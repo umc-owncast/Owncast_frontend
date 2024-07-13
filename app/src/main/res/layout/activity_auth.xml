@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AuthActivity">
+
+    <ImageView
+        android:id="@+id/login_iv"
+        android:layout_width="377dp"
+        android:layout_height="61dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="453dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="126dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/purple_rectengular" />
+
+    <ImageView
+        android:id="@+id/signup_iv"
+        android:layout_width="392dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_iv"
+        app:layout_constraintVertical_bias="0.614"
+        app:srcCompat="@drawable/white_rectengular" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="132dp"
+        android:text="로그인"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="@+id/login_iv"
+        app:layout_constraintTop_toTopOf="@+id/login_iv" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="116dp"
+        android:text="회원가입"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="@+id/signup_iv"
+        app:layout_constraintTop_toTopOf="@+id/signup_iv" />
+</androidx.constraintlayout.widget.ConstraintLayout>
