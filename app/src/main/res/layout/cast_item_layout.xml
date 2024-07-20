@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="64dp">
+
+    <ImageView
+        android:id="@+id/cast_item_iv"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/playlistfr_dummy_iv" />
+
+    <TextView
+        android:id="@+id/cast_item_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="14dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/cast_item_iv"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/cast_item_lock_iv"
+        android:layout_width="51dp"
+        android:layout_height="16dp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@+id/cast_item_title_tv"
+        app:layout_constraintTop_toBottomOf="@+id/cast_item_title_tv"
+        app:srcCompat="@drawable/fragment_cast_lock" />
+
+    <ImageView
+        android:id="@+id/cast_item_duration_iv"
+        android:layout_width="41dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="14dp"
+        app:layout_constraintStart_toEndOf="@+id/cast_item_title_tv"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/cast_item_duration" />
+
+    <ImageView
+        android:id="@+id/cast_item_edit_iv"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="16dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/fragment_cast_edit" />
+
+    <TextView
+        android:id="@+id/cast_item_creator"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:gravity="start|top"
+        android:text="TextView"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/cast_item_title_tv"
+        app:layout_constraintTop_toBottomOf="@+id/cast_item_title_tv" />
+</androidx.constraintlayout.widget.ConstraintLayout>

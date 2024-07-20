@@ -19,9 +19,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.goKeywordIv.setOnClickListener {
-            initKeyword()
-        }
+//        binding.goKeywordIv.setOnClickListener {
+//            initKeyword()
+//        }
         initBottomNavigation()
     }
 
@@ -47,26 +47,26 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, HomeFragment())
                         .commitAllowingStateLoss()
-                    //  return@setOnItemSelectedListener true
+                      return@setOnItemSelectedListener true
                 }
 
                 R.id.playlistFragment -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, PlaylistFragment())
                         .commitAllowingStateLoss()
-                    //  return@setOnItemSelectedListener true
+                      return@setOnItemSelectedListener true
                 }
                 R.id.studyFragment -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, StudyFragment())
                         .commitAllowingStateLoss()
-                    //   return@setOnItemSelectedListener true
+                       return@setOnItemSelectedListener true
                 }
                 R.id.searchFragment -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, SearchFragment())
                         .commitAllowingStateLoss()
-                    // return@setOnItemSelectedListener true
+                     return@setOnItemSelectedListener true
                 }
                 R.id.profileFragment -> {
                     supportFragmentManager.beginTransaction()

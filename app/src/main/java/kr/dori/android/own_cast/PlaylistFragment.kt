@@ -5,55 +5,83 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import kr.dori.android.own_cast.databinding.FragmentPlaylistBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener {
+    private lateinit var binding: FragmentPlaylistBinding
+    private lateinit var categoryAdapter: PlaylistCategoryAdapter
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PlaylistFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class PlaylistFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    // 나중에 서버 배포로 대체
+    private var data = mutableListOf(
+        SongData("category_name", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
+        SongData("category_name", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "monkey"),
+        SongData("category_name", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
+        SongData("category_name", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
+        SongData("category_name", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug"),
+        SongData("category_name", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
+        SongData("category_name", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "monkey"),
+        SongData("category_name", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
+        SongData("category_name", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
+        SongData("category_name", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug")
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_playlist, container, false)
+        binding = FragmentPlaylistBinding.inflate(inflater, container, false)
+
+        // RecyclerView 어댑터 설정
+        categoryAdapter = PlaylistCategoryAdapter(this)
+        categoryAdapter.dataList = data
+        binding.category.adapter = categoryAdapter
+        binding.category.layoutManager = LinearLayoutManager(context)
+
+        // 다이얼로그 구현
+        binding.fragmentPlaylistAddIv.setOnClickListener {
+            val dialog = AddCategoryDialog(requireContext(), this)
+            dialog.show()
+        }
+
+        // 저장한 캐스트, 담아온 캐스트 설정
+        val savedData = data.filter { it.isSave }
+        val unsavedData = data.filter { !it.isSave }
+        val castFragment = CastFragment()
+
+        binding.fragmentPlaylistSaveIv.setOnClickListener {
+            val bundle = Bundle().apply {
+                putParcelableArrayList("isSave", ArrayList(savedData))
+            }
+            castFragment.arguments = bundle
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.main_frm, castFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+        binding.fragmentPlaylistNotsaveIv.setOnClickListener {
+            val bundle = Bundle().apply {
+                putParcelableArrayList("isNotSave", ArrayList(unsavedData))
+            }
+            castFragment.arguments = bundle
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.main_frm, castFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PlaylistFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            PlaylistFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    // notifyDataSetChanged로 데이터 업데이트
+    override fun onCategoryAdded(categoryName: String) {
+        data.add(SongData(categoryName, R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug"))
+        categoryAdapter.notifyDataSetChanged()
+    }
+
+    override fun onCategoryEdit(position: Int, newItem: SongData) {
+        data[position] = newItem
+        categoryAdapter.notifyDataSetChanged()
     }
 }
