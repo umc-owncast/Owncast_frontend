@@ -31,7 +31,7 @@
             android:layout_weight="1"
             android:gravity="left"
             android:paddingLeft="10dp"
-            android:text="세부 관심사 선택"
+            android:text="직접 입력"
             android:textSize="20sp" />
     </LinearLayout>
 
@@ -60,78 +60,49 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingTop="50dp"
-        android:text="스포츠 중에서\n특히 어떤 걸 더 좋아하세요?"
+        android:text="일상 속 가장 많은 시간을 보내는 \n분야를 선택해주세요"
         android:textAlignment="center"
         android:textSize="18sp" />
 
-    <GridLayout
+    <LinearLayout
+        android:id="@+id/editTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:rowCount="2"
-        android:columnCount="3"
-        android:alignmentMode="alignMargins"
-        android:padding="16dp"
-        android:layout_gravity="center">
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/purple">
 
-        <Button
+        <ImageView
+            android:id="@+id/addIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_plus"
+            android:contentDescription="add_plus_icon"/>
+
+        <EditText
+            android:id="@+id/editText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_rowSpan="1"
-            android:layout_columnSpan="1"
-            android:layout_columnWeight="1"
-            android:text="야구" />
+            android:layout_weight="1"
+            android:hint="텍스트 입력할게요"
+            android:background="@android:color/transparent"
+            android:padding="0dp"
+            android:inputType="textMultiLine"
+            android:maxLength="200"
+            android:singleLine="true"
+            android:textSize="16sp"/>
 
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_rowSpan="1"
-            android:layout_columnSpan="1"
-            android:layout_columnWeight="1"
-            android:text="야구" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_rowSpan="1"
-            android:layout_columnSpan="1"
-            android:layout_columnWeight="1"
-            android:text="야구" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_rowSpan="1"
-            android:layout_columnSpan="1"
-            android:layout_columnWeight="1"
-            android:text="야구" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_rowSpan="1"
-            android:layout_columnSpan="1"
-            android:layout_columnWeight="1"
-            android:text="야구" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_rowSpan="1"
-            android:layout_columnSpan="1"
-            android:layout_columnWeight="1"
-            android:text="야구" />
-
-    </GridLayout>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/charCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editTextContainer"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="0dp"
-        android:text="+ 직접 입력할게요"
-        android:textSize="12sp"
-        android:textColor="@color/black"/>
+        android:layout_marginTop="4dp"
+        android:text="(0/200)"
+        android:textColor="#999999"
+        android:textSize="12sp" />
 
 </LinearLayout>

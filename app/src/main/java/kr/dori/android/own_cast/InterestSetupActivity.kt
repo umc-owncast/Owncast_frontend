@@ -24,7 +24,7 @@ class InterestSetupActivity : AppCompatActivity() {
         }
 
         fun onMySelfClick(view: View) {
-            val intent = Intent(this, DetailSetupActivity::class.java)
+            val intent = Intent(this, DetailSelfActivity::class.java)
             startActivity(intent)
         }
 

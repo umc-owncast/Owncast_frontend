@@ -7,14 +7,14 @@ import android.view.View
 import android.widget.Button
 import androidx.core.content.ContextCompat
 
-class ClearSignupActivity : AppCompatActivity() {
+class DetailSelfActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_clear_signup)
+        setContentView(R.layout.activity_detail_self)
 
-        fun onStartClick(view: View) {
-            val intent = Intent(this, MainActivity::class.java)
+        fun onBackClick(view: View) {
+            val intent = Intent(this, InterestSetupActivity::class.java)
             startActivity(intent)
         }
 

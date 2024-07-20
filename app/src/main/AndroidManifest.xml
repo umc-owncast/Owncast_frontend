@@ -25,6 +25,9 @@
             android:name=".DetailSetupActivity"
             android:exported="false" />
         <activity
+            android:name=".DetailSelfActivity"
+            android:exported="false" />
+        <activity
             android:name=".InterestSetupActivity"
             android:exported="false" />
         <activity
