@@ -17,7 +17,7 @@ class LanguageSetupActivity : AppCompatActivity() {
     }
 
     fun onLanguageClick(view: View) {
-        val intent = Intent(this, InterestSetupActivity::class.java)
+        val intent = Intent(this, LanguageAccentActivity::class.java)
         startActivity(intent)
     }
 }

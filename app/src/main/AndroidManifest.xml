@@ -31,6 +31,9 @@
             android:name=".LanguageSetupActivity"
             android:exported="false" />
         <activity
+            android:name=".LanguageAccentActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
