@@ -1,23 +1,32 @@
 package kr.dori.android.own_cast
 
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.GridLayoutManager
-import kr.dori.android.own_cast.databinding.ActivityInterestSetupBinding
-import kr.dori.android.own_cast.databinding.ActivityKeywordBinding
+import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import androidx.core.content.ContextCompat
 
 class InterestSetupActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityKeywordBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityKeywordBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_interest_setup)
 
-        binding.backMainIv.setOnClickListener {
-            finish()
+        fun onBackClick(view: View) {
+            val intent = Intent(this, LanguageAccentActivity::class.java)
+            startActivity(intent)
         }
+
+        fun onMyInterestClick(view: View) {
+            val intent = Intent(this, DetailSetupActivity::class.java)
+            startActivity(intent)
+        }
+
+        fun onMySelfClick(view: View) {
+            val intent = Intent(this, DetailSetupActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 }
