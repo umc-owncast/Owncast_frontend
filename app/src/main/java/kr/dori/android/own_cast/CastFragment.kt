@@ -1,4 +1,5 @@
 package kr.dori.android.own_cast
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,14 +14,17 @@ import kr.dori.android.own_cast.databinding.FragmentCastBinding
 class CastFragment : Fragment() {
     private lateinit var binding: FragmentCastBinding
     private lateinit var castAdapter: CastAdapter
+
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = FragmentCastBinding.inflate(inflater, container, false)
 
+
         // CastAdapter 초기화
         castAdapter = CastAdapter()
+
 
         // ViewModel 데이터 관찰
         sharedViewModel.data.observe(viewLifecycleOwner, Observer { newData ->
@@ -41,6 +45,7 @@ class CastFragment : Fragment() {
         // CastAdapter에 데이터 설정
         castAdapter.dataList = data
 
+
         if (savedData != null) {
             binding.fragmentCastMaintitleTv.text = "저장한 캐스트"
             binding.fragmentCastTitleTv.text = "${castAdapter.itemCount},"
@@ -48,6 +53,7 @@ class CastFragment : Fragment() {
             binding.fragmentCastMaintitleTv.text = "담아온 캐스트"
             binding.fragmentCastTitleTv.text = "${castAdapter.itemCount}"
         }
+
 
         // RecyclerView 설정
         binding.fragmentCastRv.adapter = castAdapter
@@ -61,10 +67,4 @@ class CastFragment : Fragment() {
         return binding.root
     }
 }
-
-
-
-
-
-
 

@@ -44,6 +44,7 @@ class EditCategoryDialog(context: Context, private val listener: EditCategoryLis
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
+
         binding.fragmentAddCategoryDialogOn.setOnClickListener {
             if (isText) {
                 // 해당 position의 기존 데이터를 로드
@@ -54,6 +55,7 @@ class EditCategoryDialog(context: Context, private val listener: EditCategoryLis
 
                 // 업데이트된 데이터를 listener로 전달
                 listener.onCategoryEdit(position, updatedData)
+
 
                 dismiss()
             }

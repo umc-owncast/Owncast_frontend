@@ -3,15 +3,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+
 import androidx.recyclerview.widget.LinearLayoutManager
 import kr.dori.android.own_cast.databinding.FragmentPlaylistBinding
 
 class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener {
     private lateinit var binding: FragmentPlaylistBinding
     private lateinit var categoryAdapter: PlaylistCategoryAdapter
+
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     //나중에 서버 데이터로 변경
@@ -26,6 +29,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener {
         SongData("category_name8", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
         SongData("category_name9", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
         SongData("category_name10", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug")
+
     )
 
     override fun onCreateView(
@@ -36,6 +40,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener {
 
         // RecyclerView 어댑터 설정
         categoryAdapter = PlaylistCategoryAdapter(this)
+
         binding.category.adapter = categoryAdapter
         binding.category.layoutManager = LinearLayoutManager(context)
 
@@ -61,6 +66,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener {
 
         binding.fragmentPlaylistSaveIv.setOnClickListener {
             val bundle = Bundle().apply {
+
                 putParcelableArrayList("isSave", ArrayList(sharedViewModel.data.value?.filter { it.isSave } ?: listOf()))
             }
             castFragment.arguments = bundle
@@ -73,6 +79,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener {
         binding.fragmentPlaylistNotsaveIv.setOnClickListener {
             val bundle = Bundle().apply {
                 putParcelableArrayList("isNotSave", ArrayList(sharedViewModel.data.value?.filter { !it.isSave } ?: listOf()))
+
             }
             castFragment.arguments = bundle
             requireActivity().supportFragmentManager.beginTransaction()
@@ -80,6 +87,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener {
                 .addToBackStack(null)
                 .commit()
         }
+
 
         return binding.root
     }
@@ -95,5 +103,6 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener {
 
     override fun getCategoryData(position: Int): SongData {
         return sharedViewModel.data.value?.get(position) ?: dummyData[position]
+
     }
 }
