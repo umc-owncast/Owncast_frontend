@@ -28,7 +28,8 @@ class CastAdapter : RecyclerView.Adapter<CastAdapter.Holder>() {
     inner class Holder(val binding: CastItemLayoutBinding): RecyclerView.ViewHolder(binding.root) {
         fun setText(data: SongData) {
             if(data.isSave) {
-                binding.castItemTitleTv.text = "저장한 캐스트"
+
+                binding.castItemTitleTv.text = data.title
                 binding.castItemCreator.visibility = View.GONE
                 binding.castItemEditIv.visibility = View.VISIBLE
                 if(data.isLock) {
@@ -37,7 +38,8 @@ class CastAdapter : RecyclerView.Adapter<CastAdapter.Holder>() {
                     binding.castItemLockIv.visibility = View.GONE
                 }
             } else {
-                binding.castItemTitleTv.text = "담아온 캐스트"
+
+                binding.castItemTitleTv.text = data.title
                 binding.castItemCreator.visibility = View.VISIBLE
                 binding.castItemCreator.text = "${data.creator}-${data.category}"
                 binding.castItemLockIv.visibility=View.GONE

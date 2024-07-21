@@ -47,9 +47,16 @@ class EditCategoryDialog(context: Context, private val listener: EditCategoryLis
 
         binding.fragmentAddCategoryDialogOn.setOnClickListener {
             if (isText) {
-               listener.onCategoryEdit(position,
-                   SongData(addtext,R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "animal")
-               )
+                // 해당 position의 기존 데이터를 로드
+                val existingData = listener.getCategoryData(position)
+
+                // creator 속성만 변경하여 새로운 데이터 생성
+                val updatedData = existingData.copy(title = addtext)
+
+                // 업데이트된 데이터를 listener로 전달
+                listener.onCategoryEdit(position, updatedData)
+
+
                 dismiss()
             }
         }
