@@ -15,13 +15,11 @@ class AuthActivity : AppCompatActivity() {
         val signUpButton: Button = findViewById(R.id.signUpBtn)
 
         loginButton.setOnClickListener {
-            // Navigate to LoginActivity
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
 
         signUpButton.setOnClickListener {
-            // Navigate to SignUpActivity
             val intent = Intent(this, SignupActivity::class.java)
             startActivity(intent)
         }

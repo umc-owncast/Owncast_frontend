@@ -6,14 +6,14 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:gravity="center"
-    tools:context=".MainActivity">
+    tools:context=".AuthActivity">
 
     <ImageView
         android:id="@+id/logo"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        android:background="#E0E0E0"
+        android:background="@drawable/profile"
         android:contentDescription="logo_img"
         android:layout_marginBottom="16dp" />
 
@@ -21,25 +21,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="나만의 맞춤형 오디오 OWNCAST"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:textAlignment="center"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"
+        android:letterSpacing="0.025"
+        android:textColor="#263238" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="당신의 취향에 맞춘 오디오를 제공하기 위해서는 회원가입이 필요해요"
-        android:textSize="14sp"
+        android:text="당신의 취향에 맞춘 오디오를 제공하기 위해서는\n회원가입이 필요해요"
+        android:textSize="12sp"
         android:textAlignment="center"
         android:layout_marginBottom="32dp"
-        android:maxWidth="229dp" />
+        android:letterSpacing="0.025"
+        android:textColor="#455A64" />
 
     <Button
         android:id="@+id/loginBtn"
         android:layout_width="328dp"
         android:layout_height="48dp"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="#8A2BE2"
+        android:background="@drawable/white_rectengular"
+        android:backgroundTint="@color/black"
         android:text="로그인"
         android:textColor="@android:color/white"
         android:textSize="16sp" />
@@ -48,9 +53,9 @@
         android:id="@+id/signUpBtn"
         android:layout_width="328dp"
         android:layout_height="48dp"
+        android:background="@drawable/button_background"
         android:text="회원가입"
-        android:textSize="16sp"
-        android:backgroundTint="#E0E0E0"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
 
 </LinearLayout>

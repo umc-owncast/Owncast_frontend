@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 
 class InterestSetupActivity : AppCompatActivity() {
@@ -13,9 +14,10 @@ class InterestSetupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_interest_setup)
 
-        fun onBackClick(view: View) {
-            val intent = Intent(this, LanguageAccentActivity::class.java)
-            startActivity(intent)
+        val backButton: ImageView = findViewById(R.id.backButton)
+
+        backButton.setOnClickListener {
+            finish()
         }
 
         fun onMyInterestClick(view: View) {

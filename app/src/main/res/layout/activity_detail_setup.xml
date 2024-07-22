@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".MainActivity">
+    tools:context=".DetailSetupActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,10 +59,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:paddingTop="50dp"
+        android:paddingTop="30dp"
         android:text="스포츠 중에서\n특히 어떤 걸 더 좋아하세요?"
         android:textAlignment="center"
-        android:textSize="18sp" />
+        android:textSize="14sp" />
 
     <GridLayout
         android:layout_width="match_parent"

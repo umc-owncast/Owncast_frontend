@@ -8,13 +8,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="380dp"
+        android:layout_centerVertical="true"
         android:text="In your daily life"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:letterSpacing="0.025"
         android:gravity="center"
-        android:textColor="#263238"
+        android:textColor="@color/black"
         android:lineHeight="20sp" />
+
 
     <TextView
         android:id="@+id/splash_text_line2"
@@ -23,9 +24,10 @@
         android:layout_below="@id/splash_text_line1"
         android:layout_centerHorizontal="true"
         android:text="owncast"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:letterSpacing="0.025"
         android:gravity="center"
-        android:textColor="#263238"
+        android:textColor="@color/black"
         android:lineHeight="20sp" />
+
 </RelativeLayout>

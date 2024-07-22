@@ -13,7 +13,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingTop="24dp"
-        android:paddingBottom="40dp">
+        android:paddingBottom="30dp">
 
         <ImageView
             android:id="@+id/backButton"
@@ -32,37 +32,38 @@
             android:text="회원가입"
             android:textSize="20sp"
             android:gravity="left"/>
+
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/etName"
+    <TextView
+        android:id="@+id/Id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="이름"
-        android:layout_marginBottom="8dp"/>
-
-    <EditText
-        android:id="@+id/etNickname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="닉네임"
-        android:layout_marginBottom="8dp"/>
+        android:text="아이디"
+        android:textSize="12sp"
+        android:textColor="#000000"
+        android:letterSpacing="0"
+        android:lineHeight="16dp"
+        android:textAlignment="textStart"/>
 
     <EditText
         android:id="@+id/etId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="아이디"
-        android:layout_marginBottom="4dp"/>
+        android:hint="아이디 입력 (5~15자)"
+        android:layout_marginBottom="8dp"
+        android:padding="12dp"
+        android:background="@drawable/edittext_background"
+        android:textColorHint="#A9A9A9"
+        android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/tvIdHint"
+        android:id="@+id/Password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="* 5~15자의 영문 대/소문자, 숫자만 사용해 주세요"
+        android:text="비밀번호"
         android:textSize="12sp"
         android:textColor="#000000"
-        android:layout_marginBottom="8dp"
         android:letterSpacing="0"
         android:lineHeight="16dp"
         android:textAlignment="textStart"/>
@@ -71,18 +72,21 @@
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="비밀번호"
+        android:hint="비밀번호 입력 (영문, 숫자, 특수문자 포함 8~16자)"
         android:inputType="textPassword"
-        android:layout_marginBottom="4dp"/>
+        android:background="@drawable/edittext_background"
+        android:padding="12dp"
+        android:textColorHint="#A9A9A9"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"/>
 
     <TextView
-        android:id="@+id/tvPasswordHint"
+        android:id="@+id/PasswordConfirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="* 8~16자로 구성해주세요\n* 영문 대/소문자, 숫자, 특수문자를 각 1자 이상 사용해 주세요"
+        android:text="비밀번호 확인"
         android:textSize="12sp"
         android:textColor="#000000"
-        android:layout_marginBottom="8dp"
         android:letterSpacing="0"
         android:lineHeight="16dp"
         android:textAlignment="textStart"/>
@@ -91,8 +95,56 @@
         android:id="@+id/etPasswordConfirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="비밀번호 확인"
+        android:hint="비밀번호 재입력"
         android:inputType="textPassword"
+        android:background="@drawable/edittext_background"
+        android:padding="12dp"
+        android:textColorHint="#A9A9A9"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/Name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="이름"
+        android:textSize="12sp"
+        android:textColor="#000000"
+        android:letterSpacing="0"
+        android:lineHeight="16dp"
+        android:textAlignment="textStart"/>
+
+    <EditText
+        android:id="@+id/etName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="이름"
+        android:background="@drawable/edittext_background"
+        android:padding="12dp"
+        android:textColorHint="#A9A9A9"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/NickName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="닉네임"
+        android:textSize="12sp"
+        android:textColor="#000000"
+        android:letterSpacing="0"
+        android:lineHeight="16dp"
+        android:textAlignment="textStart"/>
+
+    <EditText
+        android:id="@+id/etNickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="닉네임 입력"
+        android:background="@drawable/edittext_background"
+        android:padding="12dp"
+        android:textColorHint="#A9A9A9"
+        android:textSize="16sp"
         android:layout_marginBottom="16dp"/>
 
     <Button
@@ -101,7 +153,8 @@
         android:layout_height="48dp"
         android:text="확인"
         android:textSize="16sp"
-        android:backgroundTint="#8A2BE2"
+        android:background="@drawable/white_rectengular"
+        android:backgroundTint="#853489"
         android:textColor="@android:color/white"
         android:enabled="false"/>
 

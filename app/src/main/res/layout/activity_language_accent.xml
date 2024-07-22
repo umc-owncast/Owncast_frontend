@@ -55,13 +55,13 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textViewTitle"
+        android:id="@+id/textViewTitle1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="원하는 발음을 선택해주세요"
-        android:textSize="18sp"
+        android:text="배우고 싶은 언어를 선택해주세요"
+        android:textSize="14sp"
         android:layout_gravity="center"
-        android:paddingTop="50dp"
+        android:paddingTop="30dp"
         android:paddingBottom="24dp"/>
 
     <LinearLayout
@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="8dp"
+        android:padding="12dp"
         android:background="#ECEFF1"
         android:onClick="onLanguageClick" >
 
@@ -173,7 +173,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="8dp"
+        android:padding="12dp"
         android:background="#ECEFF1"
         android:layout_marginTop="16dp"
         android:onClick="onLanguageClick" >
@@ -260,7 +260,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="8dp"
+        android:padding="12dp"
         android:background="#ECEFF1"
         android:layout_marginTop="16dp"
         android:onClick="onLanguageClick" >

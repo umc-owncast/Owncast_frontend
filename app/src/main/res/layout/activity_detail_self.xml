@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".MainActivity">
+    tools:context=".DetailSelfActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,10 +59,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:paddingTop="50dp"
+        android:paddingTop="30dp"
         android:text="일상 속 가장 많은 시간을 보내는 \n분야를 선택해주세요"
         android:textAlignment="center"
-        android:textSize="18sp" />
+        android:textSize="14sp" />
 
     <LinearLayout
         android:id="@+id/editTextContainer"

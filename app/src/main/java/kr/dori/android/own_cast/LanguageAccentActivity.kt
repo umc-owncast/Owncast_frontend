@@ -4,8 +4,9 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
@@ -22,12 +23,18 @@ class LanguageAccentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_language_accent)
 
+        val backButton: ImageView = findViewById(R.id.backButton)
+
         englishLayout = findViewById(R.id.english_layout)
         japaneseLayout = findViewById(R.id.japanese_layout)
         spanishLayout = findViewById(R.id.spanish_layout)
         englishToggle = findViewById(R.id.english_toggle)
         japaneseToggle = findViewById(R.id.japanese_toggle)
         spanishToggle = findViewById(R.id.spanish_toggle)
+
+        backButton.setOnClickListener {
+            finish()
+        }
 
         englishLayout.setOnClickListener {
             toggleLanguageSelection(englishLayout, englishToggle)
@@ -44,8 +51,12 @@ class LanguageAccentActivity : AppCompatActivity() {
 
     private fun toggleLanguageSelection(selectedLayout: LinearLayout, toggleLayout: LinearLayout) {
         resetLayouts()
-        selectedLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.black))
+
+        findViewById<TextView>(R.id.textViewTitle1).text = "원하는 발음을 선택해주세요"
+
         toggleLayout.visibility = View.VISIBLE
+
+        selectedLayout.setBackgroundColor(Color.parseColor("#800080"))
 
         if (selectedLayout != englishLayout) {
             englishLayout.alpha = 0.4f
@@ -62,17 +73,14 @@ class LanguageAccentActivity : AppCompatActivity() {
         englishLayout.setBackgroundColor(Color.parseColor("#ECEFF1"))
         japaneseLayout.setBackgroundColor(Color.parseColor("#ECEFF1"))
         spanishLayout.setBackgroundColor(Color.parseColor("#ECEFF1"))
+
         englishToggle.visibility = View.GONE
         japaneseToggle.visibility = View.GONE
         spanishToggle.visibility = View.GONE
+
         englishLayout.alpha = 1.0f
         japaneseLayout.alpha = 1.0f
         spanishLayout.alpha = 1.0f
-    }
-
-    fun onBackClick(view: View) {
-        val intent = Intent(this, LanguageAccentActivity::class.java)
-        startActivity(intent)
     }
 
     fun onMyLanguageClick(view: View) {
