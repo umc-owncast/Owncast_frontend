@@ -8,16 +8,17 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import kr.dori.android.own_cast.databinding.FragmentAddCategoryDialogBinding
+import kr.dori.android.own_cast.databinding.FragmentEditCategoryDialogBinding
 
 class EditCategoryDialog(context: Context, private val listener: EditCategoryListener, private val position: Int) : Dialog(context) {
 
-    private lateinit var binding: FragmentAddCategoryDialogBinding
+    private lateinit var binding: FragmentEditCategoryDialogBinding
     private var isText = false
     private lateinit var addtext: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragmentAddCategoryDialogBinding.inflate(LayoutInflater.from(context))
+        binding = FragmentEditCategoryDialogBinding.inflate(LayoutInflater.from(context))
         setContentView(binding.root)
 
 
@@ -31,10 +32,10 @@ class EditCategoryDialog(context: Context, private val listener: EditCategoryLis
         }
 
         // 플레인 텍스트에 텍스트를 입력하면 확인 버튼이 on 되고 클릭 리스너 활성화
-        binding.fragmentAddCategoryPlainTv.addTextChangedListener(object : TextWatcher {
+        binding.fragmentEditCategoryPlainTv.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (s != null) {
-                    addtext = binding.fragmentAddCategoryPlainTv.text.toString()
+                    addtext = binding.fragmentEditCategoryPlainTv.text.toString()
                 }
                 isText = s?.isNotEmpty() == true
                 setButton()
@@ -44,8 +45,7 @@ class EditCategoryDialog(context: Context, private val listener: EditCategoryLis
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
-
-        binding.fragmentAddCategoryDialogOn.setOnClickListener {
+        binding.fragmentEditCategoryOn.setOnClickListener {
             if (isText) {
                 // 해당 position의 기존 데이터를 로드
                 val existingData = listener.getCategoryData(position)
@@ -56,7 +56,6 @@ class EditCategoryDialog(context: Context, private val listener: EditCategoryLis
                 // 업데이트된 데이터를 listener로 전달
                 listener.onCategoryEdit(position, updatedData)
 
-
                 dismiss()
             }
         }
@@ -64,11 +63,11 @@ class EditCategoryDialog(context: Context, private val listener: EditCategoryLis
 
     private fun setButton() {
         if (isText) {
-            binding.fragmentAddCategoryDialogOff.visibility = View.GONE
-            binding.fragmentAddCategoryDialogOn.visibility = View.VISIBLE
+            binding.fragmentEditCategoryOff.visibility = View.GONE
+            binding.fragmentEditCategoryOn.visibility = View.VISIBLE
         } else {
-            binding.fragmentAddCategoryDialogOff.visibility = View.VISIBLE
-            binding.fragmentAddCategoryDialogOn.visibility = View.GONE
+            binding.fragmentEditCategoryOff.visibility = View.VISIBLE
+            binding.fragmentEditCategoryOn.visibility = View.GONE
         }
     }
 }

@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.selectedItemId=R.id.homeFragment
 
         supportFragmentManager.beginTransaction()
-            .add(R.id.main, HomeFragment())
+            .add(R.id.main_frm, HomeFragment())
             .commitAllowingStateLoss()
 
         binding.mainBnv.setOnItemSelectedListener{ item ->
