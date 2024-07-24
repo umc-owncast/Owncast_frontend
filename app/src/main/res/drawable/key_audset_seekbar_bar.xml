@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- SeekBar 배경 -->
+    <item android:id="@android:id/background">
+
+        <shape android:shape="rectangle">
+
+            <corners android:radius="10dp"/>
+            <solid android:color="#ECEFF1"/>
+
+            <size android:height="8dp"
+                android:width="360dp"
+                />
+        </shape>
+
+    </item>
+
+    <!-- SeekBar 프로그래스 바 -->
+    <item android:id="@android:id/progress">
+        <scale
+            android:scaleHeight="10%"
+            android:scaleWidth="100%">
+            <shape android:shape="rectangle">
+                <corners android:radius="10dp"/>
+                <solid android:color="@color/main_color"/>
+                <size android:height="8dp"
+                    />
+            </shape>
+        </scale>
+    </item>
+</layer-list>
