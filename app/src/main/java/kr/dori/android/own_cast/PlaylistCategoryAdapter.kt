@@ -1,3 +1,4 @@
+/*
 package kr.dori.android.own_cast
 
 import android.content.Intent
@@ -41,3 +42,4 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener) : 
         }
     }
 }
+*/

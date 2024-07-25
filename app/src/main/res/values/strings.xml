@@ -2,4 +2,9 @@
     <string name="app_name">own_cast</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="formatted_text">말을 잘하고 싶은 당신을 위해,\n나만의 맞춤형 오디오 <font color="#8050F2">owncast</font></string>
+    <string name="auth_sub_text">회원가입 후, 당신만을 위한 추천과 서비스를 받아보세요!</string>
+    <string name="signup_detail_main_text"><font color="#8050F2"><u>스포츠</u></font> 중에서\n특히 어떤 걸 더 좋아하세요?</string>
+    <string name="signup_self"><u>+ 직접 입력할게요</u></string>
+    <string name="signup_loading_text">[닉네임]님의 취향을\nowncast에 반영하고 있어요</string>
 </resources>

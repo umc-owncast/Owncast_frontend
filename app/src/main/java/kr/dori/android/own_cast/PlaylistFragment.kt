@@ -1,4 +1,4 @@
-package kr.dori.android.own_cast
+/*package kr.dori.android.own_cast
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -84,4 +84,4 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener {
         data[position] = newItem
         categoryAdapter.notifyDataSetChanged()
     }
-}
+}*/

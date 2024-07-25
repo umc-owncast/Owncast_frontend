@@ -1,3 +1,4 @@
+/*
 package kr.dori.android.own_cast
 
 import android.content.Intent
@@ -34,4 +35,4 @@ class PlaylistCastAdapter(): RecyclerView.Adapter<PlaylistCastAdapter.Holder>() 
             Glide.with(itemView).load(data.image).into(binding.languageIv)
         }
     }
-}
+}*/

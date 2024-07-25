@@ -1,3 +1,4 @@
+/*
 package kr.dori.android.own_cast
 
 import android.content.Intent
@@ -8,9 +9,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kr.dori.android.own_cast.databinding.ActivityMainBinding
+*/
 /*
 selectedItemId로 초기 화면 설정 가능
- */
+ *//*
+
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,4 +80,4 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
-}
+}*/

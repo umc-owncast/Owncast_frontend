@@ -5,5 +5,5 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.Own_cast" parent="Base.Theme.Own_cast" />
+    <style name="Theme.Own_cast" parent="Theme.AppCompat.Light"/>
 </resources>

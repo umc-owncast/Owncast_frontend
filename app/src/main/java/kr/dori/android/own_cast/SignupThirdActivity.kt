@@ -4,15 +4,80 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.textfield.TextInputLayout
+import androidx.core.content.ContextCompat
 
-class SignupActivity : AppCompatActivity() {
+class SignupThirdActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_signup)
+        setContentView(R.layout.activity_signup_third)
+
+        findViewById<Button>(R.id.btn_next).setOnClickListener {
+            startActivity(Intent(this, ClearSignupActivity::class.java))
+        }
+
+        // TextWatcher를 추가하여 EditText의 입력 변경 감지
+        findViewById<EditText>(R.id.etId).addTextChangedListener(object : TextWatcher {
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // 텍스트가 변경되기 전의 처리 (필요없으면 빈 구현)
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val id = s.toString()
+                // 전역 변수 값 수정
+                SignupData.id = id
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // 텍스트가 변경된 후의 처리 (필요없으면 빈 구현)
+            }
+        })
+
+        // TextWatcher를 추가하여 EditText의 입력 변경 감지
+        findViewById<EditText>(R.id.etPassword).addTextChangedListener(object : TextWatcher {
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // 텍스트가 변경되기 전의 처리 (필요없으면 빈 구현)
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val password = s.toString()
+                // 전역 변수 값 수정
+                SignupData.password = password
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // 텍스트가 변경된 후의 처리 (필요없으면 빈 구현)
+            }
+        })
+
+        // TextWatcher를 추가하여 EditText의 입력 변경 감지
+        findViewById<EditText>(R.id.etName).addTextChangedListener(object : TextWatcher {
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // 텍스트가 변경되기 전의 처리 (필요없으면 빈 구현)
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val name = s.toString()
+                // 전역 변수 값 수정
+                SignupData.name = name
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // 텍스트가 변경된 후의 처리 (필요없으면 빈 구현)
+            }
+        })
+    }
+}
+   /* override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_signup_third)
 
         val backButton: ImageView = findViewById(R.id.backButton)
         val etName: EditText = findViewById(R.id.etName)
@@ -53,10 +118,6 @@ class SignupActivity : AppCompatActivity() {
                 hasError = true
             }
 
-            if (!validateNickname_1(etNickname.text.toString())) {
-                etNickname.error = "닉네임 : 이미 존재하는 닉네임입니다"
-                hasError = true
-            }
 
             if (!validateNickname_2(etNickname.text.toString())) {
                 etNickname.error = "닉네임 : 10자 이내로 구성해주세요"
@@ -118,19 +179,16 @@ class SignupActivity : AppCompatActivity() {
         return regex.matches(name)
     }
 
-    private fun validateNickname_1(nickname: String): Boolean {
-        val existingNicknames = listOf("exier1", "existingUser2") // 1. 이 목록을 실제 서버와 연동 필요
-        return !existingNicknames.contains(nickname)
-    }
 
-    private fun validateNickname_2(nickname: String): Boolean {
+    private fun validateNickname_1(nickname: String): Boolean {
         return nickname.length <= 10
     }
 
-    private fun validateNickname_3(nickname: String): Boolean {
+    private fun validateNickname_2(nickname: String): Boolean {
         val regex = Regex("^[a-zA-Z0-9가-힣-_]+$")
         return regex.matches(nickname)
     }
+
 
     private fun validateId_1(id: String): Boolean {
         val existingIds = listOf("existingId1", "existingId2") // 2. 이 목록을 실제 서버와 연동 필요
@@ -153,6 +211,5 @@ class SignupActivity : AppCompatActivity() {
         val hasSpecialChar = password.any { it in "@#\$%^&+=!" }
 
         return hasLetter && hasDigit && hasSpecialChar
-    }
+    }*/
 
-}

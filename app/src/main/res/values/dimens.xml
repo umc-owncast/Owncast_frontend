@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="top_bar_space">2dp</dimen>
+    <dimen name="TitleLargeSize">20sp</dimen>
+    <dimen name="TitleMediumSize">16sp</dimen>
+</resources>

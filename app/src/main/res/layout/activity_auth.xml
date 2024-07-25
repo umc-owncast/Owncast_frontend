@@ -1,61 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".AuthActivity">
+
 
     <ImageView
         android:id="@+id/logo"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:background="@drawable/profile"
+        android:src="@drawable/logo_img"
         android:contentDescription="logo_img"
-        android:layout_marginBottom="16dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/auth_main_text"/>
 
     <TextView
+        android:id="@id/auth_main_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="나만의 맞춤형 오디오 OWNCAST"
+        android:text="@string/formatted_text"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:letterSpacing="0.025"
+        android:textColor="@color/black"
+        android:layout_marginTop="140px"
+        android:layout_marginBottom="67px"/>
+
+    <TextView
+        android:id="@+id/auth_sub_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/auth_sub_text"
         android:textSize="14sp"
-        android:textAlignment="center"
-        android:layout_marginBottom="8dp"
         android:letterSpacing="0.025"
-        android:textColor="#263238" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="당신의 취향에 맞춘 오디오를 제공하기 위해서는\n회원가입이 필요해요"
-        android:textSize="12sp"
-        android:textAlignment="center"
-        android:layout_marginBottom="32dp"
-        android:letterSpacing="0.025"
-        android:textColor="#455A64" />
+        android:textColor="#455A64"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/auth_main_text"
+        android:layout_marginBottom="134px"/>
 
     <Button
         android:id="@+id/loginBtn"
         android:layout_width="328dp"
         android:layout_height="48dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/white_rectengular"
-        android:backgroundTint="@color/black"
+        android:background="@drawable/button_purple"
         android:text="로그인"
         android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/auth_sub_text"
+        android:layout_marginBottom="56px"/>
 
     <Button
         android:id="@+id/signUpBtn"
         android:layout_width="328dp"
         android:layout_height="48dp"
-        android:background="@drawable/button_background"
+        android:background="@drawable/button_white_border"
         android:text="회원가입"
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
+        android:textColor="@color/main_purple"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/loginBtn"/>
 
-</LinearLayout>
+</RelativeLayout>
