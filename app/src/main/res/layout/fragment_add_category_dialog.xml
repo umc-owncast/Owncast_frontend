@@ -55,7 +55,7 @@
         android:layout_width="60dp"
         android:layout_height="36dp"
         android:layout_marginStart="131dp"
-        android:layout_marginTop="84dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="12dp"
         android:src="@drawable/add_category_dialog_off"
@@ -63,8 +63,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/fragment_add_category_plain_tv" />
 
     <TextView
         android:id="@+id/textView7"
@@ -87,7 +86,7 @@
         android:layout_width="60dp"
         android:layout_height="36dp"
         android:layout_marginStart="131dp"
-        android:layout_marginTop="84dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="12dp"
         android:src="@drawable/add_category_dialog_on"
@@ -96,6 +95,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/fragment_add_category_plain_tv" />
 </androidx.constraintlayout.widget.ConstraintLayout>

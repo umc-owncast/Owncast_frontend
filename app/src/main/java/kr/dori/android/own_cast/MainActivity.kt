@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
 //        binding.goKeywordIv.setOnClickListener {
 //            initKeyword()
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.selectedItemId=R.id.homeFragment
 
         supportFragmentManager.beginTransaction()
-            .add(R.id.main, HomeFragment())
+            .add(R.id.main_frm, HomeFragment())
             .commitAllowingStateLoss()
 
         binding.mainBnv.setOnItemSelectedListener{ item ->

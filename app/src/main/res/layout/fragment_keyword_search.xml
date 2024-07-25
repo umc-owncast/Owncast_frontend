@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".KeywordActivity"
+    android:clipToOutline="true"
+    android:background="#ECEFF1">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/keyword_input_cl"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"
+        app:layout_constraintWidth_percent="0.911111111"
+        android:background="@drawable/keyword_act_input_bg"
+
+        >
+        <!--비율이 애매해서 상대비율로 만듦-->
+        <EditText
+            android:id="@+id/keyword_et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+
+            android:hint="관심 있는 키워드를 입력하세요"
+            android:inputType="text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            android:lineSpacingExtra="5sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            android:textSize="16sp"
+            android:letterSpacing="0.01"
+            android:textColorHint="#263238"
+            android:layout_marginStart="41dp"
+            android:layout_marginEnd="79dp"
+            android:background="@null"
+            />
+        <ImageView
+            android:id="@+id/back_main_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/keyword_et"
+            app:layout_constraintEnd_toStartOf="@id/keyword_et"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/keyword_et"
+            app:layout_constraintVertical_bias="0.0"
+            android:src="@drawable/keyword_act_leftangle" />
+        <ImageView
+            android:id="@+id/keyword_act_add_iv"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/homefr_add_ic"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/keyword_et"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.95"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/keyword_input_cl"
+
+        app:layout_constraintWidth_percent="0.911111111"
+        app:layout_constraintHeight_percent="0.155"
+        android:background="@drawable/keyword_act_input_bg"
+        android:layout_marginTop="16dp">
+        <TextView
+            android:id="@+id/keyword_act_suggest_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[    ] 관련 추천 키워드"
+            android:textColor="#455A64"
+            android:letterSpacing="0.01"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.13"
+            android:lineSpacingExtra="3sp"
+            android:translationY="-1.65sp"
+            android:gravity="top"
+            app:layout_constraintHorizontal_bias="0.05"
+            />
+        <TextView
+            android:id="@+id/keyword_act_suggest_1_tv"
+            android:layout_width="80dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.225"
+            android:text="키워드1"
+            android:textSize="14sp"
+            android:letterSpacing="0.02"
+            android:textColor="#455A64"
+            android:background="@drawable/keyword_act_favor_key_bg"
+            android:backgroundTint="#ECEFF1"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toBottomOf="@id/keyword_act_suggest_tv"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+            android:id="@+id/keyword_act_suggest_2_tv"
+            android:layout_width="80dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.225"
+            android:text="키워드2"
+            android:textSize="14sp"
+            android:letterSpacing="0.02"
+            android:textColor="#455A64"
+            android:background="@drawable/keyword_act_favor_key_bg"
+            android:backgroundTint="#ECEFF1"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toBottomOf="@id/keyword_act_suggest_tv"
+            app:layout_constraintStart_toEndOf="@id/keyword_act_suggest_1_tv"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,8 +17,10 @@ class KeywordActivity : AppCompatActivity() {
         binding = ActivityKeywordBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.backMainIv.setOnClickListener {
-            finish()
+        if(savedInstanceState == null){
+            supportFragmentManager.beginTransaction()
+                .add(binding.keywordFragmentFrm.id, KeywordSearchFragment())
+                .commitAllowingStateLoss()
         }
     }
 }
