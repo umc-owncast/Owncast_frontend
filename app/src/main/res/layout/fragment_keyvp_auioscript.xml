@@ -5,38 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="#FFFFFF">
-    <TextView
-        android:id="@+id/audio_save_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="오디오 저장"
-        android:lineSpacingExtra="2sp"
-        android:textSize="22sp"
-        android:textColor="#263238"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="38dp"
-        android:layout_marginStart="44dp"/>
-    <ImageView
-        android:id="@+id/key_aud_back_iv"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/keyword_act_leftangle"
 
-        app:layout_constraintEnd_toStartOf="@id/audio_save_tv"
-        app:layout_constraintTop_toTopOf="@id/audio_save_tv"
-        app:layout_constraintBottom_toBottomOf="@id/audio_save_tv"
-        android:layout_marginEnd="10dp"/>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_multiply"
-        app:layout_constraintTop_toTopOf="@id/audio_save_tv"
-        app:layout_constraintBottom_toBottomOf="@id/audio_save_tv"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        android:layout_marginEnd="17dp"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -52,7 +21,7 @@
         android:backgroundTint="#ECEFF1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/audio_save_tv"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="22dp"
 
         android:overScrollMode="never"
@@ -68,7 +37,7 @@
         android:progressDrawable="@drawable/key_audset_seekbar_bar"
         android:max="100"
         android:progress="20"
-        android:scaleType="center"
+        android:scaleType="centerCrop"
         android:maxHeight="4dp"
         android:minHeight="4dp"
         app:layout_constraintHorizontal_bias="1.0"
@@ -146,6 +115,139 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_time_speed_bg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="1.0x"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:lineSpacingExtra="3sp"
+            android:textColor="@color/text_color"
+            android:letterSpacing="0.01"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.911111111"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.1"
+        android:background="@drawable/keyword_speed__layout_bg"
+        app:layout_constraintBottom_toTopOf="@id/key_aud_scr_tool_cl"
+        app:layout_constraintStart_toStartOf="@id/key_aud_scr_tool_cl"
+        android:backgroundTint="#ECEFF1">
+        <TextView
+            android:id="@+id/keyword_speed_set_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="재생속도"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:textSize="12sp"
+            android:textColor="@color/text_color"
+            android:letterSpacing="0.04"
+            android:lineSpacingExtra="2sp"
+            android:translationY="-0.84sp"
+            android:gravity="top"/>
+        <ImageView
+            android:id="@+id/keyword_speed_back_iv"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_multiply"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toTopOf="@id/keyword_speed_set_tv"
+            app:layout_constraintBottom_toBottomOf="@id/keyword_speed_set_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"/>
+        <LinearLayout
+            android:layout_marginTop="8dp"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent="0.9"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/keyword_speed_set_tv"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.5x"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:textColor="@color/text_color"
+                android:background="@drawable/keyword_speedset_item_bg"
+                android:letterSpacing="0.01"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.75x"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:textColor="@color/text_color"
+                android:background="@drawable/keyword_speedset_item_bg"
+                android:letterSpacing="0.01"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.0x"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:textColor="@color/text_color"
+                android:background="@drawable/keyword_speedset_item_bg"
+                android:letterSpacing="0.01"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.25x"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:textColor="@color/text_color"
+                android:background="@drawable/keyword_speedset_item_bg"
+                android:letterSpacing="0.01"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.5x"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:textColor="@color/text_color"
+                android:background="@drawable/keyword_speedset_item_bg"
+                android:layout_marginEnd="8dp"
+                android:letterSpacing="0.01"
+
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2.0x"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:textColor="@color/text_color"
+                android:background="@drawable/keyword_speedset_item_bg"
+                android:letterSpacing="0.01"
+                android:layout_weight="1"
+                />
+
+        </LinearLayout>
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -157,7 +259,8 @@
         android:src="@drawable/key_aud_scr_remake"
         app:layout_constraintStart_toStartOf="@id/key_aud_scr_tool_cl"
         app:layout_constraintTop_toBottomOf="@id/key_aud_scr_tool_cl"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        />
 
     <TextView
         android:id="@+id/key_aud_scr_next_iv"
@@ -173,6 +276,8 @@
         app:layout_constraintEnd_toEndOf="@id/key_aud_scr_tool_cl"
         app:layout_constraintTop_toBottomOf="@id/key_aud_scr_tool_cl"
         android:layout_marginTop="16dp"/>
+
+
 
 
 

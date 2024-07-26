@@ -4,14 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+
+
     >
 
+
+    <!--오디오 목소리 스타일이랑, 카테고리 드롭다운에 모두 쓰임-->
     <TextView
         android:id="@+id/tv_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:textColor="#263238"
+        android:textColor="#00051F"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

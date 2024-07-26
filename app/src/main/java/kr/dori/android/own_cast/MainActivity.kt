@@ -4,11 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kr.dori.android.own_cast.databinding.ActivityMainBinding
+import kr.dori.android.own_cast.keyword.KeywordActivity
+
 /*
 selectedItemId로 초기 화면 설정 가능
  */

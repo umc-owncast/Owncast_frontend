@@ -1,10 +1,7 @@
-package kr.dori.android.own_cast
+package kr.dori.android.own_cast.keyword
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import kr.dori.android.own_cast.databinding.ActivityKeywordBinding
 
 /*

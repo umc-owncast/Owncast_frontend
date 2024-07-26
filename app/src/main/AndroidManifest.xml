@@ -16,7 +16,7 @@
             android:name=".MainActivity"
             android:exported="false"/>
         <activity
-            android:name=".KeywordActivity"
+            android:name=".keyword.KeywordActivity"
             android:exported="false" />
         <activity
             android:name=".ClearSignupActivity"

@@ -1,4 +1,4 @@
-package kr.dori.android.own_cast
+package kr.dori.android.own_cast.keyword
 
 
 import android.os.Bundle
@@ -7,8 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
+import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.FragmentKeywordSearchBinding
 
 

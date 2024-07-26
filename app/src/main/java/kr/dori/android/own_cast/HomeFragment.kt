@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kr.dori.android.own_cast.databinding.FragmentHomeBinding
-import kr.dori.android.own_cast.databinding.FragmentKeywordAuioscriptBinding
+import kr.dori.android.own_cast.keyword.KeywordActivity
 
 
 class HomeFragment : Fragment() {
@@ -19,7 +19,7 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding.insertKeyw.setOnClickListener {
-            startActivity(Intent(getActivity(),KeywordActivity::class.java))
+            startActivity(Intent(getActivity(), KeywordActivity::class.java))
         }
         return binding.root
 
