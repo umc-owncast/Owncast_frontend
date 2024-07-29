@@ -7,7 +7,7 @@ android {
     namespace = "kr.dori.android.own_cast"
     compileSdk = 34
 
-    buildFeatures{
+    buildFeatures {
         viewBinding = true
     }
 
@@ -40,7 +40,9 @@ android {
 }
 
 dependencies {
-
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.1")
+    implementation("androidx.fragment:fragment-ktx:1.4.1") // 추가된 종속성
     implementation("com.github.bumptech.glide:glide:4.12.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
