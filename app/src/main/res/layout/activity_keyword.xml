@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".keyword.KeywordActivity"
     android:clipToOutline="true"
-    android:background="#ECEFF1">
+    android:background="#ECEFF1"
+    >
 
 
     <FrameLayout

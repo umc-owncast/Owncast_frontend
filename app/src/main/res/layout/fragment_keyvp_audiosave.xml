@@ -75,8 +75,42 @@
         android:layout_marginTop="4dp"
         android:background="@drawable/key_audset_dropdown_bg"/>
 
+    <TextView
+        android:id="@+id/key_aud_save_sel_open_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="3sp"
+        android:gravity="center_vertical"
+        android:text="비공개로 설정"
+        android:textSize="14sp"
+        android:letterSpacing="0.01"
+        android:textColor="#00051F"
+
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="@id/key_aud_save_title_et"
+        app:layout_constraintTop_toBottomOf="@+id/key_aud_save_category_sp"/>
+    <ToggleButton
+        android:layout_width="52dp"
+        android:layout_height="32dp"
+        android:textOn=""
+        android:textOff=""
+        android:background="@drawable/keyword_toggle_ui"
+        app:layout_constraintEnd_toEndOf="@id/key_aud_save_category_sp"
+        app:layout_constraintTop_toTopOf="@id/key_aud_save_sel_open_tv"
+        app:layout_constraintBottom_toBottomOf="@id/key_aud_save_sel_open_tv"/>
+
+    <ImageView
+        android:id="@+id/key_aud_save_btn_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/key_save_btn_create_gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="44dp"
 
 
+        />
 
 
 

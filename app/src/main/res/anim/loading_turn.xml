@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <rotate xmlns:android="http://schemas.android.com/apk/res/android"
+        android:duration="2000"
+        android:fromDegrees="0"
+        android:toDegrees="360"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:repeatCount="infinite"
+        android:repeatMode="restart"/>
+
+    <!--rotate : 회전 효과
+    duration : 해당 애니메이션을 몇초에 걸쳐 진행할 것인지. 위 예제에서는 2초에 걸쳐 회전
+    fromDegrees, toDegrees : 회전하는 각도
+    pivotX, pivotY : 회전축. 애니메이션을 걸 이미지의 중심을 축으로 해서 회전
+    repeatCount = "infinite" : 반복 횟수 무제한
+    repeatMode : 한번의 회전이 끝난 후 실행할 모드. restart와 reverse가 있으며, restart는 정방향으로 계속 진행하고 reverse는 역방향으로 진행-->
+</set>

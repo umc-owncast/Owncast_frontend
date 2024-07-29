@@ -14,10 +14,17 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.AddCategoryDialog
+import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.FragmentKeywordAudiosetBinding
 //Keyvp가 달린 3개의 프래그먼트를 관리함, frm으로 감싸고 있음.
@@ -30,7 +37,11 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentKeywordAudiosetBinding.inflate(inflater, container, false)
-        val keywordAdapter = KeywordAudiosetVPAdapter(this)
+
+        val searchText = (arguments?.getString("searchText"))
+
+
+        val keywordAdapter = KeywordAudiosetVPAdapter(this,searchText)
 
         binding.keywordAudiosetVp.adapter = keywordAdapter
         //이 코드를 넣으면 뷰페이저가 유저의 swipe를 비활성화시킴
@@ -63,27 +74,39 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
 
             }
         }
-        /*val makeBtn = view?.findViewById<TextView>(R.id.keyword_audioset_makebtn_tb)
-        makeBtn?.setOnClickListener {
-            nextPage()
-            Toast.makeText(requireContext(), "yes", Toast.LENGTH_SHORT).show()
-        }*/
+
 
 
         return binding.root
     }
 
+
+    //dialog용 listener 인터페이스 구현
     override fun getOut() {
         activity?.finish()
     }
 
     override fun onButtonClick() {
+
+
+
         binding.keywordAudiosetVp.currentItem += 1
         binding.keywordAudiosetTb.getTabAt(binding.keywordAudiosetVp.currentItem)?.view?.
         setBackgroundColor(resources.getColor(R.color.main_color,null))
 
         //현재 위치의 배경을 칠해줌
     }
+    private fun showLoadingFragment() {
+        val fragmentTransaction = (context as KeywordActivity).supportFragmentManager.beginTransaction()
+        val loadingFragment = KeywordLoadingFragment()
+        fragmentTransaction
+            .add(R.id.keyword_fragment_container, loadingFragment)
+            .commitAllowingStateLoss()
+
+        // 로딩 애니메이션을 3초 동안 실행
+        loadingFragment.startLoading(3000)
+    }
+
 
 
 

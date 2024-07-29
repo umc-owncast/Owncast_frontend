@@ -19,7 +19,14 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding.insertKeyw.setOnClickListener {
-            startActivity(Intent(getActivity(), KeywordActivity::class.java))
+            val intent = Intent(getActivity(), KeywordActivity::class.java)
+            intent.putExtra("isSearch",true)
+            startActivity(intent)
+        }
+        binding.homefrScriptDirectInputTv.setOnClickListener {
+            val intent = Intent(getActivity(), KeywordActivity::class.java)
+            intent.putExtra("isSearch",false)
+            startActivity(intent)
         }
         return binding.root
 

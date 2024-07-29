@@ -29,6 +29,8 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
     <SeekBar
+        android:maxWidth="320dp"
+        android:minWidth="320dp"
         android:id="@+id/key_aud_script_sb"
         android:layout_width="0dp"
         app:layout_constraintWidth_percent="0.911111111"
@@ -40,6 +42,8 @@
         android:scaleType="centerCrop"
         android:maxHeight="4dp"
         android:minHeight="4dp"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/key_aud_script_rv"
         app:layout_constraintTop_toBottomOf="@+id/key_aud_script_rv"
@@ -116,13 +120,14 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
         <TextView
+            android:id="@+id/key_aud_scr_cur_speed_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_time_speed_bg"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="1.0x"
+            android:text="1.0X"
             android:gravity="center"
             android:textSize="12sp"
             android:lineSpacingExtra="3sp"
@@ -132,6 +137,8 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/key_aud_scr_speed_tool_cl"
+        android:visibility="visible"
         android:layout_width="0dp"
         app:layout_constraintWidth_percent="0.911111111"
         android:layout_height="0dp"
@@ -177,6 +184,7 @@
             android:orientation="horizontal"
             android:gravity="center">
             <TextView
+                android:id="@+id/keyword_speed_0.5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0.5x"
@@ -189,6 +197,7 @@
                 android:layout_weight="1"
                 />
             <TextView
+                android:id="@+id/keyword_speed_0.75"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0.75x"
@@ -200,17 +209,20 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"/>
             <TextView
+                android:id="@+id/keyword_speed_1.0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.0x"
                 android:textSize="11sp"
                 android:gravity="center"
-                android:textColor="@color/text_color"
+                android:textColor="@color/white"
                 android:background="@drawable/keyword_speedset_item_bg"
+                android:backgroundTint="@color/main_color"
                 android:letterSpacing="0.01"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"/>
             <TextView
+                android:id="@+id/keyword_speed_1.25"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.25x"
@@ -222,6 +234,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"/>
             <TextView
+                android:id="@+id/keyword_speed_1.5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.5x"
@@ -234,6 +247,7 @@
 
                 android:layout_weight="1"/>
             <TextView
+                android:id="@+id/keyword_speed_2.0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2.0x"

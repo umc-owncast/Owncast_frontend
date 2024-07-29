@@ -1,10 +1,12 @@
 package kr.dori.android.own_cast.keyword
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAuioscriptBinding
 
@@ -12,6 +14,10 @@ import kr.dori.android.own_cast.databinding.FragmentKeyvpAuioscriptBinding
 class KeyvpAudioScriptFragment:Fragment() {
     lateinit var binding: FragmentKeyvpAuioscriptBinding
     private var listener: KeywordBtnClickListener? = null
+    private var speedList = ArrayList<TextView>()
+
+    private var curSpeed:Int = 2
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = parentFragment as? KeywordBtnClickListener
@@ -30,6 +36,8 @@ class KeyvpAudioScriptFragment:Fragment() {
         }
 
 
+
+        initSpeedUi()
         return binding.root
 
 
@@ -41,5 +49,42 @@ class KeyvpAudioScriptFragment:Fragment() {
     override fun onDetach() {
         super.onDetach()
         listener = null
+    }
+
+
+    //음성 속도 지정하는 tool에 대한 listener 지정
+    fun initSpeedUi(){
+        binding.keyAudScrCurSpeedTv.setOnClickListener {
+            binding.keyAudScrSpeedToolCl.visibility = View.VISIBLE
+        }
+        speedList.add(binding.keywordSpeed05)
+        speedList.add(binding.keywordSpeed075)
+        speedList.add(binding.keywordSpeed10)
+        speedList.add(binding.keywordSpeed125)
+        speedList.add(binding.keywordSpeed15)
+        speedList.add(binding.keywordSpeed20)
+        for(i:Int in 0..5){
+            val speed: Float = if (i < 5) {
+                0.5f + i * 0.25f
+            } else {
+                2.0f // 2.0만 있으므로
+            }
+            speedList[i].setOnClickListener {
+                binding.keyAudScrCurSpeedTv.text = "${speed}X"
+
+                //#8050F2는 MainColro
+
+                //이전거 버튼 비활성화
+                speedList[curSpeed].setBackgroundColor(Color.parseColor("#FFFFFF"))
+                speedList[curSpeed].setTextColor(Color.parseColor("#00051F"))
+                //현재 버튼 활성화
+                speedList[i].setBackgroundColor(Color.parseColor("#8050F2"))
+                speedList[i].setTextColor(Color.parseColor("#FFFFFF"))
+                //다시 현재 버튼 위치 기억
+                curSpeed = i
+                binding.keyAudScrSpeedToolCl.visibility = View.GONE
+            }
+        }
+        binding.keyAudScrSpeedToolCl.visibility = View.GONE
     }
 }

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.annotation.LayoutRes
+import androidx.core.view.isVisible
 import kr.dori.android.own_cast.databinding.ItemAudSetSpinnerBinding
 
 
@@ -16,7 +17,7 @@ class KeyAudsetDropdownAdapter(context: Context, @LayoutRes private val resId: I
     override fun getView(position: Int, converView: View?, parent: ViewGroup): View {
         val binding = ItemAudSetSpinnerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         binding.tvSpinner.text = audioList[position]
-
+        binding.icSpinnerSoundIv.visibility = View.VISIBLE
         return binding.root
     }
 

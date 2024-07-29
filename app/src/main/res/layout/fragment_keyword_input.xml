@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+    <ImageView
+        android:id="@+id/key_input_back_iv"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/keyword_act_leftangle"
+
+        app:layout_constraintEnd_toStartOf="@id/key_aud_script_input_tv"
+        app:layout_constraintTop_toTopOf="@id/key_aud_script_input_tv"
+        app:layout_constraintBottom_toBottomOf="@id/key_aud_script_input_tv"
+        android:layout_marginEnd="10dp"/>
+
+    <TextView
+        android:id="@+id/key_aud_script_input_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="스크립트 직접 입력"
+
+        android:lineSpacingExtra="2sp"
+
+        android:gravity="top"
+        android:textSize="22sp"
+        android:textColor="#263238"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="38dp"
+        android:layout_marginStart="50dp"
+        />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.89"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="27dp"
+        app:layout_constraintTop_toBottomOf="@id/key_aud_script_input_tv"
+        app:layout_constraintStart_toStartOf="@id/key_input_back_iv"
+        android:background="@drawable/key_input_edit_bg"
+        android:backgroundTint="#ECEFF1">
+        <!--multiLine 넣음으로써 줄바꿈 가능-->
+        <!--https://woovictory.github.io/2019/07/04/Android-EditTextFunction/-->
+        <EditText
+            android:id="@+id/keyword_input_et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="17"
+            android:scrollHorizontally="false"
+            android:hint="오디오로 만들고 싶은 글을 작성해주세요"
+            android:inputType="textMultiLine"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:lineSpacingExtra="3sp"
+            android:maxLength="10000"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:textSize="14sp"
+            android:letterSpacing="0.02"
+            android:textColorHint="#455A64"
+            android:background="@null"
+            android:maxLines="25"
+
+            />
+        <TextView
+            android:id="@+id/key_input_length_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/keyword_input_et"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:lineSpacingExtra="3sp"
+            android:gravity="right|top"
+            android:textSize="14sp"
+            android:letterSpacing="0.02"
+            android:textColor="@color/text_color"
+            android:text="(0자 / 10000자)"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/key_input_next_iv"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:text="다음"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.89"
+        android:layout_height="40dp"
+
+        android:gravity="center"
+        android:background="@drawable/key_input_edit_bg"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="44dp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

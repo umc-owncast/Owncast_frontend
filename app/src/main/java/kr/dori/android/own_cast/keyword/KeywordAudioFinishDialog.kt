@@ -9,32 +9,27 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.WindowManager
-import kr.dori.android.own_cast.AddCategoryListener
-import kr.dori.android.own_cast.databinding.FragmentAddCategoryDialogBinding
 import kr.dori.android.own_cast.databinding.FragmentKeywordOutDialogBinding
+import kr.dori.android.own_cast.databinding.KeywordFinishDialogBinding
 
-class KeywordAudioOutDialog(context: Context, private val listener: KeywordAudioOutListener) : Dialog(context) {
-    private lateinit var binding : FragmentKeywordOutDialogBinding
+class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAudioFinishListener) : Dialog(context) {
+    lateinit var binding : KeywordFinishDialogBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragmentKeywordOutDialogBinding.inflate(LayoutInflater.from(context))
+        binding = KeywordFinishDialogBinding.inflate(LayoutInflater.from(context))
         setContentView(binding.root)
 
-        binding.keyAudOutCancelTv.setOnClickListener{
-            dismiss()
-        }
-        //
-        binding.keyAudOutConfirmTv.setOnClickListener {
-            listener.getOut()//keywordActivity종료
+
+        binding.keyFinHomeTv.setOnClickListener {
+            listener.goHomeFragment()
         }
 
-        //크기 재조정 함수(이거 안쓰면 원하는 대로 안나왔음)
-        //https://hanyeop.tistory.com/422
-        context.dialogResize(this, 0.675f,0.165f)
+        context.dialogResize(this, 0.945f,0.335f)
         window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
-    //size 조정하는 함수,
-    fun Context.dialogResize(dialog: Dialog, width: Float, height: Float){
+
+    private fun Context.dialogResize(dialog: Dialog, width: Float, height: Float){
         val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
         if (Build.VERSION.SDK_INT < 30){//우리는 api 31이라서 deprecated되었음

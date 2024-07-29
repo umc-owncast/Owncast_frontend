@@ -32,6 +32,18 @@
             android:layout_marginBottom="16dp"
 
             />
+        <ImageView
+            android:id="@+id/keyword_loading_iv"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/loading_progress"
+
+
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

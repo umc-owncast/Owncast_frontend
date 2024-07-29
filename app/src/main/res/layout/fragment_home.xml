@@ -78,7 +78,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/homefr_script_input_tv"
+        android:id="@+id/homefr_script_direct_input_tv"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:text="스크립트를 직접 입력할래요"
