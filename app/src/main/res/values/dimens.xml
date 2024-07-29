@@ -3,4 +3,6 @@
     <dimen name="top_bar_space">2dp</dimen>
     <dimen name="TitleLargeSize">20sp</dimen>
     <dimen name="TitleMediumSize">16sp</dimen>
+    <dimen name="signup_fifth_card_w">160dp</dimen>
+    <dimen name="signup_fifth_card_h">120dp</dimen>
 </resources>

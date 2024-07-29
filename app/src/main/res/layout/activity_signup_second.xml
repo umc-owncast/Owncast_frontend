@@ -19,8 +19,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingTop="38px"
-            android:paddingBottom="52px">
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp">
 
             <ImageView
                 android:id="@+id/backButton"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="16dp"
-            android:layout_marginBottom="46px">
+            android:layout_marginBottom="20dp">
 
             <View
                 android:layout_width="0dp"
@@ -91,7 +91,7 @@
             android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:layout_marginBottom="16px"/>
+            android:layout_marginBottom="5dp"/>
 
         <TextView
             android:id="@+id/sub_text"
@@ -102,7 +102,7 @@
             android:textColor="@color/none_gray"
             android:layout_below="@+id/main_text"
             tools:ignore="ObsoleteLayoutParam"
-            android:layout_marginBottom="60px"/>
+            android:layout_marginBottom="30dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -123,13 +123,12 @@
                 android:id="@+id/NickName_error"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="에러 메시지 1"
-                android:textSize="15dp"
+                android:text=""
+                android:textSize="10dp"
                 android:textColor="#EB0000"
                 android:layout_below="@+id/sub_text"
                 android:layout_marginStart="10dp"
-                tools:ignore="ObsoleteLayoutParam"
-                android:visibility="gone"/>
+                tools:ignore="ObsoleteLayoutParam" />
 
         </LinearLayout>
 
@@ -137,8 +136,8 @@
             android:id="@+id/etNickName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="닉네임 입력(영문, 한글, 숫자, - , _만 포함 10자 이내)"
             android:background="@drawable/edittext_background"
+            android:hint="닉네임 입력(영문, 한글, 숫자, - , _만 포함 10자 이내)"
             android:padding="12dp"
             android:textColorHint="@color/hint_color"
             android:textSize="@dimen/TitleMediumSize"/>
@@ -155,6 +154,8 @@
         android:background="@drawable/button_purple"
         android:text="다음"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/TitleMediumSize"/>
+        android:textSize="@dimen/TitleMediumSize"
+        android:clickable="false"
+        android:backgroundTint="@color/button_unclick"/>
 
 </RelativeLayout>

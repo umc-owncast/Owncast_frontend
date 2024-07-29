@@ -19,8 +19,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingTop="38px"
-            android:paddingBottom="52px">
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp">
 
             <ImageView
                 android:id="@+id/backButton"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="16dp"
-            android:layout_marginBottom="46px">
+            android:layout_marginBottom="20dp">
 
             <View
                 android:layout_width="0dp"
@@ -93,7 +93,15 @@
             android:textStyle="bold" />
 
         <CheckBox
-            android:id="@+id/ok_btn"
+            android:id="@+id/ok_btn_1"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="동의"
+            android:background="@drawable/button"
+            android:layout_marginTop="10dp"/>
+
+        <CheckBox
+            android:id="@+id/ok_btn_2"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="동의"
@@ -111,7 +119,9 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/button_purple"
         android:text="다음"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/TitleMediumSize" />
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/TitleMediumSize"
+        android:clickable="false"
+        android:backgroundTint="@color/button_unclick"/>
 
 </RelativeLayout>

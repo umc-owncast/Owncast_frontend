@@ -42,9 +42,6 @@
             android:name=".SignupLanguageActivity"
             android:exported="false" />
         <activity
-            android:name=".SignupAccentActivity"
-            android:exported="false" />
-        <activity
             android:name=".SignupFifthActivity"
             android:exported="false" />
         <activity

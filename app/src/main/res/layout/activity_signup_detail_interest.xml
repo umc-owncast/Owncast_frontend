@@ -20,8 +20,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingTop="38px"
-            android:paddingBottom="52px">
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp">
 
             <ImageView
                 android:id="@+id/backButton"
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="16dp"
-            android:layout_marginBottom="46px">
+            android:layout_marginBottom="20dp">
 
             <View
                 android:layout_width="0dp"
@@ -116,7 +116,7 @@
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/signup_detail_main_text"
+                android:text=""
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textAlignment="center"
@@ -144,10 +144,11 @@
             android:layout_marginBottom="10dp">
 
             <TextView
+                android:id="@+id/section_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="45dp"
-                android:text="축구"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/TitleLargeSize"
                 android:textStyle="bold"/>
@@ -187,10 +188,11 @@
                 android:layout_marginBottom="10dp">
 
                 <TextView
+                    android:id="@+id/section_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="45dp"
-                    android:text="야구"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/TitleLargeSize"
                     android:textStyle="bold"/>
@@ -230,10 +232,11 @@
                 android:layout_marginBottom="10dp">
 
                 <TextView
+                    android:id="@+id/section_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="45dp"
-                    android:text="농구"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/TitleLargeSize"
                     android:textStyle="bold"/>
@@ -273,10 +276,11 @@
                 android:layout_marginBottom="10dp">
 
                 <TextView
+                    android:id="@+id/section_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="45dp"
-                    android:text="테니스"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/TitleLargeSize"
                     android:textStyle="bold"/>
@@ -316,10 +320,11 @@
                 android:layout_marginBottom="10dp">
 
                 <TextView
+                    android:id="@+id/section_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="45dp"
-                    android:text="골프"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/TitleLargeSize"
                     android:textStyle="bold"/>
@@ -359,10 +364,11 @@
                 android:layout_marginBottom="10dp">
 
                 <TextView
+                    android:id="@+id/section_6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="45dp"
-                    android:text="수영"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/TitleLargeSize"
                     android:textStyle="bold"/>
@@ -405,6 +411,7 @@
                 android:layout_marginTop="20dp"/>
 
             <Button
+                android:id="@+id/confirm_button"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"

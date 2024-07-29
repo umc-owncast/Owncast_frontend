@@ -4,11 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+
 
 class SignupThirdActivity : AppCompatActivity() {
 
@@ -16,200 +16,195 @@ class SignupThirdActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup_third)
 
-        findViewById<Button>(R.id.btn_next).setOnClickListener {
-            startActivity(Intent(this, ClearSignupActivity::class.java))
+        val etName = findViewById<EditText>(R.id.etName)
+        val etId = findViewById<EditText>(R.id.etId)
+        val etPassword = findViewById<EditText>(R.id.etPassword)
+        val etPasswordConfirm = findViewById<EditText>(R.id.etPasswordConfirm)
+
+        val nameError = findViewById<TextView>(R.id.Name_error)
+        val idError = findViewById<TextView>(R.id.Id_error)
+        val passwordError = findViewById<TextView>(R.id.Password_error)
+        val passwordConfirmError = findViewById<TextView>(R.id.PasswordConfirm_error)
+        val btnNext = findViewById<Button>(R.id.btn_next)
+
+        var name = SignupData.name
+        var id = SignupData.id
+        var password = SignupData.password
+        var passwordconfirm = SignupData.passwordconfirm
+
+        val nickname = SignupData.nickname
+        findViewById<TextView>(R.id.main_text).text = "($nickname)님,\n로그인에 필요한 정보를 입력해주세요"
+
+        // 이전 내용 복원
+        if (name != getString(R.string.signup_info_first)) {
+            etName.setText(name)
+        }
+        if (id != getString(R.string.signup_info_first)) {
+            etId.setText(id)
+        }
+        if (password != getString(R.string.signup_info_first)) {
+            etPassword.setText(password)
+        }
+        if (passwordconfirm != getString(R.string.signup_info_first)) {
+            etPasswordConfirm.setText(passwordconfirm)
+            nextBtnSection(btnNext)
         }
 
-        // TextWatcher를 추가하여 EditText의 입력 변경 감지
-        findViewById<EditText>(R.id.etId).addTextChangedListener(object : TextWatcher {
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // 텍스트가 변경되기 전의 처리 (필요없으면 빈 구현)
-            }
+        findViewById<ImageView>(R.id.backButton).setOnClickListener {
+            val intent = Intent(this, SignupSecondActivity::class.java)
+            startActivity(intent)
+        }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val id = s.toString()
-                // 전역 변수 값 수정
-                SignupData.id = id
-            }
+        btnNext.setOnClickListener {
+            if ( SignupData.name != getString(R.string.signup_info_first) && SignupData.id != getString(R.string.signup_info_first) && SignupData.password != getString(R.string.signup_info_first) && SignupData.passwordconfirm != getString(R.string.signup_info_first)) {
 
-            override fun afterTextChanged(s: Editable?) {
-                // 텍스트가 변경된 후의 처리 (필요없으면 빈 구현)
-            }
-        })
-
-        // TextWatcher를 추가하여 EditText의 입력 변경 감지
-        findViewById<EditText>(R.id.etPassword).addTextChangedListener(object : TextWatcher {
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // 텍스트가 변경되기 전의 처리 (필요없으면 빈 구현)
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val password = s.toString()
-                // 전역 변수 값 수정
-                SignupData.password = password
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // 텍스트가 변경된 후의 처리 (필요없으면 빈 구현)
-            }
-        })
-
-        // TextWatcher를 추가하여 EditText의 입력 변경 감지
-        findViewById<EditText>(R.id.etName).addTextChangedListener(object : TextWatcher {
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // 텍스트가 변경되기 전의 처리 (필요없으면 빈 구현)
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val name = s.toString()
-                // 전역 변수 값 수정
+                // 현재 내용 저장
                 SignupData.name = name
-            }
+                SignupData.id = id
+                SignupData.password = password
+                SignupData.passwordconfirm = passwordconfirm
 
-            override fun afterTextChanged(s: Editable?) {
-                // 텍스트가 변경된 후의 처리 (필요없으면 빈 구현)
-            }
-        })
-    }
-}
-   /* override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_signup_third)
-
-        val backButton: ImageView = findViewById(R.id.backButton)
-        val etName: EditText = findViewById(R.id.etName)
-        val etNickname: EditText = findViewById(R.id.etNickname)
-        val etId: EditText = findViewById(R.id.etId)
-        val etPassword: EditText = findViewById(R.id.etPassword)
-        val etPasswordConfirm: EditText = findViewById(R.id.etPasswordConfirm)
-        val btnSignUp: Button = findViewById(R.id.btnSignUp)
-
-        backButton.setOnClickListener {
-            finish()
-        }
-
-        val textWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                btnSignUp.isEnabled = validateInputs()
-                etName.error = null
-                etNickname.error = null
-                etId.error = null
-                etPassword.error = null
-                etPasswordConfirm.error = null
-            }
-            override fun afterTextChanged(s: Editable?) {}
-        }
-
-        etName.addTextChangedListener(textWatcher)
-        etNickname.addTextChangedListener(textWatcher)
-        etId.addTextChangedListener(textWatcher)
-        etPassword.addTextChangedListener(textWatcher)
-        etPasswordConfirm.addTextChangedListener(textWatcher)
-
-        btnSignUp.setOnClickListener {
-            var hasError = false
-
-            if (!validateName(etName.text.toString())) {
-                etName.error = "이름 : 한글 기준 5자 이내, 영문 기준 20자 이내로 입력해주세요"
-                hasError = true
-            }
-
-
-            if (!validateNickname_2(etNickname.text.toString())) {
-                etNickname.error = "닉네임 : 10자 이내로 구성해주세요"
-                hasError = true
-            }
-
-            if (!validateNickname_3(etNickname.text.toString())) {
-                etNickname.error = "닉네임 : 영문 대/소문자, 한글, 숫자, 하이픈(-), 언더스코어(_)만 사용해주세요"
-                hasError = true
-            }
-
-            if (!validateId_1(etId.text.toString())) {
-                etId.error = "아이디 : 이미 존재하는 아이디입니다"
-                hasError = true
-            }
-
-            if (!validateId_2(etId.text.toString())) {
-                etId.error = "아이디 : 5~15자의 영문 대/소문자, 숫자만 사용해 주세요"
-                hasError = true
-            }
-
-            if (!validatePassword_1(etPassword.text.toString())) {
-                etPassword.error = "비밀번호 : 8~16자로 구성해주세요"
-                hasError = true
-            }
-
-            if (!validatePassword_2(etPassword.text.toString())) {
-                etPassword.error = "비밀번호 : 영문 대/소문자, 숫자, 특수문자를 각 1자 이상 사용해 주세요"
-                hasError = true
-            }
-
-            if (etPassword.text.toString() != etPasswordConfirm.text.toString()) {
-                etPasswordConfirm.error = "비밀번호 : 일치하지 않습니다"
-                hasError = true
-            }
-
-            if (!hasError) {
-                Toast.makeText(this, "회원가입 완료", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, LanguageAccentActivity::class.java)
+                val intent = Intent(this, SignupLanguageActivity::class.java)
                 startActivity(intent)
             }
         }
+
+        // 이름 입력 필드에 대한 텍스트 변경 리스너 설정
+        etName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                name = s.toString()
+                val errorMessage = validateName(name) // 유효성 검사
+                if (errorMessage == null) {
+                    SignupData.name = name
+                }
+                updateErrorDisplay(nameError, etName, btnNext, errorMessage) // 에러메시지 표시
+            }
+        })
+
+        // 아이디 입력 필드에 대한 텍스트 변경 리스너 설정
+        etId.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                id = s.toString()
+                val errorMessage = validateId(id) // 유효성 검사
+                if (errorMessage == null) {
+                    SignupData.id = id
+                }
+                updateErrorDisplay(idError, etId, btnNext, errorMessage) // 에러메시지 표시
+            }
+        })
+
+        // 비밀번호 입력 필드에 대한 텍스트 변경 리스너 설정
+        etPassword.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                password = s.toString()
+                val errorMessage = validatePassword(password) // 유효성 검사
+                if (errorMessage == null) {
+                    SignupData.password = password
+                }
+                updateErrorDisplay(passwordError, etPassword, btnNext, errorMessage) // 에러메시지 표시
+
+                // 비밀번호가 변경되면 비밀번호 확인 필드도 확인
+                val passwordConfirm = etPasswordConfirm.text.toString()
+                val confirmErrorMessage = validatePasswordConfirm(password, passwordConfirm)
+                updateErrorDisplay(passwordConfirmError, etPasswordConfirm, btnNext, confirmErrorMessage) // 에러메시지 표시
+            }
+        })
+
+        // 비밀번호 확인 필드에 대한 텍스트 변경 리스너 설정
+        etPasswordConfirm.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val password = etPassword.text.toString()
+                passwordconfirm = s.toString()
+                val errorMessage = validatePasswordConfirm(password, passwordconfirm) // 유효성 검사
+                if (errorMessage == null)  {
+                    SignupData.passwordconfirm = passwordconfirm
+                }
+                updateErrorDisplay(passwordConfirmError, etPasswordConfirm, btnNext, errorMessage) // 에러메시지 표시
+            }
+        })
+
     }
 
-    private fun validateInputs(): Boolean {
-        val etName: EditText = findViewById(R.id.etName)
-        val etNickname: EditText = findViewById(R.id.etNickname)
-        val etId: EditText = findViewById(R.id.etId)
-        val etPassword: EditText = findViewById(R.id.etPassword)
-        val etPasswordConfirm: EditText = findViewById(R.id.etPasswordConfirm)
+    // 이름 유효성 검사
+    private fun validateName(name: String): String? {
+        val regex_1 = "^[가-힣]+$".toRegex() // 한글 전체 문자열
+        val regex_2 = "^[a-zA-Z]+$".toRegex() // 영어 전체 문자열
 
-        return etName.text.isNotEmpty() && etNickname.text.isNotEmpty() &&
-                etId.text.isNotEmpty() && etPassword.text.isNotEmpty() &&
-                etPasswordConfirm.text.isNotEmpty()
+        return when {
+            name.isEmpty() -> "이름을 입력해주세요"
+            regex_1.matches(name) && name.length > 5 -> "한글 기준 5자 이내로 입력해주세요"
+            regex_2.matches(name) && name.length > 20 -> "영어 기준 20자 이내로 입력해주세요"
+            !regex_1.matches(name) && !regex_2.matches(name) -> "한글 또는 영어만 입력해주세요"
+            else -> null
+        }
     }
 
-    private fun validateName(name: String): Boolean {
-        val regex = Regex("^[가-힣]{1,5}\$|^[a-zA-Z]{1,20}\$")
-        return regex.matches(name)
+    // 아이디 유효성 검사
+    private fun validateId(id: String): String? {
+        val existingIds = listOf("exid1", "exid2") // 이곳에 실제 서버와 연동 필요!!
+        return when {
+            id.isEmpty() -> "아이디를 입력해주세요"
+            existingIds.contains(id) -> "이미 존재하는 아이디입니다"
+            id.length !in 5..15 -> "5~15자의 영문 대/소문자, 숫자만 사용해 주세요"
+            !Regex("^[a-zA-Z0-9]+$").matches(id) -> "5~15자의 영문 대/소문자, 숫자만 사용해 주세요"
+            else -> null
+        }
     }
 
-
-    private fun validateNickname_1(nickname: String): Boolean {
-        return nickname.length <= 10
+    // 비밀번호 유효성 검사
+    private fun validatePassword(password: String): String? {
+        return when {
+            password.isEmpty() -> null
+            password.length !in 8..16 -> "8~16자로 구성해주세요"
+            !password.any { it.isUpperCase() } || !password.any { it.isLowerCase() } || !password.any { it.isDigit() } || !password.any { it in "@#\$%^&+=!" } -> "영문 대/소문자, 숫자, 특수문자를 각 1자 이상 사용해주세요"
+            else -> null
+        }
     }
 
-    private fun validateNickname_2(nickname: String): Boolean {
-        val regex = Regex("^[a-zA-Z0-9가-힣-_]+$")
-        return regex.matches(nickname)
+    // 비밀번호 확인 유효성 검사
+    private fun validatePasswordConfirm(password: String, passwordConfirm: String): String? {
+        return if (password != passwordConfirm) {
+            "입력한 비밀번호가 서로 다릅니다. 동일한 비밀번호를 입력해 주세요"
+        } else {
+            null
+        }
     }
 
-
-    private fun validateId_1(id: String): Boolean {
-        val existingIds = listOf("existingId1", "existingId2") // 2. 이 목록을 실제 서버와 연동 필요
-        return !existingIds.contains(id)
+    // 에러 메시지와 버튼 상태 업데이트
+    private fun updateErrorDisplay(errorTextView: TextView, editText: EditText, nextButton: Button, errorMessage: String?) {
+        if (errorMessage != null) {
+            errorTextView.text = errorMessage
+            editText.setBackgroundResource(R.drawable.button_error)
+            nextButton.isClickable = false
+            nextButton.backgroundTintList = ContextCompat.getColorStateList(this, R.color.button_unclick)
+        } else {
+            errorTextView.text = ""
+            editText.setBackgroundResource(R.drawable.edittext_background)
+            nextBtnSection(nextButton)
+        }
     }
 
-    private fun validateId_2(id: String): Boolean {
-        val regex = Regex("^[a-zA-Z0-9]{5,15}\$")
-        return regex.matches(id)
+    private fun nextBtnSection(nextButton: Button) {
+        if ( SignupData.name != getString(R.string.signup_info_first) && SignupData.id != getString(R.string.signup_info_first) && SignupData.password != getString(R.string.signup_info_first) && SignupData.passwordconfirm != getString(R.string.signup_info_first)){
+            nextButton.isClickable = true
+            nextButton.backgroundTintList = ContextCompat.getColorStateList(this, R.color.main_purple)
+        }
     }
-
-    private fun validatePassword_1(password: String): Boolean {
-        val isValidLength = password.length in 8..16
-        return isValidLength
-    }
-
-    private fun validatePassword_2(password: String): Boolean {
-        val hasLetter = password.any { it.isLetter() }
-        val hasDigit = password.any { it.isDigit() }
-        val hasSpecialChar = password.any { it in "@#\$%^&+=!" }
-
-        return hasLetter && hasDigit && hasSpecialChar
-    }*/
-
+}

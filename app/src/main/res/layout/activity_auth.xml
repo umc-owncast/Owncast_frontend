@@ -26,8 +26,8 @@
         android:layout_centerVertical="true"
         android:letterSpacing="0.025"
         android:textColor="@color/black"
-        android:layout_marginTop="140px"
-        android:layout_marginBottom="67px"/>
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"/>
 
     <TextView
         android:id="@+id/auth_sub_text"
@@ -39,7 +39,7 @@
         android:textColor="#455A64"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/auth_main_text"
-        android:layout_marginBottom="134px"/>
+        android:layout_marginBottom="100dp"/>
 
     <Button
         android:id="@+id/loginBtn"
@@ -51,7 +51,7 @@
         android:textSize="16sp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/auth_sub_text"
-        android:layout_marginBottom="56px"/>
+        android:layout_marginBottom="20dp"/>
 
     <Button
         android:id="@+id/signUpBtn"

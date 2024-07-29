@@ -18,7 +18,7 @@ class ClearSignupActivity : AppCompatActivity() {
         findViewById<Button>(R.id.StartBtn).setOnClickListener {
             MainScope().launch {
                 delay(3000) // 3 seconds delay
-                startActivity(Intent(this@ClearSignupActivity, SplashActivity::class.java))
+                startActivity(Intent(this@ClearSignupActivity, AuthAfterActivity::class.java))
                 Log.d("Check_Signup_Success", "회원가입에 성공하였습니다.")
                 Log.d("msg", "회원정보")
                 Log.d("check_nickname", SignupData.nickname)

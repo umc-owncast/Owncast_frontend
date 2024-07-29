@@ -17,9 +17,9 @@ class AuthAfterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_auth_after)
 
         MainScope().launch {
-            delay(2000) // 3 seconds delay
-            startActivity(Intent(this@AuthAfterActivity, SplashActivity::class.java))
-            Log.d("Check_LogIn_Success", "로그인에 성공하였습니다.")
+            delay(2000) // 2 seconds delay
+            startActivity(Intent(this@AuthAfterActivity, MainActivity::class.java))
+            Log.d("Check_LogIn_State", "로그인 상태입니다.")
             finish()
         }
     }

@@ -4,7 +4,82 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="formatted_text">말을 잘하고 싶은 당신을 위해,\n나만의 맞춤형 오디오 <font color="#8050F2">owncast</font></string>
     <string name="auth_sub_text">회원가입 후, 당신만을 위한 추천과 서비스를 받아보세요!</string>
-    <string name="signup_detail_main_text"><font color="#8050F2"><u>스포츠</u></font> 중에서\n특히 어떤 걸 더 좋아하세요?</string>
     <string name="signup_self"><u>+ 직접 입력할게요</u></string>
     <string name="signup_loading_text">[닉네임]님의 취향을\nowncast에 반영하고 있어요</string>
+    <string name="signup_info_first">닉네임</string>
+
+    <!-- detail_interest -->
+    <string-array name="detail_0"> <!-- id : title / section_1 ~ section_6 -->
+        <item><font color="#8050F2"><u>드라마 / 영화</u></font> 중에서\n특히 어떤 걸 더 좋아하세요?</item>
+        <item><font color="#8050F2"><u>스포츠</u></font> 중에서\n특히 어떤 걸 더 좋아하세요?</item>
+        <item><font color="#8050F2"><u>음악</u></font> 중에서\n특히 어떤 걸 더 좋아하세요?</item>
+        <item><font color="#8050F2"><u>음식</u></font> 중에서\n특히 어떤 걸 더 좋아하세요?</item>
+        <item><font color="#8050F2"><u>책</u></font> 중에서\n특히 어떤 걸 더 좋아하세요?</item>
+        <item><font color="#8050F2"><u>시사 / 뉴스</u></font> 중에서\n특히 어떤 걸 더 좋아하세요?</item>
+        <item><font color="#8050F2"><u>미술</u></font> 중에서\n특히 어떤 걸 더 좋아하세요?</item>
+    </string-array>
+
+    <string-array name="detail_1">
+        <item>로맨스</item>
+        <item>액션</item>
+        <item>코미디</item>
+        <item>공포</item>
+        <item>애니메이션</item>
+        <item>스릴러</item>
+    </string-array>
+
+    <string-array name="detail_2">
+        <item>축구</item>
+        <item>야구</item>
+        <item>농구</item>
+        <item>테니스</item>
+        <item>골프</item>
+        <item>수영</item>
+    </string-array>
+
+    <string-array name="detail_3">
+        <item>팝</item>
+        <item>재즈</item>
+        <item>힙합</item>
+        <item>클래식</item>
+        <item>K-POP</item>
+        <item>록</item>
+    </string-array>
+
+    <string-array name="detail_4">
+        <item>한식</item>
+        <item>양식</item>
+        <item>중식</item>
+        <item>일식</item>
+        <item>베이커리</item>
+        <item>채식</item>
+    </string-array>
+
+    <string-array name="detail_5">
+        <item>소설</item>
+        <item>자기계발</item>
+        <item>판타지</item>
+        <item>철학</item>
+        <item>역사</item>
+        <item>과학</item>
+    </string-array>
+
+    <string-array name="detail_6">
+        <item>정치</item>
+        <item>경제</item>
+        <item>국제</item>
+        <item>사회</item>
+        <item>기술</item>
+        <item>환경</item>
+    </string-array>
+
+    <string-array name="detail_7">
+        <item>사진</item>
+        <item>현대미술</item>
+        <item>회화</item>
+        <item>조각</item>
+        <item>일러스트</item>
+        <item>그래픽디자인</item>
+    </string-array>
+
 </resources>
