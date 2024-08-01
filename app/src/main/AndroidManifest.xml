@@ -38,12 +38,10 @@
         <activity android:name=".ChangeSelfActivity" android:exported="false"/>
         <activity android:name=".PasswordSettingActivity" android:exported="false"/>
         <activity android:name=".ProfileSettingActivity" android:exported="false"/>
-
-        <!--수정 필요-->
-        <activity android:name=".SplashActivity" android:exported="false"/>
+        <activity android:name=".ProfileActivity" android:exported="false"/>
 
         <activity
-            android:name=".ProfileActivity"
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
