@@ -36,7 +36,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/fragment_cast_play_iv"
+            android:id="@+id/cast_play"
             android:layout_width="158dp"
             android:layout_height="40dp"
             android:layout_marginStart="34dp"
@@ -46,7 +46,7 @@
             app:layout_constraintTop_toBottomOf="@+id/fragment_cast_title_iv" />
 
         <ImageView
-            android:id="@+id/fragment_cast_shuffle_iv"
+            android:id="@+id/cast_shuffle"
             android:layout_width="158dp"
             android:layout_height="40dp"
             android:layout_marginTop="16dp"

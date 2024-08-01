@@ -13,13 +13,24 @@
         android:theme="@style/Theme.Own_cast"
         tools:targetApi="31">
         <activity
+            android:name=".OnlySearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".keyword.ScriptActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PlayCastActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".keyword.KeywordActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            />
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ClearSignupActivity"
             android:exported="false" />
