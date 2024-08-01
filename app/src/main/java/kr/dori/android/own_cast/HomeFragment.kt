@@ -20,7 +20,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        initKeyword()
+        //initKeyword()
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding.insertKeyw.setOnClickListener {
             val intent = Intent(getActivity(), KeywordActivity::class.java)
