@@ -32,9 +32,18 @@
         <activity android:name=".ClearSignupActivity" android:exported="false"/>
         <activity android:name=".LoginActivity" android:exported="false"/>
         <activity android:name=".MainActivity" android:exported="false"/>
+        <activity android:name=".ChangeDetailInterestActivity" android:exported="false"/>
+        <activity android:name=".ChangeInterestActivity" android:exported="false"/>
+        <activity android:name=".ChangeLanguageActivity" android:exported="false"/>
+        <activity android:name=".ChangeSelfActivity" android:exported="false"/>
+        <activity android:name=".PasswordSettingActivity" android:exported="false"/>
+        <activity android:name=".ProfileSettingActivity" android:exported="false"/>
+
+        <!--수정 필요-->
+        <activity android:name=".SplashActivity" android:exported="false"/>
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".ProfileActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

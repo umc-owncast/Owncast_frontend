@@ -11,4 +11,5 @@
     <color name="button_unclick">#ECEFF1</color>
     <color name="hint_color">#B0BEC5</color>
     <color name="togle_color">#BCB8E1</color>
+    <color name="semi_transparent_black">#66000000</color>
 </resources>
