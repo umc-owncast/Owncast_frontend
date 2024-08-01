@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".AuthAfterActivity">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textAlignment="center">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/logo_img"
+            android:layout_gravity="center"
+            android:contentDescription="logo_img"/>
+
+        <TextView
+            android:id="@id/auth_main_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/formatted_text"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.025"
+            android:textColor="@color/black"
+            android:layout_marginTop="140px"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
+
