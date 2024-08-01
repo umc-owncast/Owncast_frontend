@@ -1,30 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignupActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ClearSignupActivity">
 
-    <ImageView
-        android:id="@+id/go_login_iv"
-        android:layout_width="413dp"
-        android:layout_height="68dp"
-        android:layout_marginBottom="108dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/purple_rectengular" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@id/main_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="152dp"
-        android:text="로그인"
-        android:textSize="40sp"
-        app:layout_constraintEnd_toEndOf="@+id/go_login_iv"
-        app:layout_constraintTop_toTopOf="@+id/go_login_iv" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:text="회원가입이 완료되었습니다"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:letterSpacing="0.025"
+        android:textColor="@color/black"
+        android:layout_above="@+id/sub_text"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/sub_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:letterSpacing="0.025"
+        android:textStyle="bold"
+        android:textColor="@color/black"/>
+
+    <Button
+        android:id="@+id/StartBtn"
+        android:layout_width="368dp"
+        android:layout_height="48dp"
+        android:background="@drawable/button_purple"
+        android:text="시작하기"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/sub_text"
+        android:layout_marginTop="30dp"/>
+
+</RelativeLayout>

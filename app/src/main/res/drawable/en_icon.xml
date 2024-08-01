@@ -1,0 +1,8 @@
+<svg xmlns="http://schemas.android.com/apk/res/android" width="100" height="100" viewBox="0 0 100 100">
+    <!-- 말풍선 본체 -->
+    <ellipse cx="50" cy="40" rx="40" ry="25" fill="white" />
+    <!-- 말풍선 꼬리 -->
+    <polygon points="45,65 55,55 65,65" fill="white" />
+    <!-- 텍스트 -->
+    <text x="50" y="45" font-family="Arial" font-size="24" fill="#9B51E0" text-anchor="middle" dominant-baseline="middle">Aa</text>
+</svg>

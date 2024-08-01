@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChangeLanguageActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/btn_next">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/backButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/back"
+                    android:contentDescription="back_button"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:text="언어 설정"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/TitleLargeSize" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/EnSection"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/button_purple"
+                android:padding="10dp"
+                android:layout_marginTop="30dp"
+                android:onClick="onEnSectionClick">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp">
+
+                    <ImageView
+                        android:id="@+id/img_EnSection"
+                        android:layout_width="36dp"
+                        android:layout_height="28.5dp"
+                        android:src="@drawable/language_section_button"
+                        android:contentDescription="img_EnSection" />
+
+                    <TextView
+                        android:id="@+id/txt_EnSection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Aa"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/main_purple"
+                        android:gravity="center"
+                        android:layout_marginBottom="2dp"/>
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="영어"
+                    android:textColor="@color/white"
+                    android:textSize="18dp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/EnSection_togle"
+                android:layout_width="match_parent"
+                android:layout_height="226dp"
+                android:orientation="vertical"
+                android:background="@drawable/button_purple"
+                android:backgroundTint="@color/togle_color"
+                android:padding="10dp"
+                android:layout_marginTop="5dp"
+                android:visibility="gone">
+
+                <FrameLayout
+                    android:id="@+id/EnSection_togle_usa"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/button_white"
+                    android:padding="10dp"
+                    android:layout_marginBottom="6dp"
+                    android:onClick="togle_onclick_en_usa">
+
+                    <LinearLayout
+                        android:id="@+id/EnSection_togle_usa_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/EnSection_togle_usa_content_img"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/usa"
+                            android:contentDescription="EnSection_togle_usa_content_img"
+                            android:layout_marginEnd="15dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="미국"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/TitleMediumSize"
+                            android:textStyle="bold"/>
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/EnSection_togle_eng"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/button_white"
+                    android:padding="10dp"
+                    android:layout_marginBottom="6dp"
+                    android:onClick="togle_onclick_en_eng">
+
+                    <LinearLayout
+                        android:id="@+id/EnSection_togle_eng_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/EnSection_togle_eng_content_img"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/england"
+                            android:contentDescription="EnSection_togle_eng_content_img"
+                            android:layout_marginEnd="15dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="영국"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/TitleMediumSize"
+                            android:textStyle="bold"/>
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/EnSection_togle_aus"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/button_white"
+                    android:padding="10dp"
+                    android:layout_marginBottom="6dp"
+                    android:onClick="togle_onclick_en_aus">
+
+                    <LinearLayout
+                        android:id="@+id/EnSection_togle_aus_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/EnSection_togle_aus_content_img"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/australia"
+                            android:contentDescription="EnSection_togle_aus_content_img"
+                            android:layout_marginEnd="15dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="호주"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/TitleMediumSize"
+                            android:textStyle="bold"/>
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/EnSection_togle_ind"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/button_white"
+                    android:padding="10dp"
+                    android:layout_marginBottom="6dp"
+                    android:onClick="togle_onclick_en_ind">
+
+                    <LinearLayout
+                        android:id="@+id/EnSection_togle_ind_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/EnSection_togle_ind_content_img"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/india"
+                            android:contentDescription="EnSection_togle_ind_content_img"
+                            android:layout_marginEnd="15dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="인도"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/TitleMediumSize"
+                            android:textStyle="bold"/>
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/JpSection"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/button_purple"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:onClick="onJpSectionClick">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp">
+
+                    <ImageView
+                        android:id="@+id/img_JpSection"
+                        android:layout_width="36dp"
+                        android:layout_height="28.5dp"
+                        android:src="@drawable/language_section_button"
+                        android:contentDescription="img_JpSection" />
+
+                    <TextView
+                        android:id="@+id/txt_JpSection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="あ"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/main_purple"
+                        android:gravity="center"
+                        android:layout_marginBottom="2dp"/>
+                </FrameLayout>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="일본어"
+                    android:textColor="@color/white"
+                    android:textSize="18dp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/JpSection_togle"
+                android:layout_width="match_parent"
+                android:layout_height="67dp"
+                android:orientation="vertical"
+                android:background="@drawable/button_purple"
+                android:backgroundTint="@color/togle_color"
+                android:padding="10dp"
+                android:layout_marginTop="5dp"
+                android:visibility="gone">
+
+                <FrameLayout
+                    android:id="@+id/JpSection_togle_jp"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/button_white"
+                    android:padding="10dp"
+                    android:layout_marginBottom="6dp"
+                    android:onClick="togle_onclick_jp_jp">
+
+                    <LinearLayout
+                        android:id="@+id/JpSection_togle_jp_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/JpSection_togle_jp_content_img"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/japan"
+                            android:contentDescription="JpSection_togle_jp_content_img"
+                            android:layout_marginEnd="15dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="일본"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/TitleMediumSize"
+                            android:textStyle="bold"/>
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/SpSection"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/button_purple"
+                android:padding="10dp"
+                android:layout_marginTop="10dp"
+                android:onClick="onSpSectionClick">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp">
+
+                    <ImageView
+                        android:id="@+id/img_SpSection"
+                        android:layout_width="36dp"
+                        android:layout_height="28.5dp"
+                        android:src="@drawable/language_section_button"
+                        android:contentDescription="img_SpSection" />
+
+                    <TextView
+                        android:id="@+id/txt_SpSection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="ós"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/main_purple"
+                        android:gravity="center"
+                        android:layout_marginBottom="2dp"/>
+                </FrameLayout>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="스페인어"
+                    android:textColor="@color/white"
+                    android:textSize="18dp"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/SpSection_togle"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:orientation="vertical"
+                android:background="@drawable/button_purple"
+                android:backgroundTint="@color/togle_color"
+                android:padding="10dp"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                android:layout_marginBottom="50dp">
+
+                <FrameLayout
+                    android:id="@+id/SpSection_togle_sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/button_white"
+                    android:padding="10dp"
+                    android:layout_marginBottom="6dp"
+                    android:onClick="togle_onclick_sp_sp">
+
+                    <LinearLayout
+                        android:id="@+id/SpSection_togle_sp_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/SpSection_togle_sp_content_img"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/spain"
+                            android:contentDescription="SpSection_togle_sp_content_img"
+                            android:layout_marginEnd="15dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="스페인"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/TitleMediumSize"
+                            android:textStyle="bold"/>
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/SpSection_togle_usa"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/button_white"
+                    android:padding="10dp"
+                    android:onClick="togle_onclick_sp_usa">
+
+                    <LinearLayout
+                        android:id="@+id/SpSection_togle_usa_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/SpSection_togle_usa_content_img"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/usa"
+                            android:contentDescription="SpSection_togle_usa_content_img"
+                            android:layout_marginEnd="15dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="미국"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/TitleMediumSize"
+                            android:textStyle="bold"/>
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_next"
+        android:layout_width="368dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_purple"
+        android:text="다음"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/TitleMediumSize"
+        android:backgroundTint="@color/button_unclick"
+        android:clickable="false"/>
+
+</RelativeLayout>

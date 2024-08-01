@@ -2,23 +2,26 @@ package kr.dori.android.own_cast
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.util.Log
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import kr.dori.android.own_cast.databinding.ActivityClearSignupBinding
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ClearSignupActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityClearSignupBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityClearSignupBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_clear_signup)
 
-        val intent = Intent(this,LoginActivity::class.java)
-        binding.goLoginIv.setOnClickListener {
-            startActivity(intent)
+        findViewById<Button>(R.id.StartBtn).setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
         }
+
+        findViewById<TextView>(R.id.sub_text).text = "owncast와 함께\n[${SignupData.interest}-${SignupData.detail_interest}]이야기로 언어 공부를 시작해 보세요!"
 
     }
 }
+

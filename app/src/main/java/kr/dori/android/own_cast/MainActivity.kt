@@ -2,6 +2,8 @@ package kr.dori.android.own_cast
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -21,63 +23,65 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-//        binding.goKeywordIv.setOnClickListener {
-//            initKeyword()
-//        }
+        // 주석 처리된 부분 - 키워드 이동
+        // binding.goKeywordIv.setOnClickListener {
+        //     initKeyword()
+        // }
         initBottomNavigation()
     }
 
-    private fun initKeyword(){
+    private fun initKeyword() {
         val goKeyword = Intent(this, KeywordActivity::class.java)
         startActivity(goKeyword)
     }
 
-
-    private fun initBottomNavigation(){
-
-        val bottomNavigationView: BottomNavigationView = findViewById(R.id.main_bnv) as BottomNavigationView
-        bottomNavigationView.selectedItemId=R.id.homeFragment
+    private fun initBottomNavigation() {
+        val bottomNavigationView: BottomNavigationView =
+            findViewById(R.id.main_bnv) as BottomNavigationView
+        bottomNavigationView.selectedItemId = R.id.homeFragment
 
         supportFragmentManager.beginTransaction()
             .add(R.id.main_frm, HomeFragment())
             .commitAllowingStateLoss()
 
-        binding.mainBnv.setOnItemSelectedListener{ item ->
+        binding.mainBnv.setOnItemSelectedListener { item ->
             when (item.itemId) {
-
                 R.id.homeFragment -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, HomeFragment())
                         .commitAllowingStateLoss()
-                      return@setOnItemSelectedListener true
+                    true
                 }
 
                 R.id.playlistFragment -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, PlaylistFragment())
                         .commitAllowingStateLoss()
-                      return@setOnItemSelectedListener true
+                    true
                 }
+
                 R.id.studyFragment -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, StudyFragment())
                         .commitAllowingStateLoss()
-                       return@setOnItemSelectedListener true
+                    true
                 }
+
                 R.id.searchFragment -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, SearchFragment())
                         .commitAllowingStateLoss()
-                     return@setOnItemSelectedListener true
+                    true
                 }
+
                 R.id.profileFragment -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_frm, ProfileFragment())
-                        .commitAllowingStateLoss()
+                    val intent = Intent(this, ProfileActivity::class.java)
+                    startActivity(intent)
+                    true
                 }
+
+                else -> false
             }
-            true
         }
     }
 }

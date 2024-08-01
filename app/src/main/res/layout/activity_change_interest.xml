@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChangeInterestActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/btn_next">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="20dp">
+
+                <ImageView
+                    android:id="@+id/backButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/back"
+                    android:contentDescription="back_button"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:text="관심사 설정"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/TitleLargeSize" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <GridLayout
+            android:id="@+id/cardSection"
+            android:layout_width="wrap_content"
+            android:layout_height="530dp"
+            android:layout_marginTop="20dp"
+            android:rowCount="8"
+            android:columnCount="2"
+            android:layout_gravity="left"
+            android:layout_marginStart="20dp">
+
+            <ImageView
+                android:id="@+id/card_movie"
+                android:layout_width="@dimen/signup_fifth_card_w"
+                android:layout_height="@dimen/signup_fifth_card_h"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="card_movie"
+                android:src="@drawable/signup_card_sport" />
+
+            <ImageView
+                android:id="@+id/card_sport"
+                android:layout_width="@dimen/signup_fifth_card_w"
+                android:layout_height="@dimen/signup_fifth_card_h"
+                android:src="@drawable/signup_card_sport"
+                android:contentDescription="card_sport"
+                android:layout_marginBottom="5dp"/>
+
+            <ImageView
+                android:id="@+id/card_music"
+                android:layout_width="@dimen/signup_fifth_card_w"
+                android:layout_height="@dimen/signup_fifth_card_h"
+                android:src="@drawable/signup_card_music"
+                android:contentDescription="card_music"
+                android:layout_marginEnd="10dp"/>
+
+            <ImageView
+                android:id="@+id/card_food"
+                android:layout_width="@dimen/signup_fifth_card_w"
+                android:layout_height="@dimen/signup_fifth_card_h"
+                android:src="@drawable/signup_card_food"
+                android:contentDescription="card_food"
+                android:layout_marginBottom="5dp"/>
+
+            <ImageView
+                android:id="@+id/card_book"
+                android:layout_width="@dimen/signup_fifth_card_w"
+                android:layout_height="@dimen/signup_fifth_card_h"
+                android:src="@drawable/signup_card_book"
+                android:contentDescription="card_book"
+                android:layout_marginEnd="10dp"/>
+
+            <ImageView
+                android:id="@+id/card_news"
+                android:layout_width="@dimen/signup_fifth_card_w"
+                android:layout_height="@dimen/signup_fifth_card_h"
+                android:src="@drawable/signup_card_news"
+                android:contentDescription="card_news"
+                android:layout_marginBottom="5dp"/>
+
+            <ImageView
+                android:id="@+id/card_art"
+                android:layout_width="@dimen/signup_fifth_card_w"
+                android:layout_height="@dimen/signup_fifth_card_h"
+                android:src="@drawable/signup_card_art"
+                android:contentDescription="card_art"
+                android:layout_marginEnd="10dp"/>
+
+            <ImageView
+                android:id="@+id/card_self"
+                android:layout_width="@dimen/signup_fifth_card_w"
+                android:layout_height="@dimen/signup_fifth_card_h"
+                android:src="@drawable/signup_card_sport"
+                android:contentDescription="card_self"/>
+
+        </GridLayout>
+
+    </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_next"
+        android:layout_width="368dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_purple"
+        android:text="다음"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/TitleMediumSize"
+        android:backgroundTint="@color/button_unclick"
+        android:clickable="false"/>
+
+</RelativeLayout>

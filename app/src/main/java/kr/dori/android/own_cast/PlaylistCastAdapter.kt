@@ -1,3 +1,5 @@
+// 계속 오류가 나서 일단 여기만 전체주석처리 해놨어..!!
+/*
 package kr.dori.android.own_cast
 
 import android.content.Intent
@@ -34,4 +36,4 @@ class PlaylistCastAdapter(): RecyclerView.Adapter<PlaylistCastAdapter.Holder>() 
             Glide.with(itemView).load(data.image).into(binding.languageIv)
         }
     }
-}
+}*/

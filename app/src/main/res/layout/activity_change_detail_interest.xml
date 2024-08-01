@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChangeDetailInterestActivity"
+    android:background="#4C000000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="20dp">
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/back"
+                android:contentDescription="back_button"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="관심사 설정"
+                android:textColor="@color/black"
+                android:textSize="@dimen/TitleLargeSize" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/pop"
+        android:layout_width="368dp"
+        android:layout_height="567dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/button_white_border"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/pop_exit_button"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/btn_exit"
+                android:contentDescription="pop_exit_button"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/pop_exit_button"
+                android:textColor="@color/black"
+                android:layout_marginBottom="20dp"/>
+
+        <View
+            android:id="@+id/first_line"
+            android:layout_width="350dp"
+            android:layout_height="2dp"
+            android:background="#ECEFF1"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/title"/>
+
+        <LinearLayout
+            android:id="@+id/first_section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_below="@+id/first_line"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/section_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="@dimen/TitleLargeSize"
+                android:textStyle="bold"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/checkbox_first"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/signup_detail_uncheckbtn"
+                android:contentDescription="checkbox_first"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_marginEnd="45dp"
+                android:tag="unchecked"/>
+
+        </LinearLayout>
+
+            <View
+                android:id="@+id/second_line"
+                android:layout_width="350dp"
+                android:layout_height="2dp"
+                android:background="#ECEFF1"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/first_section"/>
+
+            <LinearLayout
+                android:id="@+id/second_section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_below="@+id/second_line"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/section_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/TitleLargeSize"
+                    android:textStyle="bold"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/checkbox_second"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/signup_detail_uncheckbtn"
+                    android:contentDescription="checkbox_second"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_marginEnd="45dp"
+                    android:tag="unchecked"/>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/third_line"
+                android:layout_width="350dp"
+                android:layout_height="2dp"
+                android:background="#ECEFF1"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/second_section"/>
+
+            <LinearLayout
+                android:id="@+id/third_section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_below="@+id/third_line"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/section_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/TitleLargeSize"
+                    android:textStyle="bold"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/checkbox_third"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/signup_detail_uncheckbtn"
+                    android:contentDescription="checkbox_third"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_marginEnd="45dp"
+                    android:tag="unchecked"/>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/fourth_line"
+                android:layout_width="350dp"
+                android:layout_height="2dp"
+                android:background="#ECEFF1"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/third_section"/>
+
+            <LinearLayout
+                android:id="@+id/fourth_section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_below="@+id/fourth_line"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/section_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/TitleLargeSize"
+                    android:textStyle="bold"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/checkbox_fourth"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/signup_detail_uncheckbtn"
+                    android:contentDescription="checkbox_fourth"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_marginEnd="45dp"
+                    android:tag="unchecked"/>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/fifth_line"
+                android:layout_width="350dp"
+                android:layout_height="2dp"
+                android:background="#ECEFF1"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/fourth_section"/>
+
+            <LinearLayout
+                android:id="@+id/fifth_section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_below="@+id/fifth_line"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/section_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/TitleLargeSize"
+                    android:textStyle="bold"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/checkbox_fifth"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/signup_detail_uncheckbtn"
+                    android:contentDescription="checkbox_fifth"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_marginEnd="45dp"
+                    android:tag="unchecked"/>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/sixth_line"
+                android:layout_width="350dp"
+                android:layout_height="2dp"
+                android:background="#ECEFF1"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/fifth_section"/>
+
+            <LinearLayout
+                android:id="@+id/sixth_section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_below="@+id/sixth_line"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/section_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/TitleLargeSize"
+                    android:textStyle="bold"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/checkbox_sixth"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/signup_detail_uncheckbtn"
+                    android:contentDescription="checkbox_sixth"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_marginEnd="45dp"
+                    android:tag="unchecked"/>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/last_line"
+                android:layout_width="350dp"
+                android:layout_height="2dp"
+                android:background="#ECEFF1"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/sixth_section"/>
+
+            <TextView
+                android:id="@+id/self"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/signup_self"
+                android:textStyle="bold"
+                android:textSize="@dimen/TitleMediumSize"
+                android:textColor="@color/black"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:layout_below="@+id/last_line"
+                android:layout_marginTop="20dp"/>
+
+            <Button
+                android:id="@+id/confirm_button"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/button_white_border"
+                android:backgroundTint="@color/button_unclick"
+                android:text="완료"
+                android:textStyle="bold"
+                android:textSize="@dimen/TitleMediumSize"
+                android:textColor="@color/white"
+                android:layout_below="@+id/self"
+                android:layout_marginTop="20dp"
+                android:clickable="false"
+                android:onClick="onConfirmButtonClick" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

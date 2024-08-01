@@ -1,60 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".AuthActivity">
 
-    <ImageView
-        android:id="@+id/login_iv"
-        android:layout_width="377dp"
-        android:layout_height="61dp"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="453dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="126dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/purple_rectengular" />
 
     <ImageView
-        android:id="@+id/signup_iv"
-        android:layout_width="392dp"
-        android:layout_height="58dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_iv"
-        app:layout_constraintVertical_bias="0.614"
-        app:srcCompat="@drawable/white_rectengular" />
+        android:id="@+id/logo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/logo_img"
+        android:contentDescription="logo_img"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/auth_main_text"/>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@id/auth_main_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="132dp"
+        android:text="@string/formatted_text"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:letterSpacing="0.025"
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/auth_sub_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/auth_sub_text"
+        android:textSize="14sp"
+        android:letterSpacing="0.025"
+        android:textColor="#455A64"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/auth_main_text"
+        android:layout_marginBottom="100dp"/>
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="328dp"
+        android:layout_height="48dp"
+        android:background="@drawable/button_purple"
         android:text="로그인"
-        android:textSize="40sp"
-        app:layout_constraintEnd_toEndOf="@+id/login_iv"
-        app:layout_constraintTop_toTopOf="@+id/login_iv" />
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/auth_sub_text"
+        android:layout_marginBottom="20dp"/>
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="116dp"
+    <Button
+        android:id="@+id/signUpBtn"
+        android:layout_width="328dp"
+        android:layout_height="48dp"
+        android:background="@drawable/button_white_border"
         android:text="회원가입"
-        android:textSize="40sp"
-        app:layout_constraintEnd_toEndOf="@+id/signup_iv"
-        app:layout_constraintTop_toTopOf="@+id/signup_iv" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:textColor="@color/main_purple"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/loginBtn"/>
+
+</RelativeLayout>

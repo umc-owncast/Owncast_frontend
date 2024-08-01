@@ -7,7 +7,6 @@ import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import kr.dori.android.own_cast.databinding.LanguageItemBinding
 import kr.dori.android.own_cast.databinding.PlaylistCategoryItemBinding
 
 class PlaylistCategoryAdapter(private val editListener: EditCategoryListener) : RecyclerView.Adapter<PlaylistCategoryAdapter.Holder>() {
