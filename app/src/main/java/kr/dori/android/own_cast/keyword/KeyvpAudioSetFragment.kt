@@ -38,9 +38,11 @@ class KeyvpAudioSetFragment: Fragment() {
         if(searchText!=null){
             binding.keywordAudEt.visibility = View.VISIBLE
             binding.keywordAudEt.text = searchText
-            binding.keywordAudEt.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+            binding.keAudsetUnderline.visibility = View.VISIBLE
+
         }else{
             binding.keywordAudEt.visibility = View.GONE
+            binding.keAudsetUnderline.visibility = View.GONE
         }
 
         val list = listOf("남성1","남성2","여성1","여성2","여성3")

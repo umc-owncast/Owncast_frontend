@@ -14,6 +14,9 @@
         <path
             android:pathData="M0 0V80H328V0"
             android:fillColor="#ECEFF1"
+            android:strokeColor="#B0BEC5"
+            android:strokeWidth="1"
             />
+
     </group>
 </vector>
