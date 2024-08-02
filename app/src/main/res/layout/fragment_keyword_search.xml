@@ -68,12 +68,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.95"/>
         <ImageView
+            android:id="@+id/keyword_search_delete_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/keyword_search_exit_ic"
             app:layout_constraintEnd_toStartOf="@id/keyword_act_add_iv"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"
             android:layout_marginEnd="8dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -103,6 +103,5 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener {
 
     override fun getCategoryData(position: Int): SongData {
         return sharedViewModel.data.value?.get(position) ?: dummyData[position]
-
     }
 }
