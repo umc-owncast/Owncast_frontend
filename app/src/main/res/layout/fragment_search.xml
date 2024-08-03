@@ -9,12 +9,13 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="80dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/search_fr_tv"
+        >
 
         <ImageView
             android:id="@+id/imageView20"
@@ -26,28 +27,52 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/fragment_search"
-            android:layout_width="296dp"
-            android:layout_height="48dp"
-            android:src="@drawable/insert_keyword2"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView20"
-            app:layout_constraintEnd_toEndOf="@+id/imageView20"
-            app:layout_constraintHorizontal_bias="0.494"
-            app:layout_constraintStart_toStartOf="@+id/imageView20"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/search_fr_search_tool_cl"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.91111111111"
+        android:layout_height="48dp"
+        android:background="@drawable/insert_keyw"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="타사용자의 오디오를 검색해보세요"
+            android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.347" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            android:lineSpacingExtra="5sp"
+            android:textColor="#455A64"
+            android:textSize="16sp"
+            android:letterSpacing="0.01"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/search_light"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="15dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/textView17"
+        android:id="@+id/search_fr_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="14dp"
+
         android:text="검색"
-        android:textSize="24sp"
+        android:textColor="@color/text_color"
+        android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +84,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="23dp"
-        android:text="좋아하는 분야가 같은 다른 사용자의 own_cast입니다."
+        android:text="좋아하는 분야가 유사한 타 사용자의 own_cast에요"
+        android:textColor="@color/text_color"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
@@ -70,10 +97,13 @@
         android:layout_marginTop="9dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView18" />
+        app:layout_constraintTop_toBottomOf="@+id/textView18"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_castlist"
+        />
 
     <TextView
-        android:id="@+id/textView19"
+        android:id="@+id/search_fr_sentence"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="70dp"

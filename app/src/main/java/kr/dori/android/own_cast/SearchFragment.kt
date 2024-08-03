@@ -38,7 +38,7 @@ class SearchFragment : Fragment() {
                 .commit()
         }
                  */
-        binding.fragmentSearch.setOnClickListener {
+        binding.searchFrSearchToolCl.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main_frm,onlySearchFragment)
                 .addToBackStack(null)

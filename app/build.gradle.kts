@@ -57,5 +57,7 @@ dependencies {
     //viewpager
     implementation("com.google.android.material:material:1.3.0")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
+    //애니메이션 추가
+    implementation("com.airbnb.android:lottie:5.0.3")
     
 }
