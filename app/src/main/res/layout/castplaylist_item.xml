@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cast_playlist_container"
+        android:layout_width="409dp"
+        android:layout_height="64dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/cast_playlist_iv"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/playlistfr_dummy_iv" />
+
+        <TextView
+            android:id="@+id/cast_playlist_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="14dp"
+            android:text="TextView"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/cast_playlist_iv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/cast_playlist_lock_iv"
+            android:layout_width="51dp"
+            android:layout_height="16dp"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="@+id/cast_playlist_title"
+            app:layout_constraintTop_toBottomOf="@+id/cast_playlist_title"
+            app:srcCompat="@drawable/fragment_cast_lock" />
+
+        <ImageView
+            android:id="@+id/cast_playlist_duration"
+            android:layout_width="41dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="14dp"
+            app:layout_constraintStart_toEndOf="@+id/cast_playlist_title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/cast_item_duration" />
+
+        <TextView
+            android:id="@+id/cast_playlist_creator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start|top"
+            android:text="TextView"
+            android:textSize="12sp"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="@+id/cast_playlist_title"
+            app:layout_constraintTop_toBottomOf="@+id/cast_playlist_title" />
+
+        <ImageView
+            android:id="@+id/cast_playlist_menu_iv"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_menu" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

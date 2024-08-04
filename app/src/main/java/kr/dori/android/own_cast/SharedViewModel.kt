@@ -1,5 +1,6 @@
 package kr.dori.android.own_cast
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,15 +23,18 @@ class SharedViewModel : ViewModel() {
 
     fun setData(newData: MutableList<SongData>) {
         _data.value = newData
+        Log.d("SharedViewModel", "setData: $newData")
     }
 
     fun updateDataAt(position: Int, newData: SongData) {
         _data.value?.set(position, newData)
         _data.value = _data.value // 트리거를 발생시키기 위해 데이터 변경 통지
+        Log.d("SharedViewModel", "updateDataAt($position): $newData")
     }
 
     fun addData(newData: SongData) {
         _data.value?.add(newData)
         _data.value = _data.value // 트리거를 발생시키기 위해 데이터 변경 통지
+        Log.d("SharedViewModel", "addData: $newData")
     }
 }

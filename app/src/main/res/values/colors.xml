@@ -14,4 +14,5 @@
     <color name="togle_color">#BCB8E1</color>
     <color name="tab_gray">#CFD8DC</color>
     <color name="semi_transparent_black">#66000000</color>
+    <color name="spinner_gray">#b8c1c7</color>
 </resources>

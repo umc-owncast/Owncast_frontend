@@ -9,11 +9,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kr.dori.android.own_cast.AddCategoryDialog
 import kr.dori.android.own_cast.AddCategoryListener
+import kr.dori.android.own_cast.EditAudio
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAudiosaveBinding
 
 
-class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategoryListener {
+//AddCategoryDialog에 toast기능을 넣으면서 EditAudio를 추가로 전달해주는 부분이 playlistFragment에 필요해서 인터페이스 상속을 추가했습니다.
+class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategoryListener, EditAudio {
     lateinit var binding: FragmentKeyvpAudiosaveBinding
     val list: MutableList<String> = mutableListOf<String>("카테고리1","카테고리2","카테고리3","카테고리4","카테고리5","추가할 카테고리 이름 입력")
     var currentPos:Int = 0//카테고리 새로 추가할때, dismiss되면 그대로 유지해야되서 만듦
@@ -27,7 +29,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
         binding = FragmentKeyvpAudiosaveBinding.inflate(inflater, container, false)
 
 
-        val dialog = AddCategoryDialog(requireContext(), this)
+        val dialog = AddCategoryDialog(requireContext(), this,this)
         adapter = KeyAudSaveDropdownAdapter(requireContext(), R.layout.item_aud_set_spinner,list)
         binding.keyAudSaveCategorySp.adapter = adapter
 
@@ -79,4 +81,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
 
     }
 
+    override fun dialogToEditAudio() {
+        TODO("Not yet implemented")
+    }
 }
