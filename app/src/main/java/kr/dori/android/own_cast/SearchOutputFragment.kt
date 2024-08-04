@@ -11,16 +11,17 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import kr.dori.android.own_cast.databinding.FragmentPlaylistBinding
-import kr.dori.android.own_cast.databinding.FragmentSearchBinding
+import kr.dori.android.own_cast.databinding.FragmentSearchOutputBinding
 
-class SearchFragment : Fragment(),SearchMover {
+class SearchOutputFragment : Fragment(), SearchMover {
 
-    lateinit var binding: FragmentSearchBinding
+    private lateinit var binding: FragmentSearchOutputBinding
+    private val searchViewModel: SearchViewModel by activityViewModels()
     private val searchAdapter = SearchAdapter(this)
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
-
 
     private val dummyData = mutableListOf(
         SongData("Cast1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
@@ -35,19 +36,16 @@ class SearchFragment : Fragment(),SearchMover {
         SongData("Cast5", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug")
     )
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        binding = FragmentSearchOutputBinding.inflate(inflater, container, false)
 
         searchAdapter.dataList = dummyData
 
-
-        binding.recyclerView.adapter = searchAdapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-
+        binding.fragmentSearchOutputRv.adapter = searchAdapter
+        binding.fragmentSearchOutputRv.layoutManager = LinearLayoutManager(context)
 
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -58,17 +56,23 @@ class SearchFragment : Fragment(),SearchMover {
             }
         }
 
-        binding.fragmentSearchPlaintextIv.setOnClickListener {
-            val input = SearchInputFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_frm, input)
-                .commitAllowingStateLoss()
+        binding.outputBackIv.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
         }
 
+        binding.outputSearchIv.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
 
+        binding.outputExitIv.setOnClickListener {
+            searchViewModel.addtext("")
+            requireActivity().supportFragmentManager.popBackStack()
+        }
 
-
-
+        // ViewModel 관찰하여 텍스트 뷰 업데이트
+        searchViewModel.text.observe(viewLifecycleOwner, Observer { newText ->
+            binding.fragmentSearchOutputTitleTv.text = newText
+        })
 
         return binding.root
     }
@@ -84,6 +88,6 @@ class SearchFragment : Fragment(),SearchMover {
     }
 
     override fun backSearch() {
-        TODO("Not yet implemented")
+        // 구현 필요 없음
     }
 }

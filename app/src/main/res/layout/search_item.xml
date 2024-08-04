@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="64dp">
+
+    <ImageView
+        android:id="@+id/search_iv"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/playlistfr_dummy_iv" />
+
+    <TextView
+        android:id="@+id/search_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="14dp"
+        android:text="캐스트"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/search_iv"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/search_duration_iv"
+        android:layout_width="41dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="14dp"
+        app:layout_constraintStart_toEndOf="@+id/search_title_tv"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/cast_item_duration" />
+
+
+    <TextView
+        android:id="@+id/search_creator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start|top"
+        android:text="크리에이터-카테고리"
+        android:textSize="13sp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@+id/search_title_tv"
+        app:layout_constraintTop_toBottomOf="@+id/search_title_tv" />
+
+    <ImageView
+        android:id="@+id/search_play_iv"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_marginEnd="46dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/search_play" />
+
+    <ImageView
+        android:id="@+id/search_add_category_off_iv"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/search_add_category_off" />
+
+    <ImageView
+        android:id="@+id/search_add_category_on_iv"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="16dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/search_add_category_on" />
+</androidx.constraintlayout.widget.ConstraintLayout>

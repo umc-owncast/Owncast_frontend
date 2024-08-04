@@ -25,7 +25,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
-    private val dummyData = mutableListOf(
+    val dummyData = mutableListOf(
         SongData("category_name1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
         SongData("category_name2", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "monkey"),
         SongData("category_name3", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
@@ -36,7 +36,6 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         SongData("category_name8", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
         SongData("category_name9", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
         SongData("category_name10", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug")
-
     )
 
     override fun onCreateView(

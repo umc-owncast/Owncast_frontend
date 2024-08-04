@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchSaveCategoryFragment">
+    android:fitsSystemWindows="true"
+    tools:context=".SearchAddCategoryActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout6"
-        android:layout_width="409dp"
+        android:id="@+id/constraintLayout5"
+        android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,42 +22,42 @@
             android:id="@+id/textView20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="16dp"
             android:text="카테고리에 캐스트 추가"
-            android:textSize="25sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/fragment_search_save_category_back"
+            android:id="@+id/activity_search_add_category_exit_iv"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="20dp"
-            android:src="@drawable/add_category_dialog_exit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/activity_play_cast_speed_table_exit_iv" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/textView21"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="7dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
         android:text="내 카테고리"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView2"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout6" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView2"
+        android:id="@+id/activity_search_add_category_rv"
         android:layout_width="0dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="7dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView21" />

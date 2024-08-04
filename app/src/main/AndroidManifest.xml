@@ -14,6 +14,10 @@
         android:theme="@style/Theme.Own_cast"
         tools:targetApi="31">
         <activity
+            android:name=".SearchAddCategoryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Own_cast" />
+        <activity
             android:name=".EditAudioActivity"
             android:exported="false"
             android:theme="@style/Theme.Own_cast" />
