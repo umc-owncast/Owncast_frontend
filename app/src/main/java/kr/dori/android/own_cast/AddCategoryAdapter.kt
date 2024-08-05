@@ -40,9 +40,6 @@ class AddCategoryAdapter(private val mover: SearchMover) : RecyclerView.Adapter<
             binding.playlistCategoryTitleTv.text = data.title
             binding.playlistCategoryNumTv.text = dataList.size.toString()
             binding.categoryImg.setImageResource(data.Img)
-
-
         }
-
     }
 }

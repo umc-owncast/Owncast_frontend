@@ -5,55 +5,57 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import kr.dori.android.own_cast.databinding.FragmentStudyBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [StudyFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class StudyFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
-
+    private lateinit var binding: FragmentStudyBinding
+    private val studyAdapter = StudyAdapter()
+    private var dummyData = mutableListOf(
+        SongData("category_name1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
+        SongData("category_name2", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "monkey"),
+        SongData("category_name3", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
+        SongData("category_name4", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
+        SongData("category_name5", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug"),
+        SongData("category_name6", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
+        SongData("category_name7", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "monkey"),
+        SongData("category_name8", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
+        SongData("category_name9", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
+        SongData("category_name10", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug")
+    )
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_study, container, false)
+        binding = FragmentStudyBinding.inflate(inflater,container,false)
+
+        studyAdapter.dataList = dummyData
+        binding.studyCategoryRv.adapter = studyAdapter
+        binding.studyCategoryRv.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+
+        binding.fragmentStudyLoofOffIv.setOnClickListener {
+            binding.fragmentStudyLoofOnIv.visibility = View.VISIBLE
+            binding.fragmentStudyLoofOffIv.visibility = View.GONE
+        }
+
+        binding.fragmentStudyLoofOnIv.setOnClickListener {
+            binding.fragmentStudyLoofOffIv.visibility = View.VISIBLE
+            binding.fragmentStudyLoofOnIv.visibility = View.GONE
+        }
+
+        binding.fragmentStudySoundOffIv.setOnClickListener {
+            binding.fragmentStudySoundOnIv.visibility = View.VISIBLE
+            binding.fragmentStudySoundOffIv.visibility = View.GONE
+        }
+
+        binding.fragmentStudySoundOnIv.setOnClickListener {
+            binding.fragmentStudySoundOffIv.visibility = View.VISIBLE
+            binding.fragmentStudySoundOnIv.visibility = View.GONE
+        }
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment StudyFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            StudyFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+
 }

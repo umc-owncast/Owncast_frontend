@@ -56,8 +56,12 @@ class SearchOutputFragment : Fragment(), SearchMover {
             }
         }
 
+        //직접 이동말고 스택을 연속으로 두개 지우는게 더 깔끔하니까 수정하자.
         binding.outputBackIv.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.main_frm,SearchFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         binding.outputSearchIv.setOnClickListener {

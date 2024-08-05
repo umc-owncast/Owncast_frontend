@@ -62,6 +62,7 @@ class SearchFragment : Fragment(),SearchMover {
             val input = SearchInputFragment()
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main_frm, input)
+                .addToBackStack(null)
                 .commitAllowingStateLoss()
         }
 

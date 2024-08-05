@@ -89,7 +89,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="12dp"
-        android:src="@drawable/add_category_dialog_on"
+        android:src="@drawable/real_jinja_ok"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
