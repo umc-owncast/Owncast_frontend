@@ -1,9 +1,12 @@
 package kr.dori.android.own_cast.keyword
 
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -54,12 +57,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
             }
         }
 
-        binding.keyAudSaveBtnIv.setOnClickListener{
-            val dialog = KeywordAudioFinishDialog(requireContext(), this)
-            dialog.setCancelable(false)
-            dialog.setCanceledOnTouchOutside(false)
-            dialog.show()
-        }
+        initSaveBtn()
 
         return binding.root
 
@@ -67,11 +65,38 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
 
     }
 
+    //dialog버튼 좀 길어져서 init으로 함수 바꿈.
+    fun initSaveBtn(){
+        // 화면 크기 가져오기
+        val displayMetrics = DisplayMetrics()
+
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
+        binding.keyAudSaveBtnIv.setOnClickListener{
+            val dialog = KeywordAudioFinishDialog(requireContext(), this)
+            dialog.setCancelable(false)
+            dialog.setCanceledOnTouchOutside(false)
+            dialog.show()
+
+            //dialog위치 조정
+            val window = dialog.window
+            if (window != null) {
+                val params: WindowManager.LayoutParams = window.attributes
+                params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+
+                params.y = (screenHeight * 0.55).toInt()
+                window.attributes = params
+            }
+        }
+    }
+
+
+    //finish dialog listener 구현
     override fun goHomeFragment() {
         super.goHomeFragment()
         activity?.finish()
     }
-    //addCategory와 같은 기능이니, listener 사용해서 구현
+    //addCategory같이 카테고리 추가하는 기능
     override fun onCategoryAdded(categoryName: String) {
         list.add(list.size-1,categoryName)
         adapter.notifyDataSetChanged()

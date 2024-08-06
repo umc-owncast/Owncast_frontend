@@ -109,6 +109,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 
     override fun getCategoryData(position: Int): SongData {
         return sharedViewModel.data.value?.get(position) ?: dummyData[position]
+
     }
 
     override fun ToPlayCast() {
@@ -152,5 +153,6 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 
     override fun ToEditAudio() {
         TODO("Not yet implemented")
+
     }
 }

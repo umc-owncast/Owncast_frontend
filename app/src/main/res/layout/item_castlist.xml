@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="8dp"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    android:layout_marginBottom="8dp"
+    >
+    <ImageView
+        android:id="@+id/it_castlist_thumbnail_iv"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/keyword_aud_save_src_bg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <ImageView
+        android:id="@+id/it_castlist_listadd_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/castlist_listadd_iv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/black_play"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/it_castlist_listadd_iv"
+        android:layout_marginEnd="8dp"/>
+    <TextView
+        android:id="@+id/it_castlist_duration_tv"
+        android:layout_width="41dp"
+        android:layout_height="16dp"
+        android:background="@drawable/keyword_act_favor_key_bg"
+        android:backgroundTint="#00051F"
+        android:text="4:18"
+        android:lineSpacingExtra="3sp"
+
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="11sp"
+        android:letterSpacing="0.05"
+        android:layout_marginStart="4dp"
+        app:layout_constraintStart_toEndOf="@id/it_castlist_title_tv"
+        app:layout_constraintTop_toTopOf="@id/it_castlist_title_tv"
+        app:layout_constraintBottom_toBottomOf="@id/it_castlist_title_tv"/>
+    <TextView
+        android:id="@+id/it_castlist_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="3sp"
+        android:text="캐스트"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:letterSpacing="0.01"
+        android:textColor="@color/text_color"
+        app:layout_constraintStart_toEndOf="@id/it_castlist_thumbnail_iv"
+        app:layout_constraintTop_toTopOf="@id/it_castlist_thumbnail_iv"
+        app:layout_constraintBottom_toBottomOf="@id/it_castlist_thumbnail_iv"
+        android:layout_marginBottom="22.5dp"
+        android:layout_marginStart="16dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="크리에이터 - 카테고리"
+        android:textSize="12sp"
+        android:textColor="@color/text_color"
+        app:layout_constraintStart_toStartOf="@id/it_castlist_title_tv"
+        app:layout_constraintTop_toBottomOf="@id/it_castlist_title_tv"
+        android:layout_marginTop="1dp"/>
+    <View
+
+        android:layout_width="340dp"
+
+        android:layout_height="0.25dp"
+        android:layout_weight="1"
+        android:background="@color/tab_gray"
+        app:layout_constraintStart_toStartOf="@id/it_castlist_title_tv"
+        app:layout_constraintTop_toBottomOf="@id/it_castlist_thumbnail_iv"
+        android:layout_marginTop="5dp"
+
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

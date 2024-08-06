@@ -58,6 +58,7 @@ class SearchFragment : Fragment(),SearchMover {
             }
         }
 
+
         binding.fragmentSearchPlaintextIv.setOnClickListener {
             val input = SearchInputFragment()
             requireActivity().supportFragmentManager.beginTransaction()
