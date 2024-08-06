@@ -24,7 +24,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.AddCategoryDialog
-import kr.dori.android.own_cast.MainActivity
+
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.FragmentKeywordAudiosetBinding
 //Keyvp가 달린 3개의 프래그먼트를 관리함, frm으로 감싸고 있음.

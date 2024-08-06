@@ -52,14 +52,20 @@
             android:textSize="16sp"
             android:letterSpacing="0.01"/>
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/search_light"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+
+            android:id="@+id/fragment_search_plaintext_iv"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="12dp"
+            android:src="@drawable/search_insert_keyword"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginEnd="15dp"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -84,8 +90,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="23dp"
-        android:text="좋아하는 분야가 유사한 타 사용자의 own_cast에요"
-        android:textColor="@color/text_color"
+
+        android:text="좋아하는 분야가 유사한 타사용자의 owncast예요"
+        android:textSize="15sp"
+
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
@@ -93,7 +101,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
-        android:layout_height="300dp"
+        android:layout_height="400dp"
         android:layout_marginTop="9dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -106,8 +114,8 @@
         android:id="@+id/search_fr_sentence"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:text="타사용자의 owncast를 담아올 수 있어요"
+        android:layout_marginTop="40dp"
+        android:text="타사용자의 owncast를 재생하거나 담아올 수 있어요"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
