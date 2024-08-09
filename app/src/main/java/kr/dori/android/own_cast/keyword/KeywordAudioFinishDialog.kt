@@ -26,7 +26,7 @@ class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAu
         }
 
         //context.dialogResize(this, 0.945f,0.335f)
-        context.dialogResize(this, 0.945f,0.7f)
+        //context.dialogResize(this, 1f,0.7f)
         window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 

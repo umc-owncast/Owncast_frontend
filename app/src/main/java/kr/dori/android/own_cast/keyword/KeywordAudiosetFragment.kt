@@ -99,16 +99,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
 
         //현재 위치의 배경을 칠해줌
     }
-    private fun showLoadingFragment() {
-        val fragmentTransaction = (context as KeywordActivity).supportFragmentManager.beginTransaction()
-        val loadingFragment = KeywordLoadingFragment()
-        fragmentTransaction
-            .add(R.id.keyword_fragment_container, loadingFragment)
-            .commitAllowingStateLoss()
 
-        // 로딩 애니메이션을 3초 동안 실행
-        loadingFragment.startLoading(3000)
-    }
 
 
 

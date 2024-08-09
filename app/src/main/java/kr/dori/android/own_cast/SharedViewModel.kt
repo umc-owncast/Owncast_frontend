@@ -37,4 +37,6 @@ class SharedViewModel : ViewModel() {
         _data.value = _data.value // 트리거를 발생시키기 위해 데이터 변경 통지
         Log.d("SharedViewModel", "addData: $newData")
     }
+
+
 }
