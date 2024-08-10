@@ -32,7 +32,11 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="200dp"
 
-        android:background="@drawable/keyword_audio_out_dialog_bg">
+
+
+
+        android:background="@drawable/keyword_aud_save_finish_dialog_bg">
+
         <ImageView
             android:id="@+id/key_fin_dialog_play_iv"
             android:layout_width="30dp"
@@ -49,7 +53,7 @@
             android:id="@+id/key_fin_cast_img_iv"
             android:layout_width="108dp"
             android:layout_height="108dp"
-            android:src="@drawable/keyword_aud_save_src_bg"
+
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="@id/key_fin_dialog_play_iv"
 

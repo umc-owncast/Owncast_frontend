@@ -2,6 +2,7 @@ package kr.dori.android.own_cast
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,7 +12,9 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kr.dori.android.own_cast.databinding.FragmentPlaylistBinding
 import kr.dori.android.own_cast.databinding.FragmentSearchBinding
 
@@ -20,7 +23,7 @@ class SearchFragment : Fragment(),SearchMover {
     lateinit var binding: FragmentSearchBinding
     private val searchAdapter = SearchAdapter(this)
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
-
+    lateinit var gridLayoutManager: GridLayoutManager
 
     private val dummyData = mutableListOf(
         SongData("Cast1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
@@ -46,8 +49,10 @@ class SearchFragment : Fragment(),SearchMover {
 
 
         binding.recyclerView.adapter = searchAdapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        gridLayoutManager = GridLayoutManager(context,2,GridLayoutManager.VERTICAL, false)
 
+        binding.recyclerView.layoutManager = gridLayoutManager
+        binding.recyclerView.setHasFixedSize(true)
 
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -88,4 +93,6 @@ class SearchFragment : Fragment(),SearchMover {
     override fun backSearch() {
         TODO("Not yet implemented")
     }
+
+
 }

@@ -8,31 +8,29 @@
     tools:context=".PlaylistFragment">
 
 
+    <TextView
+        android:id="@+id/playlistfr_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+
+
+        android:layout_marginTop="30dp"
+        android:text="플레이리스트"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
-        <TextView
-            android:id="@+id/playlistfr_title_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="14dp"
-            android:text="플레이리스트"
-
-
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/fragment_playlist_add_iv"
@@ -82,6 +80,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="0dp"
         android:layout_height="243dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -92,9 +91,9 @@
             android:id="@+id/fragment_playlist_save_iv"
             android:layout_width="170dp"
             android:layout_height="170dp"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="6dp"
             android:layout_marginBottom="81dp"
             android:src="@drawable/playlistfr_dummy_iv"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -107,9 +106,9 @@
             android:id="@+id/fragment_playlist_notsave_iv"
             android:layout_width="170dp"
             android:layout_height="170dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="6dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="81dp"
             android:src="@drawable/playlistfr_dummy_iv"
             app:layout_constraintBottom_toBottomOf="parent"

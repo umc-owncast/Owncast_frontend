@@ -61,12 +61,13 @@ class KeyvpAudioScriptFragment:Fragment() {
     fun initSpeedUi(){
         binding.keyAudScrCurSpeedTv.setOnClickListener {
             binding.keyAudScrSpeedToolCl.visibility = View.VISIBLE
-            binding.keyAudScrSpeedToolCl.setBackgroundResource(R.drawable.ic_keyword_audscr_speedui_abled)
+            binding.keyAudScrCurSpeedTv.setBackgroundResource(R.drawable.ic_keyword_audscr_speedui_abled)
         }
         //x버튼 누르면 꺼지는거
         binding.keywordSpeedBackIv.setOnClickListener {
             binding.keyAudScrSpeedToolCl.visibility = View.GONE
-            binding.keyAudScrSpeedToolCl.setBackgroundResource(R.drawable.ic_keyword_audscr_speedui_disabled)
+            binding.keyAudScrCurSpeedTv.setBackgroundResource(R.drawable.ic_keyword_audscr_speedui_disabled)
+
         }
 
         speedList.add(binding.keywordSpeed05)
@@ -102,7 +103,7 @@ class KeyvpAudioScriptFragment:Fragment() {
             }
         }
 
-
         binding.keyAudScrSpeedToolCl.visibility = View.GONE
+
     }
 }

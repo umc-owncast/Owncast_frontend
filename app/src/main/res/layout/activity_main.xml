@@ -33,9 +33,8 @@
         android:id="@+id/playlist_table"
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:layout_marginBottom="105dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/main_frm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -154,13 +153,15 @@
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:background="#F5F5F5"
         android:id="@+id/main_bnv"
         android:layout_width="413dp"
-        android:layout_height="93dp"
+        android:layout_height="80dp"
         app:itemIconSize="20dp"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:itemBackground="@drawable/bottom_navigation_color"
         app:menu="@menu/bottom_nav_menu" />
 </androidx.constraintlayout.widget.ConstraintLayout>
