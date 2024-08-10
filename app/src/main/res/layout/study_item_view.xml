@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="195dp"
+    android:layout_height="255dp"
+    android:layout_gravity="center"
+    android:layout_margin="8dp"
+    android:background="@drawable/rounded_item_background"
+    android:clipToOutline="true"
+    android:elevation="8dp"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="I cooked today."
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+</RelativeLayout>
