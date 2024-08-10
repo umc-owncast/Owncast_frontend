@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/custom_toast_container"
-    android:layout_width="360dp"
-    android:layout_height="24dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
 
 
     <ImageView
@@ -20,8 +21,9 @@
 
     <TextView
         android:id="@+id/toast_message_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="캐스트가 삭제되었어요"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"

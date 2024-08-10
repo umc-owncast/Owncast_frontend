@@ -9,20 +9,12 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="80dp"
-<<<<<<< Updated upstream
-        android:layout_marginTop="14dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_fr_tv"
-        >
-=======
         android:layout_marginTop="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView17">
->>>>>>> Stashed changes
 
         <ImageView
             android:id="@+id/imageView20"
@@ -34,32 +26,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/search_fr_search_tool_cl"
-        android:layout_width="0dp"
-        app:layout_constraintWidth_percent="0.91111111111"
-        android:layout_height="48dp"
-        android:background="@drawable/insert_keyw"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="타사용자의 오디오를 검색해보세요"
-            android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"
-            android:lineSpacingExtra="5sp"
-            android:textColor="#455A64"
-            android:textSize="16sp"
-            android:letterSpacing="0.01"/>
         <ImageView
-
             android:id="@+id/fragment_search_plaintext_iv"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -73,22 +40,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/search_fr_tv"
+        android:id="@+id/textView17"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="30dp"
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         android:text="검색"
-        android:textColor="@color/text_color"
-        android:textSize="22sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -99,10 +60,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="23dp"
-
         android:text="좋아하는 분야가 유사한 타사용자의 owncast예요"
         android:textSize="15sp"
-
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
@@ -114,13 +73,10 @@
         android:layout_marginTop="9dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView18"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_castlist"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
     <TextView
-        android:id="@+id/search_fr_sentence"
+        android:id="@+id/textView19"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
