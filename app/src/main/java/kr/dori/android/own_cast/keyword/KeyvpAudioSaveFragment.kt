@@ -2,8 +2,10 @@ package kr.dori.android.own_cast.keyword
 
 import android.Manifest
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -23,6 +25,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import kr.dori.android.own_cast.AddCategoryDialog
 import kr.dori.android.own_cast.AddCategoryListener
 import kr.dori.android.own_cast.EditAudio
@@ -30,6 +34,7 @@ import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.SharedViewModel
 import kr.dori.android.own_cast.SongData
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAudiosaveBinding
+import java.io.File
 
 
 //AddCategoryDialog에 toast기능을 넣으면서 EditAudio를 추가로 전달해주는 부분이 playlistFragment에 필요해서 인터페이스 상속을 추가했습니다.
@@ -44,6 +49,28 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     lateinit var adapter:KeyAudSaveDropdownAdapter
+
+
+
+    private lateinit var imageResultLauncher: ActivityResultLauncher<Intent>
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        imageResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val imageUri = result.data?.data
+                imageUri?.let {
+                    // 이미지를 ImageView에 맞게 로드
+                    Glide.with(this)
+                        .load(it)
+                        .centerCrop() // ImageView에 맞게 이미지 크기를 조정
+                        .into(binding.keyAudSaveThumbIv)
+                }
+            }
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -59,13 +86,54 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
 
             }
         }*/
-
-
         initSpinnerAdapter()
         initSaveBtn()
-
+        binding.keyAudSaveThumbIv.setOnClickListener {
+            selectGallery()
+        }
         return binding.root
     }
+
+    private fun selectGallery() {
+        // Android 버전에 따른 권한 확인
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13 (API 33) 이상
+            requestPermission(Manifest.permission.READ_MEDIA_IMAGES)
+        } else {
+            // Android 12 (API 32) 이하
+            requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+    }
+
+    private fun requestPermission(permission: String) {
+        val permissionStatus = ContextCompat.checkSelfPermission(requireContext(), permission)
+
+        if (permissionStatus == PackageManager.PERMISSION_DENIED) {
+            // 권한 요청
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(permission),
+                REQ_GALLERY
+            )
+        } else {
+            // 권한이 있는 경우 갤러리 실행
+            openGallery()
+        }
+    }
+
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        imageResultLauncher.launch(intent)
+    }
+
+
+
+    companion object {
+        private const val REQ_GALLERY = 1
+    }
+
+
 
     fun initSpinnerAdapter() {
         //마지막 칸이 category를 생성하는 기능이기 때문에 다이얼로그를 받아온다.
@@ -75,7 +143,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
         }else{
 
         }*/
-        adapter = KeyAudSaveDropdownAdapter(requireContext(), R.layout.item_aud_set_spinner, _list)
+        adapter = KeyAudSaveDropdownAdapter(requireContext(), R.layout.item_aud_set_spinner, list)
         binding.keyAudSaveCategorySp.adapter = adapter
 
         binding.keyAudSaveCategorySp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -172,40 +240,6 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
         showCustomToast("카테고리가 추가되었어요")
     }
 
-    private val REQUEST_PERMISSION = 1001
-    private val PICK_IMAGE_REQUEST = 1002
 
-
-
-    private fun checkPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_MEDIA_IMAGES), REQUEST_PERMISSION)
-            } else {
-                openGallery()
-            }
-        } else {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_PERMISSION)
-            } else {
-                openGallery()
-            }
-        }
-    }
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_PERMISSION) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openGallery()
-            } else {
-                Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, PICK_IMAGE_REQUEST)
-    }
 
 }

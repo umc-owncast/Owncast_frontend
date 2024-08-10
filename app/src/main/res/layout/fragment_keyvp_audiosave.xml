@@ -14,25 +14,39 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="52dp">
-        <ImageView
-            android:id="@+id/key_aud_save_thumb_iv"
-
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/keyword_aud_save_src_bg"
-            android:scaleType="centerCrop"
+            app:cardCornerRadius="20dp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            android:background="@drawable/keyword_aud_save_src_bg"
+            app:cardElevation="0dp">
+            <ImageView
+                android:id="@+id/key_aud_save_thumb_iv"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/searchfr_item_thumb_bg"
+
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+        </androidx.cardview.widget.CardView>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_keyword_audio_save_gallerly"
-            app:layout_constraintTop_toTopOf="@id/key_aud_save_thumb_iv"
-            app:layout_constraintStart_toStartOf="@id/key_aud_save_thumb_iv"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="60dp"
             android:layout_marginTop="64dp"/>
+
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <EditText
