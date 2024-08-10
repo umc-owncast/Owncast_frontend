@@ -96,14 +96,154 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView37" />
 
-    <ImageView
-        android:id="@+id/imageView32"
-        android:layout_width="121dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="38dp"
-        android:layout_marginTop="48dp"
-        android:src="@drawable/search_keyword"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView38" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView38"
+
+        app:layout_constraintWidth_percent="0.911111111"
+        app:layout_constraintHeight_percent="0.155"
+        android:background="@drawable/keyword_act_input_bg"
+        android:layout_marginTop="16dp">
+        <TextView
+            android:id="@+id/keyword_act_suggest_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 관련 추천 키워드"
+            android:textColor="@color/black"
+            android:letterSpacing="0.01"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/search_input_topic_tv"
+
+            app:layout_constraintTop_toTopOf="@id/search_input_topic_tv"
+
+            app:layout_constraintVertical_bias="0.13"
+            android:lineSpacingExtra="3sp"
+
+            android:gravity="top"
+            app:layout_constraintHorizontal_bias="0.05"
+            />
+        <TextView
+            android:id="@+id/search_input_topic_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/main_color"
+            android:layout_alignParentTop="true"
+
+            android:text="야구"
+            android:textSize="14sp"
+            android:letterSpacing="0.01"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/keyword_act_suggest_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="22dp"
+
+
+            android:lineSpacingExtra="3sp"
+
+            android:gravity="top"/>
+        <TextView
+            android:id="@+id/keyword_act_suggest1_tv"
+            android:layout_width="80dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.225"
+            android:text="키워드1"
+            android:textSize="14sp"
+            android:letterSpacing="0.02"
+            android:textColor="@color/black"
+            android:background="@drawable/keyword_act_favor_key_bg"
+            android:backgroundTint="#ECEFF1"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toBottomOf="@id/keyword_act_suggest_tv"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+            android:id="@+id/keyword_act_suggest2_tv"
+            android:layout_width="80dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.225"
+            android:text="키워드2"
+            android:textSize="14sp"
+            android:letterSpacing="0.02"
+            android:textColor="@color/black"
+            android:background="@drawable/keyword_act_favor_key_bg"
+            android:backgroundTint="#ECEFF1"
+            android:gravity="center"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toTopOf="@id/keyword_act_suggest1_tv"
+            app:layout_constraintStart_toEndOf="@id/keyword_act_suggest1_tv"/>
+
+        <TextView
+            android:id="@+id/keyword_act_suggest3_tv"
+            android:layout_width="80dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.225"
+            android:text="키워드3"
+            android:textSize="14sp"
+            android:letterSpacing="0.02"
+            android:textColor="@color/black"
+            android:background="@drawable/keyword_act_favor_key_bg"
+            android:backgroundTint="#ECEFF1"
+            android:gravity="center"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toTopOf="@id/keyword_act_suggest1_tv"
+            app:layout_constraintStart_toEndOf="@id/keyword_act_suggest2_tv"/>
+
+        <TextView
+            android:id="@+id/keyword_act_suggest4_tv"
+            android:layout_width="80dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.225"
+            android:text="키워드1"
+            android:textSize="14sp"
+            android:letterSpacing="0.02"
+            android:textColor="@color/black"
+            android:background="@drawable/keyword_act_favor_key_bg"
+            android:backgroundTint="#ECEFF1"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toBottomOf="@id/keyword_act_suggest1_tv"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+            android:id="@+id/keyword_act_suggest5_tv"
+            android:layout_width="80dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.225"
+            android:text="키워드2"
+            android:textSize="14sp"
+            android:letterSpacing="0.02"
+            android:textColor="@color/black"
+            android:background="@drawable/keyword_act_favor_key_bg"
+            android:backgroundTint="#ECEFF1"
+            android:gravity="center"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toTopOf="@id/keyword_act_suggest4_tv"
+            app:layout_constraintStart_toEndOf="@id/keyword_act_suggest4_tv"/>
+
+        <TextView
+            android:id="@+id/keyword_act_suggest6_tv"
+            android:layout_width="80dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.225"
+            android:text="키워드3"
+            android:textSize="14sp"
+            android:letterSpacing="0.02"
+            android:textColor="@color/black"
+            android:background="@drawable/keyword_act_favor_key_bg"
+            android:backgroundTint="#ECEFF1"
+            android:gravity="center"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toTopOf="@id/keyword_act_suggest4_tv"
+            app:layout_constraintStart_toEndOf="@id/keyword_act_suggest5_tv"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchInputFragment">
+    tools:context=".SearchOutputFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/output_constraint"
@@ -74,12 +74,15 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_search_output_rv"
-        android:layout_width="0dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="7dp"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/output_constraint" />
+        app:layout_constraintTop_toBottomOf="@+id/output_constraint"
+        tools:listitem="@layout/item_search_fr"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
