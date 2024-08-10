@@ -1,6 +1,7 @@
 package kr.dori.android.own_cast
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
@@ -54,18 +55,16 @@ class EditAudioActivity : AppCompatActivity(), EditAudio {
     }
 
     fun showCustomToast(message: String) {
-        // Inflate the custom layout
         val inflater: LayoutInflater = layoutInflater
         val layout: View = inflater.inflate(R.layout.custom_toast, findViewById(R.id.custom_toast_container))
 
-        // Set custom message
         val textView: TextView = layout.findViewById(R.id.toast_message_tv)
         textView.text = message
 
-        // Create and show the Toast
         with (Toast(applicationContext)) {
             duration = Toast.LENGTH_LONG
             view = layout
+           // setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 100)
             show()
         }
     }

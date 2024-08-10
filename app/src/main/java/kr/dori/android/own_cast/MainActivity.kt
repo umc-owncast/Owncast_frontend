@@ -31,19 +31,17 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
    // private val playCastViewModel: PlayCastViewModel by viewModels { PlayCastViewModelFactory(application) }
+
+    private var playlistTableVisible: Boolean = false // playlistTable의 현재 상태를 저장하는 변수
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initBottomNavigation()
-      //  setupActivityResultLauncher()
-        //observeViewModel()
-//        binding.playlistTable.visibility = View.VISIBLE
-//        binding.playlistTable.bringToFront()
-//        binding.playlistTable.invalidate()
-//        binding.playlistTable.requestLayout()
 
 
 
@@ -68,27 +66,6 @@ class MainActivity : AppCompatActivity() {
             binding.activityMainPauseIv.visibility = View.VISIBLE
             binding.activityMainPlayIv.visibility = View.GONE
         }
-
-    }
-
-//    private fun observeViewModel() {
-//        playCastViewModel.isPlayVisible.observe(this, Observer { isVisible ->
-//            if (isVisible) {
-//                binding.playlistTable.visibility = View.VISIBLE
-//                binding.playlistTable.bringToFront()
-//                binding.playlistTable.invalidate()
-//                binding.playlistTable.requestLayout()
-//            } else {
-//                binding.playlistTable.visibility = View.GONE
-//            }
-//        })
-//    }
-
-
-
-    private fun initKeyword() {
-        val goKeyword = Intent(this, KeywordActivity::class.java)
-        startActivity(goKeyword)
     }
 
     private fun initBottomNavigation() {
@@ -103,30 +80,36 @@ class MainActivity : AppCompatActivity() {
         binding.mainBnv.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.homeFragment -> {
+                    restorePlaylistTableVisibility()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, HomeFragment())
                         .commitAllowingStateLoss()
                     true
                 }
                 R.id.playlistFragment -> {
+                    restorePlaylistTableVisibility()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, PlaylistFragment())
                         .commitAllowingStateLoss()
                     true
                 }
                 R.id.studyFragment -> {
+                    hidePlaylistTable()
+
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, StudyFragment())
                         .commitAllowingStateLoss()
                     true
                 }
                 R.id.searchFragment -> {
+                    restorePlaylistTableVisibility() // searchFragment로 이동 시 GONE으로 설정
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, SearchFragment())
                         .commitAllowingStateLoss()
                     true
                 }
                 R.id.profileFragment -> {
+                    restorePlaylistTableVisibility()
                     val intent = Intent(this, ProfileActivity::class.java)
                     startActivity(intent)
                     true
@@ -136,13 +119,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun restorePlaylistTableVisibility() {
+        if (playlistTableVisible) {
+            binding.playlistTable.visibility = View.VISIBLE
+            binding.playlistTable.bringToFront()
+            binding.playlistTable.invalidate()
+            binding.playlistTable.requestLayout()
+        }
+    }
+
+    private fun hidePlaylistTable() {
+        playlistTableVisible = binding.playlistTable.visibility == View.VISIBLE
+        binding.playlistTable.visibility = View.GONE
+    }
+
     fun handleActivityResult(result: ActivityResult){
         if (result.resultCode == Activity.RESULT_OK) {
             Log.d("ifsuccess","success")
             val data: Intent? = result.data
             val isSuccess = data?.getBooleanExtra("result", false) ?: false
             if (isSuccess) {
-
                 binding.playlistTable.visibility = View.VISIBLE
                 binding.playlistTable.bringToFront()
                 binding.playlistTable.invalidate()
@@ -150,10 +146,12 @@ class MainActivity : AppCompatActivity() {
             } else {
                 binding.playlistTable.visibility = View.GONE
             }
+            playlistTableVisible = binding.playlistTable.visibility == View.VISIBLE
         }
     }
 
     fun setPlaylistTableVisibility(visible: Boolean) {
+        playlistTableVisible = visible
         if (visible) {
             binding.playlistTable.visibility = View.VISIBLE
             binding.playlistTable.bringToFront()//뷰를 가장 최상위로
@@ -162,8 +160,8 @@ class MainActivity : AppCompatActivity() {
         } else {
             binding.playlistTable.visibility = View.GONE
         }
-
     }
 
 
 }
+

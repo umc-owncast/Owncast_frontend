@@ -2,11 +2,13 @@ package kr.dori.android.own_cast
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kr.dori.android.own_cast.databinding.ActivityPlayCastBinding
@@ -109,13 +111,16 @@ class PlayCastActivity : AppCompatActivity() {
             binding.speedTable.bringToFront()
             binding.speedTable.invalidate()
             binding.speedTable.requestLayout()
-            binding.activityPlayCastSpeedOn.visibility = View.VISIBLE
+            //binding.activityPlayCastSpeedOn.visibility = View.VISIBLE
+            binding.realSpeedTv.setTextColor(Color.parseColor("#8050F2"))
         }
 
         binding.speedTableExitIv.setOnClickListener {
             binding.speedTable.visibility = View.GONE
             binding.activityPlayCastSpeedOn.visibility = View.GONE
+            binding.realSpeedTv.setTextColor(ContextCompat.getColor(this, R.color.black))
         }
+
 
         // fragment 이동 부분
         binding.activityPlayCastScriptOffIv.setOnClickListener {
@@ -132,6 +137,26 @@ class PlayCastActivity : AppCompatActivity() {
 
         binding.activityPlayCastScriptOnIv.setOnClickListener {
             scriptToAudio()
+        }
+
+        binding.playCastPauseIv.setOnClickListener {
+            binding.playCastPauseIv.visibility = View.GONE
+            binding.playCastPlayIv.visibility = View.VISIBLE
+        }
+
+        binding.playCastPlayIv.setOnClickListener {
+            binding.playCastPlayIv.visibility = View.GONE
+            binding.playCastPauseIv.visibility = View.VISIBLE
+        }
+
+        binding.playCastLoofOffIv.setOnClickListener {
+            binding.playCastLoofOffIv.visibility = View.GONE
+            binding.playCastLoofOnIv.visibility = View.VISIBLE
+        }
+
+        binding.playCastLoofOnIv.setOnClickListener {
+            binding.playCastLoofOffIv.visibility = View.VISIBLE
+            binding.playCastLoofOnIv.visibility = View.GONE
         }
 
 //        binding.playcastActivitySaveBackIv.setOnClickListener {
