@@ -19,98 +19,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView27"
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="30dp"
-        android:gravity="start"
-        android:maxLines="2"
-        android:minLines="2"
-        android:text="I cooked today \n 나는 밥을 한다."
-        android:textColor="#b0bec5"
-        app:layout_constraintStart_toStartOf="@+id/textView26"
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="20dp"
+        android:padding="10dp"
+        android:background="@drawable/gray_stroke"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView26" />
 
-    <TextView
-        android:id="@+id/textView28"
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:gravity="start"
-        android:maxLines="2"
-        android:minLines="2"
-        android:text="Especially, I like kimchi \n 김치 줘"
-        app:layout_constraintStart_toStartOf="@+id/textView27"
-        app:layout_constraintTop_toBottomOf="@+id/textView27" />
-
-    <TextView
-        android:id="@+id/textView29"
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:maxLines="2"
-        android:minLines="2"
-        android:text="You should try it, too \n 여러분들도 한번 시도해보세요."
-        android:textColor="#b0bec5"
-        app:layout_constraintStart_toStartOf="@+id/textView28"
-        app:layout_constraintTop_toBottomOf="@+id/textView28" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_marginStart="20dp"
-        android:src="@drawable/fragment_script_bookmark_1"
-        app:layout_constraintBottom_toBottomOf="@+id/textView27"
-        app:layout_constraintStart_toEndOf="@+id/textView27"
-        app:layout_constraintTop_toTopOf="@+id/textView27" />
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/fragment_script_change_1"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-        app:layout_constraintStart_toEndOf="@+id/imageView4"
-        app:layout_constraintTop_toTopOf="@+id/imageView4" />
-
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_marginStart="20dp"
-        android:src="@drawable/fragment_script_bookmark_2"
-        app:layout_constraintBottom_toBottomOf="@+id/textView28"
-        app:layout_constraintStart_toEndOf="@+id/textView28"
-        app:layout_constraintTop_toTopOf="@+id/textView28" />
-
-    <ImageView
-        android:id="@+id/imageView19"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/fragment_script_change_2"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView7"
-        app:layout_constraintStart_toEndOf="@+id/imageView7"
-        app:layout_constraintTop_toTopOf="@+id/imageView7" />
-
-    <ImageView
-        android:id="@+id/imageView26"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_marginStart="20dp"
-        android:src="@drawable/fragment_script_bookmark_3"
-        app:layout_constraintBottom_toBottomOf="@+id/textView29"
-        app:layout_constraintStart_toEndOf="@+id/textView29"
-        app:layout_constraintTop_toTopOf="@+id/textView29" />
-
-    <ImageView
-        android:id="@+id/imageView27"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/fragment_script_change_3"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView26"
-        app:layout_constraintStart_toEndOf="@+id/imageView26"
-        app:layout_constraintTop_toTopOf="@+id/imageView26" />
 </androidx.constraintlayout.widget.ConstraintLayout>
