@@ -8,7 +8,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
 import android.widget.SeekBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -30,8 +29,6 @@ class PlayCastActivity : AppCompatActivity() {
     private lateinit var speedTableViewModel: SpeedTableViewModel
     private val handler = Handler(Looper.getMainLooper())
     private var isSeeking = false
-
-    var matchData: Float? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +84,10 @@ class PlayCastActivity : AppCompatActivity() {
                     startSeekBarUpdate() // 플레이어가 준비되면 SeekBar 업데이트 시작
                 }
             }
+
+            override fun onPositionDiscontinuity(reason: Int) {
+                updateLyricsHighlight()
+            }
         })
 
         // Player를 즉시 준비 (Prepare player immediately)
@@ -98,6 +99,7 @@ class PlayCastActivity : AppCompatActivity() {
                 if (fromUser && !isSeeking) {
                     player.seekTo(progress * 1000L)
                     binding.startTv.text = formatTime(player.currentPosition)
+                    updateLyricsHighlight()
                 }
             }
 
@@ -109,6 +111,7 @@ class PlayCastActivity : AppCompatActivity() {
                 isSeeking = false
                 player.seekTo(seekBar?.progress?.times(1000L) ?: 0L)
                 binding.startTv.text = formatTime(player.currentPosition)
+                updateLyricsHighlight()
             }
         })
 
@@ -139,7 +142,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         // Fragment 초기화
         supportFragmentManager.beginTransaction()
-            .add(R.id.play_cast_frm, CastAudioFragment())
+            .add(R.id.play_cast_frm, CastScriptFragment())
             .commit()
 
         // LiveData 관찰
@@ -152,10 +155,8 @@ class PlayCastActivity : AppCompatActivity() {
                 val matchResult = regex.find(viewId)
 
                 if (matchResult != null) {
-                    val speed = matchResult.groupValues[1].replace("_", ".")
-                    matchData = speed.toFloat()
-
-                    if (matchData == value) {
+                    val speed = matchResult.groupValues[1].replace("_", ".").toFloat()
+                    if (speed == value) {
                         listener.visibility = View.VISIBLE
                     } else {
                         listener.visibility = View.GONE
@@ -168,12 +169,14 @@ class PlayCastActivity : AppCompatActivity() {
         binding.to10back.setOnClickListener {
             val currentPosition = player.currentPosition
             player.seekTo((currentPosition - 10000).coerceAtLeast(0))
+            updateLyricsHighlight()
         }
 
         // 10초 후로 이동하는 버튼 클릭 이벤트 처리
         binding.to10next.setOnClickListener {
             val currentPosition = player.currentPosition
             player.seekTo((currentPosition + 10000).coerceAtMost(player.duration))
+            updateLyricsHighlight()
         }
 
         // 데이터 초기 설정
@@ -262,6 +265,7 @@ class PlayCastActivity : AppCompatActivity() {
                 val currentPosition = player.currentPosition
                 binding.seekBar.progress = (currentPosition / 1000).toInt()
                 binding.startTv.text = formatTime(currentPosition)
+                updateLyricsHighlight()
             }
             handler.postDelayed(this, 1000)
         }
@@ -306,6 +310,13 @@ class PlayCastActivity : AppCompatActivity() {
                 binding.activityCastSpeedOn20Iv.visibility = View.VISIBLE
                 binding.activityCastSpeedOn20Tv.visibility = View.VISIBLE
             }
+        }
+    }
+
+    private fun updateLyricsHighlight() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
+        fragment?.let {
+            (it.binding.scriptRv.adapter as? ScriptAdapter)?.updateCurrentTime(player.currentPosition)
         }
     }
 
