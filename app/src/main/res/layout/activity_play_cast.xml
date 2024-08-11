@@ -438,22 +438,22 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/start_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:text="0:01"
+            android:text="00:00"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/textView15"
+            android:id="@+id/end_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:text="2:18"
+            android:text="04:32"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -567,7 +567,7 @@
             app:srcCompat="@drawable/ic_play_btn" />
 
         <ImageView
-            android:id="@+id/imageView10"
+            android:id="@+id/to10back"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginStart="30dp"
@@ -577,7 +577,7 @@
             app:srcCompat="@drawable/back_ten_sec" />
 
         <ImageView
-            android:id="@+id/imageView11"
+            android:id="@+id/to10next"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginEnd="29dp"
@@ -612,8 +612,8 @@
             android:layout_height="60dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView11"
-            app:layout_constraintStart_toEndOf="@+id/imageView10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/play_cast_pause" />
 
