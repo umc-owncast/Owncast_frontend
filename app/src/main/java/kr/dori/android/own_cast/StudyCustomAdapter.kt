@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import kr.dori.android.own_cast.databinding.StudyItemViewBinding
 import kotlin.math.abs
@@ -87,6 +88,14 @@ class StudyCustomAdapter() :
                 val scale = 1f - (distanceFromCenter.toFloat() / midPoint) * 0.17f
                 it.scaleX = scale
                 it.scaleY = scale
+
+
+                //중앙에 위치한 아이템의 포지션 값 출력하기
+                val snapHelper = LinearSnapHelper()
+                val centerView = snapHelper.findSnapView(layoutManager)
+                val position = layoutManager.getPosition(centerView!!)
+
+                Log.d("Center Position in adjustItemSize"," $position")
 /*
                 val distance = abs(midPoint - viewMid)
                 val changeLine = abs(midPoint/1.05f)
