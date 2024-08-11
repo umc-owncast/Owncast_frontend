@@ -1,5 +1,8 @@
 package kr.dori.android.own_cast
 
+import android.animation.AnimatorInflater
+import android.animation.AnimatorSet
+import android.content.Context
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,7 +18,7 @@ class StudyCustomAdapter() :
     var itemList: MutableList<cardData> = mutableListOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CenteredItemViewHolder {
         val binding = StudyItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CenteredItemViewHolder(binding)
+        return CenteredItemViewHolder(binding,parent.context)
     }
 
     override fun onBindViewHolder(holder: CenteredItemViewHolder, position: Int) {
@@ -23,19 +26,53 @@ class StudyCustomAdapter() :
         holder.bind(item)
 
         // 초기 상태: 모든 아이템을 기본 크기로 설정
-        holder.itemView.layoutParams.width = 611
-        holder.itemView.layoutParams.height = 800
+        //holder.itemView.layoutParams.width = 5000
+        //holder.itemView.layoutParams.height = 2000
+
+        // 레이아웃 재계산
+        holder.itemView.requestLayout()
 
     }
 
     override fun getItemCount(): Int = itemList.size
 
-    class CenteredItemViewHolder(private val binding: StudyItemViewBinding) : RecyclerView.ViewHolder(binding.root) {
+    class CenteredItemViewHolder(private val binding: StudyItemViewBinding, context: Context) : RecyclerView.ViewHolder(binding.root) {
+        private var isFront = true
+        private val frontAnim: AnimatorSet = AnimatorInflater.loadAnimator(context, R.animator.front_animator) as AnimatorSet
+        private val backAnim: AnimatorSet = AnimatorInflater.loadAnimator(context, R.animator.back_animator) as AnimatorSet
+
+        init {
+            val scale = context.resources.displayMetrics.density
+            binding.cardFront.cameraDistance = 8000 * scale
+            binding.cardBack.cameraDistance = 8000 * scale
+
+            binding.cardFront.setOnClickListener {
+                binding.cardFront.isClickable = false // 클릭 잠금
+
+                binding.cardFront.postDelayed({
+                    binding.cardFront.isClickable = true // 1초 후 클릭 가능하게 만듦
+                }, 1000)
+
+                if (isFront) {
+                    frontAnim.setTarget(binding.cardFront)
+                    backAnim.setTarget(binding.cardBack)
+                    frontAnim.start()
+                    backAnim.start()
+                } else {
+                    frontAnim.setTarget(binding.cardBack)
+                    backAnim.setTarget(binding.cardFront)
+                    frontAnim.start()
+                    backAnim.start()
+                }
+                isFront = !isFront
+            }
+        }
+
         fun bind(item: cardData) {
-            binding.textView.text = item.front
+            binding.cardFront.text = item.front
+            binding.cardBack.text = item.behind
         }
     }
-
     fun adjustItemSize(recyclerView: RecyclerView) {
         val layoutManager = recyclerView.layoutManager as LinearLayoutManager
         val midPoint = recyclerView.width / 2

@@ -1,21 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="195dp"
-    android:layout_height="255dp"
-    android:layout_gravity="center"
-    android:layout_margin="8dp"
-    android:background="@drawable/study_korean_center"
-    android:clipToOutline="true"
-    android:elevation="8dp"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_item"
+    android:layout_width="229dp"
+    android:layout_height="300dp"
     android:gravity="center"
-    android:padding="16dp">
+    android:padding="0dp">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/card_front"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/study_korean_center"
         android:gravity="center"
-        android:text="I cooked today."
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
-</RelativeLayout>
+        android:text="Front"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        android:textColor="@color/white"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/card_back"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/study_english_center"
+        android:gravity="center"
+        android:text="Front"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        android:alpha="0"
+        android:textColor="@color/black"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
