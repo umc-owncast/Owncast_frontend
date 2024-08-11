@@ -111,14 +111,17 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginEnd="36.75dp"/>
-        <ImageView
+        <ToggleButton
             android:id="@+id/key_aud_scr_repeat_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/key_aud_scr_repeat"
+            android:layout_width="36dp"
+            android:layout_height="28dp"
+            android:textOff=""
+            android:textOn=""
+            android:background="@drawable/keyword_repeat_btn_ui"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
+
         <TextView
             android:id="@+id/key_aud_scr_cur_speed_tv"
             android:layout_width="wrap_content"

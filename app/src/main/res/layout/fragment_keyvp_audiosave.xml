@@ -37,6 +37,7 @@
 
         </androidx.cardview.widget.CardView>
         <ImageView
+            android:id="@+id/key_aud_save_gal_ic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_keyword_audio_save_gallerly"
