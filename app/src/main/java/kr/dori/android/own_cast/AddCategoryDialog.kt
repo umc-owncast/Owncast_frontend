@@ -10,7 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import kr.dori.android.own_cast.databinding.FragmentAddCategoryDialogBinding
 import androidx.fragment.app.FragmentManager
-class AddCategoryDialog(context: Context, private val listener: AddCategoryListener, private val toast: EditAudio) : Dialog(context) {
+class AddCategoryDialog(context: Context, private val listener: AddCategoryListener) : Dialog(context) {
     private lateinit var binding: FragmentAddCategoryDialogBinding
     private var isText = false
     private lateinit var addtext: String
@@ -19,9 +19,6 @@ class AddCategoryDialog(context: Context, private val listener: AddCategoryListe
         super.onCreate(savedInstanceState)
         binding = FragmentAddCategoryDialogBinding.inflate(LayoutInflater.from(context))
         setContentView(binding.root)
-
-        //외부 터치 이벤트 제거하기
-        setCanceledOnTouchOutside(false)
 
         // 뒤로 가기
         binding.categoryDialogCircleIv.setOnClickListener {
@@ -51,7 +48,6 @@ class AddCategoryDialog(context: Context, private val listener: AddCategoryListe
             if (isText) {
                 listener.onCategoryAdded(addtext)
                 dismiss()
-                toast.dialogToEditAudio()
             }
         }
     }

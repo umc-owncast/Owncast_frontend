@@ -7,56 +7,47 @@
     android:background="#ECEFF1"
     >
 
+    <ImageView
+        android:id="@+id/homeFr_background_iv"
+        android:layout_width="match_parent"
+        android:layout_height="144dp"
+        android:src="@drawable/homefr_background_iv"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
 
-
+        android:background="#853489"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
     <ImageView
         android:id="@+id/homefr_owncast_iv"
-        android:src="@drawable/owncast_main_ic"
-        android:layout_width="100dp"
+        android:src="@drawable/homefr_owncast_ic"
+        android:layout_width="98dp"
         android:layout_height="29dp"
         android:layout_alignParentLeft="true"
-
+        android:layout_marginLeft="16dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="48dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="@id/insert_keyw"
+        android:layout_marginTop="11dp"
+        app:layout_constraintTop_toTopOf="@id/homeFr_background_iv"
+        app:layout_constraintStart_toStartOf="parent"
         android:gravity="top"
         />
 
     <!-- Auto layout, variables, and unit scale are not yet supported -->
-    <TextView
-        android:id="@+id/homefr_favor_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:textSize="20sp"
-        android:letterSpacing="0.01"
-        android:textColor="@color/text_color"
-        android:text="(닉네임)님,\n어떤걸 좋아하세요?"
-        android:layout_marginTop="26dp"
-
-        android:lineSpacingExtra="0sp"
-        android:gravity="center_vertical"
-        app:layout_constraintTop_toBottomOf="@id/homefr_owncast_iv"
-        app:layout_constraintStart_toStartOf="@id/homefr_owncast_iv"
-        />
     <androidx.constraintlayout.widget.ConstraintLayout
 
         android:id="@+id/insert_keyw"
-        android:layout_width="0dp"
-        app:layout_constraintWidth_percent="0.8666666666666667"
-        android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.06"
-
+        android:layout_width="328dp"
+        android:layout_height="48dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="@color/main_color"
+        android:layout_marginTop="56dp"
+        android:layout_marginBottom="40dp"
         android:background="@drawable/insert_keyw"
+        app:layout_constraintTop_toTopOf="@id/homeFr_background_iv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/homefr_favor_tv"
+        app:layout_constraintBottom_toBottomOf="@id/homeFr_background_iv"
         >
         <ImageView
             android:id="@+id/homefr_add_iv"
@@ -73,62 +64,138 @@
             android:id="@+id/some_id"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
-            android:text="좋아하는 키워드를 입력해보세요"
+            android:text="관심 있는 키워드를 입력해보세요"
             android:textSize="16sp"
             android:letterSpacing="0.01"
-            android:textColor="@color/white"
+            android:textColor="#263238"
             android:lineSpacingExtra="5sp"
             android:gravity="center_vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginStart="16dp"
-
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     <TextView
         android:id="@+id/homefr_script_direct_input_tv"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:text="스크립트를 직접 입력할래요"
-        android:layout_marginTop="15dp"
         android:textSize="14sp"
         android:letterSpacing="0.01"
-        android:textColor="@color/black"
+        android:textColor="#FFFFFF"
         android:lineSpacingExtra="3sp"
         android:translationY="-1.65sp"
         android:gravity="right|top"
-        app:layout_constraintTop_toBottomOf="@id/homefr_td_keyword_cl"
-        app:layout_constraintEnd_toEndOf="@id/homefr_td_keyword_cl"
+        app:layout_constraintBottom_toBottomOf="@id/homeFr_background_iv"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp" />
 
-        android:layout_marginEnd="2dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintBottom_toTopOf="@id/homefr_today_topic_cl"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="오늘의 문장"
+        android:textSize="14sp"
+        android:textColor="#455A64"
+        />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/homefr_today_topic_cl"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="52dp"
+        app:layout_constraintTop_toBottomOf="@id/homeFr_background_iv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:background="@drawable/homefr_tdtopic_bg"
+        >
+
+        <ImageView
+            android:id="@+id/homefr_sound_ic_iv"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/homefr_sound_ic"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/homefr_sound_ic_iv"
+            android:layout_marginEnd="56dp"
+            android:layout_marginStart="16dp"
+            >
+            <TextView
+                android:id="@+id/homefr_topic_eng_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:text="I cooked today."
+                android:textSize="12sp"
+                android:letterSpacing="0.03"
+                android:textColor="#455A64"
+                android:lineSpacingExtra="2sp"
+                android:translationY="-0.84sp"
+
+                android:gravity="top"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/homefr_topic_trans_tv"
+
+                />
+            <TextView
+                android:id="@+id/homefr_topic_trans_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:text="오늘은 요리를 해보았어요"
+                android:textSize="12sp"
+                android:letterSpacing="0.03"
+                android:textColor="#455A64"
+                android:lineSpacingExtra="2sp"
+                android:translationY="-0.84sp"
+
+                android:gravity="top"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/homefr_topic_eng_tv"
+                app:layout_constraintBottom_toBottomOf="parent"
 
 
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/homefr_td_keyword_cl"
-        android:layout_width="0dp"
-        app:layout_constraintWidth_percent="0.8666666666666667"
-        android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.5"
-        app:layout_constraintStart_toStartOf="@id/insert_keyw"
-
-        app:layout_constraintTop_toBottomOf="@id/insert_keyw"
+        android:layout_width="328dp"
+        android:layout_height="334dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/homefr_today_topic_cl"
         android:layout_marginTop="52dp"
         android:background="@drawable/homefr_keyword_bg">
         <ImageView
             android:id="@+id/homefr_td_keyword_circle_iv"
-            android:layout_width="88.19dp"
-            android:layout_height="86.13dp"
-            android:scaleType="centerCrop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/homefr_td_keyword_circle_ic"
-            app:tint="@color/main_color"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -138,7 +205,7 @@
             android:layout_height="wrap_content"
             android:letterSpacing="0.01"
             android:text="[    ]"
-            android:textSize="24sp"
+            android:textSize="14sp"
             android:textColor="#FFFFFF"
             android:lineSpacingExtra="3sp"
             android:translationY="-1.65sp"
@@ -149,216 +216,90 @@
             app:layout_constraintBottom_toBottomOf="@id/homefr_td_keyword_circle_iv"/>
 
 
-
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/homeft_td_keyword_1.rl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="67.2dp"
+            android:layout_marginStart="79dp"
             >
             <TextView
-                android:id="@+id/homefr_td_keyword1_tv"
+                android:id="@+id/homeft_td_keyword_1.tv"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:lineSpacingExtra="-13sp"
+                android:layout_height="16dp"
+                android:lineSpacingExtra="2sp"
+                android:translationY="-0.84sp"
                 android:gravity="right|top"
-                android:textSize="24sp"
-                android:letterSpacing="0.02"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="61dp"
-
-
-                android:textColor="@color/black"
-                android:text="키워드 1"
+                android:textSize="12sp"
+                android:letterSpacing="0.03"
+                android:textColor="#455A64"
+                android:text="키워드"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
             <ImageView
                 android:layout_width="4dp"
                 android:layout_height="4dp"
                 android:src="@drawable/homefr_td_keyword_circle_ic"
-                app:layout_constraintTop_toTopOf="@id/homefr_td_keyword1_tv"
-                app:layout_constraintStart_toEndOf="@id/homefr_td_keyword1_tv"
-                app:layout_constraintBottom_toBottomOf="@id/homefr_td_keyword1_tv"
-                app:tint="@color/main_color"
-
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@id/homeft_td_keyword_1.tv"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginStart="4dp"/>
 
-        <TextView
-            android:id="@+id/homefr_td_keyword2_tv"
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/homeft_td_keyword_2.rl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-
-            android:gravity="right|top"
-            android:textSize="20sp"
-            android:letterSpacing="0.02"
-            android:layout_marginTop="84dp"
-            android:layout_marginEnd="46dp"
-
-
-            android:textColor="@color/black"
-            android:text="키워드 2"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-        <ImageView
-            android:layout_width="4dp"
-            android:layout_height="4dp"
-            android:src="@drawable/homefr_td_keyword_circle_ic"
-            app:layout_constraintTop_toTopOf="@id/homefr_td_keyword2_tv"
-            app:layout_constraintStart_toEndOf="@id/homefr_td_keyword2_tv"
-            app:layout_constraintBottom_toBottomOf="@id/homefr_td_keyword2_tv"
-            app:tint="@color/main_color"
-
-            android:layout_marginStart="4dp"/>
-        <TextView
-            android:id="@+id/homefr_td_keyword3_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:lineSpacingExtra="-13sp"
-            android:gravity="right|top"
-            android:textSize="14sp"
-            android:letterSpacing="0.03"
-            android:layout_marginTop="115dp"
-            android:layout_marginStart="28dp"
-
-
-            android:textColor="@color/black"
-            android:text="키워드 3"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-        <ImageView
-            android:layout_width="4dp"
-            android:layout_height="4dp"
-            android:src="@drawable/homefr_td_keyword_circle_ic"
-            app:layout_constraintTop_toTopOf="@id/homefr_td_keyword3_tv"
-            app:layout_constraintStart_toEndOf="@id/homefr_td_keyword3_tv"
-            app:layout_constraintBottom_toBottomOf="@id/homefr_td_keyword3_tv"
-            app:tint="@color/main_color"
-
-            android:layout_marginStart="4dp"/>
-
-        <TextView
-            android:id="@+id/homefr_td_keyword4_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-
-            android:gravity="right|top"
-            android:textSize="14sp"
-            android:letterSpacing="0.02"
-            android:layout_marginTop="170dp"
-            android:layout_marginEnd="18dp"
-
-
-            android:textColor="@color/black"
-            android:text="키워드 4"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-        <ImageView
-            android:layout_width="4dp"
-            android:layout_height="4dp"
-            android:src="@drawable/homefr_td_keyword_circle_ic"
-            app:layout_constraintTop_toTopOf="@id/homefr_td_keyword4_tv"
-            app:layout_constraintEnd_toStartOf="@id/homefr_td_keyword4_tv"
-            app:layout_constraintBottom_toBottomOf="@id/homefr_td_keyword4_tv"
-            app:tint="@color/main_color"
-
-            android:layout_marginStart="4dp"/>
-
-        <TextView
-            android:id="@+id/homefr_td_keyword5_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:textStyle="bold"
-            android:gravity="right|top"
-            android:textSize="32sp"
-            android:letterSpacing="0.02"
-            android:layout_marginTop="286dp"
-            android:layout_marginEnd="27dp"
-
-
-            android:textColor="@color/black"
-            android:text="키워드 5"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-        <ImageView
-            android:layout_width="4dp"
-            android:layout_height="4dp"
-            android:src="@drawable/homefr_td_keyword_circle_ic"
-            app:layout_constraintTop_toTopOf="@id/homefr_td_keyword5_tv"
-            app:layout_constraintStart_toEndOf="@id/homefr_td_keyword5_tv"
-            app:layout_constraintBottom_toBottomOf="@id/homefr_td_keyword5_tv"
-            app:tint="@color/main_color"
-
-            android:layout_marginStart="4dp"/>
-
-        <TextView
-            android:id="@+id/homefr_td_keyword6_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:lineSpacingExtra="-13sp"
-            android:gravity="right|top"
-            android:textSize="28sp"
-            android:letterSpacing="0.02"
-            android:layout_marginTop="240dp"
-            android:layout_marginStart="28dp"
-
-
-            android:textColor="@color/black"
-            android:text="키워드 6"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-        <ImageView
-            android:layout_width="4dp"
-            android:layout_height="4dp"
-            android:src="@drawable/homefr_td_keyword_circle_ic"
-            app:layout_constraintTop_toTopOf="@id/homefr_td_keyword6_tv"
-            app:layout_constraintStart_toEndOf="@id/homefr_td_keyword6_tv"
-            app:layout_constraintBottom_toBottomOf="@id/homefr_td_keyword6_tv"
-            app:tint="@color/main_color"
-
-            android:layout_marginStart="4dp"/>
-
-
-
-
-
-
-
-
-
+            android:layout_marginTop="91.8dp"
+            android:layout_marginEnd="65dp"
+            >
+            <TextView
+                android:id="@+id/homeft_td_keyword_2.tv"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:lineSpacingExtra="2sp"
+                android:translationY="-0.84sp"
+                android:gravity="right|top"
+                android:textSize="12sp"
+                android:letterSpacing="0.03"
+                android:textColor="#455A64"
+                android:text="키워드"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+            <ImageView
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:src="@drawable/homefr_td_keyword_circle_ic"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@id/homeft_td_keyword_2.tv"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="4dp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <TextView
         android:id="@+id/homefr_td_keyword_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="197dp"
+        android:layout_height="20dp"
         android:layout_alignParentLeft="true"
-        android:textColor="#00051F"
+
         android:layout_alignParentTop="true"
-
-        android:text="를 좋아하는 당신을 위해"
-
-        app:layout_constraintTop_toTopOf="@id/homefr_keyword_topic_tv"
-        app:layout_constraintStart_toEndOf="@id/homefr_keyword_topic_tv"
-
-        android:lineSpacingExtra="3sp"
-
-        android:gravity="top"/>
-    <TextView
-        android:id="@+id/homefr_keyword_topic_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:textColor="@color/main_color"
-        android:layout_alignParentTop="true"
-
-        android:text="야구"
+        android:layout_marginTop="326dp"
+        android:text="[]를 선택한 유저의 키워드"
         app:layout_constraintBottom_toTopOf="@id/homefr_td_keyword_cl"
         app:layout_constraintStart_toStartOf="@id/homefr_td_keyword_cl"
-        android:layout_marginBottom="14dp"
-        android:layout_marginStart="3dp"
+        android:layout_marginBottom="8dp"
         android:lineSpacingExtra="3sp"
-
+        android:translationY="-1.65sp"
         android:gravity="top"/>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

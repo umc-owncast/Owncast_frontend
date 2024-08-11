@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kr.dori.android.own_cast.databinding.PlaylistCategoryItemBinding
 
-class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, private val activityMover: ActivityMover,private val fragmentMover: FragmentMover) : RecyclerView.Adapter<PlaylistCategoryAdapter.Holder>() {
+class PlaylistCategoryAdapter(private val editListener: EditCategoryListener) : RecyclerView.Adapter<PlaylistCategoryAdapter.Holder>() {
     var dataList = mutableListOf<SongData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -27,16 +27,6 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
     }
 
     inner class Holder(val binding: PlaylistCategoryItemBinding) : RecyclerView.ViewHolder(binding.root) {
-
-        init{
-            binding.playlistCategoryPlayIv.setOnClickListener{
-                activityMover.ToPlayCast()
-            }
-            binding.realclick.setOnClickListener{
-                fragmentMover.playlistToCategory()
-            }
-        }
-
         fun setText(data: SongData) {
             binding.playlistCategoryTitleTv.text = data.title
             binding.playlistCategoryNumTv.text = dataList.size.toString()

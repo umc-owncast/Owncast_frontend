@@ -5,6 +5,4 @@
     <dimen name="TitleMediumSize">16sp</dimen>
     <dimen name="signup_fifth_card_w">160dp</dimen>
     <dimen name="signup_fifth_card_h">120dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="study_item_margin">0dp</dimen>
 </resources>

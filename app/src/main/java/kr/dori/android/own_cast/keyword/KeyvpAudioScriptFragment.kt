@@ -1,17 +1,13 @@
 package kr.dori.android.own_cast.keyword
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
-import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAuioscriptBinding
 
 
@@ -41,7 +37,6 @@ class KeyvpAudioScriptFragment:Fragment() {
 
 
 
-
         initSpeedUi()
         return binding.root
 
@@ -61,15 +56,7 @@ class KeyvpAudioScriptFragment:Fragment() {
     fun initSpeedUi(){
         binding.keyAudScrCurSpeedTv.setOnClickListener {
             binding.keyAudScrSpeedToolCl.visibility = View.VISIBLE
-            binding.keyAudScrCurSpeedTv.setBackgroundResource(R.drawable.ic_keyword_audscr_speedui_abled)
         }
-        //x버튼 누르면 꺼지는거
-        binding.keywordSpeedBackIv.setOnClickListener {
-            binding.keyAudScrSpeedToolCl.visibility = View.GONE
-            binding.keyAudScrCurSpeedTv.setBackgroundResource(R.drawable.ic_keyword_audscr_speedui_disabled)
-
-        }
-
         speedList.add(binding.keywordSpeed05)
         speedList.add(binding.keywordSpeed075)
         speedList.add(binding.keywordSpeed10)
@@ -88,22 +75,16 @@ class KeyvpAudioScriptFragment:Fragment() {
                 //#8050F2는 MainColro
 
                 //이전거 버튼 비활성화
+                speedList[curSpeed].setBackgroundColor(Color.parseColor("#FFFFFF"))
                 speedList[curSpeed].setTextColor(Color.parseColor("#00051F"))
-                speedList[curSpeed].backgroundTintList = ColorStateList.
-                valueOf(ContextCompat.getColor(this.requireContext(), R.color.button_unclick))
                 //현재 버튼 활성화
-                speedList[i].backgroundTintList = ColorStateList.
-                valueOf(ContextCompat.getColor(this.requireContext(), R.color.main_color))
+                speedList[i].setBackgroundColor(Color.parseColor("#8050F2"))
                 speedList[i].setTextColor(Color.parseColor("#FFFFFF"))
                 //다시 현재 버튼 위치 기억
                 curSpeed = i
                 binding.keyAudScrSpeedToolCl.visibility = View.GONE
-
-
             }
         }
-
         binding.keyAudScrSpeedToolCl.visibility = View.GONE
-
     }
 }

@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ChangeInterestActivity">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/btn_next">
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -65,13 +65,13 @@
                 android:layout_height="@dimen/signup_fifth_card_h"
                 android:layout_marginEnd="10dp"
                 android:contentDescription="card_movie"
-                android:src="@drawable/signup_card_sport" />
+                android:src="@drawable/card_move" />
 
             <ImageView
                 android:id="@+id/card_sport"
                 android:layout_width="@dimen/signup_fifth_card_w"
                 android:layout_height="@dimen/signup_fifth_card_h"
-                android:src="@drawable/signup_card_sport"
+                android:src="@drawable/card_sport"
                 android:contentDescription="card_sport"
                 android:layout_marginBottom="5dp"/>
 
@@ -79,7 +79,7 @@
                 android:id="@+id/card_music"
                 android:layout_width="@dimen/signup_fifth_card_w"
                 android:layout_height="@dimen/signup_fifth_card_h"
-                android:src="@drawable/signup_card_music"
+                android:src="@drawable/card_music"
                 android:contentDescription="card_music"
                 android:layout_marginEnd="10dp"/>
 
@@ -87,7 +87,7 @@
                 android:id="@+id/card_food"
                 android:layout_width="@dimen/signup_fifth_card_w"
                 android:layout_height="@dimen/signup_fifth_card_h"
-                android:src="@drawable/signup_card_food"
+                android:src="@drawable/card_food"
                 android:contentDescription="card_food"
                 android:layout_marginBottom="5dp"/>
 
@@ -95,7 +95,7 @@
                 android:id="@+id/card_book"
                 android:layout_width="@dimen/signup_fifth_card_w"
                 android:layout_height="@dimen/signup_fifth_card_h"
-                android:src="@drawable/signup_card_book"
+                android:src="@drawable/card_book"
                 android:contentDescription="card_book"
                 android:layout_marginEnd="10dp"/>
 
@@ -103,7 +103,7 @@
                 android:id="@+id/card_news"
                 android:layout_width="@dimen/signup_fifth_card_w"
                 android:layout_height="@dimen/signup_fifth_card_h"
-                android:src="@drawable/signup_card_news"
+                android:src="@drawable/card_news"
                 android:contentDescription="card_news"
                 android:layout_marginBottom="5dp"/>
 
@@ -111,7 +111,7 @@
                 android:id="@+id/card_art"
                 android:layout_width="@dimen/signup_fifth_card_w"
                 android:layout_height="@dimen/signup_fifth_card_h"
-                android:src="@drawable/signup_card_art"
+                android:src="@drawable/card_art"
                 android:contentDescription="card_art"
                 android:layout_marginEnd="10dp"/>
 
@@ -119,7 +119,7 @@
                 android:id="@+id/card_self"
                 android:layout_width="@dimen/signup_fifth_card_w"
                 android:layout_height="@dimen/signup_fifth_card_h"
-                android:src="@drawable/signup_card_sport"
+                android:src="@drawable/card_self"
                 android:contentDescription="card_self"/>
 
         </GridLayout>
@@ -127,19 +127,5 @@
     </LinearLayout>
 
     </ScrollView>
-
-    <Button
-        android:id="@+id/btn_next"
-        android:layout_width="368dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="50dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/button_purple"
-        android:text="다음"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/TitleMediumSize"
-        android:backgroundTint="@color/button_unclick"
-        android:clickable="false"/>
 
 </RelativeLayout>

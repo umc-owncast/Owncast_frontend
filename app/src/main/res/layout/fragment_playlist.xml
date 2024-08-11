@@ -8,29 +8,30 @@
     tools:context=".PlaylistFragment">
 
 
-    <TextView
-        android:id="@+id/playlistfr_title_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-
-
-        android:layout_marginTop="30dp"
-        android:text="플레이리스트"
-        android:textSize="23sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
+        <TextView
+            android:id="@+id/playlistfr_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="14dp"
+            android:text="플레이리스트"
+
+
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/fragment_playlist_add_iv"
@@ -60,8 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="내 카테고리"
-            android:textStyle="bold"
+            android:text="카테고리"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -80,7 +80,6 @@
         android:id="@+id/constraintLayout"
         android:layout_width="0dp"
         android:layout_height="243dp"
-        android:layout_marginTop="5dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -89,31 +88,26 @@
 
         <ImageView
             android:id="@+id/fragment_playlist_save_iv"
-            android:layout_width="170dp"
-            android:layout_height="170dp"
-            android:layout_marginStart="16dp"
+            android:layout_width="158dp"
+            android:layout_height="158dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="6dp"
             android:layout_marginBottom="81dp"
             android:src="@drawable/playlistfr_dummy_iv"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/fragment_playlist_notsave_iv"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/fragment_playlist_notsave_iv"
-            android:layout_width="170dp"
-            android:layout_height="170dp"
-            android:layout_marginStart="6dp"
+            android:layout_width="158dp"
+            android:layout_height="158dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="32dp"
             android:layout_marginBottom="81dp"
             android:src="@drawable/playlistfr_dummy_iv"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/fragment_playlist_save_iv"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
@@ -121,18 +115,20 @@
             android:id="@+id/textView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="5dp"
-            android:text="내가 만든 캐스트"
-            app:layout_constraintStart_toStartOf="@+id/fragment_playlist_save_iv"
+            android:text="저장한 캐스트"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fragment_playlist_save_iv" />
 
         <TextView
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginStart="108dp"
+            android:layout_marginTop="5dp"
             android:text="담아온 캐스트"
-            app:layout_constraintStart_toStartOf="@+id/fragment_playlist_notsave_iv"
+            app:layout_constraintStart_toEndOf="@+id/textView8"
             app:layout_constraintTop_toBottomOf="@+id/fragment_playlist_notsave_iv" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

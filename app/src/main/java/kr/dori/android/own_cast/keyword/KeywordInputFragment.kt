@@ -55,11 +55,15 @@ class KeywordInputFragment:Fragment() {
         binding.keyInputNextIv.setOnClickListener {
             if(isText){
                 val fragmentTransaction = (context as KeywordActivity).supportFragmentManager.beginTransaction()
+
                 //앞서 입력한 키워드(@+id/keyword_aud_et)를 지울지 말지 확인하기 위한 번들
                 //이건 직접 입력했기 때문에 앞서 입력한 키워드 안뜰 것임.
                 var bundle = Bundle()
                 var fragment = KeywordAudioSetFragment()
+
                 fragment.arguments = bundle
+
+
                 fragmentTransaction.replace(R.id.keyword_fragment_frm, fragment)
                 // 백 스택에 추가하여 뒤로 가기 버튼을 통해 이전 프래그먼트로 돌아갈 수 있습니다.
                 fragmentTransaction.addToBackStack(null)//뒤로가기 버튼으로 돌아갈 수 있음.
@@ -72,7 +76,7 @@ class KeywordInputFragment:Fragment() {
         return binding.root
     }
 
-    fun btnActivate(){//텍스트 입력하면 버튼 켜지게
+    fun btnActivate(){
         if(isText){
             //textView.setTextColor(Color.parseColor("#FFFFFF"))
             //우리 메인 컬러

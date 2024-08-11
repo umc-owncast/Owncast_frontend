@@ -1,53 +1,49 @@
 package kr.dori.android.own_cast
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.CheckBox
 import android.widget.ImageView
 import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
 
 class SignupFirstActivity : ComponentActivity() {
+
+    private var isChecked = false // 체크 상태를 관리하는 변수
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup_first)
 
         val backButton = findViewById<ImageView>(R.id.backButton)
         val nextButton = findViewById<Button>(R.id.btn_next)
-        val checkBox1 = findViewById<CheckBox>(R.id.ok_btn_1)
-        val checkBox2 = findViewById<CheckBox>(R.id.ok_btn_2)
+        val checkBox = findViewById<ImageView>(R.id.checkbox)
 
         // 상태 복원
-        if (SignupData.ok_btn_1 == 1) {
-            checkBox1.isChecked = true
+        if (SignupData.ok_btn == 1) {
+            checkBox.setImageResource(R.drawable.signup_check)
+            isChecked = true
+            updateNextButtonState(isChecked, nextButton)
         }
-        if (SignupData.ok_btn_2 == 1) {
-            checkBox2.isChecked = true
+
+        // 체크박스 이미지 클릭 시 상태 변화
+        checkBox.setOnClickListener {
+            isChecked = !isChecked
+            val imageRes = if (isChecked) R.drawable.signup_check else R.drawable.signup_uncheck
+            checkBox.setImageResource(imageRes)
+            updateNextButtonState(isChecked, nextButton)
         }
-        updateNextButtonState(checkBox1.isChecked && checkBox2.isChecked, nextButton)
 
         // 백 버튼 클릭 시 AuthActivity로 이동
         backButton.setOnClickListener {
             startActivity(Intent(this, AuthActivity::class.java))
         }
 
-        // 체크박스 상태 변화 시 다음 버튼 활성화 & 색변환
-        val checkBoxes = listOf(checkBox1, checkBox2)
-        for (checkBox in checkBoxes) {
-            checkBox.setOnCheckedChangeListener { _, _ ->
-                updateNextButtonState(checkBox1.isChecked && checkBox2.isChecked, nextButton)
-            }
-        }
-
         // 다음 버튼 클릭 시 SignupSecondActivity로 이동
         nextButton.setOnClickListener {
-            // 상태 저장
-            SignupData.ok_btn_1 = 1
-            SignupData.ok_btn_2 = 1
-
-            if (checkBox1.isChecked && checkBox2.isChecked) {
+            if (isChecked) {
+                // 상태 저장
+                SignupData.ok_btn = 1
                 startActivity(Intent(this, SignupSecondActivity::class.java))
             }
         }

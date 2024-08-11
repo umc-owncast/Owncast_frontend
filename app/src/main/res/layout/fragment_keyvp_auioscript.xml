@@ -13,7 +13,7 @@
         android:layout_width="0dp"
         app:layout_constraintWidth_percent="0.911111111"
         android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.65"
+        app:layout_constraintHeight_percent="0.55"
         tools:listitem="@layout/item_keyaudscr_script"
         android:paddingTop="2dp"
 
@@ -111,22 +111,19 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginEnd="36.75dp"/>
-        <ToggleButton
+        <ImageView
             android:id="@+id/key_aud_scr_repeat_iv"
-            android:layout_width="36dp"
-            android:layout_height="28dp"
-            android:textOff=""
-            android:textOn=""
-            android:background="@drawable/keyword_repeat_btn_ui"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/key_aud_scr_repeat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
-
         <TextView
             android:id="@+id/key_aud_scr_cur_speed_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_keyword_audscr_speedui_disabled"
+            android:background="@drawable/ic_time_speed_bg"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -146,10 +143,10 @@
         app:layout_constraintWidth_percent="0.911111111"
         android:layout_height="0dp"
         app:layout_constraintHeight_percent="0.1"
-        android:background="@drawable/keyword_speedui_layout_bg"
+        android:background="@drawable/keyword_speed__layout_bg"
         app:layout_constraintBottom_toTopOf="@id/key_aud_scr_tool_cl"
         app:layout_constraintStart_toStartOf="@id/key_aud_scr_tool_cl"
-        >
+        android:backgroundTint="#ECEFF1">
         <TextView
             android:id="@+id/keyword_speed_set_tv"
             android:layout_width="wrap_content"
@@ -275,8 +272,8 @@
         android:layout_height="40dp"
         android:src="@drawable/key_aud_scr_remake"
         app:layout_constraintStart_toStartOf="@id/key_aud_scr_tool_cl"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="44dp"
+        app:layout_constraintTop_toBottomOf="@id/key_aud_scr_tool_cl"
+        android:layout_marginTop="16dp"
         />
 
     <TextView
@@ -291,8 +288,8 @@
         android:gravity="center"
         android:background="@drawable/key_aud_scr_btn_bg"
         app:layout_constraintEnd_toEndOf="@id/key_aud_scr_tool_cl"
-        app:layout_constraintBottom_toBottomOf="@id/key_aud_scr_remake_iv"
-        />
+        app:layout_constraintTop_toBottomOf="@id/key_aud_scr_tool_cl"
+        android:layout_marginTop="16dp"/>
 
 
 

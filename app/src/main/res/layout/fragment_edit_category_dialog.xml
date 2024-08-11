@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/edit_category"
+    android:id="@+id/edit_categor"
     android:layout_width="216dp"
 
     android:layout_height="132dp"
@@ -45,7 +45,6 @@
         android:ems="10"
         android:hint="카테고리 이름"
         android:inputType="text"
-        android:maxLength="20"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -88,48 +87,23 @@
         android:layout_width="60dp"
         android:layout_height="36dp"
         android:layout_marginStart="131dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="12dp"
-        android:src="@drawable/real_jinja_ok"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/add_category_dialog_on"
         android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_edit_category_plain_tv"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_edit_category_plain_tv" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
-        android:id="@+id/fragment_edit_dialog_on_edit"
+        android:id="@+id/imageView2"
         android:layout_width="21dp"
         android:layout_height="21dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginBottom="2dp"
         android:src="@drawable/edit_category_dialog_edit"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/textView7"
-        app:layout_constraintEnd_toStartOf="@+id/textView7" />
-
-    <ImageView
-        android:id="@+id/fragment_edit_dialog_onLIne"
-        android:layout_width="162dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="39dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/fragment_edit_dialog_online"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@+id/fragment_edit_category_plain_tv"
-        app:layout_constraintTop_toTopOf="@+id/fragment_edit_category_plain_tv" />
-
-    <ImageView
-        android:id="@+id/fragment_edit_dialog_off"
-        android:layout_width="21dp"
-        android:layout_height="21dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="2dp"
-        android:src="@drawable/fragment_edit_dialog_off"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/textView7"
-        app:layout_constraintEnd_toStartOf="@+id/textView7" />
+        app:layout_constraintEnd_toStartOf="@+id/textView7"
+        app:layout_constraintTop_toTopOf="@+id/textView7" />
 </androidx.constraintlayout.widget.ConstraintLayout>

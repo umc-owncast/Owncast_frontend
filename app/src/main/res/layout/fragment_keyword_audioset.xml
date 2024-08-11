@@ -48,7 +48,7 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/keyword_audioset_tb"
         android:layout_width="match_parent"
-        android:layout_height="4dp"
+        android:layout_height="2dp"
         app:layout_constraintBottom_toTopOf="@id/keyword_audioset_vp"
         app:layout_constraintStart_toStartOf="parent"
         android:backgroundTint="@color/white"
@@ -59,23 +59,20 @@
         app:tabRippleColor="#00ff0000">
         <com.google.android.material.tabs.TabItem
             android:layout_width="100dp"
-            android:layout_height="4dp"
+            android:layout_height="2dp"
             android:text=""
-            android:backgroundTint="@color/main_color"
 
             />
         <com.google.android.material.tabs.TabItem
             android:layout_width="100dp"
             android:layout_height="2dp"
             android:text=""
-            android:backgroundTint="@color/tab_gray"
             />
         <com.google.android.material.tabs.TabItem
             android:layout_width="100dp"
             android:layout_height="2dp"
             android:text=""
-            android:layout_marginStart="10dp"
-            android:backgroundTint="@color/tab_gray"/>
+            android:layout_marginStart="10dp"/>
 
 
     </com.google.android.material.tabs.TabLayout>

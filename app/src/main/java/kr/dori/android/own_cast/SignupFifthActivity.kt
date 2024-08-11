@@ -61,7 +61,7 @@ class SignupFifthActivity : ComponentActivity() {
         }
 
         // 메인 텍스트 설정
-        findViewById<TextView>(R.id.main_text).text = "(${SignupData.nickname})님이 가장 많은\n시간을 보내는 분야를 선택해주세요"
+        findViewById<TextView>(R.id.main_text).text = "${SignupData.nickname}님이 가장 많은\n시간을 보내는 분야를 선택해주세요"
     }
 
     // 카드 선택시 -> 1초 뒤 화면 전환 & 나머지 카드 변환 & 모든 카드 선택 비활성화
@@ -87,14 +87,14 @@ class SignupFifthActivity : ComponentActivity() {
     // 나머지 카드를 변환하는 함수
     private fun changeOtherCardsToWhite(selectedCard: ImageView, unDrawable: Int) {
         val cards = listOf(
-            Pair(cardMovie, R.drawable.food_un), // 수정 3
-            Pair(cardSport, R.drawable.food_un), // 수정 4
+            Pair(cardMovie, R.drawable.movie_un),
+            Pair(cardSport, R.drawable.sports_un),
             Pair(cardMusic, R.drawable.music_un),
             Pair(cardFood, R.drawable.food_un),
             Pair(cardBook, R.drawable.book_un),
             Pair(cardNews, R.drawable.news_un),
             Pair(cardArt, R.drawable.art_un),
-            Pair(cardSelf, R.drawable.food_un) // 수정 5
+            Pair(cardSelf, R.drawable.self_un)
         )
 
         for ((card, drawable) in cards) {

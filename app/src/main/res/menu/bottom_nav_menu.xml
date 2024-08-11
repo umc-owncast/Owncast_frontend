@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!--원래 drawable_look_no_select가 안 열리는 문제가 있었는데, min sdk를 24에서 21로 낮추니까 해결됨-->
 
