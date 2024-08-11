@@ -68,6 +68,9 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
                         .centerCrop() // ImageView에 맞게 이미지 크기를 조정
                         .into(binding.keyAudSaveThumbIv)
                 }
+
+                binding.keyAudSaveGalIc.visibility = View.GONE
+
             }
         }
     }
