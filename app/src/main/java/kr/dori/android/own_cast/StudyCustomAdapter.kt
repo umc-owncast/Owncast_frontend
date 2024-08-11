@@ -23,7 +23,8 @@ class StudyCustomAdapter() :
     }
 
     override fun onBindViewHolder(holder: CenteredItemViewHolder, position: Int) {
-        val item = itemList[position]
+        val actualPosition = position % itemList.size
+        val item = itemList[actualPosition]
         holder.bind(item)
 
         // 초기 상태: 모든 아이템을 기본 크기로 설정
@@ -35,7 +36,9 @@ class StudyCustomAdapter() :
 
     }
 
-    override fun getItemCount(): Int = itemList.size
+    override fun getItemCount(): Int {
+        return 1000
+    }
 
     class CenteredItemViewHolder(private val binding: StudyItemViewBinding, context: Context) : RecyclerView.ViewHolder(binding.root) {
         private var isFront = true

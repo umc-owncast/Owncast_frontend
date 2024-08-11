@@ -100,11 +100,11 @@
         android:id="@+id/fragment_study_back_iv"
         android:layout_width="16dp"
         android:layout_height="20dp"
-        android:layout_marginEnd="18dp"
+        android:layout_marginStart="150dp"
         android:rotation="90"
         android:src="@drawable/back_two"
         app:layout_constraintBottom_toBottomOf="@+id/fragment_study_state_tv"
-        app:layout_constraintEnd_toStartOf="@+id/fragment_study_state_tv"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/fragment_study_state_tv"
         app:layout_constraintVertical_bias="0.6" />
 
@@ -112,12 +112,13 @@
         android:id="@+id/fragment_study_next_iv"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:layout_marginStart="18dp"
+        android:layout_marginEnd="150dp"
         android:rotation="270"
         android:src="@drawable/back_two"
         app:layout_constraintBottom_toBottomOf="@+id/fragment_study_state_tv"
-        app:layout_constraintStart_toEndOf="@+id/fragment_study_state_tv"
-        app:layout_constraintTop_toTopOf="@+id/fragment_study_state_tv" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fragment_study_state_tv"
+        app:layout_constraintVertical_bias="0.55" />
 
     <TextView
         android:id="@+id/fragment_study_state_tv"

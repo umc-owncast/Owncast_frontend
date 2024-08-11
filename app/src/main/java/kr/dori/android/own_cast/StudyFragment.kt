@@ -27,6 +27,8 @@ class StudyFragment : Fragment() {
         cardData("이번 주는 정말 바쁘고 피곤했어요.", "This week has been really busy and tiring.")
     )
 
+    var dataCount = cardData.size
+
     val snapHelper = LinearSnapHelper()
     private lateinit var binding: FragmentStudyBinding
     private val customAdapter = StudyCustomAdapter()
@@ -49,7 +51,6 @@ class StudyFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
 
         binding = FragmentStudyBinding.inflate(inflater, container, false)
         studyAdapter.dataList = dummyData
@@ -76,40 +77,55 @@ class StudyFragment : Fragment() {
             binding.fragmentStudySoundOnIv.visibility = View.GONE
         }
 
+        // 리사이클러뷰에서 초기화 상태로 스크롤 위치 설정
+        // InitialSetting()
 
-        //custom
+        // 커스텀 어댑터 초기화
         customAdapter.itemList = cardData
 
-        // study_custom_adapter_rv 설정
+        // 리사이클러뷰 설정
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.studyCustomAdapterRv.layoutManager = layoutManager
         binding.studyCustomAdapterRv.adapter = customAdapter
 
-        // SnapHelper 추가 (아이템 간 스냅 효과) -> 탄력 효과라고 생각하면 됨
-
+        // SnapHelper 추가
         snapHelper.attachToRecyclerView(binding.studyCustomAdapterRv)
 
         // ScrollListener 추가
-
         binding.studyCustomAdapterRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 customAdapter.adjustItemSize(recyclerView)
 
-                // 중앙에 위치한 아이템의 포지션을 계산하여 로그 출력
+                // 중앙에 위치한 아이템의 포지션 계산 및 UI 업데이트
                 val centerView = snapHelper.findSnapView(layoutManager)
                 centerView?.let {
                     val position = layoutManager.getPosition(it)
-                    println("Center Position: $position")
-
-                    binding.fragmentStudyStateTv.text = "${position+1}/25"
+                    var actualPosition = position % dataCount
+                    binding.fragmentStudyStateTv.text = "${setText(actualPosition)}/$dataCount"
+                    Log.d("text","$actualPosition")
                 }
             }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val firstPosition = layoutManager.findFirstVisibleItemPosition()
+                    val lastPosition = layoutManager.findLastVisibleItemPosition()
+
+                    if (firstPosition <= dataCount) {
+                        recyclerView.scrollToPosition(firstPosition + dataCount)
+                    } else if (lastPosition >= layoutManager.itemCount - dataCount) {
+                        recyclerView.scrollToPosition(lastPosition - dataCount)
+                    }
+                }
+            }
+
         })
 
-        binding.studyCustomAdapterRv.setPadding(0, 0, 0, 0) // 패딩을 제거하여 아이템 간의 간격 줄이기
-        binding.studyCustomAdapterRv.clipToPadding = false  // 패딩이 잘리도록 설정
-
+        binding.studyCustomAdapterRv.setPadding(0, 0, 0, 0)
+        binding.studyCustomAdapterRv.clipToPadding = false
 
         // 초기 크기 조정
         binding.studyCustomAdapterRv.post {
@@ -125,8 +141,7 @@ class StudyFragment : Fragment() {
             scrollToBackItem()
         }
 
-
-        // 마진 및 패딩 추가 (아이템 간 간격 및 끝 부분 여백)
+        // 마진 및 패딩 추가
         val margin = resources.getDimensionPixelSize(R.dimen.study_item_margin)
         binding.studyCustomAdapterRv.addItemDecoration(HorizontalMarginItemDecoration(margin))
 
@@ -134,39 +149,84 @@ class StudyFragment : Fragment() {
             customAdapter.itemList.shuffle()
             customAdapter.notifyDataSetChanged()
         }
-        return binding.root
-    }
 
-
-
-        private fun scrollToNextItem() {
+        binding.studyCustomAdapterRv.scrollToPosition(5)
+        binding.studyCustomAdapterRv.post {
+            // 중앙에 아이템이 정확히 위치하도록 강제로 다시 레이아웃을 설정
             val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
-            val centerView = snapHelper.findSnapView(layoutManager)
-            centerView?.let {
-                val position = layoutManager.getPosition(it)
-                if (position < customAdapter.itemList.size - 1) {
-                    binding.studyCustomAdapterRv.smoothScrollToPosition(position + 1)
+            layoutManager.scrollToPositionWithOffset(5, (binding.studyCustomAdapterRv.width / 2) - (binding.studyCustomAdapterRv.getChildAt(0).width / 2))
+
+            binding.studyCustomAdapterRv.post {
+                customAdapter.adjustItemSize(binding.studyCustomAdapterRv)
+                val centerView = snapHelper.findSnapView(layoutManager)
+                centerView?.let {
+                    val position = layoutManager.getPosition(it)
+                    var actualPosition = position % dataCount
+                    //                    binding.fragmentStudyStateTv.text = "${setText(actualPosition)}$dataCount}" 이렇게 쓰니까 0이 나오지 ㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+                    binding.fragmentStudyStateTv.text = "${setText(actualPosition)}/$dataCount"
+                    Log.d("text","$actualPosition")
                 }
             }
         }
+
+        return binding.root
+    }
+/*
+    private fun InitialSetting() {
+        val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager?
+        layoutManager?.let {
+            val centerView = snapHelper.findSnapView(it)
+            centerView?.let {
+                val position = layoutManager.getPosition(it)
+                if (position != RecyclerView.NO_POSITION) {
+                    binding.studyCustomAdapterRv.scrollToPosition(Int.MAX_VALUE / 2 - Int.MAX_VALUE / 2 % dataCount)
+                }
+            }
+        }
+    }
+
+ */
+
+    private fun scrollToNextItem() {
+        val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
+        val centerView = snapHelper.findSnapView(layoutManager)
+        centerView?.let {
+            val position = layoutManager.getPosition(it)
+         /*   val actualPosition = position % dataCount
+            if (actualPosition < customAdapter.itemList.size - 1) {
+                binding.studyCustomAdapterRv.smoothScrollToPosition(position + 1)
+            }
+
+          */
+            binding.studyCustomAdapterRv.smoothScrollToPosition(position + 1)
+        }
+    }
 
     private fun scrollToBackItem() {
         val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
         val centerView = snapHelper.findSnapView(layoutManager)
         centerView?.let {
             val position = layoutManager.getPosition(it)
-            // 현재 위치가 첫 번째 아이템이 아닐 때만 뒤로 이동
-            if (position > 0) {
+            /*
+            val actualPosition = position % dataCount
+
+            if (actualPosition > 0) {
                 binding.studyCustomAdapterRv.smoothScrollToPosition(position - 1)
             }
+            */
+            binding.studyCustomAdapterRv.smoothScrollToPosition(position - 1)
         }
     }
+
+    private fun setText(actualPosition: Int): Int{
+        return if(actualPosition >= 5){
+            actualPosition - 4
+        }else{
+            actualPosition + dataCount - 4
+        }
+        Log.d("text","$actualPosition")
+    }
+
+
+
 }
-
-
-
-
-
-
-
-
