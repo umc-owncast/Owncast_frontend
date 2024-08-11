@@ -13,6 +13,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kr.dori.android.own_cast.databinding.FragmentSearchOutputBinding
 
@@ -45,7 +46,7 @@ class SearchOutputFragment : Fragment(), SearchMover {
         searchAdapter.dataList = dummyData
 
         binding.fragmentSearchOutputRv.adapter = searchAdapter
-        binding.fragmentSearchOutputRv.layoutManager = LinearLayoutManager(context)
+        binding.fragmentSearchOutputRv.layoutManager = GridLayoutManager(context,2)
 
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {

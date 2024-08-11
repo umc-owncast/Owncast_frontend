@@ -11,6 +11,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kr.dori.android.own_cast.HomeFragment
 import kr.dori.android.own_cast.PlayCastActivity
@@ -27,13 +29,23 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var playCastActivityResultLauncher: ActivityResultLauncher<Intent>
 
+
+
+
+   // private val playCastViewModel: PlayCastViewModel by viewModels { PlayCastViewModelFactory(application) }
+
     private var playlistTableVisible: Boolean = false // playlistTable의 현재 상태를 저장하는 변수
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initBottomNavigation()
+
+
+
+
 
         //play table call back process
         playCastActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){result: ActivityResult ->
@@ -142,12 +154,14 @@ class MainActivity : AppCompatActivity() {
         playlistTableVisible = visible
         if (visible) {
             binding.playlistTable.visibility = View.VISIBLE
-            binding.playlistTable.bringToFront()
-            binding.playlistTable.invalidate()
-            binding.playlistTable.requestLayout()
+            binding.playlistTable.bringToFront()//뷰를 가장 최상위로
+            binding.playlistTable.invalidate()//화면 무효화 및 재작성
+            binding.playlistTable.requestLayout()//크기 위치 재계산
         } else {
             binding.playlistTable.visibility = View.GONE
         }
     }
+
+
 }
 

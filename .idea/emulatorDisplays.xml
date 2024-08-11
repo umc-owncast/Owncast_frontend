@@ -3,6 +3,44 @@
   <component name="EmulatorDisplays">
     <option name="displayStateByAvdFolder">
       <map>
+        <entry key="C:\Users\ws637\.android\avd\Copy_of_Pixel_3a_API_34_extension_level_7_x86_64.avd">
+          <value>
+            <MultiDisplayState>
+              <option name="displayDescriptors">
+                <list>
+                  <DisplayDescriptor>
+                    <option name="height" value="2646" />
+                    <option name="width" value="1235" />
+                  </DisplayDescriptor>
+                  <DisplayDescriptor>
+                    <option name="displayId" value="1" />
+                    <option name="height" value="1280" />
+                    <option name="width" value="720" />
+                  </DisplayDescriptor>
+                </list>
+              </option>
+              <option name="panelState">
+                <PanelState>
+                  <option name="splitPanel">
+                    <SplitPanelState>
+                      <option name="proportion" value="0.6317135691642761" />
+                      <option name="firstComponent">
+                        <PanelState>
+                          <option name="displayId" value="0" />
+                        </PanelState>
+                      </option>
+                      <option name="secondComponent">
+                        <PanelState>
+                          <option name="displayId" value="1" />
+                        </PanelState>
+                      </option>
+                    </SplitPanelState>
+                  </option>
+                </PanelState>
+              </option>
+            </MultiDisplayState>
+          </value>
+        </entry>
         <entry key="C:\Users\ws637\.android\avd\Pixel_3a_API_34_extension_level_7_x86_64.avd">
           <value>
             <MultiDisplayState>

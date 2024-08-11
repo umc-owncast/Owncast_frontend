@@ -113,7 +113,7 @@
         android:dropDownVerticalOffset="48dp"
         android:dropDownWidth="match_parent"
         android:background="@drawable/key_audset_dropdown_bg"
-
+        android:popupBackground = "@color/white"
         >
 
     </Spinner>

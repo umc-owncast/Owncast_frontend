@@ -1,6 +1,9 @@
 package kr.dori.android.own_cast.keyword
 
 
+import android.app.Application
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableString
@@ -17,6 +20,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.SharedViewModel
 import kr.dori.android.own_cast.databinding.FragmentKeywordSearchBinding
@@ -27,7 +31,8 @@ class KeywordSearchFragment:Fragment() {
     private var isText = false
     private var searchText: String = ""//다음 프래그먼트로 화면 넘기기 위한 변수
     private var textViewList = ArrayList<TextView>()//처음에 밑에 뜨는 관련 키워드 사용 위한 변수
-    private val sharedViewModel: SharedViewModel by activityViewModels()
+    private lateinit var sharedViewModel: KeywordViewModel
+    private var keywordData: KeywordData? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,14 +41,23 @@ class KeywordSearchFragment:Fragment() {
     ): View? {
         binding = FragmentKeywordSearchBinding.inflate(inflater, container, false)
         binding.backMainIv.setOnClickListener {
-
             activity?.finish()
-
         }
+        keywordData = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable("keywordData", KeywordData::class.java)
+        } else {
+            arguments?.getParcelable("keywordData")
+        }
+        /*sharedViewModel = ViewModelProvider(requireActivity(),
+            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)).get(KeywordViewModel::class.java)
 
         val content = SpannableString(binding.keywordSearchTopicTv.getText().toString());
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
         binding.keywordSearchTopicTv.text = content
+            if (sharedViewModel.keywordData.value == null) {
+            sharedViewModel.setKeywordData(dummyData)
+        }*/
+
         initTextInputListener()
         initKeyword()
 
@@ -59,23 +73,26 @@ class KeywordSearchFragment:Fragment() {
         textViewList.add(binding.keywordActSuggest4Tv)
         textViewList.add(binding.keywordActSuggest5Tv)
         textViewList.add(binding.keywordActSuggest6Tv)
-        var keywordList: Array<String>? = null
-        sharedViewModel.keywordData.observe(viewLifecycleOwner, Observer { keywordData ->
-            if (keywordData == null) {
-                keywordList = null
-            } else {
-                keywordList = keywordData.keywordList
-            }
-        })
+        binding.keywordSearchTopicTv.text = keywordData?.mainKeyword
 
-        if (keywordList != null) {
-            for (i: Int in 0..5) {
-                //view모델 안에 실제 데이터가 있다면 그걸 텍스트 뷰에 그대로 반영
-                if (i < keywordList!!.size) {
-                    textViewList[i].text = keywordList!![i]
-                } else {
-                    textViewList[i].visibility = View.GONE
+
+
+        for(i:Int in 0..5){
+            //view모델 안에 실제 데이터가 있다면 그걸 텍스트 뷰에 그대로 반영
+            if (keywordData==null){
+                binding.keywordSearchTopicTv.text = "로딩 실패"
+                textViewList[i].text = "로딩 실패"
+                return
+            }
+            if(i<keywordData?.keywordList!!.size){
+                textViewList[i].text = keywordData?.keywordList!![i]
+                textViewList[i].setOnClickListener {
+                    val intent = Intent(getActivity(), KeywordActivity::class.java)
+                    intent.putExtra("searchText",textViewList[i].text.toString())
+                    startActivity(intent)
                 }
+            }else{
+                textViewList[i].visibility = View.GONE
             }
         }
 

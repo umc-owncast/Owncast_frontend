@@ -67,22 +67,22 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="0dp"
-        android:layout_height="400dp"
-        android:layout_marginTop="9dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
-    <TextView
-        android:id="@+id/textView19"
+        android:id="@+id/recyclerView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="타사용자의 owncast를 재생하거나 담아올 수 있어요"
-        android:textStyle="bold"
+
+        android:layout_height="0dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="7dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+
+        app:layout_constraintTop_toBottomOf="@+id/textView18"
+        tools:listitem="@layout/item_search_fr"/>
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
