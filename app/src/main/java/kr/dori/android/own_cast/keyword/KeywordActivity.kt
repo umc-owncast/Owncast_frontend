@@ -102,8 +102,8 @@ class KeywordActivity : AppCompatActivity() {
     private fun initScreen(){
 
     }
-
-    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {//editText에서 다른 화면을 누르면 포커스 해제됨ㅕ
+    //editText에서 다른 화면을 누르면 포커스 해제되는 함수
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (ev?.action == MotionEvent.ACTION_DOWN) {
             val v = currentFocus
             if (v is EditText) {

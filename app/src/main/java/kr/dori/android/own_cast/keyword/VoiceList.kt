@@ -18,11 +18,11 @@ class VoiceListRepository {
                 accent = "미국",
                 styleBusiness = Style(
                     dataType = listOf("en-US-Neural2-C", "en-US-News-L", "en-US-Neural2-E", "en-US-Neural2-D", "en-US-News-N", "en-US-Polyglot-1"),
-                    gender = listOf("비즈니스여성1", "여성2", "여성3", "남성1", "남성2", "남성3")
+                    gender = listOf("여성1", "여성2", "여성3", "남성1", "남성2", "남성3")
                 ),
                 styleCasual = Style(
                     dataType = listOf("en-US-Neural2-G", "en-US-Neural2-H", "en-US-Standard-F", "en-US-Standard-I", "en-US-Wavenet-B", "en-US-Wavenet-J"),
-                    gender = listOf("캐주얼여성1", "여성2", "여성3", "남성1", "남성2", "남성3")
+                    gender = listOf("여성1", "여성2", "여성3", "남성1", "남성2", "남성3")
                 )
             )
 
@@ -83,11 +83,11 @@ class VoiceListRepository {
                 accent = "스페인",
                 styleBusiness = Style(
                     dataType = listOf("es-ES-Neural2-C", "es-ES-Neural2-D", "es-ES-Neural2-E", "es-ES-Neural2-B", "es-ES-Neural2-F", "es-ES-Polyglot-1"),
-                    gender = listOf("비즈니스여성1", "여성2", "여성3", "남성1", "남성2", "남성3")
+                    gender = listOf("여성1", "여성2", "여성3", "남성1", "남성2", "남성3")
                 ),
                 styleCasual = Style(
                     dataType = listOf("es-ES-Neural2-A", "es-ES-Neural2-E", "es-ES-Standard-C", "es-ES-Neural2-B", "es-ES-Neural2-F", "es-ES-Polyglot-1"),
-                    gender = listOf("캐주얼여성1", "여성2", "여성3", "남성1", "남성2", "남성3")
+                    gender = listOf("여성1", "여성2", "여성3", "남성1", "남성2", "남성3")
                 )
             )
 
@@ -96,11 +96,11 @@ class VoiceListRepository {
                 accent = "미국",
                 styleBusiness = Style(
                     dataType = listOf("es-US-Neural2-A", "es-US-News-F", "es-US-News-G", "es-US-News-D", "es-US-News-E", "es-US-Polyglot-1"),
-                    gender = listOf("비즈니스여성1", "여성2", "여성3", "남성1", "남성2", "남성3")
+                    gender = listOf("여성1", "여성2", "여성3", "남성1", "남성2", "남성3")
                 ),
                 styleCasual = Style(
                     dataType = listOf("es-US-Wavenet-A", "es-US-News-F", "es-US-News-G", "es-US-Neural2-B", "es-US-News-E", "es-US-Wavenet-C"),
-                    gender = listOf("캐주얼여성1", "여성2", "여성3", "남성1", "남성2", "남성3")
+                    gender = listOf("여성1", "여성2", "여성3", "남성1", "남성2", "남성3")
                 )
             )
 

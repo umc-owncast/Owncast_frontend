@@ -5,13 +5,17 @@ import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -50,7 +54,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
 
     lateinit var adapter:KeyAudSaveDropdownAdapter
 
-
+    private var isText = false
 
     private lateinit var imageResultLauncher: ActivityResultLauncher<Intent>
 
@@ -81,16 +85,10 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
     ): View? {
         binding = FragmentKeyvpAudiosaveBinding.inflate(inflater, container, false)
 
-        /*sharedViewModel.data.value?.let {
-            for(i:Int in 0..it.size){
-                it[i].title?.let {
-                    _list.add(it)
-                }
 
-            }
-        }*/
         initSpinnerAdapter()
         initSaveBtn()
+        initEditText()
         binding.keyAudSaveThumbIv.setOnClickListener {
             selectGallery()
         }
@@ -148,7 +146,13 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
         }*/
         adapter = KeyAudSaveDropdownAdapter(requireContext(), R.layout.item_aud_set_spinner, list)
         binding.keyAudSaveCategorySp.adapter = adapter
-
+        binding.keyAudSaveCategorySp.setOnTouchListener { view, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                // Spinner가 클릭되었을 때 실행할 코드
+                binding.keyAudSaveCategorySp.setBackgroundResource(R.drawable.key_audset_dropdown_bg)
+            }
+            false
+        }
         binding.keyAudSaveCategorySp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
                 when(pos){
@@ -164,10 +168,14 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
                     }
                 }
 
+                binding.keyAudSaveCategorySp.setBackgroundResource(R.drawable.key_audset_dropdown_off_bg)
+                //다시 포커스 안된거처럼 색깔을 바꿔줘야 함
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 // 선택되지 않은 경우
+                binding.keyAudSaveCategorySp.setBackgroundResource(R.drawable.key_audset_dropdown_off_bg)
             }
+
         }
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -185,32 +193,70 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
 
         val screenWidth = displayMetrics.widthPixels
         val screenHeight = displayMetrics.heightPixels
-        binding.keyAudSaveBtnIv.setOnClickListener{
-            //finishDialog를 생성한다.
+        binding.keyAudSaveBtnOnIv.setOnClickListener{
+            //finishDialog띄우는 버튼
             val dialog = KeywordAudioFinishDialog(requireContext(), this)
             dialog.setCancelable(false)
             dialog.setCanceledOnTouchOutside(false)
-            dialog.show()
-
-            //dialog위치 조정
             val window = dialog.window
-            if (window != null) {
+            /*if (window != null) {
                 val params: WindowManager.LayoutParams = window.attributes
-                params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                params.gravity = Gravity.TOP //or Gravity.CENTER_HORIZONTAL
 
-                params.y = (screenHeight * 0.5).toInt()
+                params.y = (screenHeight * 0.5).toInt()//y위치 임의 조정함
                 window.attributes = params
-            }
+            }*/
+            dialog.show()
+            //dialog위치 조정
+
         }
 
     }
 
+
+    private fun initEditText(){
+        /*binding.keyAudSaveTitleEt.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                // 포커스가 잡혔을 때 실행할 코드
+                binding.keyAudSaveTitleEt.backgroundTintList = ColorStateList.
+                valueOf(ContextCompat.getColor(this.requireContext(), R.color.main_color))
+
+            } else {
+                // 포커스가 해제되었을 때 실행할 코드
+                binding.keyAudSaveTitleEt.backgroundTintList = ColorStateList.
+                valueOf(ContextCompat.getColor(this.requireContext(), R.color.hint_color))
+
+            }
+        }*/
+        binding.keyAudSaveTitleEt.addTextChangedListener(object :
+            TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if (s != null) {
+
+                }
+                isText = s?.isNotEmpty() == true
+                if (isText) {
+                    binding.keyAudSaveBtnOffIv.visibility = View.GONE
+                    binding.keyAudSaveBtnOnIv.visibility = View.VISIBLE
+                } else{
+                    binding.keyAudSaveBtnOffIv.visibility = View.VISIBLE
+                    binding.keyAudSaveBtnOnIv.visibility = View.GONE
+                }
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+    }
 
     //finish dialog listener 구현
     override fun goHomeFragment() {
         super.goHomeFragment()
         activity?.finish()
     }
+
     //addCategory같이 카테고리 추가하는 기능
     override fun onCategoryAdded(categoryName: String) {
         list.add(list.size-1,categoryName)

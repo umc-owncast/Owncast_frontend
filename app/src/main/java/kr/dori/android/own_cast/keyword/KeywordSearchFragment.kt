@@ -126,6 +126,7 @@ class KeywordSearchFragment:Fragment() {
                 binding.keywordEt.text.clear()
             }
         }
+        //text가 비어있으면, isText가 변한다.
         binding.keywordEt.addTextChangedListener(object :
             TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -146,6 +147,8 @@ class KeywordSearchFragment:Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
+
+        //엔터키를 눌렀을때 searchFinish를 실행(검색하는거)
         binding.keywordEt.setOnEditorActionListener { v, actionId, event ->
             // Check if the action is the "Enter" key
             if (actionId == EditorInfo.IME_ACTION_DONE ||
