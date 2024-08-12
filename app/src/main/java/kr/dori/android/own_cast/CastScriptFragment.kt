@@ -21,22 +21,22 @@ class CastScriptFragment : Fragment() {
         binding = FragmentCastScriptBinding.inflate(inflater, container, false)
 
         val rawLyrics = """
-            [00:00:000]당신은 사랑받기 위해 태어난 사람,
-            [00:05:000]당신의 삶속에서 그 사랑받고 있지요.
-            [00:10:000]당신은 사랑받기 위해 태어난 사람,
-            [00:15:000]당신의 삶속에서 그 사랑받고 있지요.
-            [00:20:000]태초부터 시작된 하나님의 사랑은,
-            [00:25:000]우리의 만남을 통해 열매를 맺고,
-            [00:30:000]당신이 이세상에 존재함으로 인해,
-            [00:35:000]우리에게 얼마나 큰 기쁨이 되는지.
-            [00:40:000]당신은 사랑받기 위해 태어난 사람,
-            [00:45:000]지금도 그 사랑 받고있지요.
-            [00:50:000]당신은 사랑받기 위해 태어난 사람,
-            [00:55:000]지금도 그 사랑 받고있지요.
-            [01:00:000]당신은 사랑받기 위해 태어난 사람,
-            [01:05:000]당신의 삶속에서 그 사랑 받고있지요.
-            [01:10:000]당신은 사랑받기위해 태어난 사람,
-            [01:15:000]당신의 삶속에서 그 사랑받고 있지요.
+            [00:00:000]당신은 사랑받기 위해 태어난 사람,\n i love kotlin, i lover android
+            [00:05:000]당신의 삶속에서 그 사랑받고 있지요. \n i love kotlin, i lover android
+            [00:10:000]당신은 사랑받기 위해 태어난 사람,\n i love kotlin, i lover android
+            [00:15:000]당신의 삶속에서 그 사랑받고 있지요.\n i love kotlin, i lover android
+            [00:20:000]태초부터 시작된 하나님의 사랑은,\n i love kotlin, i lover android
+            [00:25:000]우리의 만남을 통해 열매를 맺고,\n i love kotlin, i lover android
+            [00:30:000]당신이 이세상에 존재함으로 인해,\n i love kotlin, i lover android
+            [00:35:000]우리에게 얼마나 큰 기쁨이 되는지.\n i love kotlin, i lover android
+            [00:40:000]당신은 사랑받기 위해 태어난 사람,\n i love kotlin, i lover android
+            [00:45:000]지금도 그 사랑 받고있지요.\n i love kotlin, i lover android
+            [00:50:000]당신은 사랑받기 위해 태어난 사람,\n i love kotlin, i lover android
+            [00:55:000]지금도 그 사랑 받고있지요.\n i love kotlin, i lover android
+            [01:00:000]당신은 사랑받기 위해 태어난 사람,\n i love kotlin, i lover android
+            [01:05:000]당신의 삶속에서 그 사랑 받고있지요.\n i love kotlin, i lover android
+            [01:10:000]당신은 사랑받기위해 태어난 사람,\n i love kotlin, i lover android
+            [01:15:000]당신의 삶속에서 그 사랑받고 있지요.\n i love kotlin, i lover android
         """
 
         val lyricsList = parseLyrics(rawLyrics)
