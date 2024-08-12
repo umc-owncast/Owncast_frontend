@@ -68,14 +68,14 @@
             android:layout_width="100dp"
             android:layout_height="2dp"
             android:text=""
-            android:backgroundTint="@color/tab_gray"
+            android:backgroundTint="@color/gray"
             />
         <com.google.android.material.tabs.TabItem
             android:layout_width="100dp"
             android:layout_height="2dp"
             android:text=""
             android:layout_marginStart="10dp"
-            android:backgroundTint="@color/tab_gray"/>
+            android:backgroundTint="@color/gray"/>
 
 
     </com.google.android.material.tabs.TabLayout>

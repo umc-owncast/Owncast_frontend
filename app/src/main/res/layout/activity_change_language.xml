@@ -2,9 +2,10 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ChangeLanguageActivity">
+    android:background="@color/white"
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -494,7 +495,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:background="@drawable/button_purple"
-        android:text="다음"
+        android:text="확인"
         android:textColor="@android:color/white"
         android:textSize="@dimen/TitleMediumSize"
         android:backgroundTint="@color/button_unclick"

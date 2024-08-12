@@ -1,42 +1,80 @@
 package kr.dori.android.own_cast
 
 import android.app.Application
-
+import android.content.Context
+import android.content.SharedPreferences
 
 class SignupData : Application() {
     companion object {
 
-        // signup_first
-        var ok_btn_1 : Int = 0
-        var ok_btn_2 : Int = 0
+        var ok_btn : Int = 0
+        var temp_interest : String = ""
+        var temp_detail_interest : String = ""
+        var temp_language : String = "닉네임"
+        var temp_accent : String = "닉네임"
 
-        // signup_second
-        var nickname: String = "닉네임"
+        var profile_detail_interest = ""
 
-        // signup_third
-        var name: String = "닉네임"
-        var id: String = "닉네임"
-        var password: String = "닉네임"
-        var passwordconfirm: String = "닉네임"
+        private lateinit var instance: SignupData
 
-        // signup_language
-        var language : String = "닉네임"
-        var accent : String = "닉네임"
+        private const val PREF_NAME = "SignupDataPreferences"
 
-        // signup_fifth
-        var interest : String = "닉네임"
+        fun getInstance(): SignupData {
+            return instance
+        }
 
-        // signup_detail_interest
-        var detail_interest : String = "닉네임"
+        private fun getSharedPreferences(): SharedPreferences {
+            return instance.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        }
 
-        // 여기부터 (9ro)
+        private fun getString(key: String, defaultValue: String): String {
+            return getSharedPreferences().getString(key, defaultValue) ?: defaultValue
+        }
 
+        private fun setString(key: String, value: String) {
+            getSharedPreferences().edit().putString(key, value).apply()
+        }
 
-        /*
-        전역 변수 접근
-        val value = SignupData.nickname
-        전역 변수 값 수정
-        SignupData.nickname = "새값"
-        */
+        // 전역 변수들 (SharedPreferences에 저장/불러오기)
+        var nickname: String
+            get() = getString("nickname", "닉네임")
+            set(value) = setString("nickname", value)
+
+        var name: String
+            get() = getString("name", "닉네임")
+            set(value) = setString("name", value)
+
+        var id: String
+            get() = getString("id", "닉네임")
+            set(value) = setString("id", value)
+
+        var password: String
+            get() = getString("password", "닉네임")
+            set(value) = setString("password", value)
+
+        var passwordconfirm: String
+            get() = getString("passwordconfirm", "닉네임")
+            set(value) = setString("passwordconfirm", value)
+
+        var language: String
+            get() = getString("language", "닉네임")
+            set(value) = setString("language", value)
+
+        var accent: String
+            get() = getString("accent", "닉네임")
+            set(value) = setString("accent", value)
+
+        var interest: String
+            get() = getString("interest", "닉네임")
+            set(value) = setString("interest", value)
+
+        var detail_interest: String
+            get() = getString("detail_interest", "닉네임")
+            set(value) = setString("detail_interest", value)
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
     }
 }

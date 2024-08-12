@@ -17,10 +17,10 @@ class ClearSignupActivity : AppCompatActivity() {
         setContentView(R.layout.activity_clear_signup)
 
         findViewById<Button>(R.id.StartBtn).setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
+            startActivity(Intent(this, MainActivity::class.java))
         }
 
-        findViewById<TextView>(R.id.sub_text).text = "owncast와 함께\n[${SignupData.interest}-${SignupData.detail_interest}]이야기로 언어 공부를 시작해 보세요!"
+        findViewById<TextView>(R.id.sub_text).text = "owncast와 함께\n[${SignupData.detail_interest}]이야기로 언어 공부를 시작해 보세요!"
 
     }
 }

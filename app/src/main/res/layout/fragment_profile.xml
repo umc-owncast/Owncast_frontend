@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/profile"
+    android:background="@color/white"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ProfileActivity">
+    android:layout_height="match_parent">
 
-    <!-- 오버레이 뷰, 기본적으로 숨김 상태 -->
+
     <FrameLayout
         android:id="@+id/dialog_logout_confirmation"
         android:layout_width="match_parent"
@@ -28,12 +26,12 @@
             android:text="프로필"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="50dp"
             android:paddingBottom="15dp"
+            android:textColor="@color/black"
             android:paddingTop="15dp"
             android:paddingStart="16dp"
-            android:background="@color/white">
-        </TextView>
+            android:background="@color/white"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/go_in_icon"
-                android:contentDescription="profile_icon" />
+                android:contentDescription="profile_icon"/>
         </LinearLayout>
 
         <LinearLayout
@@ -100,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/go_in_icon"
-                android:contentDescription="set_lauguage_icon" />
+                android:contentDescription="set_lauguage_icon"/>
         </LinearLayout>
 
         <LinearLayout
@@ -112,18 +110,18 @@
                 android:id="@+id/language_line_1"
                 android:layout_width="20dp"
                 android:layout_height="1dp"
-                android:background="@color/white" />
+                android:background="@color/white"/>
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"/>
 
             <View
                 android:id="@+id/language_line_2"
                 android:layout_width="20dp"
                 android:layout_height="1dp"
-                android:background="@color/white" />
+                android:background="@color/white"/>
         </LinearLayout>
 
         <LinearLayout
@@ -154,6 +152,7 @@
                 android:layout_height="wrap_content"
                 android:text="야구"
                 android:textStyle="bold"
+                android:textColor="@color/black"
                 android:layout_marginEnd="20dp"/>
 
             <ImageView
@@ -161,7 +160,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/go_in_icon"
-                android:contentDescription="set_interest_icon" />
+                android:contentDescription="set_interest_icon"/>
         </LinearLayout>
 
         <LinearLayout
@@ -173,18 +172,18 @@
                 android:id="@+id/interest_line_1"
                 android:layout_width="20dp"
                 android:layout_height="1dp"
-                android:background="@color/white" />
+                android:background="@color/white"/>
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"/>
 
             <View
                 android:id="@+id/interest_line_2"
                 android:layout_width="20dp"
                 android:layout_height="1dp"
-                android:background="@color/white" />
+                android:background="@color/white"/>
         </LinearLayout>
 
         <TextView
@@ -197,21 +196,8 @@
             android:layout_marginTop="0dp"
             android:paddingBottom="15dp"
             android:paddingTop="15dp"
+            android:textColor="@color/black"
             android:paddingStart="16dp"
-            android:background="@color/white">
-        </TextView>
-
+            android:background="@color/white"/>
     </LinearLayout>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/main_bnv"
-        android:layout_width="413dp"
-        android:layout_height="93dp"
-        app:itemIconSize="20dp"
-        app:labelVisibilityMode="labeled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,5 @@
 package kr.dori.android.own_cast
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -71,8 +70,11 @@ class LoginActivity : ComponentActivity() {
     }
 
     private fun isValidLogin(id: String, password: String): Boolean {
-        val validIds = listOf("user1", "user2", "user3") // 예시 데이터 -> 이곳에 서버 연결 필요
-        val validPasswords = listOf("password1!", "password2@", "password3#") // 예시 데이터 -> 이곳에 서버 연결 필요
+
+        // 이곳에 서버 연결하기 -> 아이디와 비번 쌍을 줘서 해당 정보가 서버에 있는지 확인하기, 서버에서 9개 전역변수들의 값을 불러와서 전역변수에 각각 저장하기
+        val validIds = listOf("user1", "user2", "user3")
+        val validPasswords = listOf("password1!", "password2@", "password3#")
+
         return validIds.contains(id) && validPasswords.contains(password)
     }
 

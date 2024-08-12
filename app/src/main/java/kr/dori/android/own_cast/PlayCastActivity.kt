@@ -1,6 +1,5 @@
 package kr.dori.android.own_cast
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -10,17 +9,21 @@ import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import androidx.activity.viewModels
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackParameters
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.upstream.RawResourceDataSource
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackParameters
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.RawResourceDataSource
+import androidx.media3.exoplayer.ExoPlayer
 import kr.dori.android.own_cast.databinding.ActivityPlayCastBinding
 import java.util.concurrent.TimeUnit
+
+
 
 class PlayCastActivity : AppCompatActivity() {
     private lateinit var player: ExoPlayer
@@ -30,6 +33,7 @@ class PlayCastActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var isSeeking = false
 
+    @OptIn(UnstableApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayCastBinding.inflate(layoutInflater)
@@ -229,14 +233,14 @@ class PlayCastActivity : AppCompatActivity() {
         binding.playcastActivitySaveBackIv.setOnClickListener {
             val resultIntent = Intent()
             resultIntent.putExtra("result", true)
-            setResult(Activity.RESULT_OK, resultIntent)
+            setResult(RESULT_OK, resultIntent)
             finish()
         }
 
         binding.activityPlayCastAudioExitIv.setOnClickListener {
             val resultIntent = Intent()
             resultIntent.putExtra("result", false)
-            setResult(Activity.RESULT_OK, resultIntent)
+            setResult(RESULT_OK, resultIntent)
             finish()
         }
 

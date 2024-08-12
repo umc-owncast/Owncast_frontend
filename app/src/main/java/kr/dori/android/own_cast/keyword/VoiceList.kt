@@ -1,4 +1,4 @@
-data class VoiceList(
+package kr.dori.android.own_cast.keyworddata class VoiceList(
     val language: String,
     val accent: String,
     val styleBusiness: Style,

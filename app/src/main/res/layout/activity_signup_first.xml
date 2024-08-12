@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".SignupFirstActivity">
 
 
@@ -87,26 +88,66 @@
             android:id="@+id/main_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="owncast를 사용하시려면\n서비스 이용약관에 동의해주세요"
+            android:text="owncast 서비스를 제공해 드리기\n위해서는 이용약관 동의가 필요해요"
             android:textSize="22sp"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
-        <CheckBox
-            android:id="@+id/ok_btn_1"
-            android:layout_width="100dp"
+        <LinearLayout
+            android:layout_width="310dp"
             android:layout_height="wrap_content"
-            android:text="동의"
-            android:background="@drawable/button"
-            android:layout_marginTop="10dp"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="fill_vertical" >
 
-        <CheckBox
-            android:id="@+id/ok_btn_2"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="동의"
-            android:background="@drawable/button"
-            android:layout_marginTop="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="owncast 이용약관"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginRight="10dp">
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="필수"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/main_purple"
+                android:layout_marginRight="10dp">
+            </TextView>
+
+            <ImageView
+                android:id="@+id/checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:src="@drawable/signup_uncheck"
+                android:layout_gravity="end"
+                android:scaleType="fitEnd">
+            </ImageView>
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="320dp"
+            android:layout_height="285dp"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/edittext_background">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/signup_rules"
+                android:textSize="16sp" />
+
+        </ScrollView>
 
     </LinearLayout>
 
