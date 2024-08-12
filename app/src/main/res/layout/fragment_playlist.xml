@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".PlaylistFragment">
 
 
@@ -93,7 +94,7 @@
             android:layout_height="170dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="6dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="81dp"
             android:src="@drawable/playlistfr_dummy_iv"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -106,7 +107,7 @@
             android:id="@+id/fragment_playlist_notsave_iv"
             android:layout_width="170dp"
             android:layout_height="170dp"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="81dp"

@@ -21,7 +21,7 @@ class StudyAdapter() : RecyclerView.Adapter<StudyAdapter.Holder>() {
         holder.setText(data)
 
         if (position == selectedPosition) {
-            holder.binding.studyCategoryTv.setTextColor(Color.parseColor("#800080")) // 보라색
+            holder.binding.studyCategoryTv.setTextColor(Color.parseColor("#8050F2")) // 보라색
         } else {
             holder.binding.studyCategoryTv.setTextColor(Color.BLACK) // 검은색
         }

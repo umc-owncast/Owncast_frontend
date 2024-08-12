@@ -1,0 +1,8 @@
+<!-- res/drawable/seekbar_thumb.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <size
+        android:width="1dp"
+        android:height="1dp" />
+    <solid android:color="@android:color/transparent" /> <!-- Thumb의 색상 -->
+</shape>
