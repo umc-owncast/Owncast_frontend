@@ -1,14 +1,19 @@
 package kr.dori.android.own_cast
 
+import android.app.ActionBar.LayoutParams
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridLayout
+import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -48,11 +53,38 @@ class SearchFragment : Fragment(),SearchMover {
         searchAdapter.dataList = dummyData
 
 
-        binding.recyclerView.adapter = searchAdapter
+        /*binding.recyclerView.adapter = searchAdapter
         gridLayoutManager = GridLayoutManager(context,2,GridLayoutManager.VERTICAL, false)
 
         binding.recyclerView.layoutManager = gridLayoutManager
-        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.setHasFixedSize(true)*/
+
+        for (i in 0 until 4) {
+            // item_layout.xml을 inflate하여 GridLayout에 추가
+            val itemView = inflater.inflate(R.layout.item_search_fr, binding.gridLayout, false)
+            // 필요시 itemView의 내부 요소를 수정
+            /*var params:GridLayout.LayoutParams
+            if(i==1){
+                params = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(0))
+                *//*params.width = GridLayout.LayoutParams.WRAP_CONTENT/4.toInt()
+                params.height = GridLayout.LayoutParams.WRAP_CONTENT/4.toInt()*//*
+            }else if(i==2){
+                params = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(1))
+                *//*params.width = GridLayout.LayoutParams.WRAP_CONTENT/4*3.toInt()
+                params.height = GridLayout.LayoutParams.WRAP_CONTENT/4.toInt()*//*
+            }else if(i==2){
+                params = GridLayout.LayoutParams(GridLayout.spec(1), GridLayout.spec(0))
+                *//*params.width = GridLayout.LayoutParams.WRAP_CONTENT/4.toInt()
+                params.height = GridLayout.LayoutParams.WRAP_CONTENT/4*3.toInt()*//*
+            }else{
+                params = GridLayout.LayoutParams(GridLayout.spec(1), GridLayout.spec(1))
+                *//*params.width = GridLayout.LayoutParams.WRAP_CONTENT/4*3.toInt()
+                params.height = GridLayout.LayoutParams.WRAP_CONTENT/4*3.toInt()*//*
+            }
+            params.setGravity(Gravity.CENTER)
+            itemView.layoutParams = params*/
+            binding.gridLayout.addView(itemView)
+        }
 
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -64,6 +96,13 @@ class SearchFragment : Fragment(),SearchMover {
         }
 
 
+        binding.fragmentSearchArrowIv.setOnClickListener {
+            val input = SearchTwoFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.main_frm, input)
+                .addToBackStack(null)
+                .commitAllowingStateLoss()
+        }
         binding.fragmentSearchPlaintextIv.setOnClickListener {
             val input = SearchInputFragment()
             requireActivity().supportFragmentManager.beginTransaction()

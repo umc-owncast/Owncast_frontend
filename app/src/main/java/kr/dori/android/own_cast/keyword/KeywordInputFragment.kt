@@ -1,5 +1,6 @@
 package kr.dori.android.own_cast.keyword
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
@@ -43,7 +44,6 @@ class KeywordInputFragment:Fragment() {
                     //만약에 줄바꿈이나, 특수문자만 넣었으면은 false 들어감
                     isText = !(s.toString().isEmpty()||containsOnlySpecialCharacters(s.toString()))
                 }
-
                 btnActivate()
             }
 
@@ -64,7 +64,6 @@ class KeywordInputFragment:Fragment() {
                 // 백 스택에 추가하여 뒤로 가기 버튼을 통해 이전 프래그먼트로 돌아갈 수 있습니다.
                 fragmentTransaction.addToBackStack(null)//뒤로가기 버튼으로 돌아갈 수 있음.
                 fragmentTransaction.commit()
-
             }else{
                 Toast.makeText(requireContext(), "빈공간입니다.", Toast.LENGTH_SHORT).show()
             }
@@ -76,11 +75,14 @@ class KeywordInputFragment:Fragment() {
         if(isText){
             //textView.setTextColor(Color.parseColor("#FFFFFF"))
             //우리 메인 컬러
-            binding.keyInputNextIv.setBackgroundColor(Color.parseColor("#8050F2"))
+            binding.keyInputNextIv.backgroundTintList = ColorStateList.
+            valueOf(ContextCompat.getColor(this.requireContext(), R.color.main_color))
+
         }
         else{
             //textView.setTextColor(Color.parseColor("#FFFFFF"))
-            binding.keyInputNextIv.setBackgroundColor(Color.parseColor("#ECEFF1"))
+            binding.keyInputNextIv.backgroundTintList = ColorStateList.
+            valueOf(ContextCompat.getColor(this.requireContext(), R.color.button_unclick))
         }
 
     }

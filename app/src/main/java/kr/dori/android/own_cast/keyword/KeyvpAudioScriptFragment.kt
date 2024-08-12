@@ -61,12 +61,12 @@ class KeyvpAudioScriptFragment:Fragment() {
     fun initSpeedUi(){
         binding.keyAudScrCurSpeedTv.setOnClickListener {
             binding.keyAudScrSpeedToolCl.visibility = View.VISIBLE
-            binding.keyAudScrCurSpeedTv.setBackgroundResource(R.drawable.ic_keyword_audscr_speedui_abled)
+            binding.keyAudScrCurSpeedTv.setTextColor(Color.parseColor("#8050F2"))//메인컬러
         }
         //x버튼 누르면 꺼지는거
         binding.keywordSpeedBackIv.setOnClickListener {
             binding.keyAudScrSpeedToolCl.visibility = View.GONE
-            binding.keyAudScrCurSpeedTv.setBackgroundResource(R.drawable.ic_keyword_audscr_speedui_disabled)
+            binding.keyAudScrCurSpeedTv.setTextColor(Color.parseColor("#00051F"))
 
         }
 
@@ -99,6 +99,9 @@ class KeyvpAudioScriptFragment:Fragment() {
                 curSpeed = i
                 binding.keyAudScrSpeedToolCl.visibility = View.GONE
 
+
+                binding.keyAudScrCurSpeedTv.setTextColor(Color.parseColor("#00051F"))
+                //버튼 ui도 색깔 바꾸기
 
             }
         }

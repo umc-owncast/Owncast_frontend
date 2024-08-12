@@ -8,6 +8,7 @@ import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -114,18 +115,37 @@ class KeyvpAudioSetFragment: Fragment() {
      }
 
     private fun initDropDownList(){
-        val list = voiceList.styleBusiness.gender//여성1, 남성1 등으로 뜰듯
+        val list = voiceList.styleBusiness.gender
 
         //참고 https://develop-oj.tistory.com/27#google_vignette 드롭다운 메뉴
         binding.keywordAudStyleSp.adapter =
             KeyAudsetDropdownAdapter(requireContext(), R.layout.item_aud_set_spinner,list)
+        binding.keywordAudStyleSp.setOnTouchListener { view, motionEvent ->
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                // Spinner가 클릭되었을 때 실행할 코드
+                binding.keywordAudStyleSp.setBackgroundResource(R.drawable.key_audset_dropdown_bg)
+            }
+            false
+        }
+        binding.keywordAudStyleSp.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                // Spinner에 포커스가 잡혔을 때 실행할 코드
+                binding.keywordAudStyleSp.setBackgroundResource(R.drawable.key_audset_dropdown_off_bg)
+            } else {
+                // Spinner에서 포커스가 해제되었을 때 실행할 코드
+                Toast.makeText(context, "Spinner에서 포커스가 해제되었습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
         binding.keywordAudStyleSp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 val value = binding.keywordAudStyleSp.getItemAtPosition(p2).toString()
                 Toast.makeText(requireContext(), value, Toast.LENGTH_SHORT).show()
+                binding.keywordAudStyleSp.setBackgroundResource(R.drawable.key_audset_dropdown_off_bg)
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 // 선택되지 않은 경우
+                binding.keywordAudStyleSp.setBackgroundResource(R.drawable.key_audset_dropdown_off_bg)
+                //다시 스피너가 색깔이 바뀌지 않은거처럼 바꿔준다
             }
         }
         //위에는 캐주얼 비즈니스 버튼에서 눌렀을때 색깔 바뀌는것과 드롭다운 메뉴 변경
