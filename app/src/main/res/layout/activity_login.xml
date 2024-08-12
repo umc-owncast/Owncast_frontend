@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/login"
+    android:background="@color/white"
     tools:context=".LoginActivity">
 
 
@@ -58,7 +59,7 @@
             android:background="@drawable/edittext_background"
             android:padding="12dp"
             android:textColorHint="@color/hint_color"
-            android:textSize="@dimen/TitleMediumSize"/>
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/Password"
@@ -77,14 +78,14 @@
             android:background="@drawable/edittext_background"
             android:padding="12dp"
             android:textColorHint="@color/hint_color"
-            android:textSize="@dimen/TitleMediumSize"/>
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/error_msg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text = "아이디 또는 비밀번호가 잘못 되었습니다. 다시 입력해 주세요."
-            android:textSize="12sp"
+            android:textSize="10sp"
             android:textColor="#EB0000"
             android:layout_marginTop="15dp"
             android:visibility="gone"/>

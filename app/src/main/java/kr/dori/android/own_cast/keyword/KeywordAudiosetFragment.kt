@@ -82,9 +82,9 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
         binding.keywordAudiosetTb.getTabAt(0)?.view?.
         setBackgroundColor(resources.getColor(R.color.main_color,null))
         binding.keywordAudiosetTb.getTabAt(1)?.view?.
-        setBackgroundColor(resources.getColor(R.color.tab_gray,null))
+        setBackgroundColor(resources.getColor(R.color.gray,null))
         binding.keywordAudiosetTb.getTabAt(2)?.view?.
-        setBackgroundColor(resources.getColor(R.color.tab_gray,null))
+        setBackgroundColor(resources.getColor(R.color.gray,null))
     }
 
     //dialog용 listener 인터페이스 구현
@@ -106,7 +106,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
 
     private fun prevPage(){
         binding.keywordAudiosetTb.getTabAt(binding.keywordAudiosetVp.currentItem)?.view?.
-        setBackgroundColor(resources.getColor(R.color.tab_gray,null))
+        setBackgroundColor(resources.getColor(R.color.gray,null))
         binding.keywordAudiosetVp.currentItem -= 1
     }
 

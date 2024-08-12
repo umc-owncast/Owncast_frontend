@@ -2,9 +2,38 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ClearSignupActivity">
 
+    <ImageView
+        android:id="@+id/line1"
+        android:layout_width="350dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|left"
+        android:src="@drawable/screen_one_line"
+        android:scaleType="fitXY" />
+
+    <ImageView
+        android:id="@+id/line2"
+        android:layout_width="350dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|left"
+        android:src="@drawable/screen_one_line2"
+        android:scaleType="fitXY"
+        android:layout_marginTop="10dp"/>
+
+    <ImageView
+        android:id="@+id/star"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/clear_signup_star"
+        android:scaleType="fitXY"
+        android:layout_above="@+id/main_text"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="10dp" />
 
     <TextView
         android:id="@id/main_text"
@@ -25,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text=""
+        android:text="owncast와 함께\n[???] 이야기로 언어 공부를 시작해 보세요!"
         android:textAlignment="center"
         android:textSize="16sp"
         android:letterSpacing="0.025"
@@ -36,12 +65,14 @@
         android:id="@+id/StartBtn"
         android:layout_width="368dp"
         android:layout_height="48dp"
+        android:layout_marginBottom="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
         android:background="@drawable/button_purple"
         android:text="시작하기"
         android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/sub_text"
-        android:layout_marginTop="30dp"/>
+        android:textSize="@dimen/TitleMediumSize"
+        android:backgroundTint="@color/button_unclick"
+        android:clickable="false"/>
 
 </RelativeLayout>

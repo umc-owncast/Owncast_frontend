@@ -1,6 +1,5 @@
 package kr.dori.android.own_cast
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -9,51 +8,49 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
 
 
-class ChangeLanguageActivity : ComponentActivity() {
+class ChangeLanguageActivity: ComponentActivity() {
+
     private lateinit var nextButton: Button
-    private lateinit var language: String
-    private lateinit var accent: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_language)
 
-        // 입력 변수 초기화
-        language = "초기"
-        accent = "초기"
-
         val backButton = findViewById<ImageView>(R.id.backButton)
         nextButton = findViewById(R.id.btn_next)
 
         backButton.setOnClickListener {
-            startActivity(Intent(this, ProfileActivity::class.java))
+            SignupData.profile_detail_interest = "완료"
+            val intent = Intent(this, MainActivity ::class.java)
+            startActivity(intent)
         }
 
         findViewById<View>(R.id.EnSection).setOnClickListener(::onEnSectionClick)
         findViewById<View>(R.id.JpSection).setOnClickListener(::onJpSectionClick)
         findViewById<View>(R.id.SpSection).setOnClickListener(::onSpSectionClick)
 
-        // 확인 버튼을 눌러야만 정보가 업데이트
         nextButton.setOnClickListener {
-            if ( language != "초기" && accent != "초기" ) {
+            if ( SignupData.temp_language != getString(R.string.signup_info_first) && SignupData.temp_accent != getString(R.string.signup_info_first) ) {
 
-                // 정보 업데이트
-                SignupData.language = language
-                SignupData.accent = accent
+                SignupData.language = SignupData.temp_language
+                SignupData.accent = SignupData.temp_accent
 
-                // 이곳에 서버 업데이트 함수 추가 (언어와 발음 부분만 업데이트 시키기)
+                Toast.makeText(this, "언어 변경 완료", Toast.LENGTH_SHORT).show()
 
-                // 프로필로 이동
-                startActivity(Intent(this, ProfileActivity::class.java))
+                SignupData.profile_detail_interest = "완료"
+                val intent = Intent(this, MainActivity ::class.java)
+                startActivity(intent)
             }
         }
     }
 
     private fun onEnSectionClick(view: View) {
+
         setSectionVisibility(R.id.JpSection, R.id.JpSection_togle, false)
         setSectionVisibility(R.id.SpSection, R.id.SpSection_togle, false)
         setSectionVisibility(R.id.EnSection, R.id.EnSection_togle, true)
@@ -65,6 +62,7 @@ class ChangeLanguageActivity : ComponentActivity() {
     }
 
     private fun onJpSectionClick(view: View) {
+
         setSectionVisibility(R.id.EnSection, R.id.EnSection_togle, false)
         setSectionVisibility(R.id.SpSection, R.id.SpSection_togle, false)
         setSectionVisibility(R.id.JpSection, R.id.JpSection_togle, true)
@@ -73,6 +71,7 @@ class ChangeLanguageActivity : ComponentActivity() {
     }
 
     private fun onSpSectionClick(view: View) {
+
         setSectionVisibility(R.id.EnSection, R.id.EnSection_togle, false)
         setSectionVisibility(R.id.JpSection, R.id.JpSection_togle, false)
         setSectionVisibility(R.id.SpSection, R.id.SpSection_togle, true)
@@ -84,11 +83,9 @@ class ChangeLanguageActivity : ComponentActivity() {
     private fun setSectionVisibility(sectionId: Int, toggleId: Int, isVisible: Boolean) {
         val section = findViewById<LinearLayout>(sectionId)
         val toggle = findViewById<LinearLayout>(toggleId)
-
         section.setBackgroundResource(
             if (isVisible) R.drawable.button_purple else R.drawable.button_toggle
         )
-
         toggle.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
@@ -99,8 +96,8 @@ class ChangeLanguageActivity : ComponentActivity() {
         activateToggle(R.id.EnSection_togle_ind, false)
 
         // 상태 저장
-        language = "English"
-        accent = "usa"
+        SignupData.temp_language = "English"
+        SignupData.temp_accent = "usa"
     }
 
     private fun toggleOnClickEnEng(view: View) {
@@ -110,8 +107,8 @@ class ChangeLanguageActivity : ComponentActivity() {
         activateToggle(R.id.EnSection_togle_ind, false)
 
         // 상태 저장
-        SignupData.language = "English"
-        SignupData.accent = "eng"
+        SignupData.temp_language = "English"
+        SignupData.temp_accent = "eng"
     }
 
     private fun toggleOnClickEnAus(view: View) {
@@ -121,8 +118,8 @@ class ChangeLanguageActivity : ComponentActivity() {
         activateToggle(R.id.EnSection_togle_ind, false)
 
         // 상태 저장
-        language = "English"
-        accent = "aus"
+        SignupData.temp_language = "English"
+        SignupData.temp_accent = "aus"
     }
 
     private fun toggleOnClickEnInd(view: View) {
@@ -132,16 +129,16 @@ class ChangeLanguageActivity : ComponentActivity() {
         activateToggle(R.id.EnSection_togle_ind, true)
 
         // 상태 저장
-        language = "English"
-        accent = "ind"
+        SignupData.temp_language = "English"
+        SignupData.temp_accent = "ind"
     }
 
     private fun toggleOnClickJpJp(view: View) {
         activateToggle(R.id.JpSection_togle_jp, true)
 
         // 상태 저장
-        language = "Japanese"
-        accent = "jp"
+        SignupData.temp_language = "Japanese"
+        SignupData.temp_accent = "jp"
     }
 
     private fun toggleOnClickSpSp(view: View) {
@@ -149,8 +146,8 @@ class ChangeLanguageActivity : ComponentActivity() {
         activateToggle(R.id.SpSection_togle_usa, false)
 
         // 상태 저장
-        language = "Spanish"
-        accent = "sp"
+        SignupData.temp_language = "Spanish"
+        SignupData.temp_accent = "sp"
     }
 
     private fun toggleOnClickSpUsa(view: View) {
@@ -158,8 +155,8 @@ class ChangeLanguageActivity : ComponentActivity() {
         activateToggle(R.id.SpSection_togle_usa, true)
 
         // 상태 저장
-        language = "Spanish"
-        accent = "usa"
+        SignupData.temp_language = "Spanish"
+        SignupData.temp_accent = "usa"
     }
 
     private fun activateToggle(toggleId: Int, isVisible: Boolean) {

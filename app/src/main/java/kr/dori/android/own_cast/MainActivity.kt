@@ -5,50 +5,35 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kr.dori.android.own_cast.HomeFragment
-import kr.dori.android.own_cast.PlayCastActivity
-import kr.dori.android.own_cast.PlayCastViewModel
-import kr.dori.android.own_cast.PlaylistFragment
-import kr.dori.android.own_cast.ProfileActivity
-import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.SearchFragment
-import kr.dori.android.own_cast.StudyFragment
 import kr.dori.android.own_cast.databinding.ActivityMainBinding
-import kr.dori.android.own_cast.keyword.KeywordActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var playCastActivityResultLauncher: ActivityResultLauncher<Intent>
-
-
-
-
-   // private val playCastViewModel: PlayCastViewModel by viewModels { PlayCastViewModelFactory(application) }
 
     private var playlistTableVisible: Boolean = false // playlistTable의 현재 상태를 저장하는 변수
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 주석 처리된 부분 - 키워드 이동
+        // binding.goKeywordIv.setOnClickListener {
+        //     initKeyword()
+        // }
         initBottomNavigation()
 
-
-
-
-
         //play table call back process
-        playCastActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){result: ActivityResult ->
+        playCastActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
             handleActivityResult(result)
         }
 
@@ -66,6 +51,14 @@ class MainActivity : AppCompatActivity() {
             binding.activityMainPauseIv.visibility = View.VISIBLE
             binding.activityMainPlayIv.visibility = View.GONE
         }
+
+        if (SignupData.profile_detail_interest == "완료") {
+            SignupData.profile_detail_interest = ""
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.main_frm, ProfileFragment())
+                .commitAllowingStateLoss()
+        }
     }
 
     private fun initBottomNavigation() {
@@ -80,38 +73,33 @@ class MainActivity : AppCompatActivity() {
         binding.mainBnv.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.homeFragment -> {
-                    restorePlaylistTableVisibility()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, HomeFragment())
                         .commitAllowingStateLoss()
                     true
                 }
                 R.id.playlistFragment -> {
-                    restorePlaylistTableVisibility()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, PlaylistFragment())
                         .commitAllowingStateLoss()
                     true
                 }
                 R.id.studyFragment -> {
-                    hidePlaylistTable()
-
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, StudyFragment())
                         .commitAllowingStateLoss()
                     true
                 }
                 R.id.searchFragment -> {
-                    restorePlaylistTableVisibility() // searchFragment로 이동 시 GONE으로 설정
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, SearchFragment())
                         .commitAllowingStateLoss()
                     true
                 }
                 R.id.profileFragment -> {
-                    restorePlaylistTableVisibility()
-                    val intent = Intent(this, ProfileActivity::class.java)
-                    startActivity(intent)
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_frm, ProfileFragment())
+                        .commitAllowingStateLoss()
                     true
                 }
                 else -> false

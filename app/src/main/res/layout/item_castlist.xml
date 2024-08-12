@@ -79,7 +79,7 @@
 
         android:layout_height="0.25dp"
         android:layout_weight="1"
-        android:background="@color/tab_gray"
+        android:background="@color/gray"
         app:layout_constraintStart_toStartOf="@id/it_castlist_title_tv"
         app:layout_constraintTop_toBottomOf="@id/it_castlist_thumbnail_iv"
         android:layout_marginTop="5dp"

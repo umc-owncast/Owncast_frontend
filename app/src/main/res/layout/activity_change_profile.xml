@@ -5,6 +5,7 @@
     android:id="@+id/profile_setting"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ProfileSettingActivity">
 
     <RelativeLayout
@@ -44,15 +45,31 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/ID"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="아이디"
-                android:textStyle="bold"
-                android:textSize="12dp"
-                android:textColor="@color/black"
-                android:layout_marginTop="20dp"/>
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/ID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="아이디"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/IdError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/design_default_color_error"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    android:layout_marginStart="8dp"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -67,32 +84,48 @@
                         android:id="@+id/etId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="원래 아이디"
                         android:background="@drawable/edittext_background"
                         android:padding="12dp"
                         android:textSize="14sp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/btn_exit2"
+                        android:id="@+id/clearIdButton"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/btn_exit"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="340dp">
-                    </ImageView>
+                        android:layout_marginLeft="300dp"
+                        android:contentDescription="Clear ID" />
 
                 </FrameLayout>
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/Name"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="이름"
-                android:textStyle="bold"
-                android:textSize="12dp"
-                android:textColor="@color/black"
-                android:layout_marginTop="10dp"/>
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/Name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="이름"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/IdName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/design_default_color_error"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    android:layout_marginStart="8dp"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -107,32 +140,48 @@
                         android:id="@+id/etName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="원래 이름"
                         android:background="@drawable/edittext_background"
                         android:padding="12dp"
                         android:textSize="14sp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/btn_exit2"
+                        android:id="@+id/clearNameButton"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/btn_exit"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="340dp">
-                    </ImageView>
+                        android:layout_marginLeft="300dp"
+                        android:contentDescription="Clear Name" />
 
                 </FrameLayout>
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/NickName"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="닉네임"
-                android:textStyle="bold"
-                android:textSize="12dp"
-                android:textColor="@color/black"
-                android:layout_marginTop="10dp"/>
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/NickName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="닉네임"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/IdNickName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/design_default_color_error"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    android:layout_marginStart="8dp"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -147,22 +196,32 @@
                         android:id="@+id/etNickName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="원래 닉네임"
                         android:background="@drawable/edittext_background"
                         android:padding="12dp"
                         android:textSize="14sp" />
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/btn_exit2"
+                        android:id="@+id/clearNickNameButton"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="340dp">
-                    </ImageView>
+                        android:layout_marginLeft="300dp"
+                        android:contentDescription="Clear NickName"
+                        android:src="@drawable/btn_exit" />
 
                 </FrameLayout>
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/errorNickName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="이미 사용 중인 닉네임입니다."
+                android:textColor="@color/design_default_color_error"
+                android:textSize="12sp"
+                android:visibility="gone"
+                android:layout_marginTop="5dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -203,8 +262,8 @@
             android:text="확인"
             android:textColor="@android:color/white"
             android:textSize="@dimen/TitleMediumSize"
-            android:backgroundTint="@color/button_unclick"
-            android:clickable="false"/>
+            android:clickable="false"
+            android:backgroundTint="@color/button_unclick"/>
 
     </RelativeLayout>
 

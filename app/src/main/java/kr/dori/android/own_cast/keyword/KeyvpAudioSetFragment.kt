@@ -1,7 +1,6 @@
 package kr.dori.android.own_cast.keyword
 
-import VoiceList
-import VoiceListRepository
+
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -22,6 +21,8 @@ import androidx.viewpager2.widget.ViewPager2
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.SignupData
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAudiosetBinding
+import kr.dori.android.own_cast.keyworddata.VoiceList
+import kr.dori.android.own_cast.keyworddata.VoiceListRepository
 
 class KeyvpAudioSetFragment: Fragment() {
     lateinit var binding: FragmentKeyvpAudiosetBinding
@@ -95,7 +96,7 @@ class KeyvpAudioSetFragment: Fragment() {
      private fun initVoiceList(){
          voiceList = when(SignupData.language){
             "English"-> when(SignupData.accent){
-                "usa"->VoiceListRepository.voiceLists[0][0]
+                "usa"-> VoiceListRepository.voiceLists[0][0]
                 "eng"->VoiceListRepository.voiceLists[0][1]
                 "aus"->VoiceListRepository.voiceLists[0][2]
                 else->VoiceListRepository.voiceLists[0][3]//ind

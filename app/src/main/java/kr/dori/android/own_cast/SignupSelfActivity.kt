@@ -25,7 +25,7 @@ class SignupSelfActivity : ComponentActivity() {
         val btnNext = findViewById<Button>(R.id.btn_next)
         var check = 0
 
-        findViewById<TextView>(R.id.main_text).text = "(${SignupData.nickname})님이 가장 많은\n시간을 보내는 분야를 선택해주세요"
+        findViewById<TextView>(R.id.main_text).text = "${SignupData.nickname}님이 가장 많은\n시간을 보내는 분야를 선택해주세요"
 
         // 초기에는 완료 버튼을 비활성화
         btnNext.isEnabled = false

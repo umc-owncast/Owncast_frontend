@@ -1,29 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
-    <TextView
-        android:id="@+id/splash_text_line1"
+    <ImageView
+        android:id="@+id/line1"
+        android:layout_width="350dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|left"
+        android:src="@drawable/screen_one_line"
+        android:scaleType="fitXY" />
+
+    <ImageView
+        android:id="@+id/line2"
+        android:layout_width="350dp"
+        android:layout_height="100dp"
+        android:layout_gravity="top|left"
+        android:src="@drawable/screen_one_line2"
+        android:scaleType="fitXY"
+        android:layout_marginTop="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/main_section"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="In your daily life"
-        android:textSize="14sp"
-        android:letterSpacing="0.025"
-        android:textColor="@color/black"/>
+        android:orientation="horizontal"
+        android:layout_below="@+id/line1"
+        android:layout_marginTop="50dp">
 
+        <TextView
+            android:id="@+id/main_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="말을 잘하고 싶은\n당신을 위해"
+            android:textSize="25sp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="50dp"/>
 
-    <TextView
-        android:id="@+id/splash_text_line2"
+        <ImageView
+            android:id="@+id/star"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/icon_star"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/sub_ic"
+        android:layout_width="1400dp"
+        android:layout_height="200dp"
+        android:src="@drawable/splash_group"
+        android:layout_below="@+id/line2"
+        android:layout_marginTop="30dp"
+        android:gravity="center_vertical"
+        android:scaleType="fitXY"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/sub_section"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/splash_text_line1"
-        android:layout_centerHorizontal="true"
-        android:text="owncast"
-        android:textSize="14sp"
-        android:letterSpacing="0.025"
-        android:textColor="@color/black"/>
+        android:orientation="horizontal"
+        android:layout_below="@+id/main_section"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/ic_o"
+            android:layout_width="27dp"
+            android:layout_height="35dp"
+            android:src="@drawable/screen_two_logo_item"
+            android:scaleType="fitCenter"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="50dp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/ic_o_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="o"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:textColor="@color/main_purple"
+            android:layout_marginLeft="50dp"/>
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="wncast"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:textColor="@color/main_purple"/>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/icon_mic"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="3dp">
+        </ImageView>
+
+    </LinearLayout>
+
 
 </RelativeLayout>
