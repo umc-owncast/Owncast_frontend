@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
@@ -92,6 +93,8 @@ class ProfileSettingActivity : AppCompatActivity() {
             SignupData.id = etId.text.toString()
             SignupData.name = etName.text.toString()
             SignupData.nickname = etNickName.text.toString()
+
+            Toast.makeText(this, "프로필 변경 완료", Toast.LENGTH_SHORT).show()
 
             SignupData.profile_detail_interest = "완료"
             val intent = Intent(this, MainActivity::class.java)

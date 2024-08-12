@@ -1,5 +1,6 @@
 package kr.dori.android.own_cast
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -72,14 +74,18 @@ class ChangePasswordActivity : ComponentActivity() {
         }
 
         btnNext.setOnClickListener {
-            finish()
+            SignupData.password = etNewPs.toString()
+
+            Toast.makeText(this, "비밀번호 변경 완료", Toast.LENGTH_SHORT).show()
+
+            SignupData.profile_detail_interest = "완료"
+            val intent = Intent(this, MainActivity ::class.java)
+            startActivity(intent)
         }
 
         // 각 EditText의 텍스트 변경 시 이벤트 리스너
-        // EditText의 텍스트 변경 시 TextWatcher를 사용한 이벤트 리스너
         etPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // 텍스트 변경 전 처리할 내용이 있다면 이곳에 작성합니다.
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -133,7 +139,7 @@ class ChangePasswordActivity : ComponentActivity() {
     // 실시간으로 현재 비밀번호를 검사하는 함수
     private fun validateCurrentPassword() : Boolean {
         val currentPassword = etPassword.text.toString()
-        if (currentPassword != "aadf11") {
+        if (currentPassword != SignupData.password) {
             passwordError.text = "현재 비밀번호가 올바르지 않습니다."
             passwordError.isVisible = true
 

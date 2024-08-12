@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
 
@@ -105,6 +106,8 @@ class ChangeDetailInterestActivity : ComponentActivity() {
 
             SignupData.interest = SignupData.temp_interest
             SignupData.detail_interest = SignupData.temp_detail_interest
+
+            Toast.makeText(this, "관심사 변경 완료", Toast.LENGTH_SHORT).show()
 
             val intent = Intent(this, MainActivity ::class.java)
             startActivity(intent)

@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--    저장소 접근 권한   -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+
     <application
         android:name=".SignupData"
         android:allowBackup="true"
@@ -13,11 +18,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Own_cast"
         tools:targetApi="31">
-
-        <activity
-            android:name=".keyword.KeywordActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
 
         <activity android:name=".AuthActivity" android:exported="false"/>
         <activity android:name=".AuthAfterActivity" android:exported="false"/>
@@ -39,6 +39,29 @@
         <activity android:name=".PasswordSettingActivity" android:exported="false"/>
         <activity android:name=".ProfileSettingActivity" android:exported="false"/>
         <activity android:name=".ChangePasswordActivity" android:exported="false"/>
+
+
+        <activity
+            android:name=".SearchAddCategoryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Own_cast" />
+        <activity
+            android:name=".EditAudioActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Own_cast" />
+        <activity
+            android:name=".OnlySearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PlayCastActivity"
+            android:exported="false" />
+
+
+        <activity
+            android:name=".keyword.KeywordActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
 
         <activity
             android:name=".SplashActivity"

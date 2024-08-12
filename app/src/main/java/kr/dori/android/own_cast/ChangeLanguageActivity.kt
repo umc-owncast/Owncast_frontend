@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
 
@@ -24,7 +25,9 @@ class ChangeLanguageActivity: ComponentActivity() {
         nextButton = findViewById(R.id.btn_next)
 
         backButton.setOnClickListener {
-            startActivity(Intent(this, SignupThirdActivity::class.java))
+            SignupData.profile_detail_interest = "완료"
+            val intent = Intent(this, MainActivity ::class.java)
+            startActivity(intent)
         }
 
         findViewById<View>(R.id.EnSection).setOnClickListener(::onEnSectionClick)
@@ -37,6 +40,8 @@ class ChangeLanguageActivity: ComponentActivity() {
                 SignupData.language = SignupData.temp_language
                 SignupData.accent = SignupData.temp_accent
 
+                Toast.makeText(this, "언어 변경 완료", Toast.LENGTH_SHORT).show()
+
                 SignupData.profile_detail_interest = "완료"
                 val intent = Intent(this, MainActivity ::class.java)
                 startActivity(intent)
@@ -45,7 +50,6 @@ class ChangeLanguageActivity: ComponentActivity() {
     }
 
     private fun onEnSectionClick(view: View) {
-        findViewById<TextView>(R.id.main_text).text = "원하는 발음을 선택해주세요"
 
         setSectionVisibility(R.id.JpSection, R.id.JpSection_togle, false)
         setSectionVisibility(R.id.SpSection, R.id.SpSection_togle, false)
@@ -58,7 +62,6 @@ class ChangeLanguageActivity: ComponentActivity() {
     }
 
     private fun onJpSectionClick(view: View) {
-        findViewById<TextView>(R.id.main_text).text = "원하는 발음을 선택해주세요"
 
         setSectionVisibility(R.id.EnSection, R.id.EnSection_togle, false)
         setSectionVisibility(R.id.SpSection, R.id.SpSection_togle, false)
@@ -68,7 +71,6 @@ class ChangeLanguageActivity: ComponentActivity() {
     }
 
     private fun onSpSectionClick(view: View) {
-        findViewById<TextView>(R.id.main_text).text = "원하는 발음을 선택해주세요"
 
         setSectionVisibility(R.id.EnSection, R.id.EnSection_togle, false)
         setSectionVisibility(R.id.JpSection, R.id.JpSection_togle, false)

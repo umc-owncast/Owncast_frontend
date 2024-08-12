@@ -48,22 +48,22 @@ class SplashActivity : AppCompatActivity() {
             hideMainSectionAndSubSection()
             moveImageViewOffScreen()
 
-        }, 1000)
+        }, 2000)
     }
 
     private fun hideMainSectionAndSubSection() {
-        // 1초 후에 메인 섹션과 서브 섹션을 숨김
+
+        // 1초 후에 텍스트 뷰를 숨기고 이미지 뷰를 표시
         Handler(Looper.getMainLooper()).postDelayed({
             mainSection.visibility = View.GONE
             subSection.visibility = View.GONE
 
-        }, 1000)
-
+        }, 2000)
     }
 
     private fun moveImageViewOffScreen() {
-        val animation = TranslateAnimation(2000f, -2000f, 0f, 0f) // 화면 왼쪽으로 이동
-        animation.duration = 5000 // 5초 동안 이동
+        val animation = TranslateAnimation(1000f, -1100f, 0f, 0f) // 화면 왼쪽으로 이동
+        animation.duration = 3000 // 3초 동안 이동
         animation.fillAfter = true // 애니메이션 완료 후 위치 유지
 
         findViewById<ImageView>(R.id.sub_ic).visibility = View.VISIBLE
@@ -74,8 +74,8 @@ class SplashActivity : AppCompatActivity() {
     // 화면 전환
     private fun prepareForActivityTransition() {
         MainScope().launch {
-            // 5초 대기
-            delay(5000)
+            // 4초 대기
+            delay(4000)
 
             // 화면 전환할 액티비티 결정
             val targetActivity = if (SignupData.id == getString(R.string.signup_info_first)) {

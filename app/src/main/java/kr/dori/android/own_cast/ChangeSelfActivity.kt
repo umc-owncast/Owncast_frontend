@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
 
@@ -36,6 +37,8 @@ class ChangeSelfActivity : ComponentActivity() {
 
             SignupData.interest = "self"
             SignupData.detail_interest = SignupData.temp_detail_interest
+
+            Toast.makeText(this, "관심사 변경 완료", Toast.LENGTH_SHORT).show()
 
             startActivity(Intent(this, MainActivity::class.java))
         }

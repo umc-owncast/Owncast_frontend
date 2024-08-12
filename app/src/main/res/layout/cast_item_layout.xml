@@ -6,7 +6,7 @@
     android:layout_height="64dp">
 
     <ImageView
-        android:id="@+id/cast_item_iv"
+        android:id="@+id/playlist_cast2_iv"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
@@ -24,7 +24,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="14dp"
         android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/cast_item_iv"
+        app:layout_constraintStart_toEndOf="@+id/playlist_cast2_iv"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView

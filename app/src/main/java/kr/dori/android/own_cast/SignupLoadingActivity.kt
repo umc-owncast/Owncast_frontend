@@ -31,7 +31,7 @@ class SignupLoadingActivity : ComponentActivity() {
             while (true) {
                 loadingInner.setImageResource(images[index])
                 index = (index + 1) % images.size
-                delay(1000) // 1초 간격으로 이미지 교체
+                delay(700) // 0.7초 간격으로 이미지 교체
             }
         }
 

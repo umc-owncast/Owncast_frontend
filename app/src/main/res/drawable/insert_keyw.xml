@@ -7,13 +7,19 @@
     android:viewportWidth="328"
     android:viewportHeight="48"
     >
+
     <group>
+
         <clip-path
             android:pathData="M8 0H320C324.418 0 328 3.58172 328 8V40C328 44.4183 324.418 48 320 48H8C3.58172 48 0 44.4183 0 40V8C0 3.58172 3.58172 0 8 0Z"
             />
         <path
             android:pathData="M0 0V48H328V0"
             android:fillColor="#FFFFFF"
-            />
+
+            >
+
+        </path>
+
     </group>
 </vector>

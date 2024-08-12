@@ -4,28 +4,53 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#FFFFFF">
-
-    <ImageView
-
-
+    android:background="#FFFFFF"
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/key_aud_save_src_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/keyword_aud_save_src_bg"
-        android:scaleType="centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="52dp"/>
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_keyword_audio_save_gallerly"
-        app:layout_constraintTop_toTopOf="@id/key_aud_save_src_iv"
-        app:layout_constraintStart_toStartOf="@id/key_aud_save_src_iv"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="64dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="52dp">
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/keyword_aud_save_src_bg"
+            app:cardElevation="0dp">
+            <ImageView
+                android:id="@+id/key_aud_save_thumb_iv"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/searchfr_item_thumb_bg"
+
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+        </androidx.cardview.widget.CardView>
+        <ImageView
+            android:id="@+id/key_aud_save_gal_ic"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_keyword_audio_save_gallerly"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="64dp"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <EditText
         android:id="@+id/key_aud_save_title_et"
         android:layout_width="0dp"
@@ -73,7 +98,8 @@
         app:layout_constraintStart_toStartOf="@id/key_aud_save_title_et"
         app:layout_constraintTop_toBottomOf="@id/key_aud_save_category_tv"
         android:layout_marginTop="4dp"
-        android:background="@drawable/key_audset_dropdown_bg"/>
+        android:background="@drawable/key_audset_dropdown_bg"
+        android:popupBackground = "@color/white"/>
 
     <TextView
         android:id="@+id/key_aud_save_sel_open_tv"
@@ -101,8 +127,10 @@
 
     <ImageView
         android:id="@+id/key_aud_save_btn_iv"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintWidth_percent="0.911111111"
+        android:scaleType="centerCrop"
         android:src="@drawable/key_save_btn_create_gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

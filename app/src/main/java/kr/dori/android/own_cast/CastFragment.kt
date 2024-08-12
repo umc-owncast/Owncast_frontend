@@ -1,9 +1,15 @@
 package kr.dori.android.own_cast
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 
 import androidx.fragment.app.activityViewModels
@@ -11,9 +17,11 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kr.dori.android.own_cast.databinding.FragmentCastBinding
 
-class CastFragment : Fragment() {
+class CastFragment() : Fragment(), ActivityMover {
     private lateinit var binding: FragmentCastBinding
     private lateinit var castAdapter: CastAdapter
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+
 
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
@@ -23,7 +31,7 @@ class CastFragment : Fragment() {
 
 
         // CastAdapter 초기화
-        castAdapter = CastAdapter()
+        castAdapter = CastAdapter(this)
 
 
         // ViewModel 데이터 관찰
@@ -54,6 +62,15 @@ class CastFragment : Fragment() {
             binding.fragmentCastTitleTv.text = "${castAdapter.itemCount}"
         }
 
+        // Initialize ActivityResultLauncher
+        activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                Log.d("ifsuccess", "success")
+                val data: Intent? = result.data
+                val isSuccess = data?.getBooleanExtra("result", false) ?: false
+                (activity as? MainActivity)?.setPlaylistTableVisibility(isSuccess)
+            }
+        }
 
         // RecyclerView 설정
         binding.fragmentCastRv.adapter = castAdapter
@@ -64,7 +81,25 @@ class CastFragment : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         }
 
+        binding.fragmentCastPlayIv.setOnClickListener {
+            ToPlayCast()
+        }
+
+        binding.fragmentCastShuffleIv.setOnClickListener {
+            ToPlayCast()
+        }
+
         return binding.root
+    }
+
+    override fun ToPlayCast() {
+        val intent = Intent(requireContext(), PlayCastActivity::class.java)
+        activityResultLauncher.launch(intent)
+    }
+
+    override fun ToEditAudio() {
+        val intent = Intent(requireContext(), EditAudioActivity::class.java)
+        startActivity(intent)
     }
 }
 

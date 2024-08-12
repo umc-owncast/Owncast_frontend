@@ -24,7 +24,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.AddCategoryDialog
-import kr.dori.android.own_cast.MainActivity
+
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.FragmentKeywordAudiosetBinding
 //Keyvp가 달린 3개의 프래그먼트를 관리함, frm으로 감싸고 있음.
@@ -39,35 +39,24 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
         binding = FragmentKeywordAudiosetBinding.inflate(inflater, container, false)
 
         val searchText = (arguments?.getString("searchText"))
-
-
         val keywordAdapter = KeywordAudiosetVPAdapter(this,searchText)
-
         binding.keywordAudiosetVp.adapter = keywordAdapter
-        //이 코드를 넣으면 뷰페이저가 유저의 swipe를 비활성화시킴
-        binding.keywordAudiosetVp.isUserInputEnabled = false
+        initViewPager()
 
-        //내부의 탭들의 간격을 벌려주는 함수
-        for (i in 0 until binding.keywordAudiosetTb.tabCount) {
-            val tab = (binding.keywordAudiosetTb.getChildAt(0) as ViewGroup).getChildAt(i)
-            val p = tab.layoutParams as ViewGroup.MarginLayoutParams
-            p.setMargins(30, 0, 30, 0)
-            tab.requestLayout()
-        }
-
-        //indicator를 색칠할 방법이 없어서 배경색을 칠했음
-        binding.keywordAudiosetTb.getTabAt(0)?.view?.
-        setBackgroundColor(resources.getColor(R.color.main_color,null))
         binding.keyAudDoneIv.setOnClickListener{
             val dialog = KeywordAudioOutDialog(requireContext(), this)
-
             dialog.show()
         }
 
         binding.keyAudBackIv.setOnClickListener{
             if(binding.keywordAudiosetVp.currentItem==0){
-                requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
-                requireActivity().supportFragmentManager.popBackStack()
+                val isHome = (arguments?.getBoolean("isHome"))
+                if(isHome==null||isHome==false){
+                    requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
+                    requireActivity().supportFragmentManager.popBackStack()
+                }else{//홈프래그먼트에서 키워드 클릭하고 바로오면은, 그냥 액티비티 종료
+                    getOut()
+                }
             }
             else{
                 prevPage()
@@ -75,11 +64,28 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
             }
         }
 
-
-
         return binding.root
     }
 
+    fun initViewPager(){
+        //이 코드를 넣으면 뷰페이저가 유저의 swipe를 비활성화시킴
+        binding.keywordAudiosetVp.isUserInputEnabled = false
+
+        //내부의 탭들의 간격을 벌려주는 함수
+        for (i in 0 until binding.keywordAudiosetTb.tabCount) {
+            val tab = (binding.keywordAudiosetTb.getChildAt(0) as ViewGroup).getChildAt(i)
+            val p = tab.layoutParams as ViewGroup.MarginLayoutParams
+            p.setMargins(4, 0, 4, 0)
+            tab.requestLayout()
+        }
+        //indicator를 색칠할 방법이 없어서 배경색을 칠했음
+        binding.keywordAudiosetTb.getTabAt(0)?.view?.
+        setBackgroundColor(resources.getColor(R.color.main_color,null))
+        binding.keywordAudiosetTb.getTabAt(1)?.view?.
+        setBackgroundColor(resources.getColor(R.color.gray,null))
+        binding.keywordAudiosetTb.getTabAt(2)?.view?.
+        setBackgroundColor(resources.getColor(R.color.gray,null))
+    }
 
     //dialog용 listener 인터페이스 구현
     override fun getOut() {
@@ -87,32 +93,20 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
     }
 
     override fun onButtonClick() {
-
-
-
         binding.keywordAudiosetVp.currentItem += 1
         binding.keywordAudiosetTb.getTabAt(binding.keywordAudiosetVp.currentItem)?.view?.
         setBackgroundColor(resources.getColor(R.color.main_color,null))
 
         //현재 위치의 배경을 칠해줌
     }
-    private fun showLoadingFragment() {
-        val fragmentTransaction = (context as KeywordActivity).supportFragmentManager.beginTransaction()
-        val loadingFragment = KeywordLoadingFragment()
-        fragmentTransaction
-            .add(R.id.keyword_fragment_container, loadingFragment)
-            .commitAllowingStateLoss()
 
-        // 로딩 애니메이션을 3초 동안 실행
-        loadingFragment.startLoading(3000)
-    }
 
 
 
 
     private fun prevPage(){
         binding.keywordAudiosetTb.getTabAt(binding.keywordAudiosetVp.currentItem)?.view?.
-        setBackgroundColor(resources.getColor(R.color.white,null))
+        setBackgroundColor(resources.getColor(R.color.gray,null))
         binding.keywordAudiosetVp.currentItem -= 1
     }
 
