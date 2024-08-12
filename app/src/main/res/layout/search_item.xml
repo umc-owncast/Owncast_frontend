@@ -102,7 +102,7 @@
 
         android:layout_height="1dp"
         android:layout_weight="1"
-        android:background="@color/tab_gray"
+        android:background="@color/gray"
         app:layout_constraintStart_toStartOf="@id/search_title_tv"
         app:layout_constraintBottom_toBottomOf="parent"
 
