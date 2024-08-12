@@ -73,30 +73,35 @@ class MainActivity : AppCompatActivity() {
         binding.mainBnv.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.homeFragment -> {
+                    restorePlaylistTableVisibility()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, HomeFragment())
                         .commitAllowingStateLoss()
                     true
                 }
                 R.id.playlistFragment -> {
+                    restorePlaylistTableVisibility()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, PlaylistFragment())
                         .commitAllowingStateLoss()
                     true
                 }
                 R.id.studyFragment -> {
+                    hidePlaylistTable()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, StudyFragment())
                         .commitAllowingStateLoss()
                     true
                 }
                 R.id.searchFragment -> {
+                    restorePlaylistTableVisibility()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, SearchFragment())
                         .commitAllowingStateLoss()
                     true
                 }
                 R.id.profileFragment -> {
+                    restorePlaylistTableVisibility()
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, ProfileFragment())
                         .commitAllowingStateLoss()
