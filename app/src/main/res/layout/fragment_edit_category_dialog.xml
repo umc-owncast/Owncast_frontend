@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/edit_category"
     android:layout_width="216dp"
-
+    android:background="#FFFFFF"
     android:layout_height="132dp"
     tools:context=".EditCategoryDialog">
 
