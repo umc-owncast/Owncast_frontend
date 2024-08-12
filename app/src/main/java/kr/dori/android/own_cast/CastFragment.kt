@@ -55,7 +55,7 @@ class CastFragment() : Fragment(), ActivityMover {
 
 
         if (savedData != null) {
-            binding.fragmentCastMaintitleTv.text = "저장한 캐스트"
+            binding.fragmentCastMaintitleTv.text = "내가 만든 캐스트"
             binding.fragmentCastTitleTv.text = "${castAdapter.itemCount},"
         } else {
             binding.fragmentCastMaintitleTv.text = "담아온 캐스트"
