@@ -250,8 +250,8 @@ class PlayCastActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        player.release() // ExoPlayer 자원 해제
-        stopSeekBarUpdate()
+        //player.release() // ExoPlayer 자원 해제
+        //stopSeekBarUpdate()
     }
 
     private fun startSeekBarUpdate() {
@@ -284,6 +284,7 @@ class PlayCastActivity : AppCompatActivity() {
         views.forEach { view ->
             view.visibility = View.GONE
             binding.speedTable.visibility = View.GONE
+            binding.realSpeedTv.setTextColor(ContextCompat.getColor(this, R.color.black))
         }
         when (selectedSpeed) {
             0.5f -> {
@@ -360,7 +361,6 @@ class PlayCastActivity : AppCompatActivity() {
         binding.activityPlayCastAudioExitIv.visibility = View.GONE
         binding.activityPlayCastNotAudioExit.visibility = View.VISIBLE
         binding.playcastActivitySaveBackIv.visibility = View.GONE
-
         supportFragmentManager.beginTransaction()
             .replace(R.id.play_cast_frm, CastPlaylistFragment())
             .commitAllowingStateLoss()
@@ -374,7 +374,6 @@ class PlayCastActivity : AppCompatActivity() {
         binding.activityPlayCastAudioExitIv.visibility = View.VISIBLE
         binding.activityPlayCastNotAudioExit.visibility = View.GONE
         binding.playcastActivitySaveBackIv.visibility = View.VISIBLE
-
         supportFragmentManager.beginTransaction()
             .replace(R.id.play_cast_frm, CastAudioFragment())
             .commitAllowingStateLoss()

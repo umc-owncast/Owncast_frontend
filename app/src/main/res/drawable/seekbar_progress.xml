@@ -1,0 +1,26 @@
+<!-- res/drawable/seekbar_progress.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Track (진행되지 않은 부분) -->
+    <item>
+        <shape android:shape="rectangle">
+            <size
+                android:height="4dp"
+            android:width="0dp" />
+            <solid android:color="#ECEFF1" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+
+    <!-- Progress (진행된 부분) -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape android:shape="rectangle">
+                <corners android:radius="10dp" />
+                <size
+                    android:height="4dp"
+                android:width="0dp" />
+                <solid android:color="#8050F2" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>
