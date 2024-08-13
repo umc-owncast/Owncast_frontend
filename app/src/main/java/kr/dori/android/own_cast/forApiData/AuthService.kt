@@ -29,11 +29,9 @@ fun apiexecute(){
             when(resp.code) {
                 "COMMON200" -> {
                     Log.d("apiTest","연결성공")
-
                 }
                 else ->{
                     Log.d("apiTest","연결실패 코드 : ${resp.code}")
-
                 }
             }
         }

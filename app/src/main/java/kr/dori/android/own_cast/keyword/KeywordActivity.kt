@@ -32,7 +32,7 @@ data class RequestApiData(
     var audiotime:Int
 )
 
-class KeywordActivity : AppCompatActivity(),Connector {
+class KeywordActivity : AppCompatActivity() {
     private lateinit var binding: ActivityKeywordBinding
     //액티비티 내부 전반에서 사용할 데이터들, 스크립트를 생성할때, 캐스트 생성할때 사용하고 서버로 보낼 예정
 
@@ -127,11 +127,9 @@ class KeywordActivity : AppCompatActivity(),Connector {
             override fun onResponse(call: Call<AuthResponse<List<CastHomeDTO>>>, response: Response<AuthResponse<List<CastHomeDTO>>>) {
                 Log.d("SIGNUP/SUCCESS", response.toString())
                 val resp: AuthResponse<List<CastHomeDTO>> = response.body()!!
-
                 when(resp.code) {
                     "COMMON200" -> {
                         Log.d("apiTest","연결성공")
-
                     }
                     else ->{
                         Log.d("apiTest","연결실패 코드 : ${resp.code}")
@@ -146,12 +144,6 @@ class KeywordActivity : AppCompatActivity(),Connector {
         })
     }
 
-    override fun onSuccess() {
-        Log.d("apiTest","연결성공")
-    }
 
-    override fun onFailure() {
-        Log.d("apiTest", "연결실패")
-    }
 
 }
