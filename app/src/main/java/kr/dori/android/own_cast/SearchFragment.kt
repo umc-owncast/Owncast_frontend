@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -63,26 +64,20 @@ class SearchFragment : Fragment(),SearchMover {
             // item_layout.xml을 inflate하여 GridLayout에 추가
             val itemView = inflater.inflate(R.layout.item_search_fr, binding.gridLayout, false)
             // 필요시 itemView의 내부 요소를 수정
-            /*var params:GridLayout.LayoutParams
-            if(i==1){
-                params = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(0))
-                *//*params.width = GridLayout.LayoutParams.WRAP_CONTENT/4.toInt()
-                params.height = GridLayout.LayoutParams.WRAP_CONTENT/4.toInt()*//*
-            }else if(i==2){
-                params = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(1))
-                *//*params.width = GridLayout.LayoutParams.WRAP_CONTENT/4*3.toInt()
-                params.height = GridLayout.LayoutParams.WRAP_CONTENT/4.toInt()*//*
-            }else if(i==2){
-                params = GridLayout.LayoutParams(GridLayout.spec(1), GridLayout.spec(0))
-                *//*params.width = GridLayout.LayoutParams.WRAP_CONTENT/4.toInt()
-                params.height = GridLayout.LayoutParams.WRAP_CONTENT/4*3.toInt()*//*
-            }else{
-                params = GridLayout.LayoutParams(GridLayout.spec(1), GridLayout.spec(1))
-                *//*params.width = GridLayout.LayoutParams.WRAP_CONTENT/4*3.toInt()
-                params.height = GridLayout.LayoutParams.WRAP_CONTENT/4*3.toInt()*//*
+            val thumbButton = itemView.findViewById<ImageView>(R.id.item_thumb_iv)
+            thumbButton.setOnClickListener {
+                goPlayCast()
             }
-            params.setGravity(Gravity.CENTER)
-            itemView.layoutParams = params*/
+            val addCtgOffBtn = itemView.findViewById<ImageView>(R.id.searchfr_item_add_category_off_iv)
+            /*val addCtgOnBtn = itemView.findViewById<ImageView>(R.id.searchfr_item_add_category_on_iv)*/
+            addCtgOffBtn.setOnClickListener {
+                /*addCtgOffBtn.visibility = View.GONE
+                addCtgOnBtn.visibility = View.VISIBLE*/
+                goAddCast()
+                /*addCtgOffBtn.visibility = View.VISIBLE
+                addCtgOnBtn.visibility = View.GONE*/
+            }
+
             binding.gridLayout.addView(itemView)
         }
 

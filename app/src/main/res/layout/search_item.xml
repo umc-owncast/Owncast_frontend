@@ -75,17 +75,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/search_play" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/search_add_category_off_iv"
         android:layout_width="28dp"
         android:layout_height="28dp"
+        android:background="@color/white"
+        android:scaleType="fitCenter"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/search_add_category_off" />
+        android:src="@drawable/add_ctg_btn_ui" />
 
-    <ImageView
+    <!--<ImageButton
         android:id="@+id/search_add_category_on_iv"
         android:layout_width="28dp"
         android:layout_height="28dp"
@@ -94,7 +96,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/search_add_category_on" />
+        android:src="@drawable/add_ctg_btn_ui" />-->
 
     <View
 
