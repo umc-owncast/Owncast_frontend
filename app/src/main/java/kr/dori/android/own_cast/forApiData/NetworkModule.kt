@@ -1,5 +1,4 @@
-package kr.dori.android.own_cast
-
+package kr.dori.android.own_cast.forApiData
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

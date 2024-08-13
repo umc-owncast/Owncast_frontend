@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!--    저장소 접근 권한   -->
+    <!-- 저장소 접근 권한 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -15,33 +15,76 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Own_cast"
         tools:targetApi="31">
+        <service
+            android:name=".keyword.AuthService"
+            android:enabled="true"
+            android:exported="true"></service>
 
-        <activity android:name=".AuthActivity" android:exported="false"/>
-        <activity android:name=".AuthAfterActivity" android:exported="false"/>
-        <activity android:name=".SignupFirstActivity" android:exported="false"/>
-        <activity android:name=".SignupSecondActivity" android:exported="false"/>
-        <activity android:name=".SignupThirdActivity" android:exported="false"/>
-        <activity android:name=".SignupLanguageActivity" android:exported="false"/>
-        <activity android:name=".SignupFifthActivity" android:exported="false"/>
-        <activity android:name=".SignupDetailInterestActivity" android:exported="false"/>
-        <activity android:name=".SignupSelfActivity" android:exported="false"/>
-        <activity android:name=".SignupLoadingActivity" android:exported="false"/>
-        <activity android:name=".ClearSignupActivity" android:exported="false"/>
-        <activity android:name=".LoginActivity" android:exported="false"/>
-        <activity android:name=".MainActivity" android:exported="false"/>
-        <activity android:name=".ChangeDetailInterestActivity" android:exported="false"/>
-        <activity android:name=".ChangeInterestActivity" android:exported="false"/>
-        <activity android:name=".ChangeLanguageActivity" android:exported="false"/>
-        <activity android:name=".ChangeSelfActivity" android:exported="false"/>
-        <activity android:name=".PasswordSettingActivity" android:exported="false"/>
-        <activity android:name=".ProfileSettingActivity" android:exported="false"/>
-        <activity android:name=".ChangePasswordActivity" android:exported="false"/>
-
-
+        <activity
+            android:name=".AuthActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AuthAfterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignupFirstActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignupSecondActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignupThirdActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignupLanguageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignupFifthActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignupDetailInterestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignupSelfActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignupLoadingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ClearSignupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChangeDetailInterestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChangeInterestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChangeLanguageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChangeSelfActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PasswordSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChangePasswordActivity"
+            android:exported="false" />
         <activity
             android:name=".SearchAddCategoryActivity"
             android:exported="false"
@@ -56,14 +99,10 @@
         <activity
             android:name=".PlayCastActivity"
             android:exported="false" />
-
-
         <activity
             android:name=".keyword.KeywordActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-
-
         <activity
             android:name=".SplashActivity"
             android:exported="true">

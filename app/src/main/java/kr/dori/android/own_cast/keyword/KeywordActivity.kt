@@ -8,20 +8,17 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.SharedViewModel
-import kr.dori.android.own_cast.SongData
 import kr.dori.android.own_cast.databinding.ActivityKeywordBinding
-import java.lang.reflect.TypeVariable
+import kr.dori.android.own_cast.forApiData.AuthResponse
+import kr.dori.android.own_cast.forApiData.AuthRetrofitInterFace
+import kr.dori.android.own_cast.forApiData.CastHomeDTO
+import kr.dori.android.own_cast.forApiData.getRetrofit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 /*
@@ -35,7 +32,7 @@ data class RequestApiData(
     var audiotime:Int
 )
 
-class KeywordActivity : AppCompatActivity() {
+class KeywordActivity : AppCompatActivity(),Connector {
     private lateinit var binding: ActivityKeywordBinding
     //액티비티 내부 전반에서 사용할 데이터들, 스크립트를 생성할때, 캐스트 생성할때 사용하고 서버로 보낼 예정
 
@@ -70,7 +67,7 @@ class KeywordActivity : AppCompatActivity() {
             Log.d("KeywordViewmodelCheck",it.toString())
         }*/
 
-
+        apiExecute()
 
         if(savedInstanceState == null&&searchText!=null){//연관 키워드를 클릭한 경우
             var bundle = Bundle()
@@ -97,6 +94,7 @@ class KeywordActivity : AppCompatActivity() {
                 .add(binding.keywordFragmentFrm.id, KeywordInputFragment())
                 .commitAllowingStateLoss()
         }
+
     }
 
     private fun initScreen(){
@@ -117,6 +115,43 @@ class KeywordActivity : AppCompatActivity() {
             }
         }
         return super.dispatchTouchEvent(ev)
+    }
+
+
+    fun apiExecute(){
+        val apiService = getRetrofit().create(AuthRetrofitInterFace::class.java)
+        //1. apiService후, 자신이 만들어놓은 인터페이스(함수 지정해주기)
+        //2. AuthResponse에 응답으로 넘어오는 result 값의 제네릭 넣어주기 AuthResponse<List<CastHomeDTO>>
+        //3. COMMON200이 성공 코드이고, resp에서 필요한 값 받기
+        apiService.searchHome().enqueue(object: Callback<AuthResponse<List<CastHomeDTO>>> {
+            override fun onResponse(call: Call<AuthResponse<List<CastHomeDTO>>>, response: Response<AuthResponse<List<CastHomeDTO>>>) {
+                Log.d("SIGNUP/SUCCESS", response.toString())
+                val resp: AuthResponse<List<CastHomeDTO>> = response.body()!!
+
+                when(resp.code) {
+                    "COMMON200" -> {
+                        Log.d("apiTest","연결성공")
+
+                    }
+                    else ->{
+                        Log.d("apiTest","연결실패 코드 : ${resp.code}")
+
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<AuthResponse<List<CastHomeDTO>>>, t: Throwable) {
+                Log.d("apiTest", t.message.toString())
+            }
+        })
+    }
+
+    override fun onSuccess() {
+        Log.d("apiTest","연결성공")
+    }
+
+    override fun onFailure() {
+        Log.d("apiTest", "연결실패")
     }
 
 }
