@@ -14,12 +14,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.media3.common.MediaItem
-import androidx.media3.common.PlaybackParameters
-import androidx.media3.common.Player
-import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.RawResourceDataSource
-import androidx.media3.exoplayer.ExoPlayer
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackParameters
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.upstream.RawResourceDataSource
 import kr.dori.android.own_cast.databinding.ActivityPlayCastBinding
 import java.util.concurrent.TimeUnit
 
@@ -33,7 +32,7 @@ class PlayCastActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var isSeeking = false
 
-    @OptIn(UnstableApi::class)
+//    @OptIn(UnstableApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayCastBinding.inflate(layoutInflater)
@@ -146,7 +145,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         // Fragment 초기화
         supportFragmentManager.beginTransaction()
-            .add(R.id.play_cast_frm, CastScriptFragment())
+            .add(R.id.play_cast_frm, CastAudioFragment())
             .commit()
 
         // LiveData 관찰
@@ -251,8 +250,8 @@ class PlayCastActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        player.release() // ExoPlayer 자원 해제
-        stopSeekBarUpdate()
+        //player.release() // ExoPlayer 자원 해제
+        //stopSeekBarUpdate()
     }
 
     private fun startSeekBarUpdate() {
@@ -284,6 +283,8 @@ class PlayCastActivity : AppCompatActivity() {
     private fun updateSpeedUI(selectedSpeed: Float, views: List<View>) {
         views.forEach { view ->
             view.visibility = View.GONE
+            binding.speedTable.visibility = View.GONE
+            binding.realSpeedTv.setTextColor(ContextCompat.getColor(this, R.color.black))
         }
         when (selectedSpeed) {
             0.5f -> {
@@ -360,7 +361,6 @@ class PlayCastActivity : AppCompatActivity() {
         binding.activityPlayCastAudioExitIv.visibility = View.GONE
         binding.activityPlayCastNotAudioExit.visibility = View.VISIBLE
         binding.playcastActivitySaveBackIv.visibility = View.GONE
-
         supportFragmentManager.beginTransaction()
             .replace(R.id.play_cast_frm, CastPlaylistFragment())
             .commitAllowingStateLoss()
@@ -374,7 +374,6 @@ class PlayCastActivity : AppCompatActivity() {
         binding.activityPlayCastAudioExitIv.visibility = View.VISIBLE
         binding.activityPlayCastNotAudioExit.visibility = View.GONE
         binding.playcastActivitySaveBackIv.visibility = View.VISIBLE
-
         supportFragmentManager.beginTransaction()
             .replace(R.id.play_cast_frm, CastAudioFragment())
             .commitAllowingStateLoss()

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/edit_category"
     android:layout_width="216dp"
-
+    android:background="#FFFFFF"
     android:layout_height="132dp"
     tools:context=".EditCategoryDialog">
 
@@ -109,18 +109,6 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/textView7"
         app:layout_constraintEnd_toStartOf="@+id/textView7" />
-
-    <ImageView
-        android:id="@+id/fragment_edit_dialog_onLIne"
-        android:layout_width="162dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="39dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/fragment_edit_dialog_online"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@+id/fragment_edit_category_plain_tv"
-        app:layout_constraintTop_toTopOf="@+id/fragment_edit_category_plain_tv" />
 
     <ImageView
         android:id="@+id/fragment_edit_dialog_off"

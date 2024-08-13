@@ -86,13 +86,11 @@ edit category dialog에서 밑줄의 색을 변경하는 방법
         if (isText) {
             binding.fragmentEditCategoryOff.visibility = View.GONE
             binding.fragmentEditCategoryOn.visibility = View.VISIBLE
-            binding.fragmentEditDialogOnLIne.visibility = View.VISIBLE
             binding.fragmentEditDialogOnEdit.visibility = View.VISIBLE
             binding.fragmentEditDialogOff.visibility = View.GONE
         } else {
             binding.fragmentEditCategoryOff.visibility = View.VISIBLE
             binding.fragmentEditCategoryOn.visibility = View.GONE
-            binding.fragmentEditDialogOnLIne.visibility = View.GONE
             binding.fragmentEditDialogOnEdit.visibility = View.GONE
             binding.fragmentEditDialogOff.visibility = View.VISIBLE
         }

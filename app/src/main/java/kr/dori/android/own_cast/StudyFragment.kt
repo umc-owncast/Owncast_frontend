@@ -35,8 +35,8 @@ class StudyFragment : Fragment() {
     private val studyAdapter = StudyAdapter()
 
     private var dummyData = mutableListOf(
-        SongData("category_name1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
-        SongData("category_name2", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "monkey"),
+        SongData("category_name1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "내가 만든 캐스트"),
+        SongData("category_name2", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "저장한 캐스트"),
         SongData("category_name3", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
         SongData("category_name4", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
         SongData("category_name5", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug"),
@@ -76,6 +76,10 @@ class StudyFragment : Fragment() {
             binding.fragmentStudySoundOffIv.visibility = View.VISIBLE
             binding.fragmentStudySoundOnIv.visibility = View.GONE
         }
+
+        //category RV 초기화
+        studyAdapter.selectedPosition = 0 // 포지션 0을 선택된 상태로 설정
+        studyAdapter.notifyDataSetChanged() // 어댑터에 변경 사항을 알림
 
         // 리사이클러뷰에서 초기화 상태로 스크롤 위치 설정
         // InitialSetting()
