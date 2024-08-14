@@ -15,6 +15,7 @@ import kr.dori.android.own_cast.databinding.ActivityKeywordBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.AuthRetrofitInterFace
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
+import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import retrofit2.Call
 import retrofit2.Callback
@@ -44,11 +45,11 @@ class KeywordActivity : AppCompatActivity() {
         setContentView(binding.root)
         val isSearch = intent.getBooleanExtra("isSearch",true)
         val searchText: String? = intent.getStringExtra("searchText")//검색할 키워드, 이미 연관 검색어를 받아올때도 똑같은 이름으로 넘긴다
-        val keywordData = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        /*val keywordData = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra("keywordData", KeywordData::class.java)
         } else {
             intent.getParcelableExtra("keywordData") as? KeywordData
-        }
+        }*/
 
 
         //viewModel에 쓰기 위한 데이터를 가져오는 역할
@@ -83,7 +84,7 @@ class KeywordActivity : AppCompatActivity() {
         else if(savedInstanceState == null&&isSearch==true){//검색창으로 이동한 경우
             var bundle = Bundle()
             var fragment = KeywordSearchFragment()
-            bundle.putParcelable("keywordData", keywordData)
+
            fragment.arguments = bundle
             supportFragmentManager.beginTransaction()
                 .add(binding.keywordFragmentFrm.id, fragment)
@@ -119,13 +120,15 @@ class KeywordActivity : AppCompatActivity() {
 
 
     fun apiExecute(){
-        val apiService = getRetrofit().create(AuthRetrofitInterFace::class.java)
+        val apiService = getRetrofit().create(CastInterface::class.java)
         //1. apiService후, 자신이 만들어놓은 인터페이스(함수 지정해주기)
         //2. AuthResponse에 응답으로 넘어오는 result 값의 제네릭 넣어주기 AuthResponse<List<CastHomeDTO>>
         //3. COMMON200이 성공 코드이고, resp에서 필요한 값 받기
         apiService.searchHome().enqueue(object: Callback<AuthResponse<List<CastHomeDTO>>> {
             override fun onResponse(call: Call<AuthResponse<List<CastHomeDTO>>>, response: Response<AuthResponse<List<CastHomeDTO>>>) {
-                Log.d("SIGNUP/SUCCESS", response.toString())
+
+                Log.d("apiTest", response.toString())
+                Log.d("apiTest", response.body().toString())
                 val resp: AuthResponse<List<CastHomeDTO>> = response.body()!!
                 when(resp.code) {
                     "COMMON200" -> {

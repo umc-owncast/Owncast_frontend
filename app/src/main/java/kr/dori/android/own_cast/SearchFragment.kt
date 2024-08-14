@@ -64,7 +64,7 @@ class SearchFragment : Fragment(),SearchMover {
 
 
 
-        searchDataUpdate()//다른 유저 정보 받아오는 함수
+        //searchDataUpdate()//다른 유저 정보 받아오는 함수
 
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -114,7 +114,7 @@ class SearchFragment : Fragment(),SearchMover {
     }
 
 
-    fun searchDataUpdate(){//서버에서 searchFragment에 나오는 4개 캐스트 데이터 받아오기
+    /*fun searchDataUpdate(){//서버에서 searchFragment에 나오는 4개 캐스트 데이터 받아오기
         val apiService = getRetrofit().create(AuthRetrofitInterFace::class.java)
         //1. apiService후, 자신이 만들어놓은 인터페이스(함수 지정해주기)
         //2. AuthResponse에 응답으로 넘어오는 result 값의 제네릭 넣어주기 AuthResponse<List<CastHomeDTO>>
@@ -140,8 +140,8 @@ class SearchFragment : Fragment(),SearchMover {
                 Log.d("apiTest", "아예 failure 병신아")
             }
         })
-    }
-    fun setSongData(resp:AuthResponse<List<CastHomeDTO>>, inflater: LayoutInflater){
+    }*/
+    /*fun setSongData(resp:AuthResponse<List<CastHomeDTO>>, inflater: LayoutInflater){
         for(i:Int in 0..minOf(resp.result!!.size,4)){
             // item_layout.xml을 inflate하여 GridLayout에 추가
             val itemView = inflater.inflate(R.layout.item_search_fr, binding.gridLayout, false)
@@ -167,5 +167,5 @@ class SearchFragment : Fragment(),SearchMover {
             }
             binding.gridLayout.addView(itemView)
         }
-    }
+    }*/
 }

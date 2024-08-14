@@ -43,11 +43,11 @@ class KeywordSearchFragment:Fragment() {
         binding.backMainIv.setOnClickListener {
             activity?.finish()
         }
-        keywordData = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        /*keywordData = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arguments?.getParcelable("keywordData", KeywordData::class.java)
         } else {
             arguments?.getParcelable("keywordData")
-        }
+        }*/
         /*sharedViewModel = ViewModelProvider(requireActivity(),
             ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)).get(KeywordViewModel::class.java)
 
@@ -79,7 +79,7 @@ class KeywordSearchFragment:Fragment() {
 
         for(i:Int in 0..5){
             //view모델 안에 실제 데이터가 있다면 그걸 텍스트 뷰에 그대로 반영
-            if (keywordData==null){
+            if (KeywordAppData.detailTopic==null){
                 binding.keywordSearchTopicTv.text = "로딩 실패"
                 textViewList[i].text = "로딩 실패"
                 return

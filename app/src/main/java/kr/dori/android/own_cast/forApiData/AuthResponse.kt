@@ -6,13 +6,6 @@ import com.google.gson.annotations.SerializedName
 //자신이 필요한 수신 데이터 계층 쓰기
 //이런 형식으로 result 타입을 또 다른 데이터 클래스로 만듬으로서 계층구조를 형상화할 수 있습니다. / 서버에 보내는 값은 앞에 U를 붙였으며 dataClass의 이름은 해당 API 명세서를 따라갔습니다.
 //최상위 계층, 수신
-data class AuthResponse<T> (
-    @SerializedName(value = "isSuccess") val isSuccess: Boolean,
-    @SerializedName(value = "code") val code: String,
-    @SerializedName(value = "message") val message: String,
-    @SerializedName(value = "result") val result: T? = null
-)
-
 
 /*data class AuthResponse<T> (
     @SerializedName(value = "isSuccess") val isSuccess: Boolean,
@@ -20,9 +13,17 @@ data class AuthResponse<T> (
     @SerializedName(value = "message") val message: String,
     @SerializedName(value = "result") val result: List<CastHomeDTO>? = null
 )*/
-// 2 계층
 
-data class CastHomeDTO(
+
+data class AuthResponse<T> (
+    @SerializedName(value = "isSuccess") val isSuccess: Boolean,
+    @SerializedName(value = "code") val code: String,
+    @SerializedName(value = "message") val message: String?,
+    @SerializedName(value = "result") val result: T? = null
+)
+
+// 2 계층
+data class CastHomeDTO(//검색 홈 API,
     @SerializedName(value = "id") val id: Long,
     @SerializedName(value = "audioLength") val audioLength: String,
     @SerializedName(value = "title") val title: String,
@@ -48,6 +49,8 @@ data class PatchPlaylist(
     @SerializedName(value = "playlistId") val playlistId: Long,
     @SerializedName(value = "playlistName") val playlistName: String
 )
+
+
 
 
 // 3 계층

@@ -16,7 +16,7 @@ interface Connector{
 }
 
 //이거 액티비티마다 원하는 기능으로 쓰면 돼용
-fun apiexecute(){
+/*fun apiexecute(){
     val apiService = getRetrofit().create(AuthRetrofitInterFace::class.java)
     //1. apiService후, 자신이 만들어놓은 인터페이스(함수 지정해주기)
     //2. AuthResponse에 응답으로 넘어오는 result 값의 제네릭 넣어주기 AuthResponse<List<CastHomeDTO>>
@@ -40,7 +40,7 @@ fun apiexecute(){
             Log.d("apiTest", t.message.toString())
         }
     })
-}
+}*/
 
 
 //밑에 코드 쓰는 코드 아님!!!!!!!!!!!!!!!!!!!
@@ -60,7 +60,7 @@ class AuthService  {
     authService.apiExecute<List<CastHomeDTO>> { apiService.searchHome() }*/
 
 
-    fun <T> apiExecute(apiCall: () -> Call<AuthResponse<T>>) {
+    /*fun <T> apiExecute(apiCall: () -> Call<AuthResponse<T>>) {
         //val authService = getRetrofit().create(AuthRetrofitInterFace::class.java)
         //이걸 사용하는 activity에 써주면 됨!
         var resp: AuthResponse<T>
@@ -85,7 +85,7 @@ class AuthService  {
             }
         })
 
-    }
+    }*/
 
 }
 
