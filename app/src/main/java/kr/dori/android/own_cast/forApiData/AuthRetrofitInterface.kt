@@ -55,3 +55,14 @@ interface CastInterface{
     fun postScriptList(@Body postCastByKeyword: PostCastByKeyword):Call<String>
 }
 
+interface PlayListInterface{
+    @DELETE("/api/cast/{playlistId}")
+    fun deleteCast(@Path("playlistId") playlistId:Long): Call<AuthResponse<DeletePlaylist>>
+    @GET("/api/playlist/view")// 사용자 플레이리스트 목록 받아오기
+    //GetPlayList잘못만든거같던데..
+    fun getPlayList() : Call<AuthResponse<List<GetUserPlaylist>>>
+    @POST("/api/playlist")
+    fun postPlayList(@Part("playlistName") playlistName: String) : Call<AuthResponse<PostPlaylist>>
+
+}
+
