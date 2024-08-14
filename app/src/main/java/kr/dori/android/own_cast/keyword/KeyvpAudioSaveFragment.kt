@@ -31,6 +31,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kr.dori.android.own_cast.AddCategoryDialog
@@ -63,7 +64,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
 
     lateinit var _list:MutableList<String>
 
-    private val sharedViewModel: SharedViewModel by activityViewModels()
+    private lateinit var sharedViewModel: KeywordViewModel
 
     lateinit var adapter:KeyAudSaveDropdownAdapter
 
@@ -123,6 +124,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentKeyvpAudiosaveBinding.inflate(inflater, container, false)
+        sharedViewModel = ViewModelProvider(requireActivity()).get(KeywordViewModel::class.java)
         initSpinnerAdapter()
         initSaveBtn()//여기서 아마 저장하기 버튼 나옴
         initEditText()
@@ -332,7 +334,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
         //2. AuthResponse에 응답으로 넘어오는 result 값의 제네릭 넣어주기 AuthResponse<List<CastHomeDTO>>
         //3. COMMON200이 성공 코드이고, resp에서 필요한 값 받기
         //ㅔplayList가 재생목록
-        apiService.postCast(0, SaveInfo(castTitle,0,binding.keyAudPublicBtnIv.isChecked), body!!).enqueue(object: Callback<AuthResponse<Objects>> {
+        apiService.postCast(sharedViewModel.castId.value!!, SaveInfo(castTitle,0,binding.keyAudPublicBtnIv.isChecked), body!!).enqueue(object: Callback<AuthResponse<Objects>> {
             override fun onResponse(call: Call<AuthResponse<Objects>>, response: Response<AuthResponse<Objects>>) {
                 Log.d("apiTest1", response.toString())
                 val resp = response.body()!!

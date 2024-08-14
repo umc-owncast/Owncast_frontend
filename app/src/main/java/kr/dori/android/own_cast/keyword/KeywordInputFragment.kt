@@ -46,7 +46,7 @@ class KeywordInputFragment:Fragment() {
                     binding.keyInputLengthTv.setText("(${length}자 / 10000자)")
                     //만약에 줄바꿈이나, 특수문자만 넣었으면은 false 들어감
                     isText = !(s.toString().isEmpty()||containsOnlySpecialCharacters(s.toString()))
-                    searchText = binding.keywordInputEt.toString()
+                    searchText = binding.keywordInputEt.text.toString()
                 }
                 btnActivate()
             }

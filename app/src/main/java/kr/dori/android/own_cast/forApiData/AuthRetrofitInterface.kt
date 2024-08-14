@@ -2,6 +2,7 @@ package kr.dori.android.own_cast.forApiData
 
 import okhttp3.MultipartBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -34,6 +35,7 @@ interface CastInterface{
     @Multipart
     @PATCH("/api/cast/{castId}")//캐스트 수정 api, 이미지 파일로 보내야함
     fun patchCast(@Path("castId") castId:Long,@Part("updateInfo") updateInfo: UpdateInfo, @Part image: MultipartBody.Part):Call<AuthResponse<Objects>>
+
     @Multipart
     @POST("/api/cast/{castId}")//캐스트 저장 api keyvpSaveFragment에서 쓰인다
     fun postCast(@Path("castId") castId:Long,@Part("saveInfo") saveInfo: SaveInfo, @Part image: MultipartBody.Part):Call<AuthResponse<Objects>>
@@ -43,11 +45,11 @@ interface CastInterface{
     @POST("/api/cast/search")//검색 API
     fun postSearchAPI(@Query("keyword") keyword: String):Call<AuthResponse<Objects>>
     @POST("/api/cast/script")//스크립트로 캐스트를 생성하는 API, 반환되는 타입이 PostCastFromKeyword
-    fun postCastByScript(@Body postCastByScript: PostCastByScript):Call<AuthResponse<PostCastForResponse>>
+    suspend fun postCastByScript(@Body postCastByScript: PostCastByScript):Response<AuthResponse<PostCastForResponse>>
     @POST("/api/cast/other")
     fun postOtherPlaylistCast(@Body postOtherPlaylistCast: PostOtherPlaylistCast):Call<AuthResponse<Long>>
     @POST("/api/cast/keyword")//키워드로 캐스트를 생성하는 API
-    fun postCastByKeyword(@Body postCastByKeyword: PostCastByKeyword):Call<AuthResponse<PostCastForResponse>>
+    suspend fun postCastByKeyword(@Body postCastByKeyword: PostCastByKeyword):Response<AuthResponse<PostCastForResponse>>
     @POST("/api/cast/keyword-test")//스크립트로 캐스트를 생성하는 API
     //postCastByKeyword랑 같은거 쓰고 있음
     fun postScriptList(@Body postCastByKeyword: PostCastByKeyword):Call<String>

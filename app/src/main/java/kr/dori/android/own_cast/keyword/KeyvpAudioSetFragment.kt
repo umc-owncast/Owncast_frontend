@@ -4,11 +4,9 @@ package kr.dori.android.own_cast.keyword
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -18,7 +16,12 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager2.widget.ViewPager2
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.SignupData
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAudiosetBinding
@@ -27,34 +30,36 @@ import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.PostCastByKeyword
 import kr.dori.android.own_cast.forApiData.PostCastByScript
 import kr.dori.android.own_cast.forApiData.PostCastForResponse
-import kr.dori.android.own_cast.forApiData.SaveInfo
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyworddata.VoiceList
 import kr.dori.android.own_cast.keyworddata.VoiceListRepository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.http.Body
 import retrofit2.http.POST
 import java.util.Objects
+import kotlin.coroutines.CoroutineContext
 
-class KeyvpAudioSetFragment: Fragment() {
+class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
     lateinit var binding: FragmentKeyvpAudiosetBinding
     //뷰페이저에서 다음 프래그먼트로  넘기는 인터페이스 변수
     private var listener: KeywordBtnClickListener? = null
     lateinit var voiceList: VoiceList//드롭 다운 메뉴에서 사용하는 음성과 데이터 클래스
     private var searchText:String? = null
-    private var voiceStyle:Boolean = true//비즈니스 스타일, false가 캐주얼
+    /*--------api통신용 데이터---------------*/
     private lateinit var sharedViewModel: KeywordViewModel
     private var formality:String = "OFFICIAL"
     private lateinit var voice:String
     private var audioTime:Int = 60
+    /*-----------------------*/
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + corutineJob
+    private lateinit var corutineJob: Job
 
     //뷰페이저를 갖고 있는 부모 프래그먼트를 참고해서, 다음 페이지로 넘긴다.
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = parentFragment as? KeywordBtnClickListener
-
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,7 +68,7 @@ class KeyvpAudioSetFragment: Fragment() {
     ): View? {
 
         binding = FragmentKeyvpAudiosetBinding.inflate(inflater, container, false)
-
+        corutineJob = Job()//코루틴(비동기 api)를 위해초기화해준다
         sharedViewModel = ViewModelProvider(requireActivity()).get(KeywordViewModel::class.java)
         /////////////////////////////////만들고 싶어하는 텍스트 받아와서 띄우는 코드
         searchText = arguments?.getString("searchText")
@@ -106,14 +111,15 @@ class KeyvpAudioSetFragment: Fragment() {
         binding.keywordAudiosetMakebtnTb.setOnClickListener {
             if (searchText != null) {//키워드로 생성
                 Log.d("apiTest-CreateCast", PostCastByKeyword(searchText!!,formality,voice,audioTime).toString())
-                createCastByKeyword(PostCastByKeyword(searchText!!,formality,voice,audioTime))
+                sharedViewModel.setPostCastKeyword(PostCastByKeyword(searchText!!,formality,voice,audioTime))
+                listener?.createCastByKeyword(sharedViewModel.postCastKeyword.value!!)
             } else {//스크립트로 생성(input
                 //inputFragmnet에서 따로 저장해놨음
-                Log.d("apiTest-CreateCast", sharedViewModel.inputKeyword.value.toString())
-                createCastByScript(PostCastByScript(sharedViewModel.inputKeyword.value!!,formality,voice))
-
+                Log.d("apiTest-CreateCast", "inputKeywordPrint ${sharedViewModel.inputKeyword.value.toString()}")
+                sharedViewModel.setPostCastScript(PostCastByScript(sharedViewModel.inputKeyword.value!!,formality,voice))
+                listener?.createCastByScript(sharedViewModel.postCastScript.value!!)
             }
-            listener?.onButtonClick()
+
 
         }
         return binding.root
@@ -124,28 +130,6 @@ class KeyvpAudioSetFragment: Fragment() {
         super.onDetach()
         listener = null
     }
-
-     private fun initVoiceList(){
-         voiceList = when(SignupData.language){
-            "English"-> when(SignupData.accent){
-                "usa"-> VoiceListRepository.voiceLists[0][0]
-                "eng"->VoiceListRepository.voiceLists[0][1]
-                "aus"->VoiceListRepository.voiceLists[0][2]
-                else->VoiceListRepository.voiceLists[0][3]//ind
-
-            }
-            "Japanese"->when(SignupData.accent){
-                "jp"->VoiceListRepository.voiceLists[1][0]
-                else->VoiceListRepository.voiceLists[1][0]
-            }
-            else->when(SignupData.accent){//스페인어
-                "sp"->VoiceListRepository.voiceLists[2][0]
-                else->VoiceListRepository.voiceLists[2][1]
-            }
-        }
-         Log.d("voiceLanguage",voiceList.language)
-     }
-
     private fun initDropDownList(){
         val list = voiceList.styleBusiness
         voice = voiceList.styleBusiness.dataType[0]
@@ -203,62 +187,29 @@ class KeyvpAudioSetFragment: Fragment() {
         unselected.setTextColor(Color.parseColor("#455A64"))
     }
 
-    /*@POST("/api/cast/script")//스크립트로 캐스트를 생성하는 API, 반환되는 타입이 PostCastFromKeyword
-    fun postCastByScript(@Body postCastByScript: PostCastByScript):Call<AuthResponse<PostCastForResponse>>*/
 
-    private fun createCastByScript(postCastByScript: PostCastByScript){
-        val apiService = getRetrofit().create(CastInterface::class.java)
-        apiService.postCastByScript(postCastByScript).enqueue(object:
-            Callback<AuthResponse<PostCastForResponse>> {
-            override fun onResponse(call: Call<AuthResponse<PostCastForResponse>>, response: Response<AuthResponse<PostCastForResponse>>) {
-                Log.d("apiTest-CreateCast", response.toString())
-                val resp = response.body()!!
-                when(resp.code) {
-                    "COMMON200" -> {
-                        Log.d("apiTest-CreateCast","저장성공")
-                        Log.d("apiTest-CreateCast",resp.result.toString())
-                        sharedViewModel.setSentences(resp!!.result.sentences)
 
-                    }
-                    else ->{
-                        Log.d("apiTest-CreateCast","연결실패 코드 : ${resp.code}")
 
-                    }
-                }
+    private fun initVoiceList(){
+        voiceList = when(SignupData.language){
+            "English"-> when(SignupData.accent){
+                "usa"-> VoiceListRepository.voiceLists[0][0]
+                "eng"->VoiceListRepository.voiceLists[0][1]
+                "aus"->VoiceListRepository.voiceLists[0][2]
+                else->VoiceListRepository.voiceLists[0][3]//ind
+
             }
-
-            override fun onFailure(call: Call<AuthResponse<PostCastForResponse>>, t: Throwable) {
-                Log.d("apiTest-CreateCast", t.message.toString())
+            "Japanese"->when(SignupData.accent){
+                "jp"->VoiceListRepository.voiceLists[1][0]
+                else->VoiceListRepository.voiceLists[1][0]
             }
-        })
+            else->when(SignupData.accent){//스페인어
+                "sp"->VoiceListRepository.voiceLists[2][0]
+                else->VoiceListRepository.voiceLists[2][1]
+            }
+        }
+        Log.d("voiceLanguage",voiceList.language)
     }
-
-    private fun createCastByKeyword(postCastByKeyword: PostCastByKeyword){
-        val apiService = getRetrofit().create(CastInterface::class.java)
-        apiService.postCastByKeyword(postCastByKeyword).enqueue(object:
-            Callback<AuthResponse<PostCastForResponse>> {
-            override fun onResponse(call: Call<AuthResponse<PostCastForResponse>>, response: Response<AuthResponse<PostCastForResponse>>) {
-                Log.d("apiTest-CreateCast", response.toString())
-                val resp = response.body()!!
-                when(resp.code) {
-                    "COMMON200" -> {
-                        Log.d("apiTest-CreateCast","캐스트 생성성공")
-                        Log.d("apiTest-CreateCast",resp.result.toString())
-
-                    }
-                    else ->{
-                        Log.d("apiTest-castPost","연결실패 코드 : ${resp.code}")
-
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<AuthResponse<PostCastForResponse>>, t: Throwable) {
-                Log.d("apiTest-CreateCast", t.message.toString())
-            }
-        })
-    }
-
 }
 
 
