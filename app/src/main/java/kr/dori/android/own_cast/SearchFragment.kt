@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kr.dori.android.own_cast.databinding.FragmentPlaylistBinding
 import kr.dori.android.own_cast.databinding.FragmentSearchBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
-import kr.dori.android.own_cast.forApiData.AuthRetrofitInterFace
+
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import retrofit2.Call

@@ -40,7 +40,7 @@ data class GetPlayList(
     @SerializedName(value = "castList") val castList: List<Cast>
 )
 
-data class DeletePlaylist(
+data class DeletePlaylist(//플레이 리스트 조회
     @SerializedName(value = "playlistId") val playlistId: Long,
     @SerializedName(value = "totalCast") val totalCast: Int
 )
@@ -48,6 +48,11 @@ data class DeletePlaylist(
 data class PatchPlaylist(
     @SerializedName(value = "playlistId") val playlistId: Long,
     @SerializedName(value = "playlistName") val playlistName: String
+)
+
+data class PostCastForResponse(
+    @SerializedName(value = "id") val id: Long,
+    @SerializedName(value = "sentences") val sentences: List<Sentences>
 )
 
 
@@ -64,6 +69,11 @@ data class Cast(
     @SerializedName(value = "audioLength") val audioLength: String
 )
 
+data class Sentences(
+    @SerializedName(value = "originalSentence") val originalSentence: String,
+    @SerializedName(value = "translatedSentence") val translatedSentence: String,
+    @SerializedName(value = "timePoint") val audioLength: Double
+)
 
 
 

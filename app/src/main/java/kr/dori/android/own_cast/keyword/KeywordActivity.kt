@@ -10,10 +10,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import kr.dori.android.own_cast.SharedViewModel
 import kr.dori.android.own_cast.databinding.ActivityKeywordBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
-import kr.dori.android.own_cast.forApiData.AuthRetrofitInterFace
+
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.getRetrofit
@@ -37,7 +38,7 @@ class KeywordActivity : AppCompatActivity() {
     private lateinit var binding: ActivityKeywordBinding
     //액티비티 내부 전반에서 사용할 데이터들, 스크립트를 생성할때, 캐스트 생성할때 사용하고 서버로 보낼 예정
 
-    private val sharedViewModel:SharedViewModel by viewModels()
+    private lateinit var sharedViewModel:KeywordViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,28 +46,10 @@ class KeywordActivity : AppCompatActivity() {
         setContentView(binding.root)
         val isSearch = intent.getBooleanExtra("isSearch",true)
         val searchText: String? = intent.getStringExtra("searchText")//검색할 키워드, 이미 연관 검색어를 받아올때도 똑같은 이름으로 넘긴다
-        /*val keywordData = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("keywordData", KeywordData::class.java)
-        } else {
-            intent.getParcelableExtra("keywordData") as? KeywordData
-        }*/
+
+        sharedViewModel = ViewModelProvider(this).get(KeywordViewModel::class.java)
 
 
-        //viewModel에 쓰기 위한 데이터를 가져오는 역할
-        /*val _songData:ArrayList<SongData>? = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableArrayListExtra("SongData", ArrayList::class.java) as? ArrayList<SongData>
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableArrayListExtra("SongData")
-        }
-
-        if(_songData.isNullOrEmpty()){
-            Log.d("KeywordViewmodelCheck","Empty")
-        }
-        _songData?.let{
-            sharedViewModel.setData(it.toMutableList())
-            Log.d("KeywordViewmodelCheck",it.toString())
-        }*/
 
         apiExecute()
 

@@ -1,6 +1,7 @@
 package kr.dori.android.own_cast.forApiData
 
 import com.google.gson.annotations.SerializedName
+import okhttp3.MultipartBody
 
 // 송신
 data class UserPostPlaylist(
@@ -9,12 +10,12 @@ data class UserPostPlaylist(
 //1계층
 data class PatchCast(
     @SerializedName("saveInfo") val saveInfo: SaveInfo,
-    @SerializedName("image") val image: String
+    @SerializedName("image") val image: MultipartBody.Part
 )
 
 data class PostCast(
     @SerializedName("updateInfo") val updateInfo: UpdateInfo,
-    @SerializedName("image") val image: String
+    @SerializedName("image") val image: MultipartBody.Part
 )
 
 data class PostCastByScript(
@@ -24,10 +25,10 @@ data class PostCastByScript(
 )
 
 data class PostCastByKeyword(//KeywordCastCreationDTO
-    @SerializedName("script") val script: String,
+    @SerializedName("keyword") val keyword: String,
     @SerializedName("formality") val formality: String,
     @SerializedName("voice") val voice: String,
-    @SerializedName("audioTime") val audioTime:Long
+    @SerializedName("audioTime") val audioTime:Int
 )
 
 data class PostOtherPlaylistCast(//OtherCastRequestDTO
@@ -44,6 +45,6 @@ data class UpdateInfo(
 
 data class SaveInfo(
     @SerializedName("title") val title: String,
-    @SerializedName("playlistId") val imagePath: String,
+    @SerializedName("playlistId") val playlistId: Long,
     @SerializedName("isPublic") val isPublic: Boolean
 )

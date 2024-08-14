@@ -3,6 +3,7 @@ package kr.dori.android.own_cast.keyword
 import android.Manifest
 import android.app.Activity
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
@@ -13,6 +14,7 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -38,7 +40,18 @@ import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.SharedViewModel
 import kr.dori.android.own_cast.SongData
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAudiosaveBinding
+import kr.dori.android.own_cast.forApiData.AuthResponse
+import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.forApiData.SaveInfo
+import kr.dori.android.own_cast.forApiData.getRetrofit
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
+import java.util.Objects
 
 
 //AddCategoryDialog에 toast기능을 넣으면서 EditAudio를 추가로 전달해주는 부분이 playlistFragment에 필요해서 인터페이스 상속을 추가했습니다.
@@ -58,6 +71,12 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
 
     private lateinit var imageResultLauncher: ActivityResultLauncher<Intent>
 
+    /*postCast에 쓰일 정보들*/
+    private var body : MultipartBody.Part? = null//이미지 파일을 이에 담아서 요청때 보내야함
+    private lateinit var castTitle: String
+    private var isPublic : Boolean = false
+
+    //OnVIewCreated에서 선언해줌으로써, 이미지를 받아올 수 있는 imageResultLauncher를 초기화 한다.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         imageResultLauncher = registerForActivityResult(
@@ -71,30 +90,48 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
                         .load(it)
                         .centerCrop() // ImageView에 맞게 이미지 크기를 조정
                         .into(binding.keyAudSaveThumbIv)
+                    //아래의 코드로 이제 서버쪽으로 이미지를 보낼 수 있게 해줌.
+                    body = createMultipartBodyFromUri(it, requireContext())
                 }
+
 
                 binding.keyAudSaveGalIc.visibility = View.GONE
 
             }
         }
     }
+    fun createMultipartBodyFromUri(uri: Uri, context: Context): MultipartBody.Part? {
+        // Open InputStream from the Uri
+        val inputStream = context.contentResolver.openInputStream(uri) ?: return null
+        // Create a temp file in the cache directory to store the image
+        val tempFile = File(context.cacheDir, "tempImageFile.png")
+        tempFile.outputStream().use { outputStream ->
+            inputStream.use { inputStream.copyTo(outputStream) }
+        }
+
+        // Convert the temp file to RequestBody
+        val requestFile = tempFile.asRequestBody("image/*".toMediaTypeOrNull())
+
+        // Create MultipartBody.Part from RequestBody
+        return MultipartBody.Part.createFormData("photo", tempFile.name, requestFile)
+    }
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentKeyvpAudiosaveBinding.inflate(inflater, container, false)
-
-
         initSpinnerAdapter()
-        initSaveBtn()
+        initSaveBtn()//여기서 아마 저장하기 버튼 나옴
         initEditText()
         binding.keyAudSaveThumbIv.setOnClickListener {
             selectGallery()
         }
         return binding.root
     }
-
+//------------------------------------------------------------갤러리 참조용 함수
     private fun selectGallery() {
         // Android 버전에 따른 권한 확인
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -133,7 +170,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
     companion object {
         private const val REQ_GALLERY = 1
     }
-
+//------------------------------------------------------------갤러리 참조용 함수 종료
 
 
     fun initSpinnerAdapter() {
@@ -156,7 +193,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
         binding.keyAudSaveCategorySp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
                 when(pos){
-                    list.size-1 ->{
+                    list.size-1 ->{//이 부분이 카테고리 생성하는 부분, api 추가해주기
                         binding.keyAudSaveCategorySp.setSelection(currentPos)
                         dialog.show()
                     }
@@ -206,6 +243,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
                 params.y = (screenHeight * 0.5).toInt()//y위치 임의 조정함
                 window.attributes = params
             }*/
+            postCastSave()
             dialog.show()
             //dialog위치 조정
 
@@ -225,14 +263,13 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
                 // 포커스가 해제되었을 때 실행할 코드
                 binding.keyAudSaveTitleEt.backgroundTintList = ColorStateList.
                 valueOf(ContextCompat.getColor(this.requireContext(), R.color.hint_color))
-
             }
         }*/
         binding.keyAudSaveTitleEt.addTextChangedListener(object :
             TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (s != null) {
-
+                    castTitle = binding.keyAudSaveTitleEt.text.toString()
                 }
                 isText = s?.isNotEmpty() == true
                 if (isText) {
@@ -289,6 +326,33 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
         showCustomToast("카테고리가 추가되었어요")
     }
 
+    fun postCastSave(){//api저장하는 버튼
+        val apiService = getRetrofit().create(CastInterface::class.java)
+        //1. apiService후, 자신이 만들어놓은 인터페이스(함수 지정해주기)
+        //2. AuthResponse에 응답으로 넘어오는 result 값의 제네릭 넣어주기 AuthResponse<List<CastHomeDTO>>
+        //3. COMMON200이 성공 코드이고, resp에서 필요한 값 받기
+        //ㅔplayList가 재생목록
+        apiService.postCast(0, SaveInfo(castTitle,0,binding.keyAudPublicBtnIv.isChecked), body!!).enqueue(object: Callback<AuthResponse<Objects>> {
+            override fun onResponse(call: Call<AuthResponse<Objects>>, response: Response<AuthResponse<Objects>>) {
+                Log.d("apiTest1", response.toString())
+                val resp = response.body()!!
+                when(resp.code) {
+                    "COMMON200" -> {
+                        Log.d("apiTest-castPost","저장성공")
+                        Log.d("apiTest-castPost",resp.result.toString())
 
+                    }
+                    else ->{
+                        Log.d("apiTest-castPost","연결실패 코드 : ${resp.code}")
 
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<AuthResponse<Objects>>, t: Throwable) {
+                Log.d("apiTest-castPost", t.message.toString())
+            }
+        })
+    }
 }
+

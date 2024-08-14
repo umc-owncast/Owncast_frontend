@@ -2,7 +2,7 @@ package kr.dori.android.own_cast.keyword
 
 import android.util.Log
 import kr.dori.android.own_cast.forApiData.AuthResponse
-import kr.dori.android.own_cast.forApiData.AuthRetrofitInterFace
+
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
 import kr.dori.android.own_cast.forApiData.getRetrofit
 
