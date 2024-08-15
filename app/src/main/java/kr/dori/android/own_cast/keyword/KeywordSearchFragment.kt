@@ -84,8 +84,8 @@ class KeywordSearchFragment:Fragment() {
                 textViewList[i].text = "로딩 실패"
                 return
             }
-            if(i<keywordData?.keywordList!!.size){
-                textViewList[i].text = keywordData?.keywordList!![i]
+            if(i<KeywordAppData.detailTopic.size){
+                textViewList[i].text = KeywordAppData.detailTopic[i]
                 textViewList[i].setOnClickListener {
                     val intent = Intent(getActivity(), KeywordActivity::class.java)
                     intent.putExtra("searchText",textViewList[i].text.toString())

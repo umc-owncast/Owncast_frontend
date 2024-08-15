@@ -35,8 +35,8 @@ class SearchAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Searc
                 mover.goPlayCast()
             }
             binding.searchfrItemAddCategoryOffIv.setOnClickListener {
-                binding.searchfrItemAddCategoryOffIv.visibility = View.GONE
-                binding.searchfrItemAddCategoryOnIv.visibility = View.VISIBLE
+                /*binding.searchfrItemAddCategoryOffIv.visibility = View.GONE
+                binding.searchfrItemAddCategoryOnIv.visibility = View.VISIBLE*/
                 mover.goAddCast()
             }
 

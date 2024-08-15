@@ -31,8 +31,8 @@ class SearchTwoAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Se
                 mover.goPlayCast()
             }
             binding.searchAddCategoryOffIv.setOnClickListener {
-                binding.searchAddCategoryOffIv.visibility = View.GONE
-                binding.searchAddCategoryOnIv.visibility = View.VISIBLE
+                /*binding.searchAddCategoryOffIv.visibility = View.GONE
+                binding.searchAddCategoryOnIv.visibility = View.VISIBLE*/
                 mover.goAddCast()
             }
         }

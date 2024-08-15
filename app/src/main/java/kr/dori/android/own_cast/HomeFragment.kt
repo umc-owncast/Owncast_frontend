@@ -18,6 +18,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import kr.dori.android.own_cast.databinding.FragmentHomeBinding
 import kr.dori.android.own_cast.keyword.KeywordActivity
+import kr.dori.android.own_cast.keyword.KeywordAppData
 import kr.dori.android.own_cast.keyword.KeywordData
 import kr.dori.android.own_cast.keyword.KeywordViewModel
 
@@ -73,7 +74,6 @@ class HomeFragment : Fragment() {
 
        activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
            if (result.resultCode == Activity.RESULT_OK) {
-
                val data: Intent? = result.data
                val isSuccess = data?.getBooleanExtra("result", false) ?: false
            }
@@ -101,8 +101,18 @@ class HomeFragment : Fragment() {
         sharedViewModel.keywordData.value?.keywordList
         for(i:Int in 0..5){
             //view모델 안에 실제 데이터가 있다면 그걸 텍스트 뷰에 그대로 반영
-            if(i<sharedViewModel.keywordData.value?.keywordList!!.size){
+            /*if(i<sharedViewModel.keywordData.value?.keywordList!!.size){
                 textList[i].text = sharedViewModel.keywordData.value?.keywordList!![i]
+                textList[i].setOnClickListener {
+                    val intent = Intent(getActivity(), KeywordActivity::class.java)
+                    intent.putExtra("searchText",textList[i].text.toString())
+                    startActivity(intent)
+                }
+            }else{
+                textList[i].visibility = View.GONE
+            }*/
+            if(i< KeywordAppData.detailTopic.size){
+                textList[i].text = KeywordAppData.detailTopic[i]
                 textList[i].setOnClickListener {
                     val intent = Intent(getActivity(), KeywordActivity::class.java)
                     intent.putExtra("searchText",textList[i].text.toString())
