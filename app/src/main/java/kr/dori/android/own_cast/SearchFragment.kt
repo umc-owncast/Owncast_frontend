@@ -23,6 +23,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kr.dori.android.own_cast.databinding.FragmentPlaylistBinding
 import kr.dori.android.own_cast.databinding.FragmentSearchBinding
+import kr.dori.android.own_cast.forApiData.AuthResponse
+
+import kr.dori.android.own_cast.forApiData.CastHomeDTO
+import kr.dori.android.own_cast.forApiData.getRetrofit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SearchFragment : Fragment(),SearchMover {
 
@@ -45,6 +52,7 @@ class SearchFragment : Fragment(),SearchMover {
     )
 
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,11 +62,8 @@ class SearchFragment : Fragment(),SearchMover {
         searchAdapter.dataList = dummyData
 
 
-        /*binding.recyclerView.adapter = searchAdapter
-        gridLayoutManager = GridLayoutManager(context,2,GridLayoutManager.VERTICAL, false)
 
-        binding.recyclerView.layoutManager = gridLayoutManager
-        binding.recyclerView.setHasFixedSize(true)*/
+
 
         for (i in 0 until 4) {
             // item_layout.xml을 inflate하여 GridLayout에 추가
@@ -80,6 +85,7 @@ class SearchFragment : Fragment(),SearchMover {
 
             binding.gridLayout.addView(itemView)
         }
+
 
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -129,4 +135,58 @@ class SearchFragment : Fragment(),SearchMover {
     }
 
 
+    /*fun searchDataUpdate(){//서버에서 searchFragment에 나오는 4개 캐스트 데이터 받아오기
+        val apiService = getRetrofit().create(AuthRetrofitInterFace::class.java)
+        //1. apiService후, 자신이 만들어놓은 인터페이스(함수 지정해주기)
+        //2. AuthResponse에 응답으로 넘어오는 result 값의 제네릭 넣어주기 AuthResponse<List<CastHomeDTO>>
+        //3. COMMON200이 성공 코드이고, resp에서 필요한 값 받기
+        apiService.searchHome().enqueue(object: Callback<AuthResponse<List<CastHomeDTO>>> {
+            override fun onResponse(call: Call<AuthResponse<List<CastHomeDTO>>>, response: Response<AuthResponse<List<CastHomeDTO>>>) {
+                Log.d("SIGNUP/SUCCESS", response.toString())
+                val resp: AuthResponse<List<CastHomeDTO>> = response.body()!!
+
+                when(resp.code) {
+                    "COMMON200" -> {
+                        Log.d("apiTest","연결성공")
+                        //setSongData(resp,)
+                    }
+                    else ->{
+                        Log.d("apiTest","연결실패 코드 : ${resp.code}")
+
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<AuthResponse<List<CastHomeDTO>>>, t: Throwable) {
+                Log.d("apiTest", "아예 failure 병신아")
+            }
+        })
+    }*/
+    /*fun setSongData(resp:AuthResponse<List<CastHomeDTO>>, inflater: LayoutInflater){
+        for(i:Int in 0..minOf(resp.result!!.size,4)){
+            // item_layout.xml을 inflate하여 GridLayout에 추가
+            val itemView = inflater.inflate(R.layout.item_search_fr, binding.gridLayout, false)
+            // 필요시 itemView의 내부 요소를 수정
+            val thumbButton = itemView.findViewById<ImageView>(R.id.item_thumb_iv)
+            //1. 제목
+            itemView.findViewById<TextView>(R.id.searchfr_item_title_tv).text = resp.result[i].title
+            //2. 유저-카테고리
+            itemView.findViewById<TextView>(R.id.searchfr_item_category_tv).text=
+                "${resp.result[i].memberName}-${resp.result[i].playlistName}"
+            //3. 시간
+            itemView.findViewById<TextView>(R.id.searchfr_item_duration_tv).text=
+                "${resp.result[i].audioLength.toInt()/60}:${String.format("%02d", resp.result[i].audioLength.toInt()% 60)}"
+
+            //함수
+            thumbButton.setOnClickListener {
+                goPlayCast()
+            }
+
+            val addCtgOffBtn = itemView.findViewById<ImageView>(R.id.searchfr_item_add_category_off_iv)
+            addCtgOffBtn.setOnClickListener {
+                goAddCast()
+            }
+            binding.gridLayout.addView(itemView)
+        }
+    }*/
 }

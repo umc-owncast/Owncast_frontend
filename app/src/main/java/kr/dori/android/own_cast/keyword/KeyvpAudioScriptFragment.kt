@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAuioscriptBinding
 
@@ -19,7 +20,7 @@ class KeyvpAudioScriptFragment:Fragment() {
     lateinit var binding: FragmentKeyvpAuioscriptBinding
     private var listener: KeywordBtnClickListener? = null
     private var speedList = ArrayList<TextView>()
-
+    private lateinit var sharedViewModel: KeywordViewModel
     private var curSpeed:Int = 2
 
     override fun onAttach(context: Context) {
@@ -32,7 +33,7 @@ class KeyvpAudioScriptFragment:Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentKeyvpAuioscriptBinding.inflate(inflater, container, false)
-
+        sharedViewModel = ViewModelProvider(requireActivity()).get(KeywordViewModel::class.java)
 
 
         binding.keyAudScrNextIv.setOnClickListener {
@@ -107,6 +108,10 @@ class KeyvpAudioScriptFragment:Fragment() {
         }
 
         binding.keyAudScrSpeedToolCl.visibility = View.GONE
+
+    }
+
+    fun initRecyclerView(){
 
     }
 }

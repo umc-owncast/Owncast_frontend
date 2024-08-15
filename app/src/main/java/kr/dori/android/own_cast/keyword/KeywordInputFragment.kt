@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.FragmentKeywordInputBinding
 import kr.dori.android.own_cast.databinding.FragmentKeywordSearchBinding
@@ -20,6 +21,7 @@ class KeywordInputFragment:Fragment() {
     lateinit var binding : FragmentKeywordInputBinding
     private var isText = false
     private var searchText : String = ""
+    private lateinit var sharedViewModel: KeywordViewModel
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -27,6 +29,7 @@ class KeywordInputFragment:Fragment() {
     ): View? {
         binding = FragmentKeywordInputBinding.inflate(inflater, container, false)
 
+        sharedViewModel = ViewModelProvider(requireActivity()).get(KeywordViewModel::class.java)
 
 
         //뒤로가기 버튼
@@ -43,6 +46,7 @@ class KeywordInputFragment:Fragment() {
                     binding.keyInputLengthTv.setText("(${length}자 / 10000자)")
                     //만약에 줄바꿈이나, 특수문자만 넣었으면은 false 들어감
                     isText = !(s.toString().isEmpty()||containsOnlySpecialCharacters(s.toString()))
+                    searchText = binding.keywordInputEt.text.toString()
                 }
                 btnActivate()
             }
@@ -59,6 +63,9 @@ class KeywordInputFragment:Fragment() {
                 //이건 직접 입력했기 때문에 앞서 입력한 키워드 안뜰 것임.
                 var bundle = Bundle()
                 var fragment = KeywordAudioSetFragment()
+                //이 뷰모델에서 키워드 직접 받아옴
+                sharedViewModel.setInputKeyword(searchText)
+
                 fragment.arguments = bundle
                 fragmentTransaction.replace(R.id.keyword_fragment_frm, fragment)
                 // 백 스택에 추가하여 뒤로 가기 버튼을 통해 이전 프래그먼트로 돌아갈 수 있습니다.
