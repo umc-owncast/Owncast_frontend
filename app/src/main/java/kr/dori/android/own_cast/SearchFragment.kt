@@ -64,7 +64,28 @@ class SearchFragment : Fragment(),SearchMover {
 
 
 
-        //searchDataUpdate()//다른 유저 정보 받아오는 함수
+
+        for (i in 0 until 4) {
+            // item_layout.xml을 inflate하여 GridLayout에 추가
+            val itemView = inflater.inflate(R.layout.item_search_fr, binding.gridLayout, false)
+            // 필요시 itemView의 내부 요소를 수정
+            val thumbButton = itemView.findViewById<ImageView>(R.id.item_thumb_iv)
+            thumbButton.setOnClickListener {
+                goPlayCast()
+            }
+            val addCtgOffBtn = itemView.findViewById<ImageView>(R.id.searchfr_item_add_category_off_iv)
+            /*val addCtgOnBtn = itemView.findViewById<ImageView>(R.id.searchfr_item_add_category_on_iv)*/
+            addCtgOffBtn.setOnClickListener {
+                /*addCtgOffBtn.visibility = View.GONE
+                addCtgOnBtn.visibility = View.VISIBLE*/
+                goAddCast()
+                /*addCtgOffBtn.visibility = View.VISIBLE
+                addCtgOnBtn.visibility = View.GONE*/
+            }
+
+            binding.gridLayout.addView(itemView)
+        }
+
 
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {

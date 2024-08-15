@@ -84,7 +84,19 @@ class HomeFragment : Fragment() {
         for(i:Int in 0..5){
             //view모델 안에 실제 데이터가 있다면 그걸 텍스트 뷰에 그대로 반영
 
+
             if(i< KeywordAppData.detailTopic.size){//detailTopic이 MainActivity에서 api받아옴 시간 좀 걸림
+                textList[i].text = KeywordAppData.detailTopic[i]
+
+                textList[i].setOnClickListener {
+                    val intent = Intent(getActivity(), KeywordActivity::class.java)
+                    intent.putExtra("searchText",textList[i].text.toString())
+                    startActivity(intent)
+                }
+            }else{
+                textList[i].visibility = View.GONE
+            }*/
+            if(i< KeywordAppData.detailTopic.size){
                 textList[i].text = KeywordAppData.detailTopic[i]
                 textList[i].setOnClickListener {
                     val intent = Intent(getActivity(), KeywordActivity::class.java)
