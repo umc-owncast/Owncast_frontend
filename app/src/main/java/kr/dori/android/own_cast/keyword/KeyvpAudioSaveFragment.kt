@@ -2,25 +2,20 @@ package kr.dori.android.own_cast.keyword
 
 import android.Manifest
 import android.app.Activity
-import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.TextView
 import android.widget.Toast
@@ -30,16 +25,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import kr.dori.android.own_cast.AddCategoryDialog
-import kr.dori.android.own_cast.AddCategoryListener
-import kr.dori.android.own_cast.EditAudio
+import kr.dori.android.own_cast.playlist.AddCategoryDialog
+import kr.dori.android.own_cast.playlist.AddCategoryListener
+import kr.dori.android.own_cast.editAudio.EditAudio
 import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.SharedViewModel
-import kr.dori.android.own_cast.SongData
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAudiosaveBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.CastInterface
@@ -56,7 +47,8 @@ import java.util.Objects
 
 
 //AddCategoryDialog에 toast기능을 넣으면서 EditAudio를 추가로 전달해주는 부분이 playlistFragment에 필요해서 인터페이스 상속을 추가했습니다.
-class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategoryListener, EditAudio {
+class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategoryListener,
+    EditAudio {
     lateinit var binding: FragmentKeyvpAudiosaveBinding
     private val list: MutableList<String> = mutableListOf<String>("카테고리1","카테고리2","카테고리3","카테고리4","카테고리5","추가할 카테고리 이름 입력")
     var currentPos:Int = 0//카테고리 새로 추가할때, dismiss되면 그대로 유지해야되서 만듦

@@ -1,32 +1,18 @@
 package kr.dori.android.own_cast.keyword
 
-import android.app.Dialog
-import android.content.Context
-import android.graphics.Point
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kr.dori.android.own_cast.AddCategoryDialog
 
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.FragmentKeywordAudiosetBinding

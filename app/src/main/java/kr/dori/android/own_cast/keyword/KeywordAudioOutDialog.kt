@@ -9,8 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.WindowManager
-import kr.dori.android.own_cast.AddCategoryListener
-import kr.dori.android.own_cast.databinding.FragmentAddCategoryDialogBinding
 import kr.dori.android.own_cast.databinding.FragmentKeywordOutDialogBinding
 
 class KeywordAudioOutDialog(context: Context, private val listener: KeywordAudioOutListener) : Dialog(context) {

@@ -2,16 +2,13 @@ package kr.dori.android.own_cast.keyword
 
 import android.content.Context
 import android.graphics.Rect
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import kr.dori.android.own_cast.SharedViewModel
 import kr.dori.android.own_cast.databinding.ActivityKeywordBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 

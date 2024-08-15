@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".PlayCastActivity">
+    tools:context=".player.PlayCastActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/speed_table"
@@ -544,7 +544,7 @@
             android:layout_width="42dp"
             android:layout_height="30dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="16dp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

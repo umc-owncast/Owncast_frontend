@@ -3,10 +3,7 @@ package kr.dori.android.own_cast.keyword
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kr.dori.android.own_cast.SearchAdapter
-import kr.dori.android.own_cast.SongData
 import kr.dori.android.own_cast.databinding.ItemKeyaudscrScriptBinding
-import kr.dori.android.own_cast.databinding.ItemSearchFrBinding
 import kr.dori.android.own_cast.forApiData.Sentences
 
 class KeyvpAudioScriptRVAdapter(): RecyclerView.Adapter<KeyvpAudioScriptRVAdapter.Holder>()  {

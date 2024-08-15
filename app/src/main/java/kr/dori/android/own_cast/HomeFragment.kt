@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +14,10 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import kr.dori.android.own_cast.databinding.FragmentHomeBinding
 import kr.dori.android.own_cast.keyword.KeywordActivity
 import kr.dori.android.own_cast.keyword.KeywordAppData
-import kr.dori.android.own_cast.keyword.KeywordData
-import kr.dori.android.own_cast.keyword.KeywordViewModel
+import kr.dori.android.own_cast.playlist.SharedViewModel
 
 
 class HomeFragment : Fragment() {
@@ -95,7 +92,7 @@ class HomeFragment : Fragment() {
                 }
             }else{
                 textList[i].visibility = View.GONE
-            }*/
+            }
             if(i< KeywordAppData.detailTopic.size){
                 textList[i].text = KeywordAppData.detailTopic[i]
                 textList[i].setOnClickListener {
