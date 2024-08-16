@@ -27,12 +27,10 @@ import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentPlaylistBinding
 import kr.dori.android.own_cast.editAudio.EditAudio
-import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.GetAllPlaylist
 import kr.dori.android.own_cast.forApiData.playlist
 import kr.dori.android.own_cast.getRetrofit
 import kr.dori.android.own_cast.player.PlayCastActivity
-import retrofit2.Response
 
 class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, ActivityMover,
     FragmentMover,
@@ -43,7 +41,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
-/*
+    /*
     val dummyData = mutableListOf(
         SongData("category_name1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
         SongData("category_name2", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "monkey"),
@@ -63,25 +61,30 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        
+
         val getAllPlaylist = getRetrofit().create(playlist::class.java)
-        CoroutineScope(Dispatchers.IO).launch{
-            try{
-                val response = getAllPlaylist.getAllPlaylist() //변수명이 어지럽지만 첫번째 getAll은 레트로핏 활성화 객체이고, 두번째는 인터페이스 내부 함수이다.
-                if(response.isSuccessful){
-                    var playlistCategoryData = response.body()?.result
-                    withContext(Dispatchers.Main){
-                        playlistCategoryData?.let{
-                            sharedViewModel.setData(it.toMutableList())
+        CoroutineScope(Dispatchers.IO).launch() {
+            launch {
+                try {
+                    val response =
+                        getAllPlaylist.getAllPlaylist() //변수명이 어지럽지만 첫번째 getAll은 레트로핏 활성화 객체이고, 두번째는 인터페이스 내부 함수이다.
+                    if (response.isSuccessful) {
+                        var playlistCategoryData = response.body()?.result
+                        withContext(Dispatchers.Main) {
+                            playlistCategoryData?.let {
+                                sharedViewModel.setData(it.toMutableList())
+                            }
                         }
+
+                    } else {
+
                     }
-
-                }else{
-
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            }catch (e: Exception){
-                e.printStackTrace()
             }
+
+
         }
 
         binding = FragmentPlaylistBinding.inflate(inflater, container, false)
@@ -94,7 +97,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
             categoryAdapter.dataList = newData
             categoryAdapter.notifyDataSetChanged()
         })
-/*
+        /*
         if (sharedViewModel.data.value.isNullOrEmpty()) {
             sharedViewModel.setData(playlistCategoryData)
         }
@@ -102,10 +105,10 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
  */
 
         binding.fragmentPlaylistAddIv.setOnClickListener {
-            val dialog = AddCategoryDialog(requireContext(), this,this)
+            val dialog = AddCategoryDialog(requireContext(), this, this)
             dialog.show()
         }
-/*
+        /*
         val castFragment = CastFragment()
         binding.fragmentPlaylistSaveIv.setOnClickListener {
             val bundle = Bundle().apply {
@@ -132,14 +135,15 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
  */
 
         // Initialize ActivityResultLauncher
-        activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                Log.d("ifsuccess", "success")
-                val data: Intent? = result.data
-                val isSuccess = data?.getBooleanExtra("result", false) ?: false
-                (activity as? MainActivity)?.setPlaylistTableVisibility(isSuccess)
+        activityResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    Log.d("ifsuccess", "success")
+                    val data: Intent? = result.data
+                    val isSuccess = data?.getBooleanExtra("result", false) ?: false
+                    (activity as? MainActivity)?.setPlaylistTableVisibility(isSuccess)
+                }
             }
-        }
 
 
 
@@ -149,18 +153,46 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 
 
     override fun onCategoryAdded(categoryName: String) {
-      //  val newItem = SongData(categoryName, R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug")
-     //   sharedViewModel.addData(newItem)
+        //  val newItem = SongData(categoryName, R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug")
+        //   sharedViewModel.addData(newItem)
     }
 
-    override fun onCategoryEdit(position: Int, newItem: SongData) {
-      // sharedViewModel.updateDataAt(position, newItem)
+    override fun onCategoryEdit(position: Long, newItem: GetAllPlaylist) {
+
+
+        //서버 통신 전에 미리 데이터 업데이트를 시켜서 좀 더 빠릿한 느낌을 줄 수 있다.
+        sharedViewModel.updateDataAt(position, newItem)
+
+        val getAllPlaylist = getRetrofit().create(playlist::class.java)
+
+        CoroutineScope(Dispatchers.IO).launch() {
+            launch {
+                try {
+                    val playlistId: Long = newItem.playlistId
+                    val playlistName: String = newItem.name
+                    val response = getAllPlaylist.patchPlaylist(
+                        playlistId,
+                        playlistName
+                    )
+                    if (response.isSuccessful) {
+                        var playlistCategoryData = response.body()?.result
+
+
+                    } else {
+
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
-    override fun getCategoryData(position: Int): SongData {
-        //return sharedViewModel.data.value?.get(position) ?: [position]
-        TODO()
-    }
+        override fun getCategoryData(position: Long): GetAllPlaylist {
+            return sharedViewModel.data.value?.get(position.toInt())
+                ?: throw IndexOutOfBoundsException("Invalid position: $position")
+
+        }
 
         override fun ToPlayCast() {
             val intent = Intent(requireContext(), PlayCastActivity::class.java)
@@ -211,5 +243,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 
         }
     }
+
+
 
 

@@ -1,5 +1,6 @@
 package kr.dori.android.own_cast.playlist
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -47,6 +48,22 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                 binding.playlistCategoryTitleTv.text = it.name
                 binding.playlistCategoryNumTv.text = it.totalCast.toString()
             }
+            binding.playlistCategoryEditIv.setOnClickListener {
+
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val dialog = EditCategoryDialog(itemView.context, editListener, position.toLong())
+                    dialog.show()
+                } else {
+                    Log.e("PlaylistCategoryAdapter", "Invalid adapter position: $position")
+                }
+
+            }
         }
     }
 }
+
+
+
+
+

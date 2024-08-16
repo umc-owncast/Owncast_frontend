@@ -8,8 +8,9 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import kr.dori.android.own_cast.databinding.FragmentEditCategoryDialogBinding
+import kr.dori.android.own_cast.forApiData.GetAllPlaylist
 
-class EditCategoryDialog(context: Context, private val listener: EditCategoryListener, private val position: Int) : Dialog(context) {
+class EditCategoryDialog(context: Context, private val listener: EditCategoryListener, private val position: Long) : Dialog(context) {
 
     private lateinit var binding: FragmentEditCategoryDialogBinding
     private var isText = false
@@ -65,10 +66,10 @@ edit category dialog에서 밑줄의 색을 변경하는 방법
         binding.fragmentEditCategoryOn.setOnClickListener {
             if (isText) {
                 // 해당 position의 기존 데이터를 로드
-                val existingData = listener.getCategoryData(position)
+                val existingData: GetAllPlaylist = listener.getCategoryData(position)
 
                 // creator 속성만 변경하여 새로운 데이터 생성
-                val updatedData = existingData.copy(title = addtext)
+                val updatedData: GetAllPlaylist = existingData.copy(name = addtext)
 
                 // 업데이트된 데이터를 listener로 전달
                 listener.onCategoryEdit(position, updatedData)

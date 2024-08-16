@@ -29,8 +29,8 @@ class SharedViewModel : ViewModel() {
         Log.d("SharedViewModel", "setData: $newData")
     }
 
-    fun updateDataAt(position: Int, newData: GetAllPlaylist) {
-        _data.value?.set(position, newData)
+    fun updateDataAt(position: Long, newData: GetAllPlaylist) {
+        _data.value?.set(position.toInt(), newData)
         _data.value = _data.value // 트리거를 발생시키기 위해 데이터 변경 통지
         Log.d("SharedViewModel", "updateDataAt($position): $newData")
     }

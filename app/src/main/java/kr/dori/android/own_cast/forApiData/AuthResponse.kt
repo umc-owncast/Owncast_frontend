@@ -57,7 +57,7 @@ data class PostCastForResponse(
 data class GetAllPlaylist(
     val name: String,
     val imagePath: String,
-    val playlistId: Int,
+    val playlistId: Long,
     val totalCast: Int
 )
 

@@ -64,7 +64,7 @@ interface playlist{
     suspend fun getAllPlaylist():Response<AuthResponse<List<GetAllPlaylist>>>
 
     @PATCH("/api/playlist/{playlistId}")
-    suspend fun patchPlaylist(@Query("playlistId") playlistId: Long, @Query("playlistName")playlistName: String): Response<AuthResponse<PatchPlaylist>>
+    suspend fun patchPlaylist(@Query("playlistId") playlistId: Long, @Query("playlistName") playlistName: String): Response<AuthResponse<PatchPlaylist>>
 
     @POST("/api/playlist")
     suspend fun postPlaylist(@Query("playlistName")playlistName: String): Response<AuthResponse<PostPlaylist>>
