@@ -1,7 +1,6 @@
 package kr.dori.android.own_cast.forApiData
 
 
-
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Response
@@ -19,6 +18,7 @@ import java.util.Objects
 //여기다가는 자기가 써야하는 함수 쓰기
 //AuthResponse에 써놓은 DTO(result의 구조체) 넣어줘야 함
 //ex)AuthResponse<List<CastHomeDTO>>>
+
 interface CastInterface{
     @DELETE("/api/cast/{castId}")
     fun deleteCast(@Path("castId") castId:Long): Call<AuthResponse<String>>
@@ -32,11 +32,16 @@ interface CastInterface{
     fun getKeywordHome() : Call<AuthResponse<List<String>>>
     @Multipart
     @PATCH("/api/cast/{castId}")//캐스트 수정 api, 이미지 파일로 보내야함
-    fun patchCast(@Path("castId") castId:Long,@Part("updateInfo") updateInfo: UpdateInfo, @Part image: MultipartBody.Part): Call<AuthResponse<Objects>>
+
+    fun patchCast(@Path("castId") castId:Long,@Part("updateInfo") updateInfo: UpdateInfo, @Part image: MultipartBody.Part):Call<AuthResponse<String>>
 
     @Multipart
     @POST("/api/cast/{castId}")//캐스트 저장 api keyvpSaveFragment에서 쓰인다
-    fun postCast(@Path("castId") castId:Long,@Part("saveInfo") saveInfo: SaveInfo, @Part image: MultipartBody.Part):Call<AuthResponse<Objects>>
+    fun postCast(@Path("castId") castId:Long,@Part("saveInfo") saveInfo: SaveInfo, @Part image: MultipartBody.Part):Call<AuthResponse<String>>
+
+
+
+
     /*@POST("/api/cast/{castId}")//캐스트 저장 api keyvpSaveFragment에서 쓰인다
     fun postCast(@Path("castId") castId:Long,@Body postCast: PostCast):Call<AuthResponse<Objects>>*/
 
@@ -50,8 +55,22 @@ interface CastInterface{
     suspend fun postCastByKeyword(@Body postCastByKeyword: PostCastByKeyword):Response<AuthResponse<PostCastForResponse>>
     @POST("/api/cast/keyword-test")//스크립트로 캐스트를 생성하는 API
     //postCastByKeyword랑 같은거 쓰고 있음
-    fun postScriptList(@Body postCastByKeyword: PostCastByKeyword): Call<String>
+
+    fun postScriptList(@Body postCastByKeyword: PostCastByKeyword):Call<String>
 }
+
+interface PlayListInterface{
+    @DELETE("/api/cast/{playlistId}")
+    fun deleteCast(@Path("playlistId") playlistId:Long): Call<AuthResponse<DeletePlaylist>>
+    @GET("/api/playlist/view")// 사용자 플레이리스트 목록 받아오기
+    //GetPlayList잘못만든거같던데..
+    fun getPlayList() : Call<AuthResponse<List<GetUserPlaylist>>>
+    @POST("/api/playlist")
+    fun postPlayList(@Query("playlistName") playlistName: String) : Call<AuthResponse<PostPlaylist>>
+
+}
+
+
 
 interface Playlist{
     @DELETE("/api/playlist/{playlistId}")

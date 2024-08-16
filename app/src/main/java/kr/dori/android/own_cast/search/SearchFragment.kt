@@ -8,7 +8,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
+import android.widget.GridLayout
 import android.widget.ImageView
+
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,6 +20,13 @@ import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentSearchBinding
+import kr.dori.android.own_cast.forApiData.AuthResponse
+
+import kr.dori.android.own_cast.forApiData.CastHomeDTO
+import kr.dori.android.own_cast.forApiData.getRetrofit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 import kr.dori.android.own_cast.player.PlayCastActivity
 
@@ -54,6 +64,10 @@ class SearchFragment : Fragment(), SearchMover {
 
 
 
+        //searchDataUpdate()//다른 유저 정보 받아오는 함수
+
+
+
         for (i in 0 until 4) {
             // item_layout.xml을 inflate하여 GridLayout에 추가
             val itemView = inflater.inflate(R.layout.item_search_fr, binding.gridLayout, false)
@@ -74,6 +88,7 @@ class SearchFragment : Fragment(), SearchMover {
 
             binding.gridLayout.addView(itemView)
         }
+
 
 
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->

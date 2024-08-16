@@ -112,6 +112,7 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
             if (searchText != null) {//키워드로 생성
                 Log.d("apiTest-CreateCast", PostCastByKeyword(searchText!!,formality,voice,audioTime).toString())
                 sharedViewModel.setPostCastKeyword(PostCastByKeyword(searchText!!,formality,voice,audioTime))
+
                 listener?.createCastByKeyword(sharedViewModel.postCastKeyword.value!!)
             } else {//스크립트로 생성(input
                 //inputFragmnet에서 따로 저장해놨음

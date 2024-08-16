@@ -10,6 +10,7 @@ fun getRetrofit(): Retrofit {
         .addConverterFactory(GsonConverterFactory.create()).build()
 
     return retrofit
+
 }
 
 /*
@@ -20,3 +21,4 @@ flow
 3. 인터페이스를 담은 레트로핏 객체 생성
 4. 예외 처리
  */
+

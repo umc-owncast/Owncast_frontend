@@ -6,7 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -135,15 +141,19 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
     }
     private suspend fun createCastByScriptLauncher(postCastByScript: PostCastByScript): AuthResponse<PostCastForResponse>?{
         val apiService = getRetrofit().create(CastInterface::class.java)
-        delay(2000)
+
         return try {
             val response = apiService.postCastByScript(postCastByScript)
-            if (response.code().equals("COMMON200")) {
+
+            if (response.code().equals("200")||response.body()?.code.equals("COMMON200")) {
                 Log.d("apiTest-CreateCast", "저장성공: ${response.body()?.result}")
                 response.body()
             } else {
                 Log.d("apiTest-CreateCast", response.toString())
                 Log.d("apiTest-CreateCast", "연결실패 코드: ${response.code()}")
+
+                Log.d("apiTest-CreateCast", "오류 이유: ${response.body()?.message}")
+
                 null
             }
         } catch (e: Exception) {
@@ -180,15 +190,20 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
     }
     private suspend fun createCastByKeywordLauncher(postCastByKeyword: PostCastByKeyword):AuthResponse<PostCastForResponse>?{
         val apiService = getRetrofit().create(CastInterface::class.java)
-        delay(2000)
+
         return try {
             val response = apiService.postCastByKeyword(postCastByKeyword)
-            if (response.code().equals("COMMON200")) {
+
+            if (response.code().equals("200")||response.body()?.code.equals("COMMON200")) {
+
                 Log.d("apiTest-CreateCast", "저장성공: ${response.body()?.result}")
                 response.body()
             } else {
                 Log.d("apiTest-CreateCast", response.toString())
                 Log.d("apiTest-CreateCast", "연결실패 코드: ${response.code()}")
+
+                Log.d("apiTest-CreateCast", "오류 이유: ${response.body()?.message}")
+
                 null
             }
         } catch (e: Exception) {

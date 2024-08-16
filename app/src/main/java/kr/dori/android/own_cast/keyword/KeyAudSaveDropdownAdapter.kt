@@ -7,17 +7,16 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.annotation.LayoutRes
 import kr.dori.android.own_cast.R
+
 import kr.dori.android.own_cast.databinding.ItemAudSetSpinnerBinding
 
-class KeyAudSaveDropdownAdapter(context: Context, @LayoutRes private val resId: Int, private val categoryList: List<String>)
+class KeyAudSaveDropdownAdapter(context: Context, @LayoutRes private val resId: Int, private val categoryList:MutableList<String>)
     : ArrayAdapter<String>(context, resId, categoryList) {
+    //var dataList: MutableList<PlaylistText> = mutableListOf()
     override fun getView(position: Int, converView: View?, parent: ViewGroup): View {
         val binding = ItemAudSetSpinnerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-
             binding.tvSpinner.text = categoryList[position]
-
-
         return binding.root
     }
 

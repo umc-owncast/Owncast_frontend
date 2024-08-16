@@ -12,8 +12,19 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kr.dori.android.own_cast.databinding.ActivityMainBinding
+import kr.dori.android.own_cast.forApiData.AuthResponse
 
+import kr.dori.android.own_cast.forApiData.CastHomeDTO
+import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.forApiData.PostPlaylist
+import kr.dori.android.own_cast.forApiData.UserPostPlaylist
+import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.KeywordAppData
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
+
 import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.playlist.PlaylistFragment
 import kr.dori.android.own_cast.search.SearchFragment

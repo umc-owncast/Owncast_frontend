@@ -22,7 +22,7 @@ class KeyvpAudioScriptFragment:Fragment() {
     private var speedList = ArrayList<TextView>()
     private lateinit var sharedViewModel: KeywordViewModel
     private var curSpeed:Int = 2
-
+    private lateinit var adapter:KeyvpAudioScriptRVAdapter
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = parentFragment as? KeywordBtnClickListener
@@ -42,7 +42,7 @@ class KeyvpAudioScriptFragment:Fragment() {
 
 
 
-
+        initRecyclerView()
         initSpeedUi()
         return binding.root
 
@@ -112,6 +112,12 @@ class KeyvpAudioScriptFragment:Fragment() {
     }
 
     fun initRecyclerView(){
+
+        sharedViewModel.sentences.value?.let{
+            adapter = KeyvpAudioScriptRVAdapter(it)
+
+            binding.keyAudScriptRv.adapter = adapter
+        }
 
     }
 }

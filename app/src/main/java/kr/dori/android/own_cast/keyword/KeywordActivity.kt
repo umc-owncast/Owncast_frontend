@@ -7,12 +7,20 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+
 import kr.dori.android.own_cast.databinding.ActivityKeywordBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
+
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
 import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.forApiData.GetUserPlaylist
+import kr.dori.android.own_cast.forApiData.PlayListInterface
+
+
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,6 +38,8 @@ data class RequestApiData(
     var audiotime:Int
 )
 
+
+//기능 : 뷰모델에 카테고리(플레이리스트) 추가, 액티비티 전반 포커스 해제, 액티비티내 프래그먼트 분배
 class KeywordActivity : AppCompatActivity() {
     private lateinit var binding: ActivityKeywordBinding
     //액티비티 내부 전반에서 사용할 데이터들, 스크립트를 생성할때, 캐스트 생성할때 사용하고 서버로 보낼 예정
@@ -47,8 +57,8 @@ class KeywordActivity : AppCompatActivity() {
 
 
 
-        apiExecute()
 
+        initCategoryInViewModel()
         if(savedInstanceState == null&&searchText!=null){//연관 키워드를 클릭한 경우
             var bundle = Bundle()
             var fragment = KeywordAudioSetFragment()
@@ -98,19 +108,24 @@ class KeywordActivity : AppCompatActivity() {
     }
 
 
-    fun apiExecute(){
-        val apiService = getRetrofit().create(CastInterface::class.java)
+
+    fun initCategoryInViewModel(){
+        val apiService = getRetrofit().create(PlayListInterface::class.java)
         //1. apiService후, 자신이 만들어놓은 인터페이스(함수 지정해주기)
         //2. AuthResponse에 응답으로 넘어오는 result 값의 제네릭 넣어주기 AuthResponse<List<CastHomeDTO>>
         //3. COMMON200이 성공 코드이고, resp에서 필요한 값 받기
-        apiService.searchHome().enqueue(object: Callback<AuthResponse<List<CastHomeDTO>>> {
-            override fun onResponse(call: Call<AuthResponse<List<CastHomeDTO>>>, response: Response<AuthResponse<List<CastHomeDTO>>>) {
+        apiService.getPlayList().enqueue(object: Callback<AuthResponse<List<GetUserPlaylist>>> {
+            override fun onResponse(call: Call<AuthResponse<List<GetUserPlaylist>>>, response: Response<AuthResponse<List<GetUserPlaylist>>>) {
 
-                Log.d("apiTest", response.toString())
-                Log.d("apiTest", response.body().toString())
-                val resp: AuthResponse<List<CastHomeDTO>> = response.body()!!
+                Log.d("apiTest-category", response.toString())
+                Log.d("apiTest-category", response.body().toString())
+                val resp: AuthResponse<List<GetUserPlaylist>> = response.body()!!
                 when(resp.code) {
                     "COMMON200" -> {
+                        for(i:Int in 0..(resp.result!!.size-1)){//카테고리(플레이리스트 추가)
+                            sharedViewModel.addGetPlayList(PlaylistText(resp.result[i].playlistId,resp.result[i].name))
+                        }
+
                         Log.d("apiTest","연결성공")
                     }
                     else ->{
@@ -120,7 +135,9 @@ class KeywordActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<AuthResponse<List<CastHomeDTO>>>, t: Throwable) {
+
+            override fun onFailure(call: Call<AuthResponse<List<GetUserPlaylist>>>, t: Throwable) {
+
                 Log.d("apiTest", t.message.toString())
             }
         })

@@ -17,7 +17,11 @@ import androidx.fragment.app.activityViewModels
 import kr.dori.android.own_cast.databinding.FragmentHomeBinding
 import kr.dori.android.own_cast.keyword.KeywordActivity
 import kr.dori.android.own_cast.keyword.KeywordAppData
+
+import kr.dori.android.own_cast.keyword.KeywordData
+import kr.dori.android.own_cast.keyword.KeywordViewModel
 import kr.dori.android.own_cast.playlist.SharedViewModel
+
 
 
 class HomeFragment : Fragment() {
@@ -85,16 +89,6 @@ class HomeFragment : Fragment() {
             if(i< KeywordAppData.detailTopic.size){//detailTopic이 MainActivity에서 api받아옴 시간 좀 걸림
                 textList[i].text = KeywordAppData.detailTopic[i]
 
-                textList[i].setOnClickListener {
-                    val intent = Intent(getActivity(), KeywordActivity::class.java)
-                    intent.putExtra("searchText",textList[i].text.toString())
-                    startActivity(intent)
-                }
-            }else{
-                textList[i].visibility = View.GONE
-            }
-            if(i< KeywordAppData.detailTopic.size){
-                textList[i].text = KeywordAppData.detailTopic[i]
                 textList[i].setOnClickListener {
                     val intent = Intent(getActivity(), KeywordActivity::class.java)
                     intent.putExtra("searchText",textList[i].text.toString())
