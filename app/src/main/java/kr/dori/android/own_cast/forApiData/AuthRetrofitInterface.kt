@@ -23,9 +23,9 @@ interface CastInterface{
     @DELETE("/api/cast/{castId}")
     fun deleteCast(@Path("castId") castId:Long): Call<AuthResponse<String>>
     @GET("/api/cast/{castId}/scripts")
-    fun getCastScript(@Path("castId") castId:Long): Call<AuthResponse<String>>
+    suspend fun getCastScript(@Path("castId") castId:Long): Response<AuthResponse<List<Script>>>
     @GET("/api/cast/{castId}/audio")//이거 내 생각엔 파일인거같은데
-    fun getCastPlay(@Path("castId") castId:Long): Call<AuthResponse<String>>
+    suspend fun getCastPlay(@Path("castId") castId:Long): Response<AuthResponse<String>>
     @GET("/api/cast/search/home") // 검색 홈 API(검색 화면 상위 4개 castdata받아옴)
     fun searchHome(): Call<AuthResponse<List<CastHomeDTO>>>
     @GET("/api/cast/home")// 홈화면 키워드 6개 받아오기

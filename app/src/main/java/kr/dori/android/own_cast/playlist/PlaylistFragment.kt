@@ -215,10 +215,12 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 
         }
 
-        override fun ToPlayCast() {
-            val intent = Intent(requireContext(), PlayCastActivity::class.java)
-            activityResultLauncher.launch(intent)
-        }
+    override fun ToPlayCast(castId: Long) {
+        val intent = Intent(requireContext(), PlayCastActivity::class.java)
+        intent.putExtra("CAST_ID", castId) // castId를 전달
+        activityResultLauncher.launch(intent)
+    }
+
 
     override fun playlistToCategory(playlistId: Long) {
 

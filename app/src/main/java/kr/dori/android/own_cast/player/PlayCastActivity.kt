@@ -18,8 +18,14 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.upstream.RawResourceDataSource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.ActivityPlayCastBinding
+import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.getRetrofit
 import java.util.concurrent.TimeUnit
 
 
@@ -37,6 +43,46 @@ class PlayCastActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayCastBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val castId = intent.getLongExtra("CAST_ID", -1)
+        Log.d("xibal","$castId")
+
+
+        val getCastInfo = getRetrofit().create(CastInterface::class.java)
+        CoroutineScope(Dispatchers.IO).launch() {
+            launch {
+                try {
+                    val response = getCastInfo.getCastScript(castId)
+
+                    if (response.isSuccessful) {
+                        val script = response.body()?.result
+                        Log.d("xibal", "${script}")
+
+
+                    }
+                } catch (e: Exception) {
+                    Log.d("xibal","대꼴")
+                    e.printStackTrace()
+                }
+
+                }
+            launch {
+                try{
+                    val response = getCastInfo.getCastPlay(castId)
+
+                    if(response.isSuccessful){
+                        val audio = response.body()?.result
+                        Log.d("xibal","${audio}")
+                    }
+
+            }catch (e: Exception){
+                    Log.d("xibal","대꼴")
+                e.printStackTrace()
+            }
+            }
+        }
+
+
 
         speedTableViewModel = ViewModelProvider(this).get(SpeedTableViewModel::class.java)
 
