@@ -1,5 +1,6 @@
 package kr.dori.android.own_cast.playlist
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +38,7 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
                 if (position != RecyclerView.NO_POSITION) {
                     val cast = dataList[position]
                     activityMover.ToPlayCast(cast.castId)
+                    Log.d("tag","${cast.castId}")
                 }
             }
         }

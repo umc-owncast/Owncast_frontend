@@ -2,22 +2,29 @@ package kr.dori.android.own_cast.player
 
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.SeekBar
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackParameters
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.upstream.RawResourceDataSource
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.datasource.DataSource
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.PlaybackParameters
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.MediaSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,9 +33,8 @@ import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.ActivityPlayCastBinding
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.getRetrofit
+import java.io.InputStream
 import java.util.concurrent.TimeUnit
-
-
 
 class PlayCastActivity : AppCompatActivity() {
     private lateinit var player: ExoPlayer
@@ -38,53 +44,64 @@ class PlayCastActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var isSeeking = false
 
-//    @OptIn(UnstableApi::class)
+    @OptIn(UnstableApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayCastBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val castId = intent.getLongExtra("CAST_ID", -1)
-        Log.d("xibal","$castId")
+        enableEdgeToEdge()
 
+        player = ExoPlayer.Builder(this).build()
+        player.volume = 1.0f
+
+        val castId = intent.getLongExtra("CAST_ID", -1)
+        Log.d("cast", "$castId")
 
         val getCastInfo = getRetrofit().create(CastInterface::class.java)
-        CoroutineScope(Dispatchers.IO).launch() {
-            launch {
-                try {
-                    val response = getCastInfo.getCastScript(castId)
-
-                    if (response.isSuccessful) {
-                        val script = response.body()?.result
-                        Log.d("xibal", "${script}")
-
-
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val playResponse = getCastInfo.getCastPlay(castId)
+                if (playResponse.isSuccessful) {
+                    playResponse.body()?.let { responseBody ->
+                        val stream = responseBody.byteStream()
+                        withContext(Dispatchers.Main) {
+                            player.playStream(stream)
+                        }
                     }
-                } catch (e: Exception) {
-                    Log.d("xibal","대꼴")
-                    e.printStackTrace()
+                } else {
+                    Log.e("player", "Failed to get cast play: ${playResponse.errorBody()?.string()}")
                 }
-
-                }
-            launch {
-                try{
-                    val response = getCastInfo.getCastPlay(castId)
-
-                    if(response.isSuccessful){
-                        val audio = response.body()?.result
-                        Log.d("xibal","${audio}")
-                    }
-
-            }catch (e: Exception){
-                    Log.d("xibal","대꼴")
-                e.printStackTrace()
-            }
+            } catch (e: Exception) {
+                Log.e("player", "Exception during playback setup", e)
             }
         }
 
-
-
         speedTableViewModel = ViewModelProvider(this).get(SpeedTableViewModel::class.java)
+
+        player.addListener(object : Player.Listener {
+            override fun onPlaybackStateChanged(state: Int) {
+                Log.d("PlayerState", "Playback state changed: $state")
+                when (state) {
+                    Player.STATE_READY -> {
+                        Log.d("PlayerState", "Player is ready to play")
+                    }
+                    Player.STATE_ENDED -> {
+                        Log.d("PlayerState", "Playback ended")
+                    }
+                    Player.STATE_BUFFERING -> {
+                        Log.d("PlayerState", "Buffering...")
+                    }
+                    Player.STATE_IDLE -> {
+                        Log.d("PlayerState", "Player is idle")
+                    }
+                }
+            }
+
+            override fun onPlayerError(error: PlaybackException) {
+                Log.e("PlayerError", "Error occurred during playback", error)
+            }
+        })
 
         val clickImageView = listOf(
             binding.activityCastSpeed05Iv,
@@ -113,16 +130,6 @@ class PlayCastActivity : AppCompatActivity() {
             binding.activityCastSpeedOn20Tv
         )
 
-        // ExoPlayer 초기화
-        player = ExoPlayer.Builder(this).build()
-
-        // res/raw 디렉토리의 love.mp3 파일 URI 생성
-        val uri = RawResourceDataSource.buildRawResourceUri(R.raw.love)
-
-        // 재생할 미디어 아이템 생성
-        val mediaItem = MediaItem.fromUri(uri)
-        player.setMediaItem(mediaItem)
-
         // ExoPlayer 리스너를 추가하여 준비 완료와 상태 변화를 감지
         player.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(state: Int) {
@@ -138,9 +145,6 @@ class PlayCastActivity : AppCompatActivity() {
                 updateLyricsHighlight()
             }
         })
-
-        // Player를 즉시 준비 (Prepare player immediately)
-        player.prepare()
 
         // SeekBar 변경 리스너 설정
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -296,8 +300,8 @@ class PlayCastActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        //player.release() // ExoPlayer 자원 해제
-        //stopSeekBarUpdate()
+        player.release() // ExoPlayer 자원 해제
+        stopSeekBarUpdate()
     }
 
     private fun startSeekBarUpdate() {
@@ -433,3 +437,34 @@ class PlayCastActivity : AppCompatActivity() {
         }
     }
 }
+
+@OptIn(UnstableApi::class)
+private fun ExoPlayer.setMediaSource(mediaSource: MediaSource, startPositionMs: Long = 0L) {
+    // ExoPlayer의 기본 메서드를 호출하도록 수정
+    this.setMediaSource(mediaSource, startPositionMs)
+}
+
+@OptIn(UnstableApi::class)
+private fun createMediaSource(factory: ProgressiveMediaSource.Factory, mediaItem: MediaItem): MediaSource {
+    // ProgressiveMediaSource.Factory를 사용하여 MediaSource 생성
+    return factory.createMediaSource(mediaItem)
+}
+
+@OptIn(UnstableApi::class)
+private fun ExoPlayer.playStream(inputStream: InputStream) {
+    val dataSourceFactory = DataSource.Factory { InputStreamDataSource(inputStream) }
+    val mediaSource = createMediaSource(
+        ProgressiveMediaSource.Factory(dataSourceFactory),
+        MediaItem.Builder().setUri(Uri.EMPTY).build()
+    )
+
+    // 미디어 소스를 설정하고 재생 준비
+    this.setMediaSource(mediaSource)
+    this.prepare()
+    this.playWhenReady = true
+}
+
+
+
+
+

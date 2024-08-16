@@ -62,7 +62,7 @@ class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
                         }
                     }
                 } else {
-                    Log.e("CategoryFragment", "Failed to fetch playlist info")
+                    Log.d("PlaylistCategory", "Failed to fetch playlist info")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
