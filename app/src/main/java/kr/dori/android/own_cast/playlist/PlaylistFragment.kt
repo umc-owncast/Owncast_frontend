@@ -31,6 +31,7 @@ import kr.dori.android.own_cast.forApiData.GetAllPlaylist
 import kr.dori.android.own_cast.forApiData.playlist
 import kr.dori.android.own_cast.getRetrofit
 import kr.dori.android.own_cast.player.PlayCastActivity
+import okhttp3.Dispatcher
 
 class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, ActivityMover,
     FragmentMover,
@@ -151,10 +152,18 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         return binding.root
     }
 
-
+// addCategory 부분은 사용자 토큰이 필요하기에 2024-08-16시점에는 기능이 작동하지 않습니다. -> 사용자 정보와, 제목,totalCast, CastList등의 정보가 필요함 ->
     override fun onCategoryAdded(categoryName: String) {
-        //  val newItem = SongData(categoryName, R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug")
-        //   sharedViewModel.addData(newItem)
+
+        val getAllPlaylist = getRetrofit().create(playlist::class.java)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try{
+                val response = getAllPlaylist.postPlaylist(categoryName)
+            }catch(e: Exception){
+                e.printStackTrace()
+            }
+        }
     }
 
     override fun onCategoryEdit(position: Long, newItem: GetAllPlaylist) {
@@ -175,7 +184,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
                         playlistName
                     )
                     if (response.isSuccessful) {
-                        var playlistCategoryData = response.body()?.result
+                       // var playlistCategoryData = response.body()?.result
 
 
                     } else {
