@@ -79,6 +79,7 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
         } else {//직접 입력
             binding.keywordAudEt.visibility = View.GONE
             binding.keAudsetUnderline.visibility = View.GONE
+            binding.keywordAudiosetSb.visibility = View.GONE
         }
         /////////////////////////////////////
         initVoiceList()//사용자의 언어-발음에 따라 dropdownmenu변경

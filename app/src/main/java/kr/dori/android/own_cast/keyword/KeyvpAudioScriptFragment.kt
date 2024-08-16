@@ -3,15 +3,22 @@ package kr.dori.android.own_cast.keyword
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.media.browse.MediaBrowser.MediaItem
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAuioscriptBinding
 
@@ -23,6 +30,16 @@ class KeyvpAudioScriptFragment:Fragment() {
     private lateinit var sharedViewModel: KeywordViewModel
     private var curSpeed:Int = 2
     private lateinit var adapter:KeyvpAudioScriptRVAdapter
+
+
+    /*-------exoPlayer용 변수--------------------*/
+    private lateinit var player: ExoPlayer
+    private lateinit var steamingUrl : String
+    private val handler = Handler(Looper.getMainLooper())
+    private var isSeeking = false
+    private var mills: Float =0f
+    /*---------------------------*/
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = parentFragment as? KeywordBtnClickListener
@@ -42,7 +59,9 @@ class KeyvpAudioScriptFragment:Fragment() {
 
 
 
-        initRecyclerView()
+
+        initPlayer()
+        initRecyclerView()//sentnences를 받아와 출력
         initSpeedUi()
         return binding.root
 
@@ -57,7 +76,122 @@ class KeyvpAudioScriptFragment:Fragment() {
         listener = null
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        player.release() // 플레이어 리소스 해제
+        stopSeekBarUpdate() // SeekBar 업데이트 중지
+    }
 
+    fun initPlayer(){
+        player = ExoPlayer.Builder(requireContext()).build()
+        steamingUrl = "https://owncast-s3.s3.ap-northeast-2.amazonaws.com/07918ecb-464a-44fa-8bcd-5ab0025d964d"
+        //deprecated 됐다길래;
+        val mediaItem = androidx.media3.common.MediaItem.fromUri(steamingUrl)
+        player.setMediaItem(mediaItem)
+        player.prepare()
+
+
+        player.addListener(object : Player.Listener {
+            override fun onIsLoadingChanged(isLoading: Boolean) {
+
+            }
+
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                if (playbackState == Player.STATE_READY) {//재생상태가 준비되었음
+                    //binding.keyAudScriptSb.max = (player.duration / 1000).toInt() // SeekBar 최대값 설정
+                    binding.keyAudSetMediaTimeTv.text = formatTime(player.duration)
+                    startSeekBarUpdate()
+                    player.play()
+                }
+            }
+
+            override fun onPositionDiscontinuity(
+                oldPosition: Player.PositionInfo,
+                newPosition: Player.PositionInfo,
+                reason: Int
+            ) {//재생상태가 변경되었음.
+                super.onPositionDiscontinuity(oldPosition, newPosition, reason)
+
+            }
+            //Player.DISCONTINUITY_REASON_AUTO_TRANSITION 미디어간 자동 변환
+        })
+        binding.keyAudScriptSb.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser && !isSeeking) {
+                    // 사용자가 SeekBar를 조작하면 플레이어의 재생 위치를 변경
+                    player.seekTo(progress*player.duration/100000L)
+                    binding.keyAudSetMediaTimeTv.text = formatTime(player.currentPosition) // 현재 재생 위치를 업데이트
+
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                isSeeking = true // 사용자가 SeekBar를 조작 중
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                isSeeking = false // 사용자가 SeekBar 조작을 마침
+                val progress = seekBar?.progress?.toLong() ?: 0L
+                player.seekTo(progress*player.duration/100000L)
+                binding.keyAudSetMediaTimeTv.text = formatTime(player.currentPosition) // 현재 재생 위치 업데이트
+
+            }
+        })
+
+
+        binding.keyAudScrAddSecondIv.setOnClickListener{
+            val currentPosition = player.currentPosition
+            val newPosition = currentPosition + 10_000L // 10초 앞으로
+            player.seekTo(newPosition)
+        }
+        binding.keyAudScrMinSecondIv.setOnClickListener {
+            val currentPosition = player.currentPosition
+            val newPosition = currentPosition - 10_000L // 10초 앞으로
+            player.seekTo(newPosition)
+        }
+        binding.keyAudScriptPlaybtnIv.setOnClickListener{
+            player.play()
+            binding.keyAudScriptPlaybtnIv.visibility = View.VISIBLE
+            binding.keyAudScriptStopBtnIv.visibility = View.GONE
+
+        }
+        binding.keyAudScriptStopBtnIv.setOnClickListener{
+            player.pause()
+            binding.keyAudScriptPlaybtnIv.visibility = View.GONE
+            binding.keyAudScriptStopBtnIv.visibility = View.VISIBLE
+        }
+    }
+
+    private val updateSeekBar = object : Runnable {
+        override fun run() {
+            if (player.isPlaying) {
+                val currentPosition = player.currentPosition
+                binding.keyAudScriptSb.progress = ((currentPosition*100000 /player.duration )).toInt() // SeekBar 현재 위치 업데이트
+                binding.keyAudSetProgTimeTv.text = formatTime(currentPosition) // 현재 재생 시간 업데이트
+                updateLyricsHighlight()
+
+            }
+            handler.postDelayed(this, 100) // 1초마다 업데이트
+        }
+    }
+
+    // SeekBar 업데이트 시작
+    private fun startSeekBarUpdate() {
+        handler.postDelayed(updateSeekBar, 100)
+    }
+
+    // SeekBar 업데이트 중지
+    private fun stopSeekBarUpdate() {
+        handler.removeCallbacks(updateSeekBar)
+    }
+    private fun formatTime(timeMs: Long): String {
+        val totalSeconds = timeMs / 1000
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+        return String.format("%d:%02d", minutes, seconds)
+    }
+
+    /*---------------------------------------------------------------------------------------------*/
     //음성 속도 지정하는 tool에 대한 listener 지정
     fun initSpeedUi(){
         binding.keyAudScrCurSpeedTv.setOnClickListener {
@@ -86,8 +220,12 @@ class KeyvpAudioScriptFragment:Fragment() {
             speedList[i].setOnClickListener {
                 binding.keyAudScrCurSpeedTv.text = "${speed}X"
 
-                //#8050F2는 MainColro
 
+                player.setPlaybackSpeed(speed)//미디어 플레이어 재생속도 설정
+                player.playWhenReady = true//자동 재생해줌
+
+
+                //#8050F2는 MainColro
                 //이전거 버튼 비활성화
                 speedList[curSpeed].setTextColor(Color.parseColor("#00051F"))
                 speedList[curSpeed].backgroundTintList = ColorStateList.
@@ -118,6 +256,10 @@ class KeyvpAudioScriptFragment:Fragment() {
 
             binding.keyAudScriptRv.adapter = adapter
         }
+
+    }
+
+    fun updateLyricsHighlight(){
 
     }
 }

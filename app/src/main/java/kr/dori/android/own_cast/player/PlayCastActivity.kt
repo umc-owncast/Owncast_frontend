@@ -82,7 +82,8 @@ class PlayCastActivity : AppCompatActivity() {
             override fun onPlaybackStateChanged(state: Int) {
                 if (state == Player.STATE_READY) {
                     val duration = player.duration
-                    binding.seekBar.max = (duration / 1000).toInt()
+                    //binding.seekBar.max = (duration / 1000).toInt()
+                    binding.seekBar.max = (100000)
                     binding.endTv.text = formatTime(duration)
                     startSeekBarUpdate() // 플레이어가 준비되면 SeekBar 업데이트 시작
                 }
@@ -100,7 +101,8 @@ class PlayCastActivity : AppCompatActivity() {
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser && !isSeeking) {
-                    player.seekTo(progress * 1000L)
+                    //player.seekTo(progress * 1000L)
+                    player.seekTo(progress*player.duration/100000L)
                     binding.startTv.text = formatTime(player.currentPosition)
                     updateLyricsHighlight()
                 }
@@ -112,7 +114,9 @@ class PlayCastActivity : AppCompatActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 isSeeking = false
-                player.seekTo(seekBar?.progress?.times(1000L) ?: 0L)
+                //player.seekTo(seekBar?.progress?.times(1000L) ?: 0L)
+                val progress = seekBar?.progress?.toLong() ?: 0L
+                player.seekTo(progress*player.duration/100000L)
                 binding.startTv.text = formatTime(player.currentPosition)
                 updateLyricsHighlight()
             }
@@ -255,7 +259,7 @@ class PlayCastActivity : AppCompatActivity() {
     }
 
     private fun startSeekBarUpdate() {
-        handler.postDelayed(updateSeekBar, 1000)
+        handler.postDelayed(updateSeekBar, 100)
     }
 
     private fun stopSeekBarUpdate() {
@@ -266,11 +270,14 @@ class PlayCastActivity : AppCompatActivity() {
         override fun run() {
             if (player.isPlaying) {
                 val currentPosition = player.currentPosition
-                binding.seekBar.progress = (currentPosition / 1000).toInt()
+
+                //binding.seekBar.progress = (currentPosition / 1000).toInt()
+
+                binding.seekBar.progress = ((currentPosition*100000 /player.duration )).toInt()
                 binding.startTv.text = formatTime(currentPosition)
                 updateLyricsHighlight()
             }
-            handler.postDelayed(this, 1000)
+            handler.postDelayed(this, 100)
         }
     }
 

@@ -88,6 +88,9 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
     private lateinit var castTitle: String
     private var isPublic : Boolean = false
 
+    //finish dialog
+    private var uri: Uri? = null
+
 
 
 
@@ -133,6 +136,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                     .centerCrop() // ImageView에 맞게 이미지 크기를 조정
                     .into(binding.keyAudSaveThumbIv)
                 //아래의 코드로 이제 서버쪽으로 이미지를 보낼 수 있게 해줌.
+                uri = it//finish dialog로 사진 정보 넘겨줘야함
                 body = createMultipartBodyFromUri(it, requireContext())
             }
 
@@ -368,7 +372,8 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //2. AuthResponse에 응답으로 넘어오는 result 값의 제네릭 넣어주기 AuthResponse<List<CastHomeDTO>>
         //3. COMMON200이 성공 코드이고, resp에서 필요한 값 받기
         val playlistId : Long = sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].id
-        val findialog = KeywordAudioFinishDialog(requireContext(), this)
+        val findialog = KeywordAudioFinishDialog(requireContext(), this, castTitle,
+            sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].playlistName, uri)//저장 타이틀, 카테고리, 길이, 사진
         apiService.postCast(sharedViewModel.castId.value!!, SaveInfo(castTitle,playlistId,binding.keyAudPublicBtnIv.isChecked), body!!).enqueue(object: Callback<AuthResponse<String>> {
             override fun onResponse(call: Call<AuthResponse<String>>, response: Response<AuthResponse<String>>) {
                 Log.d("apiTest-castPost", "저장 시도 중 ${ response.toString() }")
