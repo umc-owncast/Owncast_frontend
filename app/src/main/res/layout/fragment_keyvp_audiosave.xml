@@ -27,7 +27,7 @@
                 android:id="@+id/key_aud_save_thumb_iv"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/searchfr_item_thumb_bg"
+                android:src="@drawable/save_keyword_thumb_ex1"
 
                 android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +44,7 @@
             android:src="@drawable/ic_keyword_audio_save_gallerly"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="60dp"
+            android:layout_marginStart="64dp"
             android:layout_marginTop="64dp"/>
 
 

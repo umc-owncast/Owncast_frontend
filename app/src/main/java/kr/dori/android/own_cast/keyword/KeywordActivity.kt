@@ -19,6 +19,7 @@ import kr.dori.android.own_cast.forApiData.CastHomeDTO
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.GetUserPlaylist
 import kr.dori.android.own_cast.forApiData.PlayListInterface
+
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import retrofit2.Call
 import retrofit2.Callback
@@ -112,12 +113,12 @@ class KeywordActivity : AppCompatActivity() {
         apiService.getPlayList().enqueue(object: Callback<AuthResponse<List<GetUserPlaylist>>> {
             override fun onResponse(call: Call<AuthResponse<List<GetUserPlaylist>>>, response: Response<AuthResponse<List<GetUserPlaylist>>>) {
 
-                Log.d("apiTest", response.toString())
-                Log.d("apiTest", response.body().toString())
+                Log.d("apiTest-category", response.toString())
+                Log.d("apiTest-category", response.body().toString())
                 val resp: AuthResponse<List<GetUserPlaylist>> = response.body()!!
                 when(resp.code) {
                     "COMMON200" -> {
-                        for(i:Int in 0..resp.result!!.size){//카테고리(플레이리스트 추가)
+                        for(i:Int in 0..(resp.result!!.size-1)){//카테고리(플레이리스트 추가)
                             sharedViewModel.addGetPlayList(PlaylistText(resp.result[i].playlistId,resp.result[i].name))
                         }
                         Log.d("apiTest","연결성공")

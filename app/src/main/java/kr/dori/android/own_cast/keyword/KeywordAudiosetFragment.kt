@@ -152,12 +152,13 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
         delay(2000)
         return try {
             val response = apiService.postCastByScript(postCastByScript)
-            if (response.code().equals("COMMON200")) {
+            if (response.code().equals("200")||response.body()?.code.equals("COMMON200")) {
                 Log.d("apiTest-CreateCast", "저장성공: ${response.body()?.result}")
                 response.body()
             } else {
                 Log.d("apiTest-CreateCast", response.toString())
                 Log.d("apiTest-CreateCast", "연결실패 코드: ${response.code()}")
+                Log.d("apiTest-CreateCast", "오류 이유: ${response.body()?.message}")
                 null
             }
         } catch (e: Exception) {
@@ -197,12 +198,13 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
         delay(2000)
         return try {
             val response = apiService.postCastByKeyword(postCastByKeyword)
-            if (response.code().equals("COMMON200")) {
+            if (response.code().equals("200")||response.body()?.code.equals("COMMON200")) {
                 Log.d("apiTest-CreateCast", "저장성공: ${response.body()?.result}")
                 response.body()
             } else {
                 Log.d("apiTest-CreateCast", response.toString())
                 Log.d("apiTest-CreateCast", "연결실패 코드: ${response.code()}")
+                Log.d("apiTest-CreateCast", "오류 이유: ${response.body()?.message}")
                 null
             }
         } catch (e: Exception) {

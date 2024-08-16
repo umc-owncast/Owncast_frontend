@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -49,11 +51,14 @@ import kr.dori.android.own_cast.forApiData.SaveInfo
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.util.Objects
 
 
@@ -69,9 +74,12 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
     private lateinit var sharedViewModel: KeywordViewModel
 
     lateinit var adapter:KeyAudSaveDropdownAdapter
+    private var playlistName : MutableList<String> = mutableListOf<String>()
 
     private var isText = false
+    private var id : Long? = null
 
+    private lateinit var dialog:AddCategoryDialog
     private lateinit var imageResultLauncher: ActivityResultLauncher<Intent>
 
     /*postCast에 쓰일 정보들*/
@@ -88,8 +96,14 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
         binding = FragmentKeyvpAudiosaveBinding.inflate(inflater, container, false)
         sharedViewModel = ViewModelProvider(requireActivity()).get(KeywordViewModel::class.java)
         initSpinnerAdapter()
-        initSaveBtn()//여기서 저장하기 버튼, 저장 api 호출
         //postCastSave()를 같이 호출함
+        initSaveBtn()//여기서 저장하기 버튼, 저장 api 호출
+
+        //기존에 있던 사진을 우선적으로 저장함, 나중에 init으로 변경하기ㅕ
+        body = prepareFilePartFromDrawable(requireContext(), R.drawable.save_keyword_thumb_ex1, "image")
+
+
+
         initEditText()
         binding.keyAudSaveThumbIv.setOnClickListener {
             selectGallery()
@@ -175,35 +189,72 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     companion object {
         private const val REQ_GALLERY = 1
     }
+
+    //기존 파일을 비트맵으로 바꿔서 서버 api에 보낼 수 있게 하는 방법
+    fun prepareFilePartFromDrawable(context: Context, resourceId: Int, partName: String): MultipartBody.Part {
+        // 리소스에서 Bitmap 가져오기
+        val bitmap = BitmapFactory.decodeResource(context.resources, resourceId)
+
+        // Bitmap을 임시 파일로 변환
+        val file = createTempFile(context, bitmap)
+
+        // 파일을 RequestBody로 변환
+        val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
+
+        // MultipartBody.Part로 변환
+        return MultipartBody.Part.createFormData(partName, file.name, requestFile)
+    }
+
+    fun createTempFile(context: Context, bitmap: Bitmap): File {
+        // 임시 파일 생성
+        val file = File(context.cacheDir, "temp_image.jpg")
+
+        try {
+            // Bitmap을 JPEG 파일로 저장
+            val fos = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+            fos.flush()
+            fos.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return file
+    }
 //------------------------------------------------------------갤러리 참조용 함수 종료
 
 
     fun initSpinnerAdapter() {
         //마지막 칸이 category를 생성하는 기능이기 때문에 다이얼로그를 받아온다.
-        val dialog = AddCategoryDialog(requireContext(), this, this)
+        dialog = AddCategoryDialog(requireContext(), this, this)
         /*if(_list.isNullOrEmpty()){
             adapter = KeyAudSaveDropdownAdapter(requireContext(), R.layout.item_aud_set_spinner, list)
         }else{
 
         }*/
-        adapter = KeyAudSaveDropdownAdapter(requireContext(), R.layout.item_aud_set_spinner)
 
-        adapter.dataList = sharedViewModel.getPlayList.value!!
-        adapter.dataList.add(PlaylistText(-1,"추가할 카테고리 이름 입력"))
+        // 뷰모델의 MutableLiveData로부터 playlistName들을 추출하여 List로 만들기
+        for(i :Int in 0..sharedViewModel.getPlayList.value!!.size-1){
+            playlistName.add(sharedViewModel.getPlayList.value!![i].playlistName)
+        }
+        playlistName.add("추가할 카테고리 이름 입력")
+        adapter = KeyAudSaveDropdownAdapter(requireContext(), R.layout.item_aud_set_spinner,playlistName)
+        //adapter.dataList = sharedViewModel.getPlayList.value!!
         adapter.notifyDataSetChanged()
         binding.keyAudSaveCategorySp.adapter = adapter
+
+        Log.d("apitest-getPlaylist",sharedViewModel.getPlayList.value!!.toString())
 
 
         binding.keyAudSaveCategorySp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
+                val value = binding.keyAudSaveCategorySp.getItemAtPosition(pos).toString()
                 when(pos){
-                    list.size-1 ->{//이 부분이 카테고리 생성하는 부분, api 추가해주기
+                    playlistName.size-1 ->{//이 부분이 카테고리 생성하는 부분, api 추가해주기
                         binding.keyAudSaveCategorySp.setSelection(currentPos)
                         dialog.show()
                     }
                     else ->{
-                        val value = binding.keyAudSaveCategorySp.getItemAtPosition(pos).toString()
-                        binding.keyAudSaveCategorySp.getItemAtPosition(pos)
                         currentPos = pos
                         Toast.makeText(requireContext(), value, Toast.LENGTH_SHORT).show()
                     }
@@ -243,14 +294,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //list.add(list.size-1,categoryName)원랜 이걸로 변환됐다고 해줘야되는데
         //setSelection 써야 우리가 작성한 카테고리가 선택됨
         //selection 효과가 기본적으로 구현돼있는듯
-
-        binding.keyAudSaveCategorySp.setSelection(list.size-2)
-        var id: Long? = addPlaylist(categoryName)!!
-        id?.let {
-            sharedViewModel.addGetPlayList(PlaylistText(it,categoryName))
-            adapter.dataList.add(adapter.dataList.size-1,PlaylistText(it,categoryName))
-        }
-
+        addPlaylist(categoryName)
         adapter.notifyDataSetChanged()
 
         //새로 생성하면 키워드 생성하기 메뉴가 size-1, 새로 생성된 메뉴가 size-2
@@ -287,11 +331,9 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val screenHeight = displayMetrics.heightPixels
         binding.keyAudSaveBtnOnIv.setOnClickListener{
             //finishDialog띄우는 버튼
-            val dialog = KeywordAudioFinishDialog(requireContext(), this)
-            dialog.setCancelable(false)
-            dialog.setCanceledOnTouchOutside(false)
+
             postCastSave()//이게 api
-            dialog.show()
+
             /*
             val window = dialog.window
             if (window != null) {
@@ -312,17 +354,20 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //1. apiService후, 자신이 만들어놓은 인터페이스(함수 지정해주기)
         //2. AuthResponse에 응답으로 넘어오는 result 값의 제네릭 넣어주기 AuthResponse<List<CastHomeDTO>>
         //3. COMMON200이 성공 코드이고, resp에서 필요한 값 받기
-        val playlistId : Long = adapter.dataList[binding.keyAudSaveCategorySp.selectedItemPosition].id
-
-        apiService.postCast(sharedViewModel.castId.value!!, SaveInfo(castTitle,playlistId,binding.keyAudPublicBtnIv.isChecked), body!!).enqueue(object: Callback<AuthResponse<Objects>> {
-            override fun onResponse(call: Call<AuthResponse<Objects>>, response: Response<AuthResponse<Objects>>) {
+        val playlistId : Long = sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].id
+        val findialog = KeywordAudioFinishDialog(requireContext(), this)
+        apiService.postCast(sharedViewModel.castId.value!!, SaveInfo(castTitle,playlistId,binding.keyAudPublicBtnIv.isChecked), body!!).enqueue(object: Callback<AuthResponse<String>> {
+            override fun onResponse(call: Call<AuthResponse<String>>, response: Response<AuthResponse<String>>) {
                 Log.d("apiTest1", response.toString())
                 val resp = response.body()!!
                 when(resp.code) {
                     "COMMON200" -> {
-                        Log.d("apiTest-castPost","저장성공")
+
                         Log.d("apiTest-castPost",resp.result.toString())
 
+                        findialog.setCancelable(false)//dialog는 여기서
+                        findialog.setCanceledOnTouchOutside(false)
+                        findialog.show()
                     }
                     else ->{
                         Log.d("apiTest-castPost","연결실패 코드 : ${resp.code}")
@@ -331,24 +376,30 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                 }
             }
 
-            override fun onFailure(call: Call<AuthResponse<Objects>>, t: Throwable) {
+            override fun onFailure(call: Call<AuthResponse<String>>, t: Throwable) {
                 Log.d("apiTest-castPost", t.message.toString())
             }
         })
     }
 
-    fun addPlaylist(categoryName: String): Long? {//playList추가 버튼
+    fun addPlaylist(categoryName: String) {//playList추가 버튼
         val apiService = getRetrofit().create(PlayListInterface::class.java)
-        var id : Long? = null
         apiService.postPlayList(categoryName).enqueue(object: Callback<AuthResponse<PostPlaylist>> {
             override fun onResponse(call: Call<AuthResponse<PostPlaylist>>, response: Response<AuthResponse<PostPlaylist>>) {
                 Log.d("apiTest1", response.toString())
                 val resp : AuthResponse<PostPlaylist> = response.body()!!
                 when(resp.code) {
                     "COMMON200" -> {
-                        Log.d("apiTest-playlistAdd","저장성공")
-                        Log.d("apiTest-playlistAdd",resp.result.toString())
+
+                        Log.d("apiTest-playlistAdd", "저장성공 id: ${ resp.result.toString() } 제목 : ${categoryName}")
                         id =  resp.result!!.playlistId
+                        id?.let {
+                            sharedViewModel.addGetPlayList(PlaylistText(it,categoryName))
+                            playlistName.add(playlistName.size-1,categoryName)
+                            adapter.notifyDataSetChanged()
+                        }
+                        binding.keyAudSaveCategorySp.setSelection(playlistName.size-2)
+                        dialog.dismiss()
                     }
                     else ->{
                         Log.d("apiTest-playlistAdd","연결실패 코드 : ${resp.code}")
@@ -362,7 +413,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
             }
         })
-        return id
+
     }
 
     private fun initEditText(){

@@ -50,7 +50,7 @@ class AddCategoryDialog(context: Context, private val listener: AddCategoryListe
         binding.fragmentAddCategoryDialogOn.setOnClickListener {
             if (isText) {
                 listener.onCategoryAdded(addtext)
-                dismiss()
+                //dismiss를 바깥에서 처리하였음ㅕ
                 toast.dialogToEditAudio()
             }
         }

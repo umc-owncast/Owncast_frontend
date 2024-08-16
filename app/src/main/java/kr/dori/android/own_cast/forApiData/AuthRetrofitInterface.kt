@@ -17,10 +17,7 @@ import java.util.Objects
 //여기다가는 자기가 써야하는 함수 쓰기
 //AuthResponse에 써놓은 DTO(result의 구조체) 넣어줘야 함
 //ex)AuthResponse<List<CastHomeDTO>>>
-interface PlaylistInterFace {
-    @DELETE("/api/playlist/{playlistId}")
-    fun deleteCast(@Path("playlistId") playlistId:Long): Call<AuthResponse<String>>
-}
+
 interface CastInterface{
     @DELETE("/api/cast/{castId}")
     fun deleteCast(@Path("castId") castId:Long): Call<AuthResponse<String>>
@@ -34,11 +31,11 @@ interface CastInterface{
     fun getKeywordHome() : Call<AuthResponse<List<String>>>
     @Multipart
     @PATCH("/api/cast/{castId}")//캐스트 수정 api, 이미지 파일로 보내야함
-    fun patchCast(@Path("castId") castId:Long,@Part("updateInfo") updateInfo: UpdateInfo, @Part image: MultipartBody.Part):Call<AuthResponse<Objects>>
+    fun patchCast(@Path("castId") castId:Long,@Part("updateInfo") updateInfo: UpdateInfo, @Part image: MultipartBody.Part):Call<AuthResponse<String>>
 
     @Multipart
     @POST("/api/cast/{castId}")//캐스트 저장 api keyvpSaveFragment에서 쓰인다
-    fun postCast(@Path("castId") castId:Long,@Part("saveInfo") saveInfo: SaveInfo, @Part image: MultipartBody.Part):Call<AuthResponse<Objects>>
+    fun postCast(@Path("castId") castId:Long,@Part("saveInfo") saveInfo: SaveInfo, @Part image: MultipartBody.Part):Call<AuthResponse<String>>
     /*@POST("/api/cast/{castId}")//캐스트 저장 api keyvpSaveFragment에서 쓰인다
     fun postCast(@Path("castId") castId:Long,@Body postCast: PostCast):Call<AuthResponse<Objects>>*/
 
@@ -62,7 +59,10 @@ interface PlayListInterface{
     //GetPlayList잘못만든거같던데..
     fun getPlayList() : Call<AuthResponse<List<GetUserPlaylist>>>
     @POST("/api/playlist")
-    fun postPlayList(@Part("playlistName") playlistName: String) : Call<AuthResponse<PostPlaylist>>
+    fun postPlayList(@Query("playlistName") playlistName: String) : Call<AuthResponse<PostPlaylist>>
 
 }
-
+/*interface PlaylistInterFace {
+    @DELETE("/api/playlist/{playlistId}")
+    fun deleteCast(@Path("playlistId") playlistId:Long): Call<AuthResponse<String>>
+}*/

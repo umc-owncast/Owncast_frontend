@@ -10,24 +10,21 @@ import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.SongData
 import kr.dori.android.own_cast.databinding.ItemAudSetSpinnerBinding
 
-class KeyAudSaveDropdownAdapter(context: Context, @LayoutRes private val resId: Int)
-    : ArrayAdapter<String>(context, resId) {
-    var dataList: MutableList<PlaylistText> = mutableListOf()
+class KeyAudSaveDropdownAdapter(context: Context, @LayoutRes private val resId: Int, private val categoryList:MutableList<String>)
+    : ArrayAdapter<String>(context, resId, categoryList) {
+    //var dataList: MutableList<PlaylistText> = mutableListOf()
     override fun getView(position: Int, converView: View?, parent: ViewGroup): View {
         val binding = ItemAudSetSpinnerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-
-            binding.tvSpinner.text = dataList[position].playlistName
-
-
+            binding.tvSpinner.text = categoryList[position]
         return binding.root
     }
 
     // 드롭다운된 항목들 리스트의 뷰
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         val binding = ItemAudSetSpinnerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        binding.tvSpinner.text = dataList[position].playlistName
-        if(position == dataList.size-1){
+        binding.tvSpinner.text = categoryList[position]
+        if(position == categoryList.size-1){
             binding.icSpinnerSoundIv.setImageResource(R.drawable.playlistfr_add_iv)
             binding.icSpinnerSoundIv.visibility = View.VISIBLE
         }
@@ -36,5 +33,5 @@ class KeyAudSaveDropdownAdapter(context: Context, @LayoutRes private val resId: 
 
 
 
-    override fun getCount() = dataList.size
+    override fun getCount() = categoryList.size
 }

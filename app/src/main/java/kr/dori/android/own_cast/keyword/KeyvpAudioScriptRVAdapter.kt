@@ -9,8 +9,8 @@ import kr.dori.android.own_cast.databinding.ItemKeyaudscrScriptBinding
 import kr.dori.android.own_cast.databinding.ItemSearchFrBinding
 import kr.dori.android.own_cast.forApiData.Sentences
 
-class KeyvpAudioScriptRVAdapter(): RecyclerView.Adapter<KeyvpAudioScriptRVAdapter.Holder>()  {
-    var dataList: List<Sentences> = listOf()
+class KeyvpAudioScriptRVAdapter(var dataList: List<Sentences>): RecyclerView.Adapter<KeyvpAudioScriptRVAdapter.Holder>()  {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KeyvpAudioScriptRVAdapter.Holder {
         val binding = ItemKeyaudscrScriptBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return Holder(binding)
