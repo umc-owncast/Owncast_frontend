@@ -61,6 +61,12 @@ data class GetAllPlaylist(
     val totalCast: Int
 )
 
+data class Script(
+    @SerializedName(value = "originalSentence") val originalSentence: String,
+    @SerializedName(value = "translatedSentence") val translatedSentence: String,
+    @SerializedName(value = "timePoint") val timePoint: Float
+)
+
 
 
 

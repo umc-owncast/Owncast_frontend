@@ -86,21 +86,25 @@ class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
         binding.fragmentCategoryRv.adapter = castAdapter
         binding.fragmentCategoryRv.layoutManager = LinearLayoutManager(context)
 
+
+// 이 부분은 재생목록 부분이어서 어떻게 수정할건지 생각을 해봐야 됨 -> 재생목록 순서를 어떻게 정할 것인가?
         binding.fragmentCategoryPlayIv.setOnClickListener {
-            ToPlayCast()
+            //ToPlayCast()
         }
 
         binding.fragmentCategoryShuffleIv.setOnClickListener {
-            ToPlayCast()
+            //ToPlayCast()
         }
 
         return binding.root
     }
 
-    override fun ToPlayCast() {
+    override fun ToPlayCast(castId: Long) {
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
+        intent.putExtra("CAST_ID", castId) // castId를 전달
         activityResultLauncher.launch(intent)
     }
+
 
     override fun ToEditAudio() {
         val intent = Intent(requireContext(), EditAudioActivity::class.java)

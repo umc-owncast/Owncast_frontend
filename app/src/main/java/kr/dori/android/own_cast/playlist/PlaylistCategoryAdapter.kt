@@ -37,7 +37,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
 
         init {
             binding.playlistCategoryPlayIv.setOnClickListener {
-                activityMover.ToPlayCast()
+               // activityMover.ToPlayCast()
             }
             binding.realclick.setOnClickListener {
                 val position = adapterPosition

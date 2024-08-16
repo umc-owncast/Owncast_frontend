@@ -31,11 +31,16 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
     inner class Holder(val binding: CastItemLayoutBinding): RecyclerView.ViewHolder(binding.root) {
 
 
-        init{
+        init {
             binding.goPlaycastConstraint.setOnClickListener {
-                activityMover.ToPlayCast()
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val cast = dataList[position]
+                    activityMover.ToPlayCast(cast.castId)
+                }
             }
         }
+
         fun setText(data: Cast) {
 
             val constraintLayout = binding.root as ConstraintLayout
