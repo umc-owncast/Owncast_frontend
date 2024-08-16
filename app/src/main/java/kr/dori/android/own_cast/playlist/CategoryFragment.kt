@@ -39,6 +39,7 @@ class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d("xibal","${playlistId}")
 
 
         binding =  FragmentCategoryBinding.inflate(inflater,container,false)
