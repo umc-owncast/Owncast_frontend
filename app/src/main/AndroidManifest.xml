@@ -20,10 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Own_cast"
         tools:targetApi="31">
-        <service
-            android:name=".keyword.AuthService"
-            android:enabled="true"
-            android:exported="true"></service>
+
+
 
         <activity
             android:name=".AuthActivity"
@@ -86,18 +84,16 @@
             android:name=".ChangePasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".SearchAddCategoryActivity"
+            android:name=".search.SearchAddCategoryActivity"
             android:exported="false"
             android:theme="@style/Theme.Own_cast" />
         <activity
-            android:name=".EditAudioActivity"
+            android:name=".editAudio.EditAudioActivity"
             android:exported="false"
             android:theme="@style/Theme.Own_cast" />
+
         <activity
-            android:name=".OnlySearchActivity"
-            android:exported="false" />
-        <activity
-            android:name=".PlayCastActivity"
+            android:name=".player.PlayCastActivity"
             android:exported="false" />
         <activity
             android:name=".keyword.KeywordActivity"

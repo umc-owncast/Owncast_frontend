@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.annotation.LayoutRes
 import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.SongData
+
 import kr.dori.android.own_cast.databinding.ItemAudSetSpinnerBinding
 
 class KeyAudSaveDropdownAdapter(context: Context, @LayoutRes private val resId: Int, private val categoryList:MutableList<String>)

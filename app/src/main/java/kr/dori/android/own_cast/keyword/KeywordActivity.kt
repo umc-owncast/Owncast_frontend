@@ -2,16 +2,16 @@ package kr.dori.android.own_cast.keyword
 
 import android.content.Context
 import android.graphics.Rect
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import kr.dori.android.own_cast.SharedViewModel
+
 import kr.dori.android.own_cast.databinding.ActivityKeywordBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 
@@ -19,6 +19,7 @@ import kr.dori.android.own_cast.forApiData.CastHomeDTO
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.GetUserPlaylist
 import kr.dori.android.own_cast.forApiData.PlayListInterface
+
 
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import retrofit2.Call
@@ -53,6 +54,8 @@ class KeywordActivity : AppCompatActivity() {
         val searchText: String? = intent.getStringExtra("searchText")//검색할 키워드, 이미 연관 검색어를 받아올때도 똑같은 이름으로 넘긴다
 
         sharedViewModel = ViewModelProvider(this).get(KeywordViewModel::class.java)
+
+
 
 
         initCategoryInViewModel()
@@ -105,6 +108,7 @@ class KeywordActivity : AppCompatActivity() {
     }
 
 
+
     fun initCategoryInViewModel(){
         val apiService = getRetrofit().create(PlayListInterface::class.java)
         //1. apiService후, 자신이 만들어놓은 인터페이스(함수 지정해주기)
@@ -121,6 +125,7 @@ class KeywordActivity : AppCompatActivity() {
                         for(i:Int in 0..(resp.result!!.size-1)){//카테고리(플레이리스트 추가)
                             sharedViewModel.addGetPlayList(PlaylistText(resp.result[i].playlistId,resp.result[i].name))
                         }
+
                         Log.d("apiTest","연결성공")
                     }
                     else ->{
@@ -130,7 +135,9 @@ class KeywordActivity : AppCompatActivity() {
                 }
             }
 
+
             override fun onFailure(call: Call<AuthResponse<List<GetUserPlaylist>>>, t: Throwable) {
+
                 Log.d("apiTest", t.message.toString())
             }
         })

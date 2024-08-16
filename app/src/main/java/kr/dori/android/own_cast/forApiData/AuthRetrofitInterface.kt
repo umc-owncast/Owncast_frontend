@@ -1,5 +1,6 @@
 package kr.dori.android.own_cast.forApiData
 
+
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Response
@@ -31,11 +32,16 @@ interface CastInterface{
     fun getKeywordHome() : Call<AuthResponse<List<String>>>
     @Multipart
     @PATCH("/api/cast/{castId}")//캐스트 수정 api, 이미지 파일로 보내야함
+
     fun patchCast(@Path("castId") castId:Long,@Part("updateInfo") updateInfo: UpdateInfo, @Part image: MultipartBody.Part):Call<AuthResponse<String>>
 
     @Multipart
     @POST("/api/cast/{castId}")//캐스트 저장 api keyvpSaveFragment에서 쓰인다
     fun postCast(@Path("castId") castId:Long,@Part("saveInfo") saveInfo: SaveInfo, @Part image: MultipartBody.Part):Call<AuthResponse<String>>
+
+
+
+
     /*@POST("/api/cast/{castId}")//캐스트 저장 api keyvpSaveFragment에서 쓰인다
     fun postCast(@Path("castId") castId:Long,@Body postCast: PostCast):Call<AuthResponse<Objects>>*/
 
@@ -49,6 +55,7 @@ interface CastInterface{
     suspend fun postCastByKeyword(@Body postCastByKeyword: PostCastByKeyword):Response<AuthResponse<PostCastForResponse>>
     @POST("/api/cast/keyword-test")//스크립트로 캐스트를 생성하는 API
     //postCastByKeyword랑 같은거 쓰고 있음
+
     fun postScriptList(@Body postCastByKeyword: PostCastByKeyword):Call<String>
 }
 
@@ -62,7 +69,31 @@ interface PlayListInterface{
     fun postPlayList(@Query("playlistName") playlistName: String) : Call<AuthResponse<PostPlaylist>>
 
 }
-/*interface PlaylistInterFace {
+
+
+
+interface Playlist{
     @DELETE("/api/playlist/{playlistId}")
-    fun deleteCast(@Path("playlistId") playlistId:Long): Call<AuthResponse<String>>
-}*/
+    suspend fun deletePlaylist(@Query("playlistId") playlistId: Long): Response<AuthResponse<DeletePlaylist>>
+
+    @GET("/api/playlist/{playlistId}")
+    suspend fun getPlaylistInfo(@Query("playlistId") playlistId: Long, @Query("page") page: Int, @Query("size") size: Int): Response<AuthResponse<GetPlayList>>
+
+    @GET("/api/playlist/view")
+    suspend fun getAllPlaylist():Response<AuthResponse<List<GetAllPlaylist>>>
+
+    @PATCH("/api/playlist/{playlistId}")
+    suspend fun patchPlaylist(@Query("playlistId") playlistId: Long, @Query("playlistName") playlistName: String): Response<AuthResponse<PatchPlaylist>>
+
+    @POST("/api/playlist")
+    suspend fun postPlaylist(@Query("playlistName")playlistName: String): Response<AuthResponse<PostPlaylist>>
+}
+
+
+interface player{
+
+}
+
+interface bookmark{
+
+}

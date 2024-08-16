@@ -12,7 +12,6 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.DisplayMetrics
@@ -22,7 +21,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.TextView
 import android.widget.Toast
@@ -35,35 +33,38 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import kr.dori.android.own_cast.AddCategoryDialog
-import kr.dori.android.own_cast.AddCategoryListener
-import kr.dori.android.own_cast.EditAudio
+import kr.dori.android.own_cast.playlist.AddCategoryDialog
+import kr.dori.android.own_cast.playlist.AddCategoryListener
+import kr.dori.android.own_cast.editAudio.EditAudio
 import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.SharedViewModel
-import kr.dori.android.own_cast.SongData
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAudiosaveBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.PlayListInterface
 import kr.dori.android.own_cast.forApiData.PostPlaylist
+
 import kr.dori.android.own_cast.forApiData.SaveInfo
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+
 import okhttp3.RequestBody
+
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.Objects
+
+
 
 
 //AddCategoryDialog에 toast기능을 넣으면서 EditAudio를 추가로 전달해주는 부분이 playlistFragment에 필요해서 인터페이스 상속을 추가했습니다.
-class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategoryListener, EditAudio {
+class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategoryListener,
+    EditAudio {
     lateinit var binding: FragmentKeyvpAudiosaveBinding
     private val list: MutableList<String> = mutableListOf<String>("카테고리1","카테고리2","카테고리3","카테고리4","카테고리5","추가할 카테고리 이름 입력")
     var currentPos:Int = 0//카테고리 새로 추가할때, dismiss되면 그대로 유지해야되서 만듦
@@ -88,6 +89,8 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
     private var isPublic : Boolean = false
 
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -96,11 +99,13 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
         binding = FragmentKeyvpAudiosaveBinding.inflate(inflater, container, false)
         sharedViewModel = ViewModelProvider(requireActivity()).get(KeywordViewModel::class.java)
         initSpinnerAdapter()
+
         //postCastSave()를 같이 호출함
         initSaveBtn()//여기서 저장하기 버튼, 저장 api 호출
 
         //기존에 있던 사진을 우선적으로 저장함, 나중에 init으로 변경하기ㅕ
         body = prepareFilePartFromDrawable(requireContext(), R.drawable.save_keyword_thumb_ex1, "image")
+
 
 
 
@@ -110,6 +115,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener,AddCategory
         }
         return binding.root
     }
+
 
 //------------------------------------------------------------갤러리 참조용 함수
 //OnVIewCreated에서 선언해줌으로써, 이미지를 받아올 수 있는 imageResultLauncher를 초기화 한다.
@@ -151,6 +157,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // Create MultipartBody.Part from RequestBody
         return MultipartBody.Part.createFormData("photo", tempFile.name, requestFile)
     }
+
     private fun selectGallery() {
         // Android 버전에 따른 권한 확인
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -190,6 +197,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         private const val REQ_GALLERY = 1
     }
 
+
     //기존 파일을 비트맵으로 바꿔서 서버 api에 보낼 수 있게 하는 방법
     fun prepareFilePartFromDrawable(context: Context, resourceId: Int, partName: String): MultipartBody.Part {
         // 리소스에서 Bitmap 가져오기
@@ -221,6 +229,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         return file
     }
+
 //------------------------------------------------------------갤러리 참조용 함수 종료
 
 
@@ -250,7 +259,9 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
                 val value = binding.keyAudSaveCategorySp.getItemAtPosition(pos).toString()
                 when(pos){
+
                     playlistName.size-1 ->{//이 부분이 카테고리 생성하는 부분, api 추가해주기
+
                         binding.keyAudSaveCategorySp.setSelection(currentPos)
                         dialog.show()
                     }
@@ -277,6 +288,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             }
         }
     }
+
 
 
 
@@ -322,6 +334,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         showCustomToast("카테고리가 추가되었어요")
     }
 
+
     //dialog버튼 좀 길어져서 init으로 함수 바꿈.
     fun initSaveBtn(){
         // 화면 크기 가져오기
@@ -358,29 +371,39 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val findialog = KeywordAudioFinishDialog(requireContext(), this)
         apiService.postCast(sharedViewModel.castId.value!!, SaveInfo(castTitle,playlistId,binding.keyAudPublicBtnIv.isChecked), body!!).enqueue(object: Callback<AuthResponse<String>> {
             override fun onResponse(call: Call<AuthResponse<String>>, response: Response<AuthResponse<String>>) {
-                Log.d("apiTest1", response.toString())
-                val resp = response.body()!!
-                when(resp.code) {
-                    "COMMON200" -> {
+                Log.d("apiTest-castPost", "저장 시도 중 ${ response.toString() }")
+                val resp = response.body()
+                if(resp!=null){
+                    when(resp.code) {
+                        "COMMON200" -> {
 
-                        Log.d("apiTest-castPost",resp.result.toString())
+                            Log.d("apiTest-castPost",resp.result.toString())
 
-                        findialog.setCancelable(false)//dialog는 여기서
-                        findialog.setCanceledOnTouchOutside(false)
-                        findialog.show()
+                            findialog.setCancelable(false)//dialog는 여기서
+                            findialog.setCanceledOnTouchOutside(false)
+
+                            findialog.show()
+
+                        }
+                        else ->{
+                            Log.d("apiTest-castPost","연결실패 코드 : ${resp.code}")
+
+                        }
                     }
-                    else ->{
-                        Log.d("apiTest-castPost","연결실패 코드 : ${resp.code}")
-
-                    }
+                }else{
+                    Toast.makeText(requireContext(), "서버가 불안정합니다 잠시후 다시 시도해주세요", Toast.LENGTH_SHORT).show()
                 }
+
             }
+
 
             override fun onFailure(call: Call<AuthResponse<String>>, t: Throwable) {
                 Log.d("apiTest-castPost", t.message.toString())
+                Toast.makeText(requireContext(), "서버가 불안정합니다 잠시후 다시 시도해주세요", Toast.LENGTH_SHORT).show()
             }
         })
     }
+
 
     fun addPlaylist(categoryName: String) {//playList추가 버튼
         val apiService = getRetrofit().create(PlayListInterface::class.java)
@@ -451,5 +474,6 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
+
 }
 

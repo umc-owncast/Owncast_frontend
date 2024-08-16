@@ -1,6 +1,7 @@
 package kr.dori.android.own_cast.keyword
 
 import android.app.Application
+
 import android.util.Log
 import kr.dori.android.own_cast.SignupData
 import kr.dori.android.own_cast.forApiData.AuthResponse
@@ -10,10 +11,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class KeywordAppData: Application() {
     companion object{
         //keyword에서 쓸 전역변수 정리
         var mainTopic = ""
+
         fun getDetailTopic(key: String, defaultValue: String): List<String> {
             return KeywordAppData.detailTopic ?: listOf("로딩중","로딩중","로딩중","로딩중","로딩중","로딩중")
         }
@@ -40,6 +43,7 @@ class KeywordAppData: Application() {
             duration = null
             exposure = false
             category = ""
+
         }*/
 
 
@@ -72,6 +76,7 @@ class KeywordAppData: Application() {
                 }
             })
         }
+
     }
 
 

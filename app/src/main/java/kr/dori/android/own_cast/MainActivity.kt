@@ -24,6 +24,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
+import kr.dori.android.own_cast.player.PlayCastActivity
+import kr.dori.android.own_cast.playlist.PlaylistFragment
+import kr.dori.android.own_cast.search.SearchFragment
+import kr.dori.android.own_cast.study.StudyFragment
+
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var playCastActivityResultLauncher: ActivityResultLauncher<Intent>

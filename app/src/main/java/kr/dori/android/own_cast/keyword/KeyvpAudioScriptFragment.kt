@@ -112,10 +112,12 @@ class KeyvpAudioScriptFragment:Fragment() {
     }
 
     fun initRecyclerView(){
+
         sharedViewModel.sentences.value?.let{
             adapter = KeyvpAudioScriptRVAdapter(it)
 
             binding.keyAudScriptRv.adapter = adapter
         }
+
     }
 }

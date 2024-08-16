@@ -1,15 +1,10 @@
 package kr.dori.android.own_cast.keyword
 
 
-import android.app.Application
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
-import android.text.SpannableString
 import android.text.TextWatcher
-import android.text.style.UnderlineSpan
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -18,11 +13,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.SharedViewModel
 import kr.dori.android.own_cast.databinding.FragmentKeywordSearchBinding
 
 

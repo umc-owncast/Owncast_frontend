@@ -4,7 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+
 import kr.dori.android.own_cast.forApiData.GetPlayList
+
 import kr.dori.android.own_cast.forApiData.PostCastByKeyword
 import kr.dori.android.own_cast.forApiData.PostCastByScript
 import kr.dori.android.own_cast.forApiData.Sentences
@@ -17,7 +19,9 @@ class KeywordViewModel(application: Application) : AndroidViewModel(application)
     private val _sentences = MutableLiveData<List<Sentences>>()
     private val _postCastKeyword = MutableLiveData<PostCastByKeyword>()
     private val _postCastScript = MutableLiveData<PostCastByScript>()
+
     private val _getPlayList = MutableLiveData<MutableList<PlaylistText>>(mutableListOf())
+
 
     /*-----------------------getter----------------------*/
     val songDuration : LiveData<String> get () = _songDuration
@@ -27,7 +31,9 @@ class KeywordViewModel(application: Application) : AndroidViewModel(application)
     val postCastKeyword : LiveData<PostCastByKeyword> get() = _postCastKeyword
     val postCastScript : LiveData<PostCastByScript> get() = _postCastScript
 
+
     val getPlayList : LiveData<MutableList<PlaylistText>> get() = _getPlayList
+
 
     /*-----------------------setter----------------------*/
     fun setSongDuration(data: String) {
@@ -47,6 +53,7 @@ class KeywordViewModel(application: Application) : AndroidViewModel(application)
     }
     fun setPostCastScript(data : PostCastByScript){
         _postCastScript.value = data
+
     }
     fun setGetPlayList(data : List<PlaylistText>){
         _getPlayList.value?.clear()
@@ -55,6 +62,7 @@ class KeywordViewModel(application: Application) : AndroidViewModel(application)
 
     fun addGetPlayList(data: PlaylistText){
         _getPlayList.value?.add(data)
+
     }
 
 

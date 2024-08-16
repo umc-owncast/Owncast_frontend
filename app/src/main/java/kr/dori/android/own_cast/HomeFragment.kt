@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +14,14 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import kr.dori.android.own_cast.databinding.FragmentHomeBinding
 import kr.dori.android.own_cast.keyword.KeywordActivity
 import kr.dori.android.own_cast.keyword.KeywordAppData
+
 import kr.dori.android.own_cast.keyword.KeywordData
 import kr.dori.android.own_cast.keyword.KeywordViewModel
+import kr.dori.android.own_cast.playlist.SharedViewModel
+
 
 
 class HomeFragment : Fragment() {
@@ -84,8 +85,10 @@ class HomeFragment : Fragment() {
         for(i:Int in 0..5){
             //view모델 안에 실제 데이터가 있다면 그걸 텍스트 뷰에 그대로 반영
 
+
             if(i< KeywordAppData.detailTopic.size){//detailTopic이 MainActivity에서 api받아옴 시간 좀 걸림
                 textList[i].text = KeywordAppData.detailTopic[i]
+
                 textList[i].setOnClickListener {
                     val intent = Intent(getActivity(), KeywordActivity::class.java)
                     intent.putExtra("searchText",textList[i].text.toString())

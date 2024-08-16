@@ -10,10 +10,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-interface Connector{
-    fun onSuccess()
-    fun onFailure()
-}
+
 
 //이거 액티비티마다 원하는 기능으로 쓰면 돼용
 /*fun apiexecute(){
@@ -43,51 +40,9 @@ interface Connector{
 }*/
 
 
-//밑에 코드 쓰는 코드 아님!!!!!!!!!!!!!!!!!!!
-
-class AuthService  {
-
-    private lateinit var connector: Connector
-
-    fun setConnector(connector: Connector){
-        this.connector = connector
-    }
-
-    //주석친게 사용법인데 아까워서 둠
-    /*val authService = AuthService()
-    authService.setConnector(this)
-    val apiService = getRetrofit().create(AuthRetrofitInterFace::class.java)
-    authService.apiExecute<List<CastHomeDTO>> { apiService.searchHome() }*/
 
 
-    /*fun <T> apiExecute(apiCall: () -> Call<AuthResponse<T>>) {
-        //val authService = getRetrofit().create(AuthRetrofitInterFace::class.java)
-        //이걸 사용하는 activity에 써주면 됨!
-        var resp: AuthResponse<T>
-        apiCall().enqueue(object: Callback<AuthResponse<T>> {
-            override fun onResponse(call: Call<AuthResponse<T>>, response: retrofit2.Response<AuthResponse<T>>) {
-                Log.d("SIGNUP/SUCCESS", response.toString())
-                resp = response.body()!!
 
-                when(resp.code) {
-                    "COMMON200" -> {
-                        connector.onSuccess()
-                    }
-                    else ->{
-                        connector.onFailure()
-                    }
-
-                }
-
-            }
-            override fun onFailure(call: Call<AuthResponse<T>>, t: Throwable) {
-                Log.d("apiTest", t.message.toString())
-            }
-        })
-
-    }*/
-
-}
 
 
 
