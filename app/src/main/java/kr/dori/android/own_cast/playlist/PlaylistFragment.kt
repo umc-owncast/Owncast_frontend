@@ -95,7 +95,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         binding.category.layoutManager = LinearLayoutManager(context)
 
         sharedViewModel.data.observe(viewLifecycleOwner, Observer { newData ->
-            categoryAdapter.dataList = newData
+            categoryAdapter.dataList = newData.filter{it.playlistId != 0L}.toMutableList()
             categoryAdapter.notifyDataSetChanged()
         })
         /*
