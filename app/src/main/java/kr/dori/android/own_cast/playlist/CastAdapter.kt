@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.CastItemLayoutBinding
+import kr.dori.android.own_cast.forApiData.Cast
+
 class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapter<CastAdapter.Holder>() {
-    var dataList: MutableList<SongData> = mutableListOf()
+    var dataList: MutableList<Cast> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val binding = CastItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -34,33 +36,32 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
                 activityMover.ToPlayCast()
             }
         }
-        fun setText(data: SongData) {
+        fun setText(data: Cast) {
 
             val constraintLayout = binding.root as ConstraintLayout
             val constraintSet = ConstraintSet()
             constraintSet.clone(constraintLayout)
+            binding.castItemTitleTv.text = data.castTitle
+            binding.timeTableTv.text = formatTime(data.audioLength)
 
-            if(data.isSave) {
-
-                binding.castItemTitleTv.text = data.title
+            if(data.castCreator == "헬로") {
                 binding.castItemCreator.visibility = View.GONE
                 binding.castItemEditIv.visibility = View.VISIBLE
                 binding.castItemEditIv.setOnClickListener {
                     activityMover.ToEditAudio()
                 }
-                if(data.isLock) {
-                    binding.castItemLockIv.visibility = View.VISIBLE
-                } else {
+                if(data.isPublic) {
                     binding.castItemLockIv.visibility = View.GONE
+                } else {
+                    binding.castItemLockIv.visibility = View.VISIBLE
                     binding.castItemTitleTv.apply{
 
                     }
                 }
             } else {
                 binding.castItemEditIv.visibility = View.GONE
-                binding.castItemTitleTv.text = data.title
                 binding.castItemCreator.visibility = View.VISIBLE
-                binding.castItemCreator.text = "${data.creator}-${data.category}"
+                binding.castItemCreator.text = "${data.castCreator}-${data.castCreator}"
                 binding.castItemLockIv.visibility=View.GONE
             }
             if (binding.castItemCreator.visibility == View.GONE && binding.castItemLockIv.visibility == View.GONE) {
@@ -74,6 +75,18 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
                 constraintSet.connect(binding.castItemTitleTv.id, ConstraintSet.END, binding.castItemEditIv.id, ConstraintSet.START, 16)
                 constraintSet.setHorizontalBias(binding.castItemTitleTv.id, 0.0f)
             }
+        }
+    }
+    fun formatTime(input: String): String {
+        return if (input.contains(":")) {
+            // 입력이 이미 "분:초" 형식인 경우
+            input
+        } else {
+            // 입력이 초 단위로 들어오는 경우
+            val totalSeconds = input.toIntOrNull() ?: return "00:00" // 입력이 숫자가 아닌 경우 대비
+            val minutes = totalSeconds / 60
+            val seconds = totalSeconds % 60
+            String.format("%02d:%02d", minutes, seconds)
         }
     }
 }

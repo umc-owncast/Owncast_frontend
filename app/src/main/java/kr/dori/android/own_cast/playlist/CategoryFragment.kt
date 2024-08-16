@@ -14,14 +14,21 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentCategoryBinding
 import kr.dori.android.own_cast.editAudio.EditAudioActivity
+import kr.dori.android.own_cast.forApiData.Playlist
+import kr.dori.android.own_cast.getRetrofit
 import kr.dori.android.own_cast.player.PlayCastActivity
+import retrofit2.create
 
-class CategoryFragment() : Fragment(), ActivityMover {
+class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
 
     private lateinit var binding: FragmentCategoryBinding
     private val sharedViewModel: SharedViewModel by activityViewModels()
@@ -32,21 +39,39 @@ class CategoryFragment() : Fragment(), ActivityMover {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
         binding =  FragmentCategoryBinding.inflate(inflater,container,false)
+
+        castAdapter = CastAdapter(this)
+
+
+
+        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 5)
+                if (response.isSuccessful) {
+                    val playlistInfo = response.body()?.result
+                    withContext(Dispatchers.Main) {
+                        playlistInfo?.let {
+                            // 데이터를 캐스트 리스트로 변환하여 어댑터에 설정
+                            castAdapter.dataList = it.castList.toMutableList()
+                            castAdapter.notifyDataSetChanged()
+                        }
+                    }
+                } else {
+                    Log.e("CategoryFragment", "Failed to fetch playlist info")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
 
         binding.fragmentCategoryBackIv.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
-
-        castAdapter = CastAdapter(this)
-
-        sharedViewModel.data.observe(viewLifecycleOwner, Observer{ newData ->
-            val Data = arguments?.getParcelableArrayList<SongData>(
-                "ape"
-            )?: arrayListOf()
-            castAdapter.dataList = Data
-            castAdapter.notifyDataSetChanged()
-        })
 
         // Initialize ActivityResultLauncher
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -82,3 +107,4 @@ class CategoryFragment() : Fragment(), ActivityMover {
         startActivity(intent)
     }
 }
+

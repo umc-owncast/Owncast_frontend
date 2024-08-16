@@ -15,17 +15,25 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.editAudio.EditAudioActivity
 import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentCastBinding
+import kr.dori.android.own_cast.forApiData.Cast
+import kr.dori.android.own_cast.forApiData.Playlist
+import kr.dori.android.own_cast.getRetrofit
 
-class CastFragment() : Fragment(), ActivityMover {
+class CastFragment(var playlistIdList : MutableList<Long>) : Fragment(), ActivityMover {
     private lateinit var binding: FragmentCastBinding
     private lateinit var castAdapter: CastAdapter
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+    private var playlistList: MutableList<Cast> = mutableListOf()
 
 
     private val sharedViewModel: SharedViewModel by activityViewModels()
@@ -34,38 +42,75 @@ class CastFragment() : Fragment(), ActivityMover {
                               savedInstanceState: Bundle?): View? {
         binding = FragmentCastBinding.inflate(inflater, container, false)
 
-
-        // CastAdapter 초기화
         castAdapter = CastAdapter(this)
 
+        for (playlistId in playlistIdList){
 
+            val getAllPlaylist = getRetrofit().create(Playlist::class.java)
+
+            val isSave = arguments?.getBoolean("isSave") ?: false
+
+            CoroutineScope(Dispatchers.IO).launch() {
+                launch {
+                    try {
+                        val response =
+                            getAllPlaylist.getPlaylistInfo(playlistId,0,5) //변수명이 어지럽지만 첫번째 getAll은 레트로핏 활성화 객체이고, 두번째는 인터페이스 내부 함수이다.
+                        if (response.isSuccessful) {
+                            var playlistInfo = response.body()?.result
+                            withContext(Dispatchers.Main) {
+                                playlistInfo?.let {
+                                    playlistList.addAll(it.castList)
+                                    Log.d("xibal", "$playlistList")
+
+                                    castAdapter.dataList = if (isSave) {
+                                        // isSave가 true일 때 필터링
+                                        playlistList.filter { cast -> cast.castCreator == "헬로" }
+                                    } else {
+                                        // isSave가 false일 때 필터링
+                                        playlistList.filter { cast -> cast.castCreator != "헬로" }
+                                    }.toMutableList()
+
+                                    // 어댑터에 알림
+                                    castAdapter.notifyDataSetChanged()
+                                }
+                            }
+                        } else {
+
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+        }
+
+            if(isSave){
+                binding.fragmentCastMaintitleTv.text = "내가 만든 캐스트"
+                binding.fragmentCastTitleTv.text = "${castAdapter.itemCount},"
+            }else{
+                binding.fragmentCastMaintitleTv.text = "담아온 캐스트"
+                binding.fragmentCastTitleTv.text = "${castAdapter.itemCount},"
+            }
+        }
+
+
+
+
+        // CastAdapter 초기화
+
+
+
+/*
         // ViewModel 데이터 관찰
         sharedViewModel.data.observe(viewLifecycleOwner, Observer { newData ->
             val savedData = arguments?.getParcelableArrayList<SongData>("isSave")
             val unsavedData = arguments?.getParcelableArrayList<SongData>("isNotSave")
             val data = savedData ?: unsavedData ?: arrayListOf()
-            castAdapter.dataList = data
+            castAdapter.dataList =
             castAdapter.notifyDataSetChanged()
         })
 
-        // Bundle에서 데이터를 읽어오기
-        val savedData: ArrayList<SongData>? = arguments?.getParcelableArrayList("isSave")
-        val unsavedData: ArrayList<SongData>? = arguments?.getParcelableArrayList("isNotSave")
 
-        // 데이터가 없을 경우 빈 리스트를 사용
-        val data = savedData ?: unsavedData ?: arrayListOf()
-
-        // CastAdapter에 데이터 설정
-        castAdapter.dataList = data
-
-
-        if (savedData != null) {
-            binding.fragmentCastMaintitleTv.text = "내가 만든 캐스트"
-            binding.fragmentCastTitleTv.text = "${castAdapter.itemCount},"
-        } else {
-            binding.fragmentCastMaintitleTv.text = "담아온 캐스트"
-            binding.fragmentCastTitleTv.text = "${castAdapter.itemCount}"
-        }
+        */
 
         // Initialize ActivityResultLauncher
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
