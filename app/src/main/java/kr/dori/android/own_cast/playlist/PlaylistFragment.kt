@@ -28,7 +28,8 @@ import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentPlaylistBinding
 import kr.dori.android.own_cast.editAudio.EditAudio
 import kr.dori.android.own_cast.forApiData.GetAllPlaylist
-import kr.dori.android.own_cast.forApiData.playlist
+import kr.dori.android.own_cast.forApiData.Playlist
+
 import kr.dori.android.own_cast.getRetrofit
 import kr.dori.android.own_cast.player.PlayCastActivity
 import okhttp3.Dispatcher
@@ -41,6 +42,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+    private var playlistIdList: MutableList<Long> = mutableListOf( )
 
     /*
     val dummyData = mutableListOf(
@@ -63,7 +65,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         savedInstanceState: Bundle?
     ): View? {
 
-        val getAllPlaylist = getRetrofit().create(playlist::class.java)
+        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
         CoroutineScope(Dispatchers.IO).launch() {
             launch {
                 try {
@@ -73,10 +75,13 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
                         var playlistCategoryData = response.body()?.result
                         withContext(Dispatchers.Main) {
                             playlistCategoryData?.let {
+                                playlistIdList = it.map { playlist -> playlist.playlistId }
+                                    .filter { id -> id != 0L }
+                                    .toMutableList()
                                 sharedViewModel.setData(it.toMutableList())
+                                Log.d("xibal","$playlistIdList")
                             }
                         }
-
                     } else {
 
                     }
@@ -96,6 +101,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 
         sharedViewModel.data.observe(viewLifecycleOwner, Observer { newData ->
             categoryAdapter.dataList = newData.filter{it.playlistId != 0L}.toMutableList()
+
             categoryAdapter.notifyDataSetChanged()
         })
         /*
@@ -109,13 +115,17 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
             val dialog = AddCategoryDialog(requireContext(), this, this)
             dialog.show()
         }
-        /*
-        val castFragment = CastFragment()
+
+
+      //  val castFragment = CastFragment(playlistIdList)
+
         binding.fragmentPlaylistSaveIv.setOnClickListener {
             val bundle = Bundle().apply {
-                putParcelableArrayList("isSave", ArrayList(sharedViewModel.data.value?.filter { it.isSave } ?: listOf()))
+                putBoolean("isSave", true)  // 세이브 버튼 클릭 시 true 전달
             }
-            castFragment.arguments = bundle
+            val castFragment = CastFragment(playlistIdList).apply {
+                arguments = bundle
+            }
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main_frm, castFragment)
                 .addToBackStack(null)
@@ -124,16 +134,18 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 
         binding.fragmentPlaylistNotsaveIv.setOnClickListener {
             val bundle = Bundle().apply {
-                putParcelableArrayList("isNotSave", ArrayList(sharedViewModel.data.value?.filter { !it.isSave } ?: listOf()))
+                putBoolean("isSave", false)  // 세이브 버튼 클릭 시 true 전달
             }
-            castFragment.arguments = bundle
+            val castFragment = CastFragment(playlistIdList).apply {
+                arguments = bundle
+            }
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main_frm, castFragment)
                 .addToBackStack(null)
                 .commit()
         }
 
- */
+
 
         // Initialize ActivityResultLauncher
         activityResultLauncher =
@@ -155,7 +167,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 // addCategory 부분은 사용자 토큰이 필요하기에 2024-08-16시점에는 기능이 작동하지 않습니다. -> 사용자 정보와, 제목,totalCast, CastList등의 정보가 필요함 ->
     override fun onCategoryAdded(categoryName: String) {
 
-        val getAllPlaylist = getRetrofit().create(playlist::class.java)
+        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
 
         CoroutineScope(Dispatchers.IO).launch {
             try{
@@ -172,7 +184,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         //서버 통신 전에 미리 데이터 업데이트를 시켜서 좀 더 빠릿한 느낌을 줄 수 있다.
         sharedViewModel.updateDataAt(position, newItem)
 
-        val getAllPlaylist = getRetrofit().create(playlist::class.java)
+        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
 
         CoroutineScope(Dispatchers.IO).launch() {
             launch {
@@ -208,19 +220,15 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
             activityResultLauncher.launch(intent)
         }
 
-        override fun playlistToCategory() {
-            /*val categoryFragment = CategoryFragment()
-        val bundle = Bundle().apply {
-            putParcelableArrayList("ape", ArrayList(sharedViewModel.data.value ?: listOf()))
-        }
-        categoryFragment.arguments = bundle
+    override fun playlistToCategory(playlistId: Long) {
+
+        val categoryFragment = CategoryFragment(playlistId)
+
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.main_frm, categoryFragment)
             .addToBackStack(null)
             .commit()
-
-         */
-        }
+    }
 
         fun showCustomToast(message: String) {
             // Inflate the custom layout

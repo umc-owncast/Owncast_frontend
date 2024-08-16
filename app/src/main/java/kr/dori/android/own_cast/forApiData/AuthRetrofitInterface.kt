@@ -53,7 +53,7 @@ interface CastInterface{
     fun postScriptList(@Body postCastByKeyword: PostCastByKeyword): Call<String>
 }
 
-interface playlist{
+interface Playlist{
     @DELETE("/api/playlist/{playlistId}")
     suspend fun deletePlaylist(@Query("playlistId") playlistId: Long): Response<AuthResponse<DeletePlaylist>>
 

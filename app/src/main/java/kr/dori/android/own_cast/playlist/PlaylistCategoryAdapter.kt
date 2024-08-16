@@ -35,34 +35,37 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
 
     inner class Holder(val binding: PlaylistCategoryItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        init{
-            binding.playlistCategoryPlayIv.setOnClickListener{
+        init {
+            binding.playlistCategoryPlayIv.setOnClickListener {
                 activityMover.ToPlayCast()
             }
-            binding.realclick.setOnClickListener{
-                fragmentMover.playlistToCategory()
+            binding.realclick.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val selectedPlaylistId = dataList[position].playlistId
+                    fragmentMover.playlistToCategory(selectedPlaylistId)
+                }
             }
         }
 
         fun setText(data: GetAllPlaylist) {
-            Log.d("xibal","${data.playlistId}")
+            Log.d("xibal", "${data.playlistId}")
 
-                data.let {
-                    Glide.with(binding.root.context).load(data.imagePath).into(binding.categoryImg)
-                    binding.playlistCategoryTitleTv.text = it.name
-                    binding.playlistCategoryNumTv.text = it.totalCast.toString()
+            data.let {
+                Glide.with(binding.root.context).load(data.imagePath).into(binding.categoryImg)
+                binding.playlistCategoryTitleTv.text = it.name
+                binding.playlistCategoryNumTv.text = it.totalCast.toString()
+            }
+
+            binding.playlistCategoryEditIv.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val dialog = EditCategoryDialog(itemView.context, editListener, position.toLong())
+                    dialog.show()
+                } else {
+                    Log.e("PlaylistCategoryAdapter", "Invalid adapter position: $position")
                 }
-
-                binding.playlistCategoryEditIv.setOnClickListener {
-                    val position = adapterPosition
-                    if (position != RecyclerView.NO_POSITION) {
-                        val dialog = EditCategoryDialog(itemView.context, editListener, position.toLong())
-                        dialog.show()
-                    } else {
-                        Log.e("PlaylistCategoryAdapter", "Invalid adapter position: $position")
-                    }
-                }
-
+            }
         }
     }
 }
