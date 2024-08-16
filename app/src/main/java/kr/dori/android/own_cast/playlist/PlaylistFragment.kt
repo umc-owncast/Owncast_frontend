@@ -167,11 +167,19 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 // addCategory 부분은 사용자 토큰이 필요하기에 2024-08-16시점에는 기능이 작동하지 않습니다. -> 사용자 정보와, 제목,totalCast, CastList등의 정보가 필요함 ->
     override fun onCategoryAdded(categoryName: String) {
 
-        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
+
+        val addCategory = getRetrofit().create(Playlist::class.java)
 
         CoroutineScope(Dispatchers.IO).launch {
             try{
-                val response = getAllPlaylist.postPlaylist(categoryName)
+                val response = addCategory.postPlaylist(categoryName)
+                if (response.isSuccessful) {
+                    var newCategoryId = response.body()?.result
+                    withContext(Dispatchers.Main) {
+                            sharedViewModel.addData(GetAllPlaylist(categoryName, "", newCategoryId?.playlistId?: 0,0))
+                            Log.d("xibal","$playlistIdList")
+                        }
+                    }
             }catch(e: Exception){
                 e.printStackTrace()
             }
