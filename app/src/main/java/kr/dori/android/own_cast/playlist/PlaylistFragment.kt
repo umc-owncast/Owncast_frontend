@@ -16,6 +16,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.FragmentMover
 import kr.dori.android.own_cast.MainActivity
@@ -23,7 +27,12 @@ import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentPlaylistBinding
 import kr.dori.android.own_cast.editAudio.EditAudio
+import kr.dori.android.own_cast.forApiData.AuthResponse
+import kr.dori.android.own_cast.forApiData.GetAllPlaylist
+import kr.dori.android.own_cast.forApiData.playlist
+import kr.dori.android.own_cast.getRetrofit
 import kr.dori.android.own_cast.player.PlayCastActivity
+import retrofit2.Response
 
 class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, ActivityMover,
     FragmentMover,
@@ -34,6 +43,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
+/*
     val dummyData = mutableListOf(
         SongData("category_name1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
         SongData("category_name2", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "monkey"),
@@ -45,12 +55,35 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         SongData("category_name8", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
         SongData("category_name9", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
         SongData("category_name10", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug")
+
     )
+ */
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        
+        val getAllPlaylist = getRetrofit().create(playlist::class.java)
+        CoroutineScope(Dispatchers.IO).launch{
+            try{
+                val response = getAllPlaylist.getAllPlaylist() //변수명이 어지럽지만 첫번째 getAll은 레트로핏 활성화 객체이고, 두번째는 인터페이스 내부 함수이다.
+                if(response.isSuccessful){
+                    var playlistCategoryData = response.body()?.result
+                    withContext(Dispatchers.Main){
+                        playlistCategoryData?.let{
+                            sharedViewModel.setData(it.toMutableList())
+                        }
+                    }
+
+                }else{
+
+                }
+            }catch (e: Exception){
+                e.printStackTrace()
+            }
+        }
+
         binding = FragmentPlaylistBinding.inflate(inflater, container, false)
 
         categoryAdapter = PlaylistCategoryAdapter(this, this, this)
@@ -61,16 +94,18 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
             categoryAdapter.dataList = newData
             categoryAdapter.notifyDataSetChanged()
         })
-
+/*
         if (sharedViewModel.data.value.isNullOrEmpty()) {
-            sharedViewModel.setData(dummyData)
+            sharedViewModel.setData(playlistCategoryData)
         }
+
+ */
 
         binding.fragmentPlaylistAddIv.setOnClickListener {
             val dialog = AddCategoryDialog(requireContext(), this,this)
             dialog.show()
         }
-
+/*
         val castFragment = CastFragment()
         binding.fragmentPlaylistSaveIv.setOnClickListener {
             val bundle = Bundle().apply {
@@ -94,6 +129,8 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
                 .commit()
         }
 
+ */
+
         // Initialize ActivityResultLauncher
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -104,30 +141,34 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
             }
         }
 
+
+
+
         return binding.root
     }
 
+
     override fun onCategoryAdded(categoryName: String) {
-        val newItem = SongData(categoryName, R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug")
-        sharedViewModel.addData(newItem)
+      //  val newItem = SongData(categoryName, R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug")
+     //   sharedViewModel.addData(newItem)
     }
 
     override fun onCategoryEdit(position: Int, newItem: SongData) {
-        sharedViewModel.updateDataAt(position, newItem)
+      // sharedViewModel.updateDataAt(position, newItem)
     }
 
     override fun getCategoryData(position: Int): SongData {
-        return sharedViewModel.data.value?.get(position) ?: dummyData[position]
-
+        //return sharedViewModel.data.value?.get(position) ?: [position]
+        TODO()
     }
 
-    override fun ToPlayCast() {
-        val intent = Intent(requireContext(), PlayCastActivity::class.java)
-        activityResultLauncher.launch(intent)
-    }
+        override fun ToPlayCast() {
+            val intent = Intent(requireContext(), PlayCastActivity::class.java)
+            activityResultLauncher.launch(intent)
+        }
 
-    override fun playlistToCategory() {
-        val categoryFragment = CategoryFragment()
+        override fun playlistToCategory() {
+            /*val categoryFragment = CategoryFragment()
         val bundle = Bundle().apply {
             putParcelableArrayList("ape", ArrayList(sharedViewModel.data.value ?: listOf()))
         }
@@ -136,32 +177,39 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
             .replace(R.id.main_frm, categoryFragment)
             .addToBackStack(null)
             .commit()
-    }
 
-    fun showCustomToast(message: String) {
-        // Inflate the custom layout
-        val inflater: LayoutInflater = layoutInflater
-        val layout: View = inflater.inflate(R.layout.custom_toast, binding.root.findViewById(R.id.custom_toast_container))
+         */
+        }
 
-        // Set custom message
-        val textView: TextView = layout.findViewById(R.id.toast_message_tv)
-        textView.text = message
+        fun showCustomToast(message: String) {
+            // Inflate the custom layout
+            val inflater: LayoutInflater = layoutInflater
+            val layout: View = inflater.inflate(
+                R.layout.custom_toast,
+                binding.root.findViewById(R.id.custom_toast_container)
+            )
 
-        // Create and show the Toast
-        with (Toast(requireContext())) {
-            duration = Toast.LENGTH_LONG
-            view = layout
-            show()
+            // Set custom message
+            val textView: TextView = layout.findViewById(R.id.toast_message_tv)
+            textView.text = message
+
+            // Create and show the Toast
+            with(Toast(requireContext())) {
+                duration = Toast.LENGTH_LONG
+                view = layout
+                show()
+            }
+        }
+
+        override fun dialogToEditAudio() {
+            showCustomToast("카테고리가 추가되었어요")
+
+        }
+
+        override fun ToEditAudio() {
+            TODO("Not yet implemented")
+
         }
     }
 
-    override fun dialogToEditAudio() {
-        showCustomToast("카테고리가 추가되었어요")
 
-    }
-
-    override fun ToEditAudio() {
-        TODO("Not yet implemented")
-
-    }
-}

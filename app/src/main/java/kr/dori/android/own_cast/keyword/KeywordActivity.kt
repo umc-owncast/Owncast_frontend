@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import kr.dori.android.own_cast.databinding.ActivityKeywordBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
-
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.getRetrofit

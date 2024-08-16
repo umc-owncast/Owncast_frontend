@@ -1,5 +1,7 @@
 package kr.dori.android.own_cast.forApiData
 
+
+
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Response
@@ -17,10 +19,6 @@ import java.util.Objects
 //여기다가는 자기가 써야하는 함수 쓰기
 //AuthResponse에 써놓은 DTO(result의 구조체) 넣어줘야 함
 //ex)AuthResponse<List<CastHomeDTO>>>
-interface PlaylistInterFace {
-    @DELETE("/api/playlist/{playlistId}")
-    fun deleteCast(@Path("playlistId") playlistId:Long): Call<AuthResponse<String>>
-}
 interface CastInterface{
     @DELETE("/api/cast/{castId}")
     fun deleteCast(@Path("castId") castId:Long): Call<AuthResponse<String>>
@@ -34,7 +32,7 @@ interface CastInterface{
     fun getKeywordHome() : Call<AuthResponse<List<String>>>
     @Multipart
     @PATCH("/api/cast/{castId}")//캐스트 수정 api, 이미지 파일로 보내야함
-    fun patchCast(@Path("castId") castId:Long,@Part("updateInfo") updateInfo: UpdateInfo, @Part image: MultipartBody.Part):Call<AuthResponse<Objects>>
+    fun patchCast(@Path("castId") castId:Long,@Part("updateInfo") updateInfo: UpdateInfo, @Part image: MultipartBody.Part): Call<AuthResponse<Objects>>
 
     @Multipart
     @POST("/api/cast/{castId}")//캐스트 저장 api keyvpSaveFragment에서 쓰인다
@@ -52,6 +50,31 @@ interface CastInterface{
     suspend fun postCastByKeyword(@Body postCastByKeyword: PostCastByKeyword):Response<AuthResponse<PostCastForResponse>>
     @POST("/api/cast/keyword-test")//스크립트로 캐스트를 생성하는 API
     //postCastByKeyword랑 같은거 쓰고 있음
-    fun postScriptList(@Body postCastByKeyword: PostCastByKeyword):Call<String>
+    fun postScriptList(@Body postCastByKeyword: PostCastByKeyword): Call<String>
 }
 
+interface playlist{
+    @DELETE("/api/playlist/{playlistId}")
+    suspend fun deletePlaylist(@Query("playlistId") playlistId: Long): Response<AuthResponse<DeletePlaylist>>
+
+    @GET("/api/playlist/{playlistId}")
+    suspend fun getPlaylistInfo(@Query("playlistId") playlistId: Long, @Query("page") page: Int, @Query("size") size: Int): Response<AuthResponse<GetPlayList>>
+
+    @GET("/api/playlist/view")
+    suspend fun getAllPlaylist():Response<AuthResponse<List<GetAllPlaylist>>>
+
+    @PATCH("/api/playlist/{playlistId}")
+    suspend fun patchPlaylist(@Query("playlistId") playlistId: Long, @Query("playlistName")playlistName: String): Response<AuthResponse<PatchPlaylist>>
+
+    @POST("/api/playlist")
+    suspend fun postPlaylist(@Query("playlistName")playlistName: String): Response<AuthResponse<PostPlaylist>>
+}
+
+
+interface player{
+
+}
+
+interface bookmark{
+
+}

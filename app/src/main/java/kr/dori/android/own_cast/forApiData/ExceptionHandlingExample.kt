@@ -1,15 +1,5 @@
 package kr.dori.android.own_cast.keyword
 
-import android.util.Log
-import kr.dori.android.own_cast.forApiData.AuthResponse
-
-import kr.dori.android.own_cast.forApiData.CastHomeDTO
-import kr.dori.android.own_cast.forApiData.getRetrofit
-
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-
 interface Connector{
     fun onSuccess()
     fun onFailure()

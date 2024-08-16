@@ -8,9 +8,13 @@ import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.FragmentMover
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.PlaylistCategoryItemBinding
+import kr.dori.android.own_cast.forApiData.AuthResponse
+import kr.dori.android.own_cast.forApiData.GetAllPlaylist
+import retrofit2.Response
 
 class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, private val activityMover: ActivityMover, private val fragmentMover: FragmentMover) : RecyclerView.Adapter<PlaylistCategoryAdapter.Holder>() {
-    var dataList = mutableListOf<SongData>()
+
+    var dataList: MutableList<GetAllPlaylist> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val binding = PlaylistCategoryItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -37,15 +41,11 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
             }
         }
 
-        fun setText(data: SongData) {
-            binding.playlistCategoryTitleTv.text = data.title
-            binding.playlistCategoryNumTv.text = dataList.size.toString()
-            Glide.with(itemView).load(data.Img).into(binding.categoryImg)
-
-            binding.playlistCategoryEditIv.setOnClickListener {
-                val position = adapterPosition
-                val dialog = EditCategoryDialog(itemView.context, editListener, position)
-                dialog.show()
+        fun setText(data: GetAllPlaylist) {
+            data.let{
+                Glide.with(binding.root.context).load(data.imagePath).into(binding.categoryImg)
+                binding.playlistCategoryTitleTv.text = it.name
+                binding.playlistCategoryNumTv.text = it.totalCast.toString()
             }
         }
     }

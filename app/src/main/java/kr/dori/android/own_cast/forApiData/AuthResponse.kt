@@ -2,10 +2,9 @@ package kr.dori.android.own_cast.forApiData
 
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serial
 
 //자신이 필요한 수신 데이터 계층 쓰기
-//이런 형식으로 result 타입을 또 다른 데이터 클래스로 만듬으로서 계층구조를 형상화할 수 있습니다. / 서버에 보내는 값은 앞에 U를 붙였으며 dataClass의 이름은 해당 API 명세서를 따라갔습니다.
-//최상위 계층, 수신
 
 /*data class AuthResponse<T> (
     @SerializedName(value = "isSuccess") val isSuccess: Boolean,
@@ -40,7 +39,7 @@ data class GetPlayList(
     @SerializedName(value = "castList") val castList: List<Cast>
 )
 
-data class DeletePlaylist(//플레이 리스트 조회
+data class DeletePlaylist(
     @SerializedName(value = "playlistId") val playlistId: Long,
     @SerializedName(value = "totalCast") val totalCast: Int
 )
@@ -53,6 +52,13 @@ data class PatchPlaylist(
 data class PostCastForResponse(
     @SerializedName(value = "id") val id: Long,
     @SerializedName(value = "sentences") val sentences: List<Sentences>
+)
+
+data class GetAllPlaylist(
+    val name: String,
+    val imagePath: String,
+    val playlistId: Int,
+    val totalCast: Int
 )
 
 
