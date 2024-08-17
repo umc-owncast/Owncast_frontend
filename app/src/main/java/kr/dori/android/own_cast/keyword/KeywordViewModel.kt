@@ -22,7 +22,7 @@ class KeywordViewModel(application: Application) : AndroidViewModel(application)
     private val _getPlayList = MutableLiveData<MutableList<PlaylistText>>(mutableListOf())
 
 
-    private val _getPlayList = MutableLiveData<MutableList<PlaylistText>>(mutableListOf())
+
 
 
     /*-----------------------getter----------------------*/
