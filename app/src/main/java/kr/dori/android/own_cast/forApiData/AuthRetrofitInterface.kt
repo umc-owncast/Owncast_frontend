@@ -1,7 +1,10 @@
 package kr.dori.android.own_cast.forApiData
 
 
+import android.renderscript.Script
+
 import okhttp3.MultipartBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -23,9 +26,11 @@ interface CastInterface{
     @DELETE("/api/cast/{castId}")
     fun deleteCast(@Path("castId") castId:Long): Call<AuthResponse<String>>
     @GET("/api/cast/{castId}/scripts")
-    fun getCastScript(@Path("castId") castId:Long): Call<AuthResponse<String>>
+
+    suspend fun getCastScript(@Path("castId") castId:Long): Response<AuthResponse<List<Script>>>
     @GET("/api/cast/{castId}/audio")
-    fun getCastPlay(@Path("castId") castId:Long): Call<AuthResponse<String>>
+    suspend fun getCastPlay(@Path("castId") castId: Long): Response<ResponseBody>
+
     @GET("/api/cast/search/home") // 검색 홈 API(검색 화면 상위 4개 castdata받아옴)
     fun searchHome(): Call<AuthResponse<List<CastHomeDTO>>>
     @GET("/api/cast/home")// 홈화면 키워드 6개 받아오기
@@ -87,12 +92,12 @@ interface Playlist{
 
     @POST("/api/playlist")
     suspend fun postPlaylist(@Query("playlistName")playlistName: String): Response<AuthResponse<PostPlaylist>>
+
+    @GET("/api/cast/{castId}")
+    suspend fun getCast(@Path("castId")castId: Long): Response<AuthResponse<CastInfo>>
 }
 
 
-interface player{
-
-}
 
 interface bookmark{
 

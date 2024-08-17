@@ -22,6 +22,9 @@ class KeywordViewModel(application: Application) : AndroidViewModel(application)
     private val _getPlayList = MutableLiveData<MutableList<PlaylistText>>(mutableListOf())
 
 
+    private val _getPlayList = MutableLiveData<MutableList<PlaylistText>>(mutableListOf())
+
+
     /*-----------------------getter----------------------*/
     val songDuration : LiveData<String> get () = _songDuration
     val castId : LiveData<Long> get() = _castId

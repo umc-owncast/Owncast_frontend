@@ -11,7 +11,9 @@ import android.view.ViewGroup
 
 import android.widget.GridLayout
 import android.widget.ImageView
+
 import android.widget.TextView
+
 
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -24,11 +26,13 @@ import kr.dori.android.own_cast.databinding.FragmentSearchBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
+
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.GetUserPlaylist
 import kr.dori.android.own_cast.forApiData.PlayListInterface
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.PlaylistText
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -67,6 +71,9 @@ class SearchFragment : Fragment(), SearchMover {
         searchAdapter.dataList = dummyData
 
         //searchDataUpdate()//다른 유저 정보 받아오는 함수
+
+
+
 
 
 

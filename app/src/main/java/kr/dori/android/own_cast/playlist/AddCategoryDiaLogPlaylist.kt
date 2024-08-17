@@ -9,8 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import kr.dori.android.own_cast.databinding.FragmentAddCategoryDialogBinding
 import kr.dori.android.own_cast.editAudio.EditAudio
+import kr.dori.android.own_cast.forApiData.GetAllPlaylist
 
-class AddCategoryDialog(context: Context, private val listener: AddCategoryListener, private val toast: EditAudio) : Dialog(context) {
+class AddCategoryDiaLogPlaylist(context: Context, private val listener: AddCategoryListener, private val toast: EditAudio) : Dialog(context) {
     private lateinit var binding: FragmentAddCategoryDialogBinding
     private var isText = false
     private lateinit var addtext: String
@@ -49,8 +50,9 @@ class AddCategoryDialog(context: Context, private val listener: AddCategoryListe
 
         binding.fragmentAddCategoryDialogOn.setOnClickListener {
             if (isText) {
+
                 listener.onCategoryAdded(addtext)
-                //dismiss를 바깥에서 처리하였음ㅕ
+                dismiss()
                 toast.dialogToEditAudio()
             }
         }

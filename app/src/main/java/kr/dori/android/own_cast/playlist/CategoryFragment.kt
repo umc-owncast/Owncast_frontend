@@ -20,9 +20,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.MainActivity
+import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentCategoryBinding
 import kr.dori.android.own_cast.editAudio.EditAudioActivity
+import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.getRetrofit
 import kr.dori.android.own_cast.player.PlayCastActivity
@@ -34,11 +36,12 @@ class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var castAdapter: CastAdapter
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
-
+    lateinit var sendCastIdList: List<Cast>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d("xibal","${playlistId}")
 
 
         binding =  FragmentCategoryBinding.inflate(inflater,container,false)
@@ -58,11 +61,13 @@ class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
                         playlistInfo?.let {
                             // 데이터를 캐스트 리스트로 변환하여 어댑터에 설정
                             castAdapter.dataList = it.castList.toMutableList()
+                            Log.d("castInfo","${it.castList}")
+                            sendCastIdList = it.castList
                             castAdapter.notifyDataSetChanged()
                         }
                     }
                 } else {
-                    Log.e("CategoryFragment", "Failed to fetch playlist info")
+                    Log.d("PlaylistCategory", "Failed to fetch playlist info")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -86,21 +91,37 @@ class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
         binding.fragmentCategoryRv.adapter = castAdapter
         binding.fragmentCategoryRv.layoutManager = LinearLayoutManager(context)
 
+
+// 이 부분은 재생목록 부분이어서 어떻게 수정할건지 생각을 해봐야 됨 -> 재생목록 순서를 어떻게 정할 것인가?
         binding.fragmentCategoryPlayIv.setOnClickListener {
-            ToPlayCast()
+            ToPlayCast(sendCastIdList)
+           // Log.d("Cast","$sendCastIdList")
         }
 
         binding.fragmentCategoryShuffleIv.setOnClickListener {
-            ToPlayCast()
+            ToPlayCast(sendCastIdList)
         }
 
         return binding.root
     }
 
-    override fun ToPlayCast() {
-        val intent = Intent(requireContext(), PlayCastActivity::class.java)
-        activityResultLauncher.launch(intent)
+    override fun ToPlayCast(castList: List<Cast>) {
+        val currentCast = CastPlayerData.currentCast
+
+        if (currentCast != null && castList.contains(currentCast)) {
+            // 첫 번째 케이스: 현재 재생 중인 캐스트를 클릭한 경우
+            val intent = Intent(requireContext(), PlayCastActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT // 기존 Activity 재사용
+            activityResultLauncher.launch(intent)
+        } else {
+            // 두 번째 케이스: 다른 캐스트를 클릭한 경우
+            CastPlayerData.setCastList(castList) // 새로운 캐스트 리스트 설정
+            val intent = Intent(requireContext(), PlayCastActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK // 새로운 Activity 생성
+            activityResultLauncher.launch(intent)
+        }
     }
+
 
     override fun ToEditAudio() {
         val intent = Intent(requireContext(), EditAudioActivity::class.java)

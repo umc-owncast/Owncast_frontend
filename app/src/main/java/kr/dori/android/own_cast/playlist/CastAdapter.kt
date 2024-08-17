@@ -1,5 +1,6 @@
 package kr.dori.android.own_cast.playlist
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,11 +32,17 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
     inner class Holder(val binding: CastItemLayoutBinding): RecyclerView.ViewHolder(binding.root) {
 
 
-        init{
+        init {
             binding.goPlaycastConstraint.setOnClickListener {
-                activityMover.ToPlayCast()
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val cast = dataList[position]
+                    activityMover.ToPlayCast(listOf(cast))
+                    Log.d("tag","${cast.castId}")
+                }
             }
         }
+
         fun setText(data: Cast) {
 
             val constraintLayout = binding.root as ConstraintLayout

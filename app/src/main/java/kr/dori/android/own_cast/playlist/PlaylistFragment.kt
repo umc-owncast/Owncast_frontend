@@ -1,5 +1,4 @@
 package kr.dori.android.own_cast.playlist
-
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -24,15 +23,17 @@ import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.FragmentMover
 import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.data.SongData
+import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.FragmentPlaylistBinding
 import kr.dori.android.own_cast.editAudio.EditAudio
+import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.GetAllPlaylist
 import kr.dori.android.own_cast.forApiData.Playlist
 
 import kr.dori.android.own_cast.getRetrofit
+import kr.dori.android.own_cast.keyword.AddCategoryDialog
 import kr.dori.android.own_cast.player.PlayCastActivity
-import okhttp3.Dispatcher
+
 
 class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, ActivityMover,
     FragmentMover,
@@ -112,12 +113,12 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
  */
 
         binding.fragmentPlaylistAddIv.setOnClickListener {
-            val dialog = AddCategoryDialog(requireContext(), this, this)
+            val dialog = AddCategoryDiaLogPlaylist(requireContext(), this, this)
             dialog.show()
         }
 
 
-      //  val castFragment = CastFragment(playlistIdList)
+        //  val castFragment = CastFragment(playlistIdList)
 
         binding.fragmentPlaylistSaveIv.setOnClickListener {
             val bundle = Bundle().apply {
@@ -164,14 +165,22 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         return binding.root
     }
 
-// addCategory 부분은 사용자 토큰이 필요하기에 2024-08-16시점에는 기능이 작동하지 않습니다. -> 사용자 정보와, 제목,totalCast, CastList등의 정보가 필요함 ->
+    // addCategory 부분은 사용자 토큰이 필요하기에 2024-08-16시점에는 기능이 작동하지 않습니다. -> 사용자 정보와, 제목,totalCast, CastList등의 정보가 필요함 ->
     override fun onCategoryAdded(categoryName: String) {
 
-        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
+
+        val addCategory = getRetrofit().create(Playlist::class.java)
 
         CoroutineScope(Dispatchers.IO).launch {
             try{
-                val response = getAllPlaylist.postPlaylist(categoryName)
+                val response = addCategory.postPlaylist(categoryName)
+                if (response.isSuccessful) {
+                    var newCategoryId = response.body()?.result
+                    withContext(Dispatchers.Main) {
+                        sharedViewModel.addData(GetAllPlaylist(categoryName, "", newCategoryId?.playlistId?: 0,0))
+                        Log.d("xibal","$playlistIdList")
+                    }
+                }
             }catch(e: Exception){
                 e.printStackTrace()
             }
@@ -196,7 +205,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
                         playlistName
                     )
                     if (response.isSuccessful) {
-                       // var playlistCategoryData = response.body()?.result
+                        // var playlistCategoryData = response.body()?.result
 
 
                     } else {
@@ -209,17 +218,28 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         }
     }
 
-        override fun getCategoryData(position: Long): GetAllPlaylist {
-            return sharedViewModel.data.value?.get(position.toInt())
-                ?: throw IndexOutOfBoundsException("Invalid position: $position")
+    override fun getCategoryData(position: Long): GetAllPlaylist {
+        return sharedViewModel.data.value?.get(position.toInt())
+            ?: throw IndexOutOfBoundsException("Invalid position: $position")
 
-        }
+    }
 
-        override fun ToPlayCast() {
+    override fun ToPlayCast(castList: List<Cast>) {
+        val currentCast = CastPlayerData.currentCast
+
+        if (currentCast != null && castList.contains(currentCast)) {
+            // 첫 번째 케이스: 현재 재생 중인 캐스트를 클릭한 경우
             val intent = Intent(requireContext(), PlayCastActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT // 기존 Activity 재사용
+            activityResultLauncher.launch(intent)
+        } else {
+            // 두 번째 케이스: 다른 캐스트를 클릭한 경우
+            CastPlayerData.setCastList(castList) // 새로운 캐스트 리스트 설정
+            val intent = Intent(requireContext(), PlayCastActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK // 새로운 Activity 생성
             activityResultLauncher.launch(intent)
         }
-
+    }
     override fun playlistToCategory(playlistId: Long) {
 
         val categoryFragment = CategoryFragment(playlistId)
@@ -230,36 +250,37 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
             .commit()
     }
 
-        fun showCustomToast(message: String) {
-            // Inflate the custom layout
-            val inflater: LayoutInflater = layoutInflater
-            val layout: View = inflater.inflate(
-                R.layout.custom_toast,
-                binding.root.findViewById(R.id.custom_toast_container)
-            )
+    fun showCustomToast(message: String) {
+        // Inflate the custom layout
+        val inflater: LayoutInflater = layoutInflater
+        val layout: View = inflater.inflate(
+            R.layout.custom_toast,
+            binding.root.findViewById(R.id.custom_toast_container)
+        )
 
-            // Set custom message
-            val textView: TextView = layout.findViewById(R.id.toast_message_tv)
-            textView.text = message
+        // Set custom message
+        val textView: TextView = layout.findViewById(R.id.toast_message_tv)
+        textView.text = message
 
-            // Create and show the Toast
-            with(Toast(requireContext())) {
-                duration = Toast.LENGTH_LONG
-                view = layout
-                show()
-            }
-        }
-
-        override fun dialogToEditAudio() {
-            showCustomToast("카테고리가 추가되었어요")
-
-        }
-
-        override fun ToEditAudio() {
-            TODO("Not yet implemented")
-
+        // Create and show the Toast
+        with(Toast(requireContext())) {
+            duration = Toast.LENGTH_LONG
+            view = layout
+            show()
         }
     }
+
+    override fun dialogToEditAudio() {
+        showCustomToast("카테고리가 추가되었어요")
+
+    }
+
+    override fun ToEditAudio() {
+        TODO("Not yet implemented")
+
+    }
+}
+
 
 
 

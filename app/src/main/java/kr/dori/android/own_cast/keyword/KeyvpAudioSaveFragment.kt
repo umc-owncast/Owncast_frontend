@@ -6,7 +6,9 @@ import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+
 import android.content.res.ColorStateList
+
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -18,7 +20,6 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -33,7 +34,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import kr.dori.android.own_cast.playlist.AddCategoryDialog
 import kr.dori.android.own_cast.playlist.AddCategoryListener
 import kr.dori.android.own_cast.editAudio.EditAudio
 import kr.dori.android.own_cast.R
@@ -80,7 +80,9 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
     private var isText = false
     private var id : Long? = null
 
+
     private lateinit var dialog:AddCategoryDialog
+
     private lateinit var imageResultLauncher: ActivityResultLauncher<Intent>
 
     /*postCast에 쓰일 정보들*/
@@ -88,8 +90,10 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
     private lateinit var castTitle: String
     private var isPublic : Boolean = false
 
+
     //finish dialog
     private var uri: Uri? = null
+
 
 
 
@@ -136,7 +140,9 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                     .centerCrop() // ImageView에 맞게 이미지 크기를 조정
                     .into(binding.keyAudSaveThumbIv)
                 //아래의 코드로 이제 서버쪽으로 이미지를 보낼 수 있게 해줌.
+
                 uri = it//finish dialog로 사진 정보 넘겨줘야함
+
                 body = createMultipartBodyFromUri(it, requireContext())
             }
 
@@ -372,8 +378,10 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //2. AuthResponse에 응답으로 넘어오는 result 값의 제네릭 넣어주기 AuthResponse<List<CastHomeDTO>>
         //3. COMMON200이 성공 코드이고, resp에서 필요한 값 받기
         val playlistId : Long = sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].id
+
         val findialog = KeywordAudioFinishDialog(requireContext(), this, castTitle,
             sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].playlistName, uri)//저장 타이틀, 카테고리, 길이, 사진
+
         apiService.postCast(sharedViewModel.castId.value!!, SaveInfo(castTitle,playlistId,binding.keyAudPublicBtnIv.isChecked), body!!).enqueue(object: Callback<AuthResponse<String>> {
             override fun onResponse(call: Call<AuthResponse<String>>, response: Response<AuthResponse<String>>) {
                 Log.d("apiTest-castPost", "저장 시도 중 ${ response.toString() }")

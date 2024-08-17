@@ -7,7 +7,9 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+
 import androidx.activity.enableEdgeToEdge
+
 
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -57,6 +59,7 @@ class KeywordActivity : AppCompatActivity() {
         sharedViewModel = ViewModelProvider(this).get(KeywordViewModel::class.java)
 
         enableEdgeToEdge()
+
 
 
         initCategoryInViewModel()

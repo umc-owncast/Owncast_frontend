@@ -33,6 +33,7 @@ class KeyvpAudioScriptFragment:Fragment() {
     private lateinit var adapter:KeyvpAudioScriptRVAdapter
 
 
+
     /*-------exoPlayer용 변수--------------------*/
     lateinit var player: ExoPlayer
     private lateinit var steamingUrl : String
@@ -41,6 +42,7 @@ class KeyvpAudioScriptFragment:Fragment() {
     private var mills: Float =0f
 
     /*---------------------------*/
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -67,12 +69,14 @@ class KeyvpAudioScriptFragment:Fragment() {
         }
 
 
+
         player = ExoPlayer.Builder(requireContext()).build()
         //이 작업을 전체 관리하는 listener에서 해주고 있음.
         //화면을 나갔을때의 pause와 resume과 재생성했을때의 pause를 재 관리 해줘야할거같은데..
         initPlayer()
         initRecyclerView()//sentnences를 받아와 출력
         //스크립트 재생성했을때 이 두개를 다시 실행시켜야함
+
         initSpeedUi()
         return binding.root
 
@@ -290,9 +294,11 @@ class KeyvpAudioScriptFragment:Fragment() {
             binding.keyAudScriptRv.adapter = adapter
         }
 
+
     }
 
     fun updateLyricsHighlight(){
+
 
     }
 }
