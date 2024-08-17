@@ -77,6 +77,8 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
             binding.keywordAudEt.text = searchText
             binding.keAudsetUnderline.visibility = View.VISIBLE
         } else {//직접 입력
+            binding.keyAudSetCurTimeTv.visibility = View.GONE
+            binding.keyAudSetFullTimeTv.visibility = View.GONE
             binding.keywordAudEt.visibility = View.GONE
             binding.keAudsetUnderline.visibility = View.GONE
             binding.keywordAudiosetSb.visibility = View.GONE

@@ -26,27 +26,6 @@ class KeywordAppData: Application() {
 
         var detailTopic : List<String> = listOf("로딩중","로딩중","로딩중","로딩중","로딩중","로딩중")
 
-
-        /*var chooseIndex = -1
-        var title: String = ""
-        var thumbnail :Int? = null
-        var user: String? = ""
-        var duration: Int? = null
-        var exposure:Boolean? = false
-        var category:String = ""
-
-        fun clearData(){
-            chooseIndex = -1
-            title = ""
-            thumbnail = null
-            user = ""
-            duration = null
-            exposure = false
-            category = ""
-
-        }*/
-
-
         fun initDetailKeyword(){
             val apiService = getRetrofit().create(CastInterface::class.java)
             //1. apiService후, 자신이 만들어놓은 인터페이스(함수 지정해주기)

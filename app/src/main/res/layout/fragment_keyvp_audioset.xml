@@ -154,6 +154,7 @@
 
         />
     <TextView
+        android:id="@+id/key_aud_set_full_time_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:lineSpacingExtra="3sp"

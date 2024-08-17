@@ -7,6 +7,7 @@ import android.media.browse.MediaBrowser.MediaItem
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,11 +34,12 @@ class KeyvpAudioScriptFragment:Fragment() {
 
 
     /*-------exoPlayer용 변수--------------------*/
-    private lateinit var player: ExoPlayer
+    lateinit var player: ExoPlayer
     private lateinit var steamingUrl : String
     private val handler = Handler(Looper.getMainLooper())
     private var isSeeking = false
     private var mills: Float =0f
+
     /*---------------------------*/
 
     override fun onAttach(context: Context) {
@@ -56,12 +58,21 @@ class KeyvpAudioScriptFragment:Fragment() {
         binding.keyAudScrNextIv.setOnClickListener {
             listener?.onButtonClick()
         }
+        binding.keyAudScrRemakeIv.setOnClickListener{
+            if(sharedViewModel.postCastScript.value!= null){
+                listener?.createCastByScript(sharedViewModel.postCastScript.value!!)
+            }else{
+                listener?.createCastByKeyword(sharedViewModel.postCastKeyword.value!!)
+            }
+        }
 
 
-
-
+        player = ExoPlayer.Builder(requireContext()).build()
+        //이 작업을 전체 관리하는 listener에서 해주고 있음.
+        //화면을 나갔을때의 pause와 resume과 재생성했을때의 pause를 재 관리 해줘야할거같은데..
         initPlayer()
         initRecyclerView()//sentnences를 받아와 출력
+        //스크립트 재생성했을때 이 두개를 다시 실행시켜야함
         initSpeedUi()
         return binding.root
 
@@ -74,23 +85,42 @@ class KeyvpAudioScriptFragment:Fragment() {
     override fun onDetach() {
         super.onDetach()
         listener = null
+        player?.let {
+            it.release()
+        } // 플레이어 리소스 해제
+        stopSeekBarUpdate() // SeekBar 업데이트 중지
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        player.release() // 플레이어 리소스 해제
+        player?.let {
+            it.release()
+        } // 플레이어 리소스 해제// 플레이어 리소스 해제
         stopSeekBarUpdate() // SeekBar 업데이트 중지
     }
 
-    fun initPlayer(){
-        player = ExoPlayer.Builder(requireContext()).build()
+    override fun onPause() {
+        super.onPause()
+        player.pause()
+        stopSeekBarUpdate()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        player.play()
+        if(player.playWhenReady)startSeekBarUpdate()
+    }
+
+
+
+    fun initPlayer(){//새로 만들어올떄만 필요
+        binding.keyAudScriptSb.progress=0
+
         steamingUrl = "https://owncast-s3.s3.ap-northeast-2.amazonaws.com/07918ecb-464a-44fa-8bcd-5ab0025d964d"
         //deprecated 됐다길래;
         val mediaItem = androidx.media3.common.MediaItem.fromUri(steamingUrl)
         player.setMediaItem(mediaItem)
         player.prepare()
-
-
         player.addListener(object : Player.Listener {
             override fun onIsLoadingChanged(isLoading: Boolean) {
 
@@ -100,10 +130,12 @@ class KeyvpAudioScriptFragment:Fragment() {
                 if (playbackState == Player.STATE_READY) {//재생상태가 준비되었음
                     //binding.keyAudScriptSb.max = (player.duration / 1000).toInt() // SeekBar 최대값 설정
                     binding.keyAudSetMediaTimeTv.text = formatTime(player.duration)
+                    //사용자가 화면을 나갔을때 다시 progressbar 코루틴을 다시 실행시키기 위해 만듦
                     startSeekBarUpdate()
                     player.play()
                 }
             }
+
 
             override fun onPositionDiscontinuity(
                 oldPosition: Player.PositionInfo,
@@ -151,14 +183,15 @@ class KeyvpAudioScriptFragment:Fragment() {
         }
         binding.keyAudScriptPlaybtnIv.setOnClickListener{
             player.play()
-            binding.keyAudScriptPlaybtnIv.visibility = View.VISIBLE
-            binding.keyAudScriptStopBtnIv.visibility = View.GONE
+            binding.keyAudScriptPlaybtnIv.visibility = View.GONE
+            binding.keyAudScriptStopBtnIv.visibility = View.VISIBLE
+
 
         }
         binding.keyAudScriptStopBtnIv.setOnClickListener{
             player.pause()
-            binding.keyAudScriptPlaybtnIv.visibility = View.GONE
-            binding.keyAudScriptStopBtnIv.visibility = View.VISIBLE
+            binding.keyAudScriptPlaybtnIv.visibility = View.VISIBLE
+            binding.keyAudScriptStopBtnIv.visibility = View.GONE
         }
     }
 
