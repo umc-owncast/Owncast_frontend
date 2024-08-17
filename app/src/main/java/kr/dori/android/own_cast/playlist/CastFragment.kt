@@ -22,6 +22,7 @@ import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.editAudio.EditAudioActivity
 import kr.dori.android.own_cast.MainActivity
+import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentCastBinding
@@ -143,10 +144,22 @@ class CastFragment(var playlistIdList : MutableList<Long>) : Fragment(), Activit
     }
 
     override fun ToPlayCast(castList: List<Cast>) {
-        val intent = Intent(requireContext(), PlayCastActivity::class.java)
-        intent.putExtra("CAST_ID", ArrayList(castList)) // castId를 전달
-        activityResultLauncher.launch(intent)
+        val currentCast = CastPlayerData.currentCast
+
+        if (currentCast != null && castList.contains(currentCast)) {
+            // 첫 번째 케이스: 현재 재생 중인 캐스트를 클릭한 경우
+            val intent = Intent(requireContext(), PlayCastActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT // 기존 Activity 재사용
+            activityResultLauncher.launch(intent)
+        } else {
+            // 두 번째 케이스: 다른 캐스트를 클릭한 경우
+            CastPlayerData.setCastList(castList) // 새로운 캐스트 리스트 설정
+            val intent = Intent(requireContext(), PlayCastActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK // 새로운 Activity 생성
+            activityResultLauncher.launch(intent)
+        }
     }
+
 
     override fun ToEditAudio() {
         val intent = Intent(requireContext(), EditAudioActivity::class.java)

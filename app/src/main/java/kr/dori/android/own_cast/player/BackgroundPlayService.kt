@@ -15,13 +15,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.getRetrofit
-
 class BackgroundPlayService : Service() {
 
     private val binder = LocalBinder()
     private lateinit var player: ExoPlayer
     private val handler = Handler()
-    private var isSeeking = false
 
     inner class LocalBinder : Binder() {
         fun getService(): BackgroundPlayService = this@BackgroundPlayService
@@ -34,11 +32,15 @@ class BackgroundPlayService : Service() {
         player = ExoPlayer.Builder(this).build()
     }
 
+    fun isPlaying(): Boolean {
+        return player.isPlaying
+    }
+
     fun playAudio(url: String) {
+        player.stop()
         val mediaItem = MediaItem.fromUri(url)
         player.setMediaItem(mediaItem)
         player.prepare()
-        player.play()
         startSeekBarUpdate()
     }
 
@@ -50,12 +52,20 @@ class BackgroundPlayService : Service() {
         player.play()
     }
 
+    fun stopAudio() {
+        player.stop()  // 현재 재생 중인 음원을 중지
+    }
+
     fun seekTo(positionMs: Long) {
         player.seekTo(positionMs)
     }
 
     fun setPlaybackSpeed(speed: Float) {
         player.playbackParameters = PlaybackParameters(speed)
+    }
+
+    fun getPlaybackSpeed(): Float {
+        return player.playbackParameters.speed
     }
 
     fun getCurrentPosition(): Long {

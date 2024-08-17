@@ -23,6 +23,7 @@ import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.FragmentMover
 import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.FragmentPlaylistBinding
 import kr.dori.android.own_cast.editAudio.EditAudio
 import kr.dori.android.own_cast.forApiData.Cast
@@ -224,11 +225,21 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
     }
 
     override fun ToPlayCast(castList: List<Cast>) {
-        val intent = Intent(requireContext(), PlayCastActivity::class.java)
-        intent.putExtra("CAST_ID", ArrayList(castList)) // castId를 전달
-        activityResultLauncher.launch(intent)
-    }
+        val currentCast = CastPlayerData.currentCast
 
+        if (currentCast != null && castList.contains(currentCast)) {
+            // 첫 번째 케이스: 현재 재생 중인 캐스트를 클릭한 경우
+            val intent = Intent(requireContext(), PlayCastActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT // 기존 Activity 재사용
+            activityResultLauncher.launch(intent)
+        } else {
+            // 두 번째 케이스: 다른 캐스트를 클릭한 경우
+            CastPlayerData.setCastList(castList) // 새로운 캐스트 리스트 설정
+            val intent = Intent(requireContext(), PlayCastActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK // 새로운 Activity 생성
+            activityResultLauncher.launch(intent)
+        }
+    }
     override fun playlistToCategory(playlistId: Long) {
 
         val categoryFragment = CategoryFragment(playlistId)
