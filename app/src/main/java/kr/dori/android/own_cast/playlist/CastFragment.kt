@@ -144,22 +144,14 @@ class CastFragment(var playlistIdList : MutableList<Long>) : Fragment(), Activit
     }
 
     override fun ToPlayCast(castList: List<Cast>) {
-        val currentCast = CastPlayerData.currentCast
+     //   val currentCast = CastPlayerData.currentCast
 
         CastPlayerData.test(castList)
 
-        if (currentCast != null && castList.contains(currentCast)) {
-            // 첫 번째 케이스: 현재 재생 중인 캐스트를 클릭한 경우
-            val intent = Intent(requireContext(), PlayCastActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT // 기존 Activity 재사용
-            activityResultLauncher.launch(intent)
-        } else {
-            // 두 번째 케이스: 다른 캐스트를 클릭한 경우
-            CastPlayerData.setCastList(castList) // 새로운 캐스트 리스트 설정
-            val intent = Intent(requireContext(), PlayCastActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK // 새로운 Activity 생성
-            activityResultLauncher.launch(intent)
-        }
+        val intent = Intent(requireContext(), PlayCastActivity::class.java)
+
+        activityResultLauncher.launch(intent)
+
     }
 
 
