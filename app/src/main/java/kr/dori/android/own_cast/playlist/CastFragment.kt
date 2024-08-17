@@ -146,6 +146,8 @@ class CastFragment(var playlistIdList : MutableList<Long>) : Fragment(), Activit
     override fun ToPlayCast(castList: List<Cast>) {
         val currentCast = CastPlayerData.currentCast
 
+        CastPlayerData.test(castList)
+
         if (currentCast != null && castList.contains(currentCast)) {
             // 첫 번째 케이스: 현재 재생 중인 캐스트를 클릭한 경우
             val intent = Intent(requireContext(), PlayCastActivity::class.java)
