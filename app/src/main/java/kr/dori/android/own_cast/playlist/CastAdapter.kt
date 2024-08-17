@@ -37,7 +37,7 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val cast = dataList[position]
-                    activityMover.ToPlayCast(cast.castId)
+                    activityMover.ToPlayCast(listOf(cast))
                     Log.d("tag","${cast.castId}")
                 }
             }

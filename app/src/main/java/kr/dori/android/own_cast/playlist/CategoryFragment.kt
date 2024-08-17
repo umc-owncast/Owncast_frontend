@@ -23,6 +23,7 @@ import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentCategoryBinding
 import kr.dori.android.own_cast.editAudio.EditAudioActivity
+import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.getRetrofit
 import kr.dori.android.own_cast.player.PlayCastActivity
@@ -34,7 +35,7 @@ class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var castAdapter: CastAdapter
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
-
+    lateinit var sendCastIdList: List<Cast>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,6 +60,8 @@ class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
                         playlistInfo?.let {
                             // 데이터를 캐스트 리스트로 변환하여 어댑터에 설정
                             castAdapter.dataList = it.castList.toMutableList()
+                            Log.d("castInfo","${it.castList}")
+                            sendCastIdList = it.castList
                             castAdapter.notifyDataSetChanged()
                         }
                     }
@@ -90,19 +93,20 @@ class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
 
 // 이 부분은 재생목록 부분이어서 어떻게 수정할건지 생각을 해봐야 됨 -> 재생목록 순서를 어떻게 정할 것인가?
         binding.fragmentCategoryPlayIv.setOnClickListener {
-            //ToPlayCast()
+            ToPlayCast(sendCastIdList)
+           // Log.d("Cast","$sendCastIdList")
         }
 
         binding.fragmentCategoryShuffleIv.setOnClickListener {
-            //ToPlayCast()
+            ToPlayCast(sendCastIdList)
         }
 
         return binding.root
     }
 
-    override fun ToPlayCast(castId: Long) {
+    override fun ToPlayCast(castList: List<Cast>) {
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
-        intent.putExtra("CAST_ID", castId) // castId를 전달
+        intent.putExtra("CAST_ID", ArrayList(castList)) // castId를 전달
         activityResultLauncher.launch(intent)
     }
 

@@ -6,12 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.FragmentMover
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.PlaylistCategoryItemBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.GetAllPlaylist
+import kr.dori.android.own_cast.forApiData.Playlist
+import kr.dori.android.own_cast.forApiData.getRetrofit
 import retrofit2.Response
 
 class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, private val activityMover: ActivityMover, private val fragmentMover: FragmentMover) : RecyclerView.Adapter<PlaylistCategoryAdapter.Holder>() {
@@ -37,7 +43,11 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
 
         init {
             binding.playlistCategoryPlayIv.setOnClickListener {
-               // activityMover.ToPlayCast()
+               val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val selectedPlaylistId = dataList[position].playlistId
+                    getCastInfo(selectedPlaylistId)
+                }
             }
             binding.realclick.setOnClickListener {
                 val position = adapterPosition
@@ -66,6 +76,29 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                     Log.e("PlaylistCategoryAdapter", "Invalid adapter position: $position")
                 }
             }
+        }
+        fun getCastInfo(playlistId: Long){
+            val getAllPlaylist = getRetrofit().create(Playlist::class.java)
+
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 5)
+                    if (response.isSuccessful) {
+                        val playlistInfo = response.body()?.result
+                        withContext(Dispatchers.Main) {
+                            playlistInfo?.let {
+                                val castList = it.castList.toMutableList()
+                                activityMover.ToPlayCast(castList)
+                            }
+                        }
+                    } else {
+                        Log.e("PlaylistCategoryAdapter", "Failed to fetch playlist info")
+                    }
+                } catch (e: Exception) {
+                    Log.e("PlaylistCategoryAdapter", "Exception during API call", e)
+                }
+            }
+
         }
     }
 }

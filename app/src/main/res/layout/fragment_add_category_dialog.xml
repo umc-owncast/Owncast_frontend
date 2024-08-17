@@ -5,7 +5,7 @@
     android:layout_width="216dp"
     android:layout_height="132dp"
 
-    tools:context=".playlist.AddCategoryDialog">
+    tools:context=".keyword.AddCategoryDialog">
 
     <ImageView
         android:id="@+id/category_dialog_circle_iv"

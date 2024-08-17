@@ -2,11 +2,9 @@ package kr.dori.android.own_cast.keyword
 
 import android.Manifest
 import android.app.Activity
-import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -16,9 +14,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -30,10 +26,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import kr.dori.android.own_cast.playlist.AddCategoryDialog
 import kr.dori.android.own_cast.playlist.AddCategoryListener
 import kr.dori.android.own_cast.editAudio.EditAudio
 import kr.dori.android.own_cast.R
@@ -80,7 +74,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
     private var isText = false
     private var id : Long? = null
 
-    private lateinit var dialog:AddCategoryDialog
+    private lateinit var dialog: AddCategoryDialog
     private lateinit var imageResultLauncher: ActivityResultLauncher<Intent>
 
     /*postCast에 쓰일 정보들*/

@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.ActivityPlayCastBinding
+import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.getRetrofit
 import java.io.InputStream
@@ -55,27 +56,18 @@ class PlayCastActivity : AppCompatActivity() {
         player = ExoPlayer.Builder(this).build()
         player.volume = 1.0f
 
-        val castId = intent.getLongExtra("CAST_ID", -1)
-        Log.d("cast", "$castId")
+        //형 이 부분에서 클릭한 캐스트의 정보를 받아올 수 있어요
+        val castList = intent.getSerializableExtra("CAST_ID") as? ArrayList<Cast>
 
-        val getCastInfo = getRetrofit().create(CastInterface::class.java)
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val playResponse = getCastInfo.getCastPlay(castId)
-                if (playResponse.isSuccessful) {
-                    playResponse.body()?.let { responseBody ->
-                        val stream = responseBody.byteStream()
-                        withContext(Dispatchers.Main) {
-                            player.playStream(stream)
-                        }
-                    }
-                } else {
-                    Log.e("player", "Failed to get cast play: ${playResponse.errorBody()?.string()}")
-                }
-            } catch (e: Exception) {
-                Log.e("player", "Exception during playback setup", e)
-            }
+        Log.d("Cast","$castList")
+        castList?.let {
+            // 각 Cast 객체의 castId를 추출하여 순차적으로 스트리밍을 시작합니다.
+            for (cast in it) {
+            val castId = cast.castId
+            playCast(castId)
         }
+        }
+
 
         speedTableViewModel = ViewModelProvider(this).get(SpeedTableViewModel::class.java)
 
@@ -297,6 +289,26 @@ class PlayCastActivity : AppCompatActivity() {
             scriptToAudio()
         }
     }
+    private fun playCast(castId: Long){
+        val getCastInfo = getRetrofit().create(CastInterface::class.java)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val playResponse = getCastInfo.getCastPlay(castId)
+                if (playResponse.isSuccessful) {
+                    playResponse.body()?.let { responseBody ->
+                        val stream = responseBody.byteStream()
+                        withContext(Dispatchers.Main) {
+                            player.playStream(stream)
+                        }
+                    }
+                } else {
+                    Log.e("player", "Failed to get cast play: ${playResponse.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("player", "Exception during playback setup", e)
+            }
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -367,6 +379,8 @@ class PlayCastActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
     private fun updateLyricsHighlight() {
         val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
