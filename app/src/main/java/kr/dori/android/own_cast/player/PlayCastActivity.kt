@@ -110,7 +110,7 @@ class PlayCastActivity : AppCompatActivity() {
         }
 
         // Next 버튼 클릭 이벤트 처리
-        binding.to10next.setOnClickListener {
+        binding.next.setOnClickListener {
             val nextCast = CastPlayerData.playNext()
             nextCast?.let {
                 stopCurrentAudio()  // 기존 음원 중지
@@ -119,12 +119,20 @@ class PlayCastActivity : AppCompatActivity() {
         }
 
         // Previous 버튼 클릭 이벤트 처리
-        binding.to10back.setOnClickListener {
+        binding.previous.setOnClickListener {
             val previousCast = CastPlayerData.playPrevious()
             previousCast?.let {
                 stopCurrentAudio()  // 기존 음원 중지
                 playCast(previousCast)  // 새로운 캐스트 재생
             }
+        }
+
+        binding.to10next.setOnClickListener {
+            service?.seekTo(service?.getCurrentPosition()?.plus(10000L) ?: 0L)
+        }
+
+        binding.to10back.setOnClickListener {
+            service?.seekTo(service?.getCurrentPosition()?.minus(10000L) ?: 0L)
         }
 
         // 배속 설정 이벤트 리스너
@@ -171,6 +179,7 @@ class PlayCastActivity : AppCompatActivity() {
                 binding.realSpeedTv.text = "${speed}x"
                 updateSpeedUI(speed, targetView)
                 CastPlayerData.playbackSpeed = speed
+                speedTableViewModel.setData(speed) // ViewModel에 배속 값을 저장
             }
         }
 
@@ -215,6 +224,12 @@ class PlayCastActivity : AppCompatActivity() {
 
         binding.activityPlayCastNotAudioExit.setOnClickListener {
             scriptToAudio()
+        }
+
+
+        binding.speedTableOffIv.setOnClickListener {
+            binding.speedTable.visibility = View.VISIBLE
+            binding.speedTable.bringToFront()
         }
     }
 
