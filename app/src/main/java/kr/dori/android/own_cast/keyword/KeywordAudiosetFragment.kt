@@ -119,7 +119,10 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
 
     override fun createCastByScript(postCastByScript: PostCastByScript){
         corutineJob = Job()
-        val dialog = KeywordLoadingDialog(requireContext(), "스크립트를 생성중이에요")
+        var dialogText : String
+        if(binding.keywordAudiosetVp.currentItem==0)dialogText = "스크립트를 생성 중이에요"
+        else dialogText = "스크립트를 다시 생성 중이에요"
+        val dialog = KeywordLoadingDialog(requireContext(), dialogText)
         dialog.setCancelable(false)
         dialog.setCanceledOnTouchOutside(false)
         dialog.show()
@@ -181,7 +184,12 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
 
     override fun createCastByKeyword(postCastByKeyword: PostCastByKeyword){
         corutineJob = Job()
-        val dialog = KeywordLoadingDialog(requireContext(),"스크립트를 생성중이에요")
+        var dialogText : String
+
+        if(binding.keywordAudiosetVp.currentItem==0)dialogText = "스크립트를 생성 중이에요"
+        else dialogText = "스크립트를 다시 생성 중이에요"
+
+        val dialog = KeywordLoadingDialog(requireContext(),dialogText)
         dialog.setCancelable(false)
         dialog.setCanceledOnTouchOutside(false)
         dialog.show()
