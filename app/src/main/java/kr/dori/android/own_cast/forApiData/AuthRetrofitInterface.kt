@@ -1,6 +1,7 @@
 package kr.dori.android.own_cast.forApiData
 
 
+import android.renderscript.Script
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -88,12 +89,12 @@ interface Playlist{
 
     @POST("/api/playlist")
     suspend fun postPlaylist(@Query("playlistName")playlistName: String): Response<AuthResponse<PostPlaylist>>
+
+    @GET("/api/cast/{castId}")
+    suspend fun getCast(@Path("castId")castId: Long): Response<AuthResponse<CastInfo>>
 }
 
 
-interface player{
-
-}
 
 interface bookmark{
 
