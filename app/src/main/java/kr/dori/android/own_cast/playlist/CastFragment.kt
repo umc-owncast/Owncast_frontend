@@ -132,19 +132,19 @@ class CastFragment(var playlistIdList : MutableList<Long>) : Fragment(), Activit
         }
 
         binding.fragmentCastPlayIv.setOnClickListener {
-            //ToPlayCast()
+            ToPlayCast(playlistList)
         }
 
         binding.fragmentCastShuffleIv.setOnClickListener {
-           // ToPlayCast()
+            ToPlayCast(playlistList)
         }
 
         return binding.root
     }
 
-    override fun ToPlayCast(castId: Long) {
+    override fun ToPlayCast(castList: List<Cast>) {
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
-        intent.putExtra("CAST_ID", castId) // castId를 전달
+        intent.putExtra("CAST_ID", ArrayList(castList)) // castId를 전달
         activityResultLauncher.launch(intent)
     }
 
