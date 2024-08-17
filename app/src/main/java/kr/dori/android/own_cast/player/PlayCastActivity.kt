@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.ActivityPlayCastBinding
 import kr.dori.android.own_cast.forApiData.Cast
 import java.util.concurrent.TimeUnit
@@ -75,6 +76,7 @@ class PlayCastActivity : AppCompatActivity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser && !isSeeking) {
                     service?.seekTo(progress * 1000L)
+                    CastPlayerData.updatePlaybackPosition(service?.getCurrentPosition() ?: 0L)
                     binding.startTv.text = formatTime(service?.getCurrentPosition() ?: 0L)
                     updateLyricsHighlight()
                 }
@@ -87,6 +89,7 @@ class PlayCastActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 isSeeking = false
                 service?.seekTo(seekBar?.progress?.times(1000L) ?: 0L)
+                CastPlayerData.updatePlaybackPosition(service?.getCurrentPosition() ?: 0L)
                 binding.startTv.text = formatTime(service?.getCurrentPosition() ?: 0L)
                 updateLyricsHighlight()
             }
@@ -104,6 +107,24 @@ class PlayCastActivity : AppCompatActivity() {
             binding.playCastPauseIv.visibility = View.GONE
             binding.playCastPlayIv.visibility = View.VISIBLE
             service?.pauseAudio()
+        }
+
+        // Next 버튼 클릭 이벤트 처리
+        binding.to10next.setOnClickListener {
+            val nextCast = CastPlayerData.playNext()
+            nextCast?.let {
+                stopCurrentAudio()  // 기존 음원 중지
+                playCast(nextCast)  // 새로운 캐스트 재생
+            }
+        }
+
+        // Previous 버튼 클릭 이벤트 처리
+        binding.to10back.setOnClickListener {
+            val previousCast = CastPlayerData.playPrevious()
+            previousCast?.let {
+                stopCurrentAudio()  // 기존 음원 중지
+                playCast(previousCast)  // 새로운 캐스트 재생
+            }
         }
 
         // 배속 설정 이벤트 리스너
@@ -139,6 +160,7 @@ class PlayCastActivity : AppCompatActivity() {
             Log.d("speed", "$value")
             updateSpeedUI(value, targetView)
             service?.setPlaybackSpeed(value)
+            CastPlayerData.playbackSpeed = value
         })
 
         clickImageView.forEachIndexed { index, imageView ->
@@ -148,6 +170,7 @@ class PlayCastActivity : AppCompatActivity() {
                 service?.setPlaybackSpeed(speed)
                 binding.realSpeedTv.text = "${speed}x"
                 updateSpeedUI(speed, targetView)
+                CastPlayerData.playbackSpeed = speed
             }
         }
 
@@ -186,15 +209,18 @@ class PlayCastActivity : AppCompatActivity() {
         }
 
         binding.activityPlayCastAudioExitIv.setOnClickListener {
-            val resultIntent = Intent()
-            resultIntent.putExtra("result", false)
-            setResult(RESULT_OK, resultIntent)
-            finish()
+            service?.pauseAudio() // 음원 재생 중지
+            finish() // Activity 종료
         }
 
         binding.activityPlayCastNotAudioExit.setOnClickListener {
             scriptToAudio()
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        updateUI() // 기존 Activity로 돌아올 때 UI 업데이트
     }
 
     override fun onDestroy() {
@@ -207,28 +233,58 @@ class PlayCastActivity : AppCompatActivity() {
     }
 
     private fun initializePlayer() {
-        // castList 초기화 -> nullPointError 우회 방법
-        val castList = intent.getSerializableExtra("CAST_ID") as? ArrayList<Cast> ?: arrayListOf()
-        val realCastList = castList.filter { it.castId != 0L }
+        val currentCast = CastPlayerData.currentCast
 
-        if (realCastList.isNotEmpty()) {
-            val firstCast = realCastList.first()
-            val castId = firstCast.castId
-
-            if (castId != null && castId != 0L) {
-                service?.getCastInfo(castId) { url, audioLength ->
-                    url?.let {
-                        service?.playAudio(it)
-                        binding.endTv.text = formatTime(audioLength)
-                        binding.seekBar.max = (audioLength / 1000).toInt()
-                    }
+        if (currentCast != null) {
+            // 현재 재생 중인 캐스트가 있는 경우
+            service?.getCastInfo(currentCast.castId) { url, audioLength ->
+                url?.let {
+                    service?.playAudio(it)
+                    binding.endTv.text = formatTime(audioLength)
+                    binding.seekBar.max = (audioLength / 1000).toInt()
+                    CastPlayerData.currentPosition = service?.getCurrentPosition() ?: 0L
+                    CastPlayerData.playbackSpeed = service?.getPlaybackSpeed() ?: 1.0f
+                    updateUI()
                 }
-            } else {
-                Log.e("PlayCastActivity", "Invalid castId: $castId")
             }
         } else {
-            Log.e("PlayCastActivity", "realCastList is empty")
-            finish()
+            // 두 번째 케이스: 다른 캐스트를 클릭한 경우
+            playCast(CastPlayerData.currentCast!!)
+        }
+    }
+
+    private fun playCast(cast: Cast) {
+        CastPlayerData.addCast(cast)
+        service?.getCastInfo(cast.castId) { url, audioLength ->
+            url?.let {
+                service?.playAudio(it)
+                binding.endTv.text = formatTime(audioLength)
+                binding.seekBar.max = (audioLength / 1000).toInt()
+            }
+        }
+    }
+
+
+    private fun stopCurrentAudio() {
+        service?.stopAudio()  // 새로운 메서드를 BackgroundPlayService에 추가
+    }
+
+
+    private fun updateUI() {
+        val currentCast = CastPlayerData.currentCast
+        if (currentCast != null) {
+            //binding.ti.text = currentCast.castTitle
+            binding.seekBar.max = (service?.getDuration() ?: 0L / 1000).toInt()
+            binding.seekBar.progress = (CastPlayerData.currentPosition / 1000).toInt()
+            binding.realSpeedTv.text = "${CastPlayerData.playbackSpeed}x"
+
+            if (service?.isPlaying() == true) {
+                binding.playCastPlayIv.visibility = View.GONE
+                binding.playCastPauseIv.visibility = View.VISIBLE
+            } else {
+                binding.playCastPlayIv.visibility = View.VISIBLE
+                binding.playCastPauseIv.visibility = View.GONE
+            }
         }
     }
 
@@ -246,7 +302,7 @@ class PlayCastActivity : AppCompatActivity() {
                 val currentPosition = it.getCurrentPosition()
                 binding.seekBar.progress = (currentPosition / 1000).toInt()
                 binding.startTv.text = formatTime(currentPosition)
-                updateLyricsHighlight()
+                //updateLyricsHighlight()
             }
             handler.postDelayed(this, 1000)
         }

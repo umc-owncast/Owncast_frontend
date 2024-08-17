@@ -578,7 +578,7 @@
             android:layout_height="35dp"
             android:layout_marginStart="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView12"
+            app:layout_constraintStart_toEndOf="@+id/previous"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/back_ten_sec" />
 
@@ -588,12 +588,12 @@
             android:layout_height="35dp"
             android:layout_marginEnd="29dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView13"
+            app:layout_constraintEnd_toStartOf="@+id/next"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/go_ten_sec" />
 
         <ImageView
-            android:id="@+id/imageView12"
+            android:id="@+id/previous"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="30dp"
@@ -603,7 +603,7 @@
             app:srcCompat="@drawable/skip_previous" />
 
         <ImageView
-            android:id="@+id/imageView13"
+            android:id="@+id/next"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="30dp"
@@ -677,8 +677,10 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/activity_play_cast_constraint_seekbar"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/one">
+        app:layout_constraintTop_toBottomOf="@+id/one"
+        app:layout_constraintVertical_bias="0.0">
 
     </FrameLayout>
 

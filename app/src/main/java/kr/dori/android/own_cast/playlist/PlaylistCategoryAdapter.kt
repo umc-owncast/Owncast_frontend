@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.FragmentMover
+import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.PlaylistCategoryItemBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
@@ -77,7 +78,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                 }
             }
         }
-        fun getCastInfo(playlistId: Long){
+        fun getCastInfo(playlistId: Long) {
             val getAllPlaylist = getRetrofit().create(Playlist::class.java)
 
             CoroutineScope(Dispatchers.IO).launch {
@@ -88,6 +89,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                         withContext(Dispatchers.Main) {
                             playlistInfo?.let {
                                 val castList = it.castList.toMutableList()
+                                CastPlayerData.setCastList(castList)  // 캐스트 리스트를 저장
                                 activityMover.ToPlayCast(castList)
                             }
                         }
@@ -98,8 +100,8 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                     Log.e("PlaylistCategoryAdapter", "Exception during API call", e)
                 }
             }
-
         }
+
     }
 }
 
