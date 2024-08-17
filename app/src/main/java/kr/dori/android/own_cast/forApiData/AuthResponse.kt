@@ -81,11 +81,14 @@ data class GetAllPlaylist(
     val totalCast: Int
 )
 
-data class Script(
-    @SerializedName(value = "originalSentence") val originalSentence: String,
-    @SerializedName(value = "translatedSentence") val translatedSentence: String,
-    @SerializedName(value = "timePoint") val timePoint: Float
-)
+data class CastInfo(
+    @SerializedName(value = "id") val id: Long,
+    @SerializedName(value = "title") val title: String,
+    @SerializedName(value = "imagePath") val imagePath: String,
+    @SerializedName(value = "audioLength") val audioLength: String,
+    @SerializedName(value = "fileUrl") val fileUrl: String,
+    @SerializedName(value = "sentences") val sentences: List<NewSentences>
+    )
 
 
 
@@ -108,6 +111,12 @@ data class Sentences(
     @SerializedName(value = "timePoint") val audioLength: Double
 )
 
+data class NewSentences(
+    @SerializedName(value = "id") val id: Long,
+    @SerializedName(value = "originalSentence") val originalSentence: String,
+    @SerializedName(value = "translatedSentence") val translatedSentence: String,
+    @SerializedName(value = "timePoint") val audioLength: Double
+)
 
 
 
