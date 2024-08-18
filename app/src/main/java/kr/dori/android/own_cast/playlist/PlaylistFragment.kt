@@ -244,9 +244,9 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
     }
  */
 
-    override fun playlistToCategory(playlistId: Long) {
+    override fun playlistToCategory(playlistId: Long, playlistName: String) {
 
-        val categoryFragment = CategoryFragment(playlistId)
+        val categoryFragment = CategoryFragment(playlistId, playlistName)
 
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.main_frm, categoryFragment)

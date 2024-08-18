@@ -34,6 +34,7 @@ class PlayCastActivity : AppCompatActivity() {
     private var isBound = false
     private val handler = Handler()
 
+
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, binder: IBinder) {
             val localBinder = binder as BackgroundPlayService.LocalBinder
@@ -91,8 +92,9 @@ class PlayCastActivity : AppCompatActivity() {
 
         // 초기 Fragment 설정
         supportFragmentManager.beginTransaction()
-            .add(R.id.play_cast_frm, CastAudioFragment())
+            .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle))
             .commit()
+
 
         // SeekBar 변경 리스너 설정 -> 사람이 seekbar를 움직였을때 기능합니다. -> getCurrentPosition을 통해서 현재 진행사황을 서비스에서 가져옵니다.
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -143,6 +145,10 @@ class PlayCastActivity : AppCompatActivity() {
                 xibalCast(nextCast.castId)  // 새로운 캐스트 재생
                 Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
             }
+            supportFragmentManager.beginTransaction()
+                .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle))
+                .commit()
+
         }
 
         // Previous 버튼 클릭 이벤트 처리
@@ -156,6 +162,9 @@ class PlayCastActivity : AppCompatActivity() {
                 xibalCast(previousCast.castId)  // 새로운 캐스트 재생
                 Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
             }
+            supportFragmentManager.beginTransaction()
+                .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle))
+                .commit()
         }
 
         binding.to10next.setOnClickListener {
@@ -435,8 +444,9 @@ class PlayCastActivity : AppCompatActivity() {
         binding.playcastActivitySaveBackIv.visibility = View.VISIBLE
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.play_cast_frm, CastAudioFragment())
+            .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle))
             .commitAllowingStateLoss()
+
     }
 
     private fun audioToPlaylist() {
@@ -463,8 +473,9 @@ class PlayCastActivity : AppCompatActivity() {
         binding.playcastActivitySaveBackIv.visibility = View.VISIBLE
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.play_cast_frm, CastAudioFragment())
+            .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle))
             .commitAllowingStateLoss()
+
     }
 
     fun formatSpeed(speed: String): String {
