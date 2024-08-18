@@ -92,7 +92,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         // 초기 Fragment 설정
         supportFragmentManager.beginTransaction()
-            .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle))
+            .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle, CastPlayerData.currentCast.castCreator, CastPlayerData.currentCast.castCategory))
             .commit()
 
 
@@ -146,7 +146,7 @@ class PlayCastActivity : AppCompatActivity() {
                 Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
             }
             supportFragmentManager.beginTransaction()
-                .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle))
+                .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle,CastPlayerData.currentCast.castCreator,CastPlayerData.currentCast.castCategory))
                 .commit()
 
         }
@@ -163,7 +163,7 @@ class PlayCastActivity : AppCompatActivity() {
                 Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
             }
             supportFragmentManager.beginTransaction()
-                .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle))
+                .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle,CastPlayerData.currentCast.castCreator,CastPlayerData.currentCast.castCategory))
                 .commit()
         }
 
@@ -444,7 +444,7 @@ class PlayCastActivity : AppCompatActivity() {
         binding.playcastActivitySaveBackIv.visibility = View.VISIBLE
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle))
+            .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle,CastPlayerData.currentCast.castCreator,CastPlayerData.currentCast.castCategory))
             .commitAllowingStateLoss()
 
     }
@@ -473,7 +473,7 @@ class PlayCastActivity : AppCompatActivity() {
         binding.playcastActivitySaveBackIv.visibility = View.VISIBLE
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle))
+            .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle,CastPlayerData.currentCast.castCreator,CastPlayerData.currentCast.castCategory))
             .commitAllowingStateLoss()
 
     }
