@@ -1,6 +1,8 @@
 package kr.dori.android.own_cast.player
 
+import ScriptAdapter
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -21,6 +23,8 @@ import kr.dori.android.own_cast.forApiData.getRetrofit
 class CastScriptFragment(val currentCast: Cast) : Fragment() {
     lateinit var binding: FragmentCastScriptBinding
     private val playCastViewModel: PlayCastViewModel2 by activityViewModels()
+    private val handler = Handler()
+    val adapter = ScriptAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +41,7 @@ class CastScriptFragment(val currentCast: Cast) : Fragment() {
                     val castInfo = response.body()?.result
                     withContext(Dispatchers.Main){
                         Log.d("castSentence","${castInfo?.sentences}")
-                        val adapter = ScriptAdapter()
+
                         adapter.dataList = castInfo?.sentences?:listOf()
                         binding.scriptRv.adapter = adapter
                         binding.scriptRv.layoutManager = LinearLayoutManager(context)
@@ -65,10 +69,17 @@ class CastScriptFragment(val currentCast: Cast) : Fragment() {
 
  */
 
+
         return binding.root
     }
 
 
+
+
+    fun updateCurrentTime(currentTime: Long) {
+        Log.d("UpdateTime", "Fragment: $currentTime")
+        adapter.updateCurrentTime(currentTime)
+    }
 
 
 

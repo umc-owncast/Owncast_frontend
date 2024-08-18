@@ -360,11 +360,15 @@ class PlayCastActivity : AppCompatActivity() {
                 val currentPosition = it.getCurrentPosition()
                 binding.seekBar.progress = (currentPosition / 1000).toInt() // 현재 위치를 초 단위로 설정
                 binding.startTv.text = formatTime(currentPosition)
+
+                // CastScriptFragment에 시간 정보 전달
+                val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
+                fragment?.updateCurrentTime(currentPosition)
+                Log.d("UpdateTime", "Activity: $currentPosition")
             }
-            handler.postDelayed(this, 300) // 두번째 이상 객체 불러올 떄
+            handler.postDelayed(this, 300) // 주기적으로 업데이트
         }
     }
-
 
     private fun formatTime(ms: Long): String {
         val minutes = TimeUnit.MILLISECONDS.toMinutes(ms)
@@ -517,6 +521,5 @@ class PlayCastActivity : AppCompatActivity() {
         return String.format("%02d:%02d", minutes, seconds)
     }
 }
-
 
 
