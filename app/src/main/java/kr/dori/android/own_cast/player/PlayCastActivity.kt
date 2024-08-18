@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.media3.exoplayer.ExoPlayer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.R
@@ -230,14 +231,16 @@ class PlayCastActivity : AppCompatActivity() {
             scriptToAudio()
         }
 
-        binding.playCastLoofOffIv.setOnClickListener {
-            binding.playCastLoofOffIv.visibility = View.GONE
-            binding.playCastLoofOnIv.visibility = View.VISIBLE
-        }
-
         binding.playCastLoofOnIv.setOnClickListener {
             binding.playCastLoofOffIv.visibility = View.VISIBLE
             binding.playCastLoofOnIv.visibility = View.GONE
+            service?.setRepeatMode(ExoPlayer.REPEAT_MODE_OFF) // 반복 모드 해제
+        }
+
+        binding.playCastLoofOffIv.setOnClickListener {
+            binding.playCastLoofOffIv.visibility = View.GONE
+            binding.playCastLoofOnIv.visibility = View.VISIBLE
+            service?.setRepeatMode(ExoPlayer.REPEAT_MODE_ONE) // 현재 트랙 반복 모드로 설정
         }
 
         binding.playcastActivitySaveBackIv.setOnClickListener {

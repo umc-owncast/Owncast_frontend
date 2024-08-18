@@ -62,6 +62,11 @@ class BackgroundPlayService : Service() {
         player.play()
     }
 
+    // 반복 모드 설정
+    fun setRepeatMode(repeatMode: Int) {
+        player.repeatMode = repeatMode
+    }
+
     fun stopAudio() {
         player.stop()  // 현재 재생 중인 음원을 중지
     }
