@@ -76,12 +76,14 @@ class PlayCastActivity : AppCompatActivity() {
         startSeekBarUpdate()
          */
 
-        // 새로운 액티비티가 시작될 때, 기존 재생 중지 -> 서비스 바인딩 전에 호출함으로서 기존에 재생된 음원 멈추기
-        stopCurrentAudio()
+
 
         // 서비스 바인딩
         val intent = Intent(this, BackgroundPlayService::class.java)
         bindService(intent, connection, Context.BIND_AUTO_CREATE)
+
+        // 새로운 액티비티가 시작될 때, 기존 재생 중지 -> 서비스 바인딩 전에 호출함으로서 기존에 재생된 음원 멈추기
+        stopCurrentAudio()
 
         // 초기 Fragment 설정
         supportFragmentManager.beginTransaction()
@@ -455,7 +457,7 @@ class PlayCastActivity : AppCompatActivity() {
         val seconds = input % 60
         return String.format("%02d:%02d", minutes, seconds)
     }
-
-
-
 }
+
+
+

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kr.dori.android.own_cast.player.BackgroundPlayService
 
 
 class SplashActivity : AppCompatActivity() {
@@ -37,6 +38,11 @@ class SplashActivity : AppCompatActivity() {
 
         // 화면전환
         prepareForActivityTransition()
+
+        // BackgroundPlayService를 시작합니다.
+        val serviceIntent = Intent(this, BackgroundPlayService::class.java)
+        startService(serviceIntent) // 서비스가 없으면 생성, 있으면 유지됩니다.
+
     }
 
     private fun showTextViewAndImageView() {
