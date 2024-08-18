@@ -431,6 +431,7 @@ class PlayCastActivity : AppCompatActivity() {
         binding.activityPlayCastNotAudioExit.visibility = View.VISIBLE
         binding.playcastActivitySaveBackIv.visibility = View.GONE
 
+        disableLoopForSentence()
         // 새로운 CastScriptFragment 생성 및 추가
         val scriptFragment = CastScriptFragment(CastPlayerData.currentCast)
         supportFragmentManager.beginTransaction()
@@ -505,6 +506,7 @@ class PlayCastActivity : AppCompatActivity() {
                 .commit()
 
             1 -> {
+                disableLoopForSentence()
                 val scriptFragment = CastScriptFragment(CastPlayerData.currentCast)
 
                 // 콜백 설정
@@ -556,7 +558,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         if (sentence != null && nextSentence != null) {
             val startTime = (sentence.timePoint * 1000).toLong()
-            val endTime = (nextSentence.timePoint * 1000).toLong()
+            val endTime = ((nextSentence.timePoint * 1000)-10).toLong()
             Log.d("loop", "Start: $startTime, End: $endTime")
             service?.setLoopForSegment(startTime, endTime)
         } else {
