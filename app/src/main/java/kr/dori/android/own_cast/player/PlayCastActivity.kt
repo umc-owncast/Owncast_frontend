@@ -40,14 +40,22 @@ class PlayCastActivity : AppCompatActivity() {
             isBound = true
 
             val currentCast = CastPlayerData.currentCast
-            playCast(currentCast.castId)
-            startSeekBarUpdate()
 
-            // 새로운 액티비티가 시작될 때, 기존 재생 중지 -> 서비스 바인딩 전에 호출함으로서 기존에 재생된 음원 멈추기
-            stopCurrentAudio()
-            updateUI()
+            // MainActivity에서 넘어온 경우 재생 상태를 유지
+            if (intent.hasExtra("fromMainActivity") && intent.getBooleanExtra("fromMainActivity", false)) {
+                updateUI() // 현재 재생 상태에 맞게 UI 업데이트
+                    service?.getCastInfo(currentCast.castId) { url, audioLength ->
+                        url?.let {
+                            binding.endTv.text = formatTime(audioLength.toInt())
+                        }
+                    }
+            } else {
+                // 새로운 캐스트를 준비
+                stopCurrentAudio()
+                playCast(currentCast.castId)
+            }
 
-            //  startSeekBarUpdate() // 시크바 업데이트 시작
+            startSeekBarUpdate() // 시크바 업데이트 시작
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {
@@ -55,7 +63,6 @@ class PlayCastActivity : AppCompatActivity() {
             isBound = false
         }
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayCastBinding.inflate(layoutInflater)
@@ -69,17 +76,11 @@ class PlayCastActivity : AppCompatActivity() {
 
         speedTableViewModel = ViewModelProvider(this).get(SpeedTableViewModel::class.java)
 
+
         // 배속 초기값 설정
         if (speedTableViewModel.data.value == null) {
             speedTableViewModel.setData(1.0f)
         }
-
-        /* 캐스트 초기화 설정인데, ㅈ박았죠! -> 이유는 너가 멍청해서 그렇습니다~ -> 초기화 설정은 Service가 끝난후에 진행되어야 합니다. 따라서 connection 객체의 onServiceConnected 안에서 작동할 수 있도록 수정해야 합니다.
-        var currentCast = CastPlayerData.currentCast
-        playCast(currentCast.castId)
-        startSeekBarUpdate()
-         */
-
 
 
         // 서비스 바인딩
@@ -87,13 +88,12 @@ class PlayCastActivity : AppCompatActivity() {
         bindService(intent, connection, Context.BIND_AUTO_CREATE)
 
 
-
         // 초기 Fragment 설정
         supportFragmentManager.beginTransaction()
             .add(R.id.play_cast_frm, CastAudioFragment())
             .commit()
 
-        // SeekBar 변경 리스너 설정 -> 사람이 seekbar를 움직였을때 기능합니다.
+        // SeekBar 변경 리스너 설정 -> 사람이 seekbar를 움직였을때 기능합니다. -> getCurrentPosition을 통해서 현재 진행사황을 서비스에서 가져옵니다.
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser && !isSeeking) {
@@ -248,6 +248,9 @@ class PlayCastActivity : AppCompatActivity() {
         }
 
         binding.activityPlayCastAudioExitIv.setOnClickListener {
+            val resultIntent = Intent()
+            resultIntent.putExtra("result", false)
+            setResult(RESULT_OK, resultIntent)
             service?.pauseAudio() // 음원 재생 중지
             finish() // Activity 종료
         }
@@ -322,6 +325,7 @@ class PlayCastActivity : AppCompatActivity() {
         currentCast?.let {
             binding.seekBar.max = service?.getDuration()?.toInt()?.div(1000) ?: 0
             binding.seekBar.progress = (service?.getCurrentPosition()?.div(1000))?.toInt() ?: 0
+          //  binding.seekbar
 
             if (service?.isPlaying() == true) {
                 binding.playCastPlayIv.visibility = View.GONE

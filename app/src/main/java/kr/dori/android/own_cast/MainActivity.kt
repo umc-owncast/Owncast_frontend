@@ -57,8 +57,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.activityMainRealClickConstraint.setOnClickListener {
             val intent = Intent(this, PlayCastActivity::class.java)
+            intent.putExtra("fromMainActivity", true)  // MainActivity에서 넘어왔음을 표시
             playCastActivityResultLauncher.launch(intent)
         }
+
 
         binding.activityMainPauseIv.setOnClickListener {
             binding.activityMainPauseIv.visibility = View.GONE
