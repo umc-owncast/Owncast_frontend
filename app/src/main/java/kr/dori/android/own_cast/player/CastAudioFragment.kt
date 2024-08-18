@@ -9,7 +9,7 @@ import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.FragmentCastAudioBinding
 
-class CastAudioFragment(val castName: String) : Fragment() {
+class CastAudioFragment(val castName: String, val castCreator: String, val castCategory: String) : Fragment() {
 
     lateinit var binding: FragmentCastAudioBinding
 
@@ -22,6 +22,11 @@ class CastAudioFragment(val castName: String) : Fragment() {
 
         binding.castTitle.text = castName
 
+        if(castCreator != "헬로"){
+            binding.creatorCategory.text = "${castCreator}-${castCategory}"
+        }else{
+            binding.creatorCategory.visibility = View.GONE
+        }
 
 
         return binding.root
