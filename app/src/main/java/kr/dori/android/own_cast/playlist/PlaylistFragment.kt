@@ -225,15 +225,11 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
     }
 
     override fun ToPlayCast(castList: List<Cast>) {
-        //   val currentCast = CastPlayerData.currentCast
-
-        CastPlayerData.test(castList)
-
+        CastPlayerData.setCast(castList)
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
-
         activityResultLauncher.launch(intent)
-
     }
+
     override fun playlistToCategory(playlistId: Long) {
 
         val categoryFragment = CategoryFragment(playlistId)
