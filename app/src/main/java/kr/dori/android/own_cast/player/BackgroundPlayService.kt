@@ -37,10 +37,12 @@ class BackgroundPlayService : Service() {
     }
 
     fun playAudio(url: String) {
-        player.stop()
+        // 이전 재생을 중지하고 새로 재생
+        player.stop()  // 기존 재생 중지
         val mediaItem = MediaItem.fromUri(url)
         player.setMediaItem(mediaItem)
         player.prepare()
+        player.play()  // 재생 시작
         startSeekBarUpdate()
     }
 
@@ -94,7 +96,7 @@ class BackgroundPlayService : Service() {
         }
     }
 
-    fun getCastInfo(castId: Long, onInfoReceived: (String?, Long) -> Unit) {
+    fun getCastInfo(castId: Long, onInfoReceived: (String?, Int) -> Unit) {
         val getCastInfo = getRetrofit().create(Playlist::class.java)
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -103,10 +105,12 @@ class BackgroundPlayService : Service() {
                 if (response.isSuccessful) {
                     val castInfo = response.body()?.result
                     castInfo?.let {
-                        val audioUrl = it.fileUrl
-                        val audioLength = parseAudioLength(it.audioLength)
+                        val audioUrl = it.fileUrl ?: ""
+                        val audioLength = parseTimeToSeconds(it.audioLength) // 초 단위로 변환
+                        Log.d("test", "${audioUrl}, ${audioLength}, ${it.audioLength}")
+
                         withContext(Dispatchers.Main) {
-                            onInfoReceived(audioUrl, audioLength)
+                            onInfoReceived(audioUrl, audioLength) // URL과 총 시간을 초 단위로 전달
                         }
                     }
                 } else {
@@ -119,14 +123,30 @@ class BackgroundPlayService : Service() {
         }
     }
 
-    private fun parseAudioLength(audioLength: String): Long {
-        val parts = audioLength.split(":")
-        return if (parts.size == 2) {
-            val minutes = parts[0].toIntOrNull() ?: 0
-            val seconds = parts[1].toIntOrNull() ?: 0
-            (minutes * 60 + seconds) * 1000L
+    fun formatTime(input: String): String {
+        return if (input.contains(":")) {
+            // 입력이 이미 "분:초" 형식인 경우
+            input
         } else {
-            0L
+            // 입력이 초 단위로 들어오는 경우
+            val totalSeconds = input.toIntOrNull() ?: return "00:00" // 입력이 숫자가 아닌 경우 대비
+            val minutes = totalSeconds / 60
+            val seconds = totalSeconds % 60
+            String.format("%02d:%02d", minutes, seconds)
         }
     }
+
+    fun parseTimeToSeconds(input: String): Int {
+        return if (input.contains(":")) {
+            // 입력이 "분:초" 형식인 경우
+            val parts = input.split(":")
+            val minutes = parts[0].toIntOrNull() ?: 0
+            val seconds = parts[1].toIntOrNull() ?: 0
+            (minutes * 60) + seconds
+        } else {
+            // 입력이 이미 초 단위인 경우
+            input.toIntOrNull() ?: 0
+        }
+    }
+
 }

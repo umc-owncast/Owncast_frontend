@@ -8,6 +8,7 @@ object CastPlayerData {
     var currentPosition : Int = 0
     lateinit var currentCast: Cast
 
+    // 이 부분에 id검사 기능도 넣어야 됨
     fun setCast(testList: List<Cast>) {
         allCastList.addAll(testList)
 
@@ -23,7 +24,7 @@ object CastPlayerData {
     }
 
 
-    fun playNext(): Long {
+    fun playNext(): Cast {
         if(currentPosition +1 in 0 until allCastList.size){
             currentPosition++
             currentCast = allCastList[currentPosition]
@@ -31,10 +32,10 @@ object CastPlayerData {
         }else{
             Log.e("playNext", "Next position is out of bounds: $currentPosition")
         }
-        return currentPosition.toLong()
+        return currentCast
     }
 
-    fun playPrevious(): Long {
+    fun playPrevious(): Cast {
         if(currentPosition -1 in 0 until allCastList.size){
             currentPosition--
             currentCast = allCastList[currentPosition]
@@ -42,7 +43,7 @@ object CastPlayerData {
         }else{
             Log.e("playNext", "Next position is out of bounds: $currentPosition")
         }
-        return currentPosition.toLong()
+        return currentCast
     }
 
 }
