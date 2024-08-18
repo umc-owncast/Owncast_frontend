@@ -218,17 +218,31 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         }
     }
 
+    override fun ToPlayCast(castList: List<Cast>) {
+        // 현재 서비스가 재생 중인지 확인하고 중지
+        //val currentService = getCurrentServiceInstance()
+      //  service?.stopAudio()
+
+        // 캐스트 설정 및 새 액티비티로 이동
+        CastPlayerData.setCast(castList)
+        val intent = Intent(requireContext(), PlayCastActivity::class.java)
+        activityResultLauncher.launch(intent)
+    }
+
+
+
     override fun getCategoryData(position: Long): GetAllPlaylist {
         return sharedViewModel.data.value?.get(position.toInt())
             ?: throw IndexOutOfBoundsException("Invalid position: $position")
 
     }
-
+/*
     override fun ToPlayCast(castList: List<Cast>) {
         CastPlayerData.setCast(castList)
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
         activityResultLauncher.launch(intent)
     }
+ */
 
     override fun playlistToCategory(playlistId: Long) {
 

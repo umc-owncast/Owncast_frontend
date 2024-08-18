@@ -38,8 +38,12 @@ class PlayCastActivity : AppCompatActivity() {
             val localBinder = binder as BackgroundPlayService.LocalBinder
             service = localBinder.getService()
             isBound = true
-            initializePlayer()
-            startSeekBarUpdate() // 시크바 업데이트 시작
+
+            val currentCast = CastPlayerData.currentCast
+            playCast(currentCast.castId)
+            startSeekBarUpdate()
+
+            //  startSeekBarUpdate() // 시크바 업데이트 시작
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {
@@ -54,7 +58,10 @@ class PlayCastActivity : AppCompatActivity() {
         setContentView(binding.root)
         enableEdgeToEdge()
 
-        stopCurrentAudio()
+
+        // 처음 앱에 들어갔을 때의 초기 UI 설정
+        binding.playCastPlayIv.visibility = View.VISIBLE
+        binding.playCastPauseIv.visibility = View.GONE
 
         speedTableViewModel = ViewModelProvider(this).get(SpeedTableViewModel::class.java)
 
@@ -62,6 +69,15 @@ class PlayCastActivity : AppCompatActivity() {
         if (speedTableViewModel.data.value == null) {
             speedTableViewModel.setData(1.0f)
         }
+
+        /* 캐스트 초기화 설정인데, ㅈ박았죠! -> 이유는 너가 멍청해서 그렇습니다~ -> 초기화 설정은 Service가 끝난후에 진행되어야 합니다. 따라서 connection 객체의 onServiceConnected 안에서 작동할 수 있도록 수정해야 합니다.
+        var currentCast = CastPlayerData.currentCast
+        playCast(currentCast.castId)
+        startSeekBarUpdate()
+         */
+
+        // 새로운 액티비티가 시작될 때, 기존 재생 중지 -> 서비스 바인딩 전에 호출함으로서 기존에 재생된 음원 멈추기
+        stopCurrentAudio()
 
         // 서비스 바인딩
         val intent = Intent(this, BackgroundPlayService::class.java)
@@ -72,12 +88,12 @@ class PlayCastActivity : AppCompatActivity() {
             .add(R.id.play_cast_frm, CastAudioFragment())
             .commit()
 
-        // SeekBar 변경 리스너 설정
+        // SeekBar 변경 리스너 설정 -> 사람이 seekbar를 움직였을때 기능합니다.
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser && !isSeeking) {
                     service?.seekTo(progress * 1000L)
-                   // CastPlayerData.updatePlaybackPosition(service?.getCurrentPosition() ?: 0L)
+                    // CastPlayerData.updatePlaybackPosition(service?.getCurrentPosition() ?: 0L)
                     binding.startTv.text = formatTime(service?.getCurrentPosition() ?: 0L)
                     updateLyricsHighlight()
                 }
@@ -114,11 +130,11 @@ class PlayCastActivity : AppCompatActivity() {
         binding.next.setOnClickListener {
             binding.playCastPlayIv.visibility = View.GONE
             binding.playCastPauseIv.visibility = View.VISIBLE
-            service?.resumeAudio()
-            val nextCast = CastPlayerData.playNext()
+            // service?.resumeAudio()
+            val nextCast = CastPlayerData.playNext() // type: Cast
             nextCast?.let {
                 stopCurrentAudio()  // 기존 음원 중지
-                playCast(nextCast)  // 새로운 캐스트 재생
+                playCast(nextCast.castId)  // 새로운 캐스트 재생
                 Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
             }
         }
@@ -127,11 +143,11 @@ class PlayCastActivity : AppCompatActivity() {
         binding.previous.setOnClickListener {
             binding.playCastPlayIv.visibility = View.GONE
             binding.playCastPauseIv.visibility = View.VISIBLE
-            service?.resumeAudio()
+            // service?.resumeAudio()
             val previousCast = CastPlayerData.playPrevious()
             previousCast?.let {
                 stopCurrentAudio()  // 기존 음원 중지
-                playCast(previousCast)  // 새로운 캐스트 재생
+                playCast(previousCast.castId)  // 새로운 캐스트 재생
                 Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
             }
         }
@@ -187,7 +203,7 @@ class PlayCastActivity : AppCompatActivity() {
                 service?.setPlaybackSpeed(speed)
                 binding.realSpeedTv.text = "${speed}x"
                 updateSpeedUI(speed, targetView)
-              //  CastPlayerData.playbackSpeed = speed
+                //  CastPlayerData.playbackSpeed = speed
                 speedTableViewModel.setData(speed) // ViewModel에 배속 값을 저장
             }
         }
@@ -244,7 +260,12 @@ class PlayCastActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        updateUI() // 기존 Activity로 돌아올 때 UI 업데이트
+
+        // 기존 재생 중지
+        stopCurrentAudio()
+
+        // 기존 UI 업데이트
+        updateUI()
     }
 
     override fun onDestroy() {
@@ -256,48 +277,30 @@ class PlayCastActivity : AppCompatActivity() {
         stopSeekBarUpdate()
     }
 
-    private fun initializePlayer() {
-
-        playCast(CastPlayerData.currentPosition.toLong())
-/*
-            service?.getCastInfo(currentCast.castId) { url, audioLength ->
-                url?.let {
-                    service?.playAudio(it)
-                    binding.endTv.text = formatTime(audioLength)
-                    binding.seekBar.max = (audioLength / 1000).toInt()
-                    CastPlayerData.currentPosition = service?.getCurrentPosition() ?: 0L
-                    CastPlayerData.playbackSpeed = service?.getPlaybackSpeed() ?: 1.0f
-                    updateUI()
-                }
-            }
-
- */
-        }
-
-
     private fun playCast(castId: Long) {
         service?.getCastInfo(castId) { url, audioLength ->
             url?.let {
                 service?.playAudio(it)
-                binding.endTv.text = formatTime(audioLength)
-                binding.seekBar.max = (audioLength / 1000).toInt()
+                binding.endTv.text = formatTime(audioLength.toInt())
+                binding.seekBar.max = audioLength // 시크바 최대값 설정 (초 단위)
+                startSeekBarUpdate() // 시크바 업데이트 시작
             }
         }
     }
 
-
     private fun stopCurrentAudio() {
-        service?.stopAudio()  // 새로운 메서드를 BackgroundPlayService에 추가
+        // 서비스가 이미 바인딩 되어 있는지 확인하고 중지
+        service?.let {
+            it.stopAudio()
+        }
     }
 
 
     private fun updateUI() {
         val currentCast = CastPlayerData.currentCast
-        if (currentCast != null) {
-            //binding.ti.text = currentCast.castTitle
-            binding.seekBar.max = (service?.getDuration() ?: 0L / 1000).toInt()
-            binding.seekBar.progress = (CastPlayerData.currentPosition / 1000).toInt()
-            //binding.realSpeedTv.text = "${CastPlayerData.playbackSpeed}x"
+        currentCast?.let {
+            binding.seekBar.max = service?.getDuration()?.toInt()?.div(1000) ?: 0
+            binding.seekBar.progress = (service?.getCurrentPosition()?.div(1000))?.toInt() ?: 0
 
             if (service?.isPlaying() == true) {
                 binding.playCastPlayIv.visibility = View.GONE
@@ -308,7 +311,6 @@ class PlayCastActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun startSeekBarUpdate() {
         handler.postDelayed(updateSeekBar, 1000)
     }
@@ -321,13 +323,13 @@ class PlayCastActivity : AppCompatActivity() {
         override fun run() {
             service?.let {
                 val currentPosition = it.getCurrentPosition()
-                binding.seekBar.progress = (currentPosition / 1000).toInt()
+                binding.seekBar.progress = (currentPosition / 1000).toInt() // 현재 위치를 초 단위로 설정
                 binding.startTv.text = formatTime(currentPosition)
-                //updateLyricsHighlight()
             }
             handler.postDelayed(this, 1000)
         }
     }
+
 
     private fun formatTime(ms: Long): String {
         val minutes = TimeUnit.MILLISECONDS.toMinutes(ms)
@@ -444,6 +446,16 @@ class PlayCastActivity : AppCompatActivity() {
             speed + "x"
         }
     }
+    override fun onResume() {
+        super.onResume()
+        updateUI() // UI 업데이트 시 현재 상태를 반영하여 조정
+    }
+    fun formatTime(input: Int): String {
+        val minutes = input / 60
+        val seconds = input % 60
+        return String.format("%02d:%02d", minutes, seconds)
+    }
+
 
 
 }
