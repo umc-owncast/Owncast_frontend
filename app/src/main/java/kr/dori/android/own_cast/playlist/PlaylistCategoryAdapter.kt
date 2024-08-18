@@ -54,7 +54,8 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val selectedPlaylistId = dataList[position].playlistId
-                    fragmentMover.playlistToCategory(selectedPlaylistId)
+                    val selectedPlaylistName = dataList[position].name
+                    fragmentMover.playlistToCategory(selectedPlaylistId, selectedPlaylistName)
                 }
             }
         }
