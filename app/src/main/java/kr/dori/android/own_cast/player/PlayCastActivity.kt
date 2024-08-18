@@ -41,6 +41,7 @@ class PlayCastActivity : AppCompatActivity() {
             service = localBinder.getService()
             isBound = true
 
+            service?.setPlaybackSpeed(1.0f)
             val currentCast = CastPlayerData.currentCast
 
             // MainActivity에서 넘어온 경우 재생 상태를 유지
@@ -83,6 +84,7 @@ class PlayCastActivity : AppCompatActivity() {
         if (speedTableViewModel.data.value == null) {
             speedTableViewModel.setData(1.0f)
         }
+
 
 
         // 서비스 바인딩
