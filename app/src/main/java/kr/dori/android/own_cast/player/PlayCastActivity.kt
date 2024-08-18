@@ -33,7 +33,7 @@ class PlayCastActivity : AppCompatActivity() {
     private var service: BackgroundPlayService? = null
     private var isBound = false
     private val handler = Handler()
-
+    var stateListener: Int = 0
 
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, binder: IBinder) {
@@ -94,7 +94,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         // 초기 Fragment 설정
         supportFragmentManager.beginTransaction()
-            .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle, CastPlayerData.currentCast.castCreator, CastPlayerData.currentCast.castCategory))
+            .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast))
             .commit()
 
 
@@ -105,7 +105,7 @@ class PlayCastActivity : AppCompatActivity() {
                     service?.seekTo(progress * 1000L)
                     // CastPlayerData.updatePlaybackPosition(service?.getCurrentPosition() ?: 0L)
                     binding.startTv.text = formatTime(service?.getCurrentPosition() ?: 0L)
-                    updateLyricsHighlight()
+                    //updateLyricsHighlight()
                 }
             }
 
@@ -118,7 +118,7 @@ class PlayCastActivity : AppCompatActivity() {
                 service?.seekTo(seekBar?.progress?.times(1000L) ?: 0L)
                 //CastPlayerData.updatePlaybackPosition(service?.getCurrentPosition() ?: 0L)
                 binding.startTv.text = formatTime(service?.getCurrentPosition() ?: 0L)
-                updateLyricsHighlight()
+                    //  updateLyricsHighlight()
             }
         })
 
@@ -147,9 +147,7 @@ class PlayCastActivity : AppCompatActivity() {
                 xibalCast(nextCast.castId)  // 새로운 캐스트 재생
                 Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
             }
-            supportFragmentManager.beginTransaction()
-                .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle,CastPlayerData.currentCast.castCreator,CastPlayerData.currentCast.castCategory))
-                .commit()
+            missFortune()
 
         }
 
@@ -164,9 +162,7 @@ class PlayCastActivity : AppCompatActivity() {
                 xibalCast(previousCast.castId)  // 새로운 캐스트 재생
                 Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
             }
-            supportFragmentManager.beginTransaction()
-                .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle,CastPlayerData.currentCast.castCreator,CastPlayerData.currentCast.castCategory))
-                .commit()
+            missFortune()
         }
 
         binding.to10next.setOnClickListener {
@@ -351,7 +347,7 @@ class PlayCastActivity : AppCompatActivity() {
         }
     }
     private fun startSeekBarUpdate() {
-        handler.postDelayed(updateSeekBar, 1000)
+        handler.postDelayed(updateSeekBar, 10) //이건 첫번째 객체
     }
 
     private fun stopSeekBarUpdate() {
@@ -365,7 +361,7 @@ class PlayCastActivity : AppCompatActivity() {
                 binding.seekBar.progress = (currentPosition / 1000).toInt() // 현재 위치를 초 단위로 설정
                 binding.startTv.text = formatTime(currentPosition)
             }
-            handler.postDelayed(this, 1000)
+            handler.postDelayed(this, 300) // 두번째 이상 객체 불러올 떄
         }
     }
 
@@ -413,13 +409,15 @@ class PlayCastActivity : AppCompatActivity() {
             }
         }
     }
-
+/*
     private fun updateLyricsHighlight() {
         val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
         fragment?.let {
             (it.binding.scriptRv.adapter as? ScriptAdapter)?.updateCurrentTime(service?.getCurrentPosition() ?: 0L)
         }
     }
+
+ */
 
     // Fragment 전환 함수들
     private fun audioToScript() {
@@ -432,8 +430,9 @@ class PlayCastActivity : AppCompatActivity() {
         binding.playcastActivitySaveBackIv.visibility = View.GONE
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.play_cast_frm, CastScriptFragment())
+            .replace(R.id.play_cast_frm, CastScriptFragment(CastPlayerData.currentCast))
             .commitAllowingStateLoss()
+        stateListener = 1
     }
 
     private fun scriptToAudio() {
@@ -446,9 +445,10 @@ class PlayCastActivity : AppCompatActivity() {
         binding.playcastActivitySaveBackIv.visibility = View.VISIBLE
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle,CastPlayerData.currentCast.castCreator,CastPlayerData.currentCast.castCategory))
+            .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast))
             .commitAllowingStateLoss()
 
+        stateListener = 0
     }
 
     private fun audioToPlaylist() {
@@ -463,6 +463,8 @@ class PlayCastActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.play_cast_frm, CastPlaylistFragment())
             .commitAllowingStateLoss()
+
+        stateListener = 2
     }
 
     private fun playlistToAudio() {
@@ -475,8 +477,26 @@ class PlayCastActivity : AppCompatActivity() {
         binding.playcastActivitySaveBackIv.visibility = View.VISIBLE
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle,CastPlayerData.currentCast.castCreator,CastPlayerData.currentCast.castCategory))
+            .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast))
             .commitAllowingStateLoss()
+
+        stateListener = 0
+    }
+
+    fun missFortune() {
+
+        when(stateListener){
+            0 ->             supportFragmentManager.beginTransaction()
+                .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast))
+                .commit()
+
+            1 ->         supportFragmentManager.beginTransaction()
+                .replace(R.id.play_cast_frm, CastScriptFragment(CastPlayerData.currentCast))
+                .commitAllowingStateLoss()
+            2 ->         supportFragmentManager.beginTransaction()
+                .replace(R.id.play_cast_frm, CastPlaylistFragment())
+                .commitAllowingStateLoss()
+        }
 
     }
 

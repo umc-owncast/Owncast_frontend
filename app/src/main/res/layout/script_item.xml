@@ -6,13 +6,12 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/textView14"
+        android:id="@+id/originalSentence_tv"
         android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:minLines="2"
+        android:layout_marginBottom="3dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,4 +57,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/fragment_script_change_2" />
+
+    <TextView
+        android:id="@+id/translationSentence_tv"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="6dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/originalSentence_tv" />
 </androidx.constraintlayout.widget.ConstraintLayout>
