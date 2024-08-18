@@ -32,6 +32,14 @@ class BackgroundPlayService : Service() {
         player = ExoPlayer.Builder(this).build()
     }
 
+    fun prepareAudio(url: String) {
+        player.stop()  // 기존 재생 중지
+        val mediaItem = MediaItem.fromUri(url)
+        player.setMediaItem(mediaItem)
+        player.prepare()  // 오디오 준비
+        // 재생은 하지 않음
+    }
+
     fun isPlaying(): Boolean {
         return player.isPlaying
     }

@@ -43,6 +43,10 @@ class PlayCastActivity : AppCompatActivity() {
             playCast(currentCast.castId)
             startSeekBarUpdate()
 
+            // 새로운 액티비티가 시작될 때, 기존 재생 중지 -> 서비스 바인딩 전에 호출함으로서 기존에 재생된 음원 멈추기
+            stopCurrentAudio()
+            updateUI()
+
             //  startSeekBarUpdate() // 시크바 업데이트 시작
         }
 
@@ -82,8 +86,7 @@ class PlayCastActivity : AppCompatActivity() {
         val intent = Intent(this, BackgroundPlayService::class.java)
         bindService(intent, connection, Context.BIND_AUTO_CREATE)
 
-        // 새로운 액티비티가 시작될 때, 기존 재생 중지 -> 서비스 바인딩 전에 호출함으로서 기존에 재생된 음원 멈추기
-        stopCurrentAudio()
+
 
         // 초기 Fragment 설정
         supportFragmentManager.beginTransaction()
@@ -136,7 +139,7 @@ class PlayCastActivity : AppCompatActivity() {
             val nextCast = CastPlayerData.playNext() // type: Cast
             nextCast?.let {
                 stopCurrentAudio()  // 기존 음원 중지
-                playCast(nextCast.castId)  // 새로운 캐스트 재생
+                xibalCast(nextCast.castId)  // 새로운 캐스트 재생
                 Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
             }
         }
@@ -149,7 +152,7 @@ class PlayCastActivity : AppCompatActivity() {
             val previousCast = CastPlayerData.playPrevious()
             previousCast?.let {
                 stopCurrentAudio()  // 기존 음원 중지
-                playCast(previousCast.castId)  // 새로운 캐스트 재생
+                xibalCast(previousCast.castId)  // 새로운 캐스트 재생
                 Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
             }
         }
@@ -282,7 +285,7 @@ class PlayCastActivity : AppCompatActivity() {
     private fun playCast(castId: Long) {
         service?.getCastInfo(castId) { url, audioLength ->
             url?.let {
-                service?.playAudio(it)
+                service?.prepareAudio(it) // 여기서 prepare만 수행
                 binding.endTv.text = formatTime(audioLength.toInt())
                 binding.seekBar.max = audioLength // 시크바 최대값 설정 (초 단위)
                 startSeekBarUpdate() // 시크바 업데이트 시작
@@ -290,10 +293,26 @@ class PlayCastActivity : AppCompatActivity() {
         }
     }
 
+    private fun xibalCast(castId: Long) {
+        service?.getCastInfo(castId) { url, audioLength ->
+            url?.let {
+                service?.playAudio(it) // 오디오를 준비하고 바로 재생
+                binding.endTv.text = formatTime(audioLength.toInt())
+                binding.seekBar.max = audioLength // 시크바 최대값 설정 (초 단위)
+                startSeekBarUpdate() // 시크바 업데이트 시작
+            }
+        }
+    }
+
+
     private fun stopCurrentAudio() {
         // 서비스가 이미 바인딩 되어 있는지 확인하고 중지
+        Log.d("test","none service")
+
         service?.let {
             it.stopAudio()
+            it.pauseAudio()
+            Log.d("test","연결이 성공적으로 끊어졌습니다")
         }
     }
 
