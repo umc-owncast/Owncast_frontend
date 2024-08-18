@@ -85,8 +85,6 @@ class PlayCastActivity : AppCompatActivity() {
             speedTableViewModel.setData(1.0f)
         }
 
-
-
         // 서비스 바인딩
         val intent = Intent(this, BackgroundPlayService::class.java)
         bindService(intent, connection, Context.BIND_AUTO_CREATE)
@@ -433,9 +431,21 @@ class PlayCastActivity : AppCompatActivity() {
         binding.activityPlayCastNotAudioExit.visibility = View.VISIBLE
         binding.playcastActivitySaveBackIv.visibility = View.GONE
 
+        // 새로운 CastScriptFragment 생성 및 추가
+        val scriptFragment = CastScriptFragment(CastPlayerData.currentCast)
         supportFragmentManager.beginTransaction()
-            .replace(R.id.play_cast_frm, CastScriptFragment(CastPlayerData.currentCast))
+            .replace(R.id.play_cast_frm, scriptFragment)
             .commitAllowingStateLoss()
+
+        // 프래그먼트가 추가된 후에 바로 콜백 메소드 설정
+        scriptFragment.adapter.onRepeatToggleListener = { position, isRepeatOn ->
+            if (isRepeatOn) {
+                enableLoopForSentence(position)
+                Log.d("loop","${position},${isRepeatOn}")
+            } else {
+                disableLoopForSentence()
+            }
+        }
         stateListener = 1
     }
 
@@ -494,9 +504,26 @@ class PlayCastActivity : AppCompatActivity() {
                 .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast))
                 .commit()
 
-            1 ->         supportFragmentManager.beginTransaction()
-                .replace(R.id.play_cast_frm, CastScriptFragment(CastPlayerData.currentCast))
-                .commitAllowingStateLoss()
+            1 -> {
+                val scriptFragment = CastScriptFragment(CastPlayerData.currentCast)
+
+                // 콜백 설정
+                scriptFragment.adapter.onRepeatToggleListener = { position, isRepeatOn ->
+                    if (isRepeatOn) {
+                        enableLoopForSentence(position)
+                        Log.d("loop","${position},${isRepeatOn}")
+                    } else {
+                        disableLoopForSentence()
+                    }
+                }
+
+                // 프래그먼트 교체
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.play_cast_frm, scriptFragment)
+                    .commitAllowingStateLoss()
+            }
+
+
             2 ->         supportFragmentManager.beginTransaction()
                 .replace(R.id.play_cast_frm, CastPlaylistFragment())
                 .commitAllowingStateLoss()
@@ -519,6 +546,27 @@ class PlayCastActivity : AppCompatActivity() {
         val minutes = input / 60
         val seconds = input % 60
         return String.format("%02d:%02d", minutes, seconds)
+    }
+
+    // 특정 문장을 반복하도록 설정
+    private fun enableLoopForSentence(position: Int) {
+        val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
+        val sentence = fragment?.adapter?.dataList?.get(position)
+        val nextSentence = fragment?.adapter?.dataList?.getOrNull(position + 1)  // 다음 문장이 없을 수도 있으므로 null을 처리
+
+        if (sentence != null && nextSentence != null) {
+            val startTime = (sentence.timePoint * 1000).toLong()
+            val endTime = (nextSentence.timePoint * 1000).toLong()
+            Log.d("loop", "Start: $startTime, End: $endTime")
+            service?.setLoopForSegment(startTime, endTime)
+        } else {
+            Log.e("loop", "Invalid sentence data for looping")
+        }
+    }
+
+    // 반복을 해제
+    private fun disableLoopForSentence() {
+        service?.clearLoop()  // 반복 구간을 해제하는 메소드
     }
 }
 

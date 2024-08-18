@@ -12,6 +12,10 @@ import kr.dori.android.own_cast.forApiData.NewSentences
 
 class ScriptAdapter : RecyclerView.Adapter<ScriptAdapter.Holder>() {
     var dataList: List<NewSentences> = emptyList()
+
+    // 이 콜백을 통해 Activity에 반복 요청을 전달합니다.
+    var onRepeatToggleListener: ((position: Int, isRepeatOn: Boolean) -> Unit)? = null
+
     private var currentHighlightedPosition: Int = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -61,40 +65,31 @@ class ScriptAdapter : RecyclerView.Adapter<ScriptAdapter.Holder>() {
             binding.translationSentenceTv.text = data.translatedSentence
 
             if (isHighlighted) {
-                //binding.originalSentenceTv.setTypeface(null, Typeface.BOLD)
-                //binding.translationSentenceTv.setTypeface(null, Typeface.BOLD)
-                //binding.root.setBackgroundColor(ContextCompat.getColor(binding.root.context, R.color.black))
                 binding.translationSentenceTv.setTextColor(Color.parseColor("#000000"))
                 binding.originalSentenceTv.setTextColor(Color.parseColor("#000000"))
-                /*
-                binding.onFocusOn.setOnClickListener {
-                    binding.onFocusOn.visibility = View.GONE
-                    binding.notFocusOff.visibility = View.VISIBLE
-                }
-                binding.notFocusOff.setOnClickListener {
-                    binding.onFocusOn.visibility = View.VISIBLE
-                    binding.notFocusOff.visibility = View.GONE
+
+                binding.loofOff.visibility = View.VISIBLE
+                binding.loofOn.visibility = View.GONE
+
+                binding.loofOff.setOnClickListener {
+                    // 루프 온을 표시하고, 현재 문장 반복 요청을 Activity로 전달
+                    binding.loofOff.visibility = View.GONE
+                    binding.loofOn.visibility = View.VISIBLE
+                    onRepeatToggleListener?.invoke(adapterPosition, true)
                 }
 
-                 */
-
+                binding.loofOn.setOnClickListener {
+                    // 루프 오프를 표시하고, 반복 재생 취소 요청을 Activity로 전달
+                    binding.loofOff.visibility = View.VISIBLE
+                    binding.loofOn.visibility = View.GONE
+                    onRepeatToggleListener?.invoke(adapterPosition, false)
+                }
             } else {
-                //binding.originalSentenceTv.setTypeface(null, Typeface.NORMAL)
-                //binding.translationSentenceTv.setTypeface(null, Typeface.NORMAL)
-                //binding.root.setBackgroundColor(ContextCompat.getColor(binding.root.context, android.R.color.darker_gray))
                 binding.translationSentenceTv.setTextColor(Color.parseColor("#808080"))
                 binding.originalSentenceTv.setTextColor(Color.parseColor("#808080"))
-                /*
-                binding.notFocusOn.setOnClickListener {
-                    binding.notFocusOn.visibility = View.GONE
-                    binding.notFocusOff.visibility = View.VISIBLE
-                }
-                binding.notFocusOff.setOnClickListener {
-                    binding.notFocusOn.visibility = View.VISIBLE
-                    binding.notFocusOff.visibility = View.GONE
-                }
 
-                 */
+                binding.loofOff.visibility = View.GONE
+                binding.loofOn.visibility = View.GONE
             }
         }
     }
