@@ -108,7 +108,7 @@ class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
     override fun ToPlayCast(castList: List<Cast>) {
         //   val currentCast = CastPlayerData.currentCast
 
-        CastPlayerData.test(castList)
+        CastPlayerData.setCast(castList)
 
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
 

@@ -31,7 +31,6 @@ class PlayCastActivity : AppCompatActivity() {
     private var isSeeking = false
     private var service: BackgroundPlayService? = null
     private var isBound = false
-
     private val handler = Handler()
 
     private val connection = object : ServiceConnection {
@@ -54,6 +53,8 @@ class PlayCastActivity : AppCompatActivity() {
         binding = ActivityPlayCastBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
+
+        stopCurrentAudio()
 
         speedTableViewModel = ViewModelProvider(this).get(SpeedTableViewModel::class.java)
 
@@ -111,21 +112,27 @@ class PlayCastActivity : AppCompatActivity() {
 
         // Next 버튼 클릭 이벤트 처리
         binding.next.setOnClickListener {
+            binding.playCastPlayIv.visibility = View.GONE
+            binding.playCastPauseIv.visibility = View.VISIBLE
+            service?.resumeAudio()
             val nextCast = CastPlayerData.playNext()
             nextCast?.let {
                 stopCurrentAudio()  // 기존 음원 중지
                 playCast(nextCast)  // 새로운 캐스트 재생
-                Log.d("test","position: ${CastPlayerData.testPosition}")
+                Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
             }
         }
 
         // Previous 버튼 클릭 이벤트 처리
         binding.previous.setOnClickListener {
+            binding.playCastPlayIv.visibility = View.GONE
+            binding.playCastPauseIv.visibility = View.VISIBLE
+            service?.resumeAudio()
             val previousCast = CastPlayerData.playPrevious()
             previousCast?.let {
                 stopCurrentAudio()  // 기존 음원 중지
                 playCast(previousCast)  // 새로운 캐스트 재생
-                Log.d("test","position: ${CastPlayerData.testPosition}")
+                Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
             }
         }
 
@@ -170,7 +177,7 @@ class PlayCastActivity : AppCompatActivity() {
             Log.d("speed", "$value")
             updateSpeedUI(value, targetView)
             service?.setPlaybackSpeed(value)
-            CastPlayerData.playbackSpeed = value
+            //CastPlayerData.playbackSpeed = value
         })
 
         clickImageView.forEachIndexed { index, imageView ->
@@ -180,7 +187,7 @@ class PlayCastActivity : AppCompatActivity() {
                 service?.setPlaybackSpeed(speed)
                 binding.realSpeedTv.text = "${speed}x"
                 updateSpeedUI(speed, targetView)
-                CastPlayerData.playbackSpeed = speed
+              //  CastPlayerData.playbackSpeed = speed
                 speedTableViewModel.setData(speed) // ViewModel에 배속 값을 저장
             }
         }
@@ -250,8 +257,9 @@ class PlayCastActivity : AppCompatActivity() {
     }
 
     private fun initializePlayer() {
-        val currentCast = CastPlayerData.testCast
 
+        playCast(CastPlayerData.currentPosition.toLong())
+/*
             service?.getCastInfo(currentCast.castId) { url, audioLength ->
                 url?.let {
                     service?.playAudio(it)
@@ -262,12 +270,13 @@ class PlayCastActivity : AppCompatActivity() {
                     updateUI()
                 }
             }
+
+ */
         }
 
 
-    private fun playCast(cast: Cast) {
-        CastPlayerData.addCast(cast)
-        service?.getCastInfo(cast.castId) { url, audioLength ->
+    private fun playCast(castId: Long) {
+        service?.getCastInfo(castId) { url, audioLength ->
             url?.let {
                 service?.playAudio(it)
                 binding.endTv.text = formatTime(audioLength)
@@ -283,12 +292,12 @@ class PlayCastActivity : AppCompatActivity() {
 
 
     private fun updateUI() {
-        val currentCast = CastPlayerData.testCast
+        val currentCast = CastPlayerData.currentCast
         if (currentCast != null) {
             //binding.ti.text = currentCast.castTitle
             binding.seekBar.max = (service?.getDuration() ?: 0L / 1000).toInt()
             binding.seekBar.progress = (CastPlayerData.currentPosition / 1000).toInt()
-            binding.realSpeedTv.text = "${CastPlayerData.playbackSpeed}x"
+            //binding.realSpeedTv.text = "${CastPlayerData.playbackSpeed}x"
 
             if (service?.isPlaying() == true) {
                 binding.playCastPlayIv.visibility = View.GONE
@@ -435,4 +444,6 @@ class PlayCastActivity : AppCompatActivity() {
             speed + "x"
         }
     }
+
+
 }
