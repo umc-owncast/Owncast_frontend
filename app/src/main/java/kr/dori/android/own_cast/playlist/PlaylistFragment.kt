@@ -32,6 +32,7 @@ import kr.dori.android.own_cast.forApiData.Playlist
 
 import kr.dori.android.own_cast.getRetrofit
 import kr.dori.android.own_cast.keyword.AddCategoryDialog
+import kr.dori.android.own_cast.player.CastWithPlaylistId
 import kr.dori.android.own_cast.player.PlayCastActivity
 
 
@@ -219,7 +220,8 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
     }
 
 
-    override fun ToPlayCast(castList: List<Cast>) {
+    override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
+
         // 현재 서비스가 재생 중인지 확인하고 중지
         //val currentService = getCurrentServiceInstance()
       //  service?.stopAudio()

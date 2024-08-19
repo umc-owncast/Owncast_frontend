@@ -18,14 +18,19 @@ import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.databinding.FragmentCastScriptBinding
 import kr.dori.android.own_cast.forApiData.Bookmark
 import kr.dori.android.own_cast.forApiData.Cast
+import kr.dori.android.own_cast.forApiData.CastInfo
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
+import kotlinx.coroutines.async
+import kr.dori.android.own_cast.forApiData.GetBookmark
 
-class CastScriptFragment(val currentCast: Cast) : Fragment() {
+class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
     lateinit var binding: FragmentCastScriptBinding
     private val playCastViewModel: PlayCastViewModel2 by activityViewModels()
     private val handler = Handler()
-    val adapter = ScriptAdapter()
+    val adapter = ScriptAdapter(currentCast)
+    lateinit var castInfo: CastInfo
+    //lateinit var filteredBookmark: List<GetBookmark>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,64 +39,47 @@ class CastScriptFragment(val currentCast: Cast) : Fragment() {
         binding = FragmentCastScriptBinding.inflate(inflater, container, false)
 
         val getScript = getRetrofit().create(Playlist::class.java)
-        val getBookmark = getRetrofit().create(Bookmark::class.java)
+       // val getBookmark = getRetrofit().create(Bookmark::class.java)
 
-        CoroutineScope(Dispatchers.IO).launch() {
-            launch {
-                try {
-                    val response = getScript.getCast(currentCast.castId)
-                    if (response.isSuccessful) {
-                        val castInfo = response.body()?.result
-                        withContext(Dispatchers.Main) {
-                            Log.d("castSentence", "${castInfo?.sentences}")
-
-                            adapter.dataList = castInfo?.sentences ?: listOf()
-                            binding.scriptRv.adapter = adapter
-                            binding.scriptRv.layoutManager = LinearLayoutManager(context)
-
-                        }
-                    } else {
-
-                    }
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
+        CoroutineScope(Dispatchers.IO).launch {
+            val castInfoDeferred = async {
+                val response = getScript.getCast(currentCast.castId)
+                if (response.isSuccessful) {
+                    response.body()?.result
+                } else {
+                    null
                 }
             }
-            launch {
-                try{
-                  //  val allBookmark = getBookmark.getBookmark(currentCast.castId)
-                }catch (e:Exception){
-                    e.printStackTrace()
-                }
-            }
-        }
-
-
-        // val lyricsList = parseLyrics(rawLyrics)
-
-        val adapter = ScriptAdapter()
-    //    adapter.dataList = lyricsList
-
 /*
-        playCastViewModel.currentTime.observe(viewLifecycleOwner, Observer { currentTime ->
-            adapter.updateCurrentTime(currentTime)
-        })
+            val bookmarkDeferred = async {
+                val response = getBookmark.getBookmark(currentCast.playlistId)
+                if (response.isSuccessful) {
+                    response.body()?.result?.filter { bookmark -> bookmark.castId == currentCast.castId }
+                } else {
+                    null
+                }
+            }
 
  */
 
+            castInfo = castInfoDeferred.await() ?: CastInfo(0, "", "", "", "", emptyList())
+          //  filteredBookmark = bookmarkDeferred.await() ?: emptyList()
 
+            withContext(Dispatchers.Main) {
+                Log.d("script", "${castInfo.sentences}")
+                Log.d("script", "playlistId: ${currentCast.playlistId}, castId: ${currentCast.castId}")
+
+                adapter.dataList = castInfo.sentences
+
+                binding.scriptRv.adapter = adapter
+                binding.scriptRv.layoutManager = LinearLayoutManager(context)
+            }
+        }
         return binding.root
     }
-
-
-
 
     fun updateCurrentTime(currentTime: Long) {
         Log.d("UpdateTime", "Fragment: $currentTime")
         adapter.updateCurrentTime(currentTime)
     }
-
-
-
 }

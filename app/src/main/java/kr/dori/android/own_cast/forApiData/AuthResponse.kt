@@ -113,6 +113,7 @@ data class CastInfo(
 
 
 data class GetBookmark(
+    @SerializedName(value = "sentenceId") val sentenceId: Long,
     @SerializedName(value = "castId") val castId: Long,
     @SerializedName(value = "originalSentence") val originalSentence: String,
     @SerializedName(value = "translatedSentence") val translatedSentence: String
@@ -138,7 +139,7 @@ data class Sentences(
 )
 
 data class NewSentences(
-    @SerializedName(value = "id") val id: Long,
+    @SerializedName(value = "id") val id: Long, //이게 센텐스 아이디입니다
     @SerializedName(value = "originalSentence") val originalSentence: String,
     @SerializedName(value = "translatedSentence") val translatedSentence: String,
 

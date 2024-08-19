@@ -113,7 +113,9 @@ interface Bookmark {
             Response<AuthResponse<Long>>
 
     @GET("/api/study/{playlistId}")
-    suspend fun getBookmark(@Path("playlistId") playlistId: Int):
+
+    suspend fun getBookmark(@Path("playlistId")playlistId: Long):
+
             Response<AuthResponse<List<GetBookmark>>>
 
     @GET("/api/study/savedcast")

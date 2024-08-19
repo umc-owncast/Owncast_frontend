@@ -11,9 +11,10 @@ import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.CastItemLayoutBinding
 import kr.dori.android.own_cast.forApiData.Cast
+import kr.dori.android.own_cast.player.CastWithPlaylistId
 
 class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapter<CastAdapter.Holder>() {
-    var dataList: MutableList<Cast> = mutableListOf()
+    var dataList: MutableList<CastWithPlaylistId> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val binding = CastItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -37,13 +38,13 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val cast = dataList[position]
+                    Log.d("test3","${listOf(cast)}")
                     activityMover.ToPlayCast(listOf(cast))
-                    Log.d("tag","${cast.castId}")
                 }
             }
         }
 
-        fun setText(data: Cast) {
+        fun setText(data: CastWithPlaylistId) {
 
             val constraintLayout = binding.root as ConstraintLayout
             val constraintSet = ConstraintSet()

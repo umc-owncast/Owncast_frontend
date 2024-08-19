@@ -19,6 +19,7 @@ import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.GetAllPlaylist
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
+import kr.dori.android.own_cast.player.CastWithPlaylistId
 import retrofit2.Response
 
 class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, private val activityMover: ActivityMover, private val fragmentMover: FragmentMover) : RecyclerView.Adapter<PlaylistCategoryAdapter.Holder>() {
@@ -91,9 +92,21 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                             playlistInfo?.let {
                                 val castList = it.castList.toMutableList()
 
+                                val castListWithPlaylistId = castList.map{
+                                    cast ->
+                                    CastWithPlaylistId(
+                                        castId = cast.castId,
+                                        playlistId = playlistId,
+                                        castTitle = cast.castTitle,
+                                        isPublic = cast.isPublic,
+                                        castCreator = cast.castCreator,
+                                        castCategory = cast.castCategory,
+                                        audioLength = cast.audioLength
+                                    )
+                                }
                                 //CastPlayerData.setCastList(castList)  // 캐스트 리스트를 저장
+                                activityMover.ToPlayCast(castListWithPlaylistId)
 
-                                activityMover.ToPlayCast(castList)
                             }
                         }
                     } else {
