@@ -219,7 +219,9 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         }
     }
 
+
     override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
+
         // 현재 서비스가 재생 중인지 확인하고 중지
         //val currentService = getCurrentServiceInstance()
       //  service?.stopAudio()
@@ -229,6 +231,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
         activityResultLauncher.launch(intent)
     }
+
 
 
 
@@ -280,7 +283,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 
     }
 
-    override fun ToEditAudio() {
+    override fun ToEditAudio(id: Long, playlistId:Long) {
         TODO("Not yet implemented")
 
     }

@@ -13,14 +13,18 @@ import kr.dori.android.own_cast.forApiData.Sentences
 
 class KeywordViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _songDuration = MutableLiveData<String>()
-    private val _castId = MutableLiveData<Long>()
-    private val _inputKeyword = MutableLiveData<String>()
-    private val _sentences = MutableLiveData<List<Sentences>>()
-    private val _postCastKeyword = MutableLiveData<PostCastByKeyword>()
-    private val _postCastScript = MutableLiveData<PostCastByScript>()
-
+    private val _songDuration = MutableLiveData<String>()//노래의 길이를 저장함
+    private val _castId = MutableLiveData<Long>()//재생하고 있는 키워드를 저장함
+    private val _inputKeyword = MutableLiveData<String>()//만든 키워드 값을 저장함
+    private val _sentences = MutableLiveData<List<Sentences>>()//실시간 가사를 받아온다
+    private val _postCastKeyword = MutableLiveData<PostCastByKeyword>()//키워드로 생성했을 때 데이터(재생성 하기 위해서)
+    private val _postCastScript = MutableLiveData<PostCastByScript>()//스크립트로 생성했을 때 데이터
     private val _getPlayList = MutableLiveData<MutableList<PlaylistText>>(mutableListOf())
+
+    private var _streamingUrl :String = ""
+
+
+
 
 
     /*-----------------------getter----------------------*/
@@ -33,6 +37,8 @@ class KeywordViewModel(application: Application) : AndroidViewModel(application)
 
 
     val getPlayList : LiveData<MutableList<PlaylistText>> get() = _getPlayList
+
+    val streamingUrl : String get() = _streamingUrl
 
 
     /*-----------------------setter----------------------*/
@@ -62,9 +68,11 @@ class KeywordViewModel(application: Application) : AndroidViewModel(application)
 
     fun addGetPlayList(data: PlaylistText){
         _getPlayList.value?.add(data)
-
     }
 
+    fun setUrl(data :String){
+        _streamingUrl = data
+    }
 
 }
 data class PlaylistText(

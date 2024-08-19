@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         //     initKeyword()
         // }
         initBottomNavigation()
-        KeywordAppData.initDetailKeyword()
+
 
         //play table call back process
         playCastActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->

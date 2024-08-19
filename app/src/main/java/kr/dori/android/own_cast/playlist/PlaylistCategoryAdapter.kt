@@ -91,6 +91,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                         withContext(Dispatchers.Main) {
                             playlistInfo?.let {
                                 val castList = it.castList.toMutableList()
+
                                 val castListWithPlaylistId = castList.map{
                                     cast ->
                                     CastWithPlaylistId(
@@ -105,6 +106,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                                 }
                                 //CastPlayerData.setCastList(castList)  // 캐스트 리스트를 저장
                                 activityMover.ToPlayCast(castListWithPlaylistId)
+
                             }
                         }
                     } else {

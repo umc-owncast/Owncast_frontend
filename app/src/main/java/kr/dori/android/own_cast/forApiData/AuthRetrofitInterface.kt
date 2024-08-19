@@ -2,6 +2,7 @@ package kr.dori.android.own_cast.forApiData
 
 
 import android.renderscript.Script
+
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -23,19 +24,22 @@ import java.util.Objects
 
 interface CastInterface{
     @DELETE("/api/cast/{castId}")
-    fun deleteCast(@Path("castId") castId:Long): Call<AuthResponse<String>>
+    suspend fun deleteCast(@Path("castId") castId:Long): Response<AuthResponse<String>>
     @GET("/api/cast/{castId}/scripts")
     suspend fun getCastScript(@Path("castId") castId:Long): Response<AuthResponse<List<Script>>>
     @GET("/api/cast/{castId}/audio")
     suspend fun getCastPlay(@Path("castId") castId: Long): Response<ResponseBody>
+
+
+
+
     @GET("/api/cast/search/home") // 검색 홈 API(검색 화면 상위 4개 castdata받아옴)
     fun searchHome(): Call<AuthResponse<List<CastHomeDTO>>>
     @GET("/api/cast/home")// 홈화면 키워드 6개 받아오기
-    fun getKeywordHome() : Call<AuthResponse<List<String>>>
+    suspend fun getKeywordHome() : Response<AuthResponse<List<String>>>
     @Multipart
     @PATCH("/api/cast/{castId}")//캐스트 수정 api, 이미지 파일로 보내야함
-
-    fun patchCast(@Path("castId") castId:Long,@Part("updateInfo") updateInfo: UpdateInfo, @Part image: MultipartBody.Part):Call<AuthResponse<String>>
+    suspend fun patchCast(@Path("castId") castId:Long,@Part("updateInfo") updateInfo: UpdateInfo, @Part image: MultipartBody.Part):Response<AuthResponse<String>>
 
     @Multipart
     @POST("/api/cast/{castId}")//캐스트 저장 api keyvpSaveFragment에서 쓰인다
@@ -48,11 +52,11 @@ interface CastInterface{
     fun postCast(@Path("castId") castId:Long,@Body postCast: PostCast):Call<AuthResponse<Objects>>*/
 
     @POST("/api/cast/search")//검색 API
-    fun postSearchAPI(@Query("keyword") keyword: String):Call<AuthResponse<Objects>>
+    suspend fun postSearchAPI(@Query("keyword") keyword: String):Response<AuthResponse<List<CastHomeDTO>>>
     @POST("/api/cast/script")//스크립트로 캐스트를 생성하는 API, 반환되는 타입이 PostCastFromKeyword
     suspend fun postCastByScript(@Body postCastByScript: PostCastByScript):Response<AuthResponse<PostCastForResponse>>
     @POST("/api/cast/other")
-    fun postOtherPlaylistCast(@Body postOtherPlaylistCast: PostOtherPlaylistCast):Call<AuthResponse<Long>>
+    fun postOtherPlaylistCast(@Body postOtherPlaylistCast: PostOtherPlaylistCast):Call<AuthResponse<PostOtherPlaylist>>
     @POST("/api/cast/keyword")//키워드로 캐스트를 생성하는 API
     suspend fun postCastByKeyword(@Body postCastByKeyword: PostCastByKeyword):Response<AuthResponse<PostCastForResponse>>
     @POST("/api/cast/keyword-test")//스크립트로 캐스트를 생성하는 API
@@ -63,10 +67,13 @@ interface CastInterface{
 
 interface PlayListInterface{
     @DELETE("/api/cast/{playlistId}")
-    fun deleteCast(@Path("playlistId") playlistId:Long): Call<AuthResponse<DeletePlaylist>>
+    suspend fun deleteCast(@Path("playlistId") playlistId:Long): Response<AuthResponse<DeletePlaylist>>
     @GET("/api/playlist/view")// 사용자 플레이리스트 목록 받아오기
     //GetPlayList잘못만든거같던데..
     fun getPlayList() : Call<AuthResponse<List<GetUserPlaylist>>>
+
+    @GET("/api/playlist/view")// 사용자 플레이리스트 목록 받아오기
+    suspend fun getPlayListCorutine() : Response<AuthResponse<List<GetUserPlaylist>>>
     @POST("/api/playlist")
     fun postPlayList(@Query("playlistName") playlistName: String) : Call<AuthResponse<PostPlaylist>>
 
@@ -96,22 +103,24 @@ interface Playlist{
 
 
 
-interface Bookmark{
+
+interface Bookmark {
     @POST("/api/bookmark")
-    suspend fun postBookmark(@Query("sentenceId")sentenceId: Int): Response<AuthResponse<Long>>
+    suspend fun postBookmark(@Query("sentenceId") sentenceId: Int): Response<AuthResponse<Long>>
 
     @DELETE("/api/bookmark")
-    suspend fun deleteBookmark(@Query("sentenceId")sentenceId: Int):
+    suspend fun deleteBookmark(@Query("sentenceId") sentenceId: Int):
             Response<AuthResponse<Long>>
 
     @GET("/api/study/{playlistId}")
+
     suspend fun getBookmark(@Path("playlistId")playlistId: Long):
+
             Response<AuthResponse<List<GetBookmark>>>
 
     @GET("/api/study/savedcast")
-    suspend fun getSaved():Response<AuthResponse<List<GetBookmark>>>
+    suspend fun getSaved(): Response<AuthResponse<List<GetBookmark>>>
 
     @GET("/api/study/mycast")
-    suspend fun getMy():Response<AuthResponse<List<GetBookmark>>>
-
+    suspend fun getMy(): Response<AuthResponse<List<GetBookmark>>>
 }

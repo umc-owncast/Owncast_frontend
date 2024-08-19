@@ -21,10 +21,14 @@
         android:theme="@style/Theme.Own_cast"
         tools:targetApi="31">
 
+
         <service
             android:name=".player.BackgroundPlayService"
             android:enabled="true"
             android:exported="true"></service>
+
+
+
 
         <activity
             android:name=".AuthActivity"

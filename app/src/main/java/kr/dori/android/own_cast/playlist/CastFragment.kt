@@ -76,6 +76,8 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
+
+
             }
 
             // 데이터를 모두 받아온 후 UI 스레드에서 처리
@@ -99,15 +101,18 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
                 // 어댑터에 알림
                 castAdapter.notifyDataSetChanged()
 
+
                 binding.fragmentCastPlayIv.setOnClickListener {
                     Log.d("test3", "$filteringData")
                     ToPlayCast(filteringData)
                 }
 
+
                 binding.fragmentCastShuffleIv.setOnClickListener {
                     Log.d("test3", "$filteringData")
                     ToPlayCast(filteringData)
                 }
+
 
                 // 제목 설정
                 if (isSave) {
@@ -115,6 +120,7 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
                 } else {
                     binding.fragmentCastMaintitleTv.text = "담아온 캐스트"
                 }
+
             }
         }
 
@@ -139,7 +145,9 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
         return binding.root
     }
 
+
     override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
+
         //   val currentCast = CastPlayerData.currentCast
 
         CastPlayerData.setCast(castList)
@@ -150,8 +158,13 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
 
     }
 
-    override fun ToEditAudio() {
+
+
+    override fun ToEditAudio(id: Long,playlistId:Long) {
+
         val intent = Intent(requireContext(), EditAudioActivity::class.java)
+        intent.putExtra("id",id)
+        intent.putExtra("playlistId",playlistId)
         startActivity(intent)
     }
 
