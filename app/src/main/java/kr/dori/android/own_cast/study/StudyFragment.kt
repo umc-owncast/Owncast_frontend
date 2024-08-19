@@ -259,3 +259,10 @@ class StudyFragment : Fragment() {
         Log.d("text","$actualPosition")
     }
 }
+
+
+
+
+
+
+

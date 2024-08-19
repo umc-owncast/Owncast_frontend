@@ -60,10 +60,12 @@ class SearchTwoAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Se
 
 
 
-    private fun formatTime(totalSeconds:Int): String {
-        val minutes = totalSeconds / 60
-        val seconds = totalSeconds % 60
-        return String.format("%d:%02d", minutes, seconds)
+        private fun formatTime(totalSeconds: Int): String {
+            val minutes = totalSeconds / 60
+            val seconds = totalSeconds % 60
+            return String.format("%d:%02d", minutes, seconds)
+        }
+
     }
 
 }

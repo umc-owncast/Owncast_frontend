@@ -83,6 +83,7 @@ class MainActivity : AppCompatActivity() {
         // binding.goKeywordIv.setOnClickListener {
         //     initKeyword()
         // }
+
         /*initBottomNavigation()*/
 
 
