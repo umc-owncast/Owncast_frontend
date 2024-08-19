@@ -53,9 +53,10 @@ class SearchTwoAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Se
                 mover.goAddCast(data.id)
             }
             binding.searchPlayIv.setOnClickListener {
-                mover.goPlayCast(dataList,data.id)
+                mover.goPlayCast(dataList, data.id)
             }
         }
+    }
 
 
 

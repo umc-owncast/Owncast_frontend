@@ -6,7 +6,6 @@
     android:background="#FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".MainActivity">
 
     <!-- 플레이리스트 테이블 -->
@@ -67,7 +66,7 @@
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView25"
+            app:layout_constraintEnd_toStartOf="@+id/activity_main_next_iv"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/play_table_pause" />
 
