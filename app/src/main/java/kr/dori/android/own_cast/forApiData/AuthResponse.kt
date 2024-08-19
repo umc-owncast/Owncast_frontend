@@ -90,8 +90,11 @@ data class CastInfo(
     @SerializedName(value = "sentences") val sentences: List<NewSentences>
     )
 
-
-
+data class GetBookmark(
+    @SerializedName(value = "castId") val castId: Long,
+    @SerializedName(value = "originalSentence") val originalSentence: String,
+    @SerializedName(value = "translatedSentence") val translatedSentence: String
+)
 
 
 // 3 계층

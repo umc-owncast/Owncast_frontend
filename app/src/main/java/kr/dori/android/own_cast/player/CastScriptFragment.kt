@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.databinding.FragmentCastScriptBinding
+import kr.dori.android.own_cast.forApiData.Bookmark
 import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
@@ -33,26 +34,36 @@ class CastScriptFragment(val currentCast: Cast) : Fragment() {
         binding = FragmentCastScriptBinding.inflate(inflater, container, false)
 
         val getScript = getRetrofit().create(Playlist::class.java)
+        val getBookmark = getRetrofit().create(Bookmark::class.java)
 
-        CoroutineScope(Dispatchers.IO).launch {
-            try{
-                val response = getScript.getCast(currentCast.castId)
-                if(response.isSuccessful){
-                    val castInfo = response.body()?.result
-                    withContext(Dispatchers.Main){
-                        Log.d("castSentence","${castInfo?.sentences}")
+        CoroutineScope(Dispatchers.IO).launch() {
+            launch {
+                try {
+                    val response = getScript.getCast(currentCast.castId)
+                    if (response.isSuccessful) {
+                        val castInfo = response.body()?.result
+                        withContext(Dispatchers.Main) {
+                            Log.d("castSentence", "${castInfo?.sentences}")
 
-                        adapter.dataList = castInfo?.sentences?:listOf()
-                        binding.scriptRv.adapter = adapter
-                        binding.scriptRv.layoutManager = LinearLayoutManager(context)
+                            adapter.dataList = castInfo?.sentences ?: listOf()
+                            binding.scriptRv.adapter = adapter
+                            binding.scriptRv.layoutManager = LinearLayoutManager(context)
+
+                        }
+                    } else {
 
                     }
-                }else{
 
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-
-            }catch (e: Exception){
-                e.printStackTrace()
+            }
+            launch {
+                try{
+                  //  val allBookmark = getBookmark.getBookmark(currentCast.castId)
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
             }
         }
 
