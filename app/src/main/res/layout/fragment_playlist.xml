@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlaylistFragment">
+    android:background="#FFFFFF"
+    tools:context=".playlist.PlaylistFragment">
 
 
     <TextView
@@ -62,6 +63,7 @@
             android:layout_marginStart="16dp"
             android:text="내 카테고리"
             android:textStyle="bold"
+            android:fontFamily="@font/pretendard_regular"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -93,7 +95,7 @@
             android:layout_height="170dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="6dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="81dp"
             android:src="@drawable/playlistfr_dummy_iv"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -106,7 +108,7 @@
             android:id="@+id/fragment_playlist_notsave_iv"
             android:layout_width="170dp"
             android:layout_height="170dp"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="81dp"
@@ -122,6 +124,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:fontFamily="@font/pretendard_regular"
             android:text="내가 만든 캐스트"
             app:layout_constraintStart_toStartOf="@+id/fragment_playlist_save_iv"
             app:layout_constraintTop_toBottomOf="@+id/fragment_playlist_save_iv" />
@@ -131,6 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:fontFamily="@font/pretendard_regular"
             android:text="담아온 캐스트"
             app:layout_constraintStart_toStartOf="@+id/fragment_playlist_notsave_iv"
             app:layout_constraintTop_toBottomOf="@+id/fragment_playlist_notsave_iv" />

@@ -39,6 +39,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
                     android:text="회원가입"
+                    android:fontFamily="@font/pretendard_regular"
                     android:textColor="@color/black"
                     android:textSize="@dimen/TitleLargeSize" />
 
@@ -120,6 +121,7 @@
                     android:text="이름"
                     android:textSize="18dp"
                     android:textColor="@color/black"
+                    android:fontFamily="@font/pretendard_regular"
                     android:layout_below="@+id/sub_text"
                     tools:ignore="ObsoleteLayoutParam" />
 
@@ -161,6 +163,7 @@
                     android:text="아이디"
                     android:textSize="18dp"
                     android:textColor="@color/black"
+                    android:fontFamily="@font/pretendard_regular"
                     android:layout_below="@+id/etName"
                     tools:ignore="ObsoleteLayoutParam" />
 
@@ -202,6 +205,7 @@
                     android:text="비밀번호"
                     android:textSize="18dp"
                     android:textColor="@color/black"
+                    android:fontFamily="@font/pretendard_regular"
                     android:layout_below="@+id/etId"
                     tools:ignore="ObsoleteLayoutParam" />
 
@@ -243,6 +247,7 @@
                     android:layout_height="wrap_content"
                     android:text="비밀번호 확인"
                     android:textSize="18dp"
+                    android:fontFamily="@font/pretendard_regular"
                     android:textColor="@color/black"
                     android:layout_below="@+id/etPassword"
                     tools:ignore="ObsoleteLayoutParam" />

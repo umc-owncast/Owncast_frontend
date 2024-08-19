@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 
 class SignupFirstActivity : ComponentActivity() {
@@ -14,6 +15,7 @@ class SignupFirstActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup_first)
+        enableEdgeToEdge()
 
         val backButton = findViewById<ImageView>(R.id.backButton)
         val nextButton = findViewById<Button>(R.id.btn_next)

@@ -43,6 +43,7 @@
                     android:paddingLeft="10dp"
                     android:text="관심사 설정"
                     android:textColor="@color/black"
+                    android:fontFamily="@font/pretendard_regular"
                     android:textSize="@dimen/TitleLargeSize" />
 
             </LinearLayout>

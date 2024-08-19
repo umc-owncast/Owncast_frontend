@@ -4,6 +4,7 @@ package kr.dori.android.own_cast
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -15,6 +16,7 @@ class AuthAfterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth_after)
+        enableEdgeToEdge()
 
         MainScope().launch {
             delay(2000) // 2 seconds delay

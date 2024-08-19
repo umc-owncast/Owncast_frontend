@@ -22,13 +22,35 @@
             android:backgroundTint="#E0E0E0"/>
 
         <ImageView
-            android:id="@+id/loading_inner"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:id="@+id/loading_inner_1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
-            android:paddingStart="20dp"
-            android:paddingTop="10dp"
             android:src="@drawable/loading_img_1" />
+
+        <ImageView
+            android:id="@+id/loading_inner_2"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:src="@drawable/loading_img_2"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/loading_inner_3"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:src="@drawable/loading_img_3"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/loading_inner_4"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_gravity="center"
+            android:src="@drawable/loading_img_4"
+            android:visibility="gone"/>
 
     </FrameLayout>
 

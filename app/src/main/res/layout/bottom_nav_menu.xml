@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_gravity="bottom"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/navi_home"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/bottom_navi_home_unfocused"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/navi_playlist"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/bottom_navi_playlist_unfocused"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/navi_study"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/bottom_navi_study_unfocused"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/navi_search"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/bottom_navi_search_unfocused"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/navi_profile"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/bottom_navi_profile_unfocused"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="#FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -23,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:text="오디오 수정"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -68,6 +70,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
+        android:fontFamily="@font/pretendard_regular"
         android:inputType="text"
         android:maxLength="20"
         android:text="원래 제목"
@@ -82,6 +85,7 @@
         android:layout_marginTop="18dp"
         android:text="카테고리"
         android:textSize="15sp"
+        android:fontFamily="@font/pretendard_regular"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/editTextText"
         app:layout_constraintTop_toBottomOf="@+id/editTextText" />
@@ -114,6 +118,7 @@
             android:text="비공개로 설정"
             android:textSize="15sp"
             android:textStyle="bold"
+            android:fontFamily="@font/pretendard_regular"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

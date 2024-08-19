@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 
 
@@ -20,6 +21,7 @@ class ChangeLanguageActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_language)
+        enableEdgeToEdge()
 
         val backButton = findViewById<ImageView>(R.id.backButton)
         nextButton = findViewById(R.id.btn_next)

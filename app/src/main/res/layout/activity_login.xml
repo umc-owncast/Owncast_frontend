@@ -36,6 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
+                android:fontFamily="@font/pretendard_regular"
                 android:text="로그인"
                 android:textColor="@color/black"
                 android:textSize="@dimen/TitleLargeSize" />
@@ -47,6 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="아이디"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="18dp"
             android:textColor="@color/black"
             android:layout_marginTop="30dp"/>
@@ -67,6 +69,7 @@
             android:layout_height="wrap_content"
             android:text="비밀번호"
             android:textSize="18dp"
+            android:fontFamily="@font/pretendard_regular"
             android:textColor="@color/black"
             android:layout_marginTop="20dp"/>
 

@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAuioscriptBinding
 
@@ -19,9 +20,9 @@ class KeyvpAudioScriptFragment:Fragment() {
     lateinit var binding: FragmentKeyvpAuioscriptBinding
     private var listener: KeywordBtnClickListener? = null
     private var speedList = ArrayList<TextView>()
-
+    private lateinit var sharedViewModel: KeywordViewModel
     private var curSpeed:Int = 2
-
+    private lateinit var adapter:KeyvpAudioScriptRVAdapter
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = parentFragment as? KeywordBtnClickListener
@@ -32,7 +33,7 @@ class KeyvpAudioScriptFragment:Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentKeyvpAuioscriptBinding.inflate(inflater, container, false)
-
+        sharedViewModel = ViewModelProvider(requireActivity()).get(KeywordViewModel::class.java)
 
 
         binding.keyAudScrNextIv.setOnClickListener {
@@ -41,7 +42,7 @@ class KeyvpAudioScriptFragment:Fragment() {
 
 
 
-
+        initRecyclerView()
         initSpeedUi()
         return binding.root
 
@@ -61,12 +62,12 @@ class KeyvpAudioScriptFragment:Fragment() {
     fun initSpeedUi(){
         binding.keyAudScrCurSpeedTv.setOnClickListener {
             binding.keyAudScrSpeedToolCl.visibility = View.VISIBLE
-            binding.keyAudScrCurSpeedTv.setBackgroundResource(R.drawable.ic_keyword_audscr_speedui_abled)
+            binding.keyAudScrCurSpeedTv.setTextColor(Color.parseColor("#8050F2"))//메인컬러
         }
         //x버튼 누르면 꺼지는거
         binding.keywordSpeedBackIv.setOnClickListener {
             binding.keyAudScrSpeedToolCl.visibility = View.GONE
-            binding.keyAudScrCurSpeedTv.setBackgroundResource(R.drawable.ic_keyword_audscr_speedui_disabled)
+            binding.keyAudScrCurSpeedTv.setTextColor(Color.parseColor("#00051F"))
 
         }
 
@@ -100,10 +101,23 @@ class KeyvpAudioScriptFragment:Fragment() {
                 binding.keyAudScrSpeedToolCl.visibility = View.GONE
 
 
+                binding.keyAudScrCurSpeedTv.setTextColor(Color.parseColor("#00051F"))
+                //버튼 ui도 색깔 바꾸기
+
             }
         }
 
         binding.keyAudScrSpeedToolCl.visibility = View.GONE
+
+    }
+
+    fun initRecyclerView(){
+
+        sharedViewModel.sentences.value?.let{
+            adapter = KeyvpAudioScriptRVAdapter(it)
+
+            binding.keyAudScriptRv.adapter = adapter
+        }
 
     }
 }

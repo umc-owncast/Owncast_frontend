@@ -10,12 +10,21 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 
 class SignupSecondActivity : ComponentActivity() {
+    private lateinit var viewModel: SignupViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup_second)
+        enableEdgeToEdge()
+
+        // ViewModel 초기화
+        viewModel = ViewModelProvider(this).get(SignupViewModel::class.java)
 
         val etNickName = findViewById<EditText>(R.id.etNickName)
         val nickNameError = findViewById<TextView>(R.id.NickName_error)
@@ -26,15 +35,16 @@ class SignupSecondActivity : ComponentActivity() {
         if (nickName != getString(R.string.signup_info_first)) {
             etNickName.setText(nickName)
             btnNext.isClickable = true
-            btnNext.backgroundTintList = ContextCompat.getColorStateList(this@SignupSecondActivity, R.color.main_purple)
+            btnNext.backgroundTintList = ContextCompat.getColorStateList(this, R.color.main_purple)
         }
 
+        // 뒤로 가기 버튼 클릭 시 이전 화면으로 이동
         findViewById<ImageView>(R.id.backButton).setOnClickListener {
             val intent = Intent(this, SignupFirstActivity::class.java)
             startActivity(intent)
         }
 
-        // 닉네임 입력 필드의 텍스트 변경을 감지하는 리스너 설정 -> 3가지 유효성 검사
+        // 닉네임 입력 필드에 텍스트 변경 리스너 설정
         etNickName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -42,42 +52,50 @@ class SignupSecondActivity : ComponentActivity() {
 
             override fun afterTextChanged(s: Editable?) {
                 nickName = s.toString()
-                var errorMessage: String? = null
 
-                // 닉네임 유효성 검사
-                errorMessage = isValidNickName_4(nickName)
+                // 동기적 유효성 검사 수행
+                val errorMessage = isValidNickName(nickName)
+
+                // 동기적 검사에서 에러가 없을 경우 비동기 유효성 검사 수행
                 if (errorMessage == null) {
-                    errorMessage = isValidNickName_3(nickName)
-                }
-                if (errorMessage == null) {
-                    errorMessage = isValidNickName_1(nickName)
-                }
-                if (errorMessage == null) {
-                    errorMessage = isValidNickName_2(nickName)
+                    viewModel.checkNickName(nickName)
                 }
 
-                // 오류 메시지가 있으면 화면에 표시하고 배경 변경
-                if (errorMessage != null) {
-                    nickNameError.text = errorMessage
-                    etNickName.setBackgroundResource(R.drawable.button_error)
-                    btnNext.isClickable = false
-                    btnNext.backgroundTintList = ContextCompat.getColorStateList(this@SignupSecondActivity, R.color.button_unclick)
-                } else {
-                    nickNameError.text = ""
-                    etNickName.setBackgroundResource(R.drawable.edittext_background)
-                    btnNext.isClickable = true
-                    btnNext.backgroundTintList = ContextCompat.getColorStateList(this@SignupSecondActivity, R.color.main_purple)
-                }
+                // ViewModel의 LiveData를 관찰하여 API 검증 결과 반영
+                viewModel.nickNameError.observe(this@SignupSecondActivity, Observer { apiError ->
+                    val finalError = errorMessage ?: apiError
+
+                    // 최종 에러 메시지에 따라 UI 업데이트
+                    if (finalError != null) {
+                        nickNameError.text = finalError
+                        etNickName.setBackgroundResource(R.drawable.button_error)
+                        btnNext.isClickable = false
+                        btnNext.backgroundTintList = ContextCompat.getColorStateList(this@SignupSecondActivity, R.color.button_unclick)
+                    } else {
+                        nickNameError.text = ""
+                        etNickName.setBackgroundResource(R.drawable.edittext_background)
+                        btnNext.isClickable = true
+                        btnNext.backgroundTintList = ContextCompat.getColorStateList(this@SignupSecondActivity, R.color.main_purple)
+                    }
+                })
             }
         })
 
-        findViewById<Button>(R.id.btn_next).setOnClickListener {
+        // 다음 버튼 클릭 시 다음 화면으로 이동
+        btnNext.setOnClickListener {
             if (etNickName.length() != 0) {
                 SignupData.nickname = nickName
                 val intent = Intent(this, SignupThirdActivity::class.java)
                 startActivity(intent)
             }
         }
+    }
+
+    // 닉네임 유효성 검사 종합 함수
+    private fun isValidNickName(nickName: String): String? {
+        return isValidNickName_4(nickName) ?:
+        isValidNickName_2(nickName) ?:
+        isValidNickName_1(nickName)
     }
 
     // 닉네임이 10자 이내인지 확인
@@ -93,16 +111,9 @@ class SignupSecondActivity : ComponentActivity() {
         return null
     }
 
-    // 기존 유저 닉네임인지 확인
-    private fun isValidNickName_3(nickName: String): String? {
-        val userNicks = listOf("111", "asdf") // 이곳에 서버 연결하기
-        if (nickName in userNicks) return "이미 존재하는 닉네임입니다"
-        return null
-    }
-
-    // 공백인지 확인
+    // 닉네임이 비어있는지 확인
     private fun isValidNickName_4(nickName: String): String? {
-        if (nickName.length == 0) return "닉네임을 입력하세요"
+        if (nickName.isEmpty()) return "닉네임을 입력하세요"
         return null
     }
 }

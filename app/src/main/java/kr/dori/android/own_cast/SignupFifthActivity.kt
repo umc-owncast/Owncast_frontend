@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 
 class SignupFifthActivity : ComponentActivity() {
 
@@ -26,6 +27,7 @@ class SignupFifthActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup_fifth)
+        enableEdgeToEdge()
 
         cardMovie = findViewById(R.id.card_movie)
         cardSport = findViewById(R.id.card_sport)

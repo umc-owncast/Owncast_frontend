@@ -50,6 +50,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/pretendard_regular"
                 android:text="(닉네임)님, 오늘도 즐거운 owncast 생활하세요!"
                 android:textSize="16sp"
                 android:textColor="@color/black"
@@ -81,6 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="언어 설정"
+                android:fontFamily="@font/pretendard_regular"
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"/>
@@ -142,6 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="관심사 설정"
+                android:fontFamily="@font/pretendard_regular"
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"/>
@@ -192,6 +195,7 @@
             android:layout_height="wrap_content"
             android:text="로그아웃"
             android:textSize="16sp"
+            android:fontFamily="@font/pretendard_regular"
             android:textStyle="bold"
             android:layout_marginTop="0dp"
             android:paddingBottom="15dp"
@@ -199,5 +203,45 @@
             android:textColor="@color/black"
             android:paddingStart="16dp"
             android:background="@color/white"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/logout_line_1"
+                android:layout_width="20dp"
+                android:layout_height="1dp"
+                android:background="@color/white"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
+            <View
+                android:id="@+id/logout_line_2"
+                android:layout_width="20dp"
+                android:layout_height="1dp"
+                android:background="@color/white"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/sign_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="회원탈퇴"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="0dp"
+            android:paddingBottom="15dp"
+            android:fontFamily="@font/pretendard_regular"
+            android:paddingTop="15dp"
+            android:textColor="@color/black"
+            android:paddingStart="16dp"
+            android:background="@color/white"/>
+
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

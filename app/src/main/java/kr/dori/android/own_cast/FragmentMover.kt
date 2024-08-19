@@ -1,5 +1,5 @@
 package kr.dori.android.own_cast
 
 interface FragmentMover{
-    fun playlistToCategory()
+    fun playlistToCategory(playlistId: Long, playlistName: String)
 }

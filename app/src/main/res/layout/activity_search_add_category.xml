@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".SearchAddCategoryActivity">
+    tools:context=".search.SearchAddCategoryActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="카테고리에 캐스트 추가"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -48,6 +49,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="20dp"
         android:text="내 카테고리"
+        android:fontFamily="@font/pretendard_regular"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout5" />

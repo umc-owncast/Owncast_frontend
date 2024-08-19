@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 
 
 class ChangeInterestActivity : ComponentActivity() {
@@ -26,6 +27,7 @@ class ChangeInterestActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_interest)
+        enableEdgeToEdge()
 
 
         cardMovie = findViewById(R.id.card_movie)
