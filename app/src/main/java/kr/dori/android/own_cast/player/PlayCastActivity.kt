@@ -47,11 +47,12 @@ class PlayCastActivity : AppCompatActivity() {
             // MainActivity에서 넘어온 경우 재생 상태를 유지
             if (intent.hasExtra("fromMainActivity") && intent.getBooleanExtra("fromMainActivity", false)) {
                 updateUI() // 현재 재생 상태에 맞게 UI 업데이트
-                    service?.getCastInfo(currentCast.castId) { url, audioLength ->
-                        url?.let {
-                            binding.endTv.text = formatTime(audioLength.toInt())
-                        }
+                service?.getCastInfo(currentCast.castId) { url, audioLength ->
+                    url?.let {
+                        binding.endTv.text = formatTime(audioLength.toInt())
                     }
+                }
+
             } else {
                 // 새로운 캐스트를 준비
                 stopCurrentAudio()
@@ -116,7 +117,9 @@ class PlayCastActivity : AppCompatActivity() {
                 service?.seekTo(seekBar?.progress?.times(1000L) ?: 0L)
                 //CastPlayerData.updatePlaybackPosition(service?.getCurrentPosition() ?: 0L)
                 binding.startTv.text = formatTime(service?.getCurrentPosition() ?: 0L)
-                    //  updateLyricsHighlight()
+
+                //  updateLyricsHighlight()
+
             }
         })
 
@@ -333,7 +336,8 @@ class PlayCastActivity : AppCompatActivity() {
         currentCast?.let {
             binding.seekBar.max = service?.getDuration()?.toInt()?.div(1000) ?: 0
             binding.seekBar.progress = (service?.getCurrentPosition()?.div(1000))?.toInt() ?: 0
-          //  binding.seekbar
+
+            //  binding.seekbar
 
             if (service?.isPlaying() == true) {
                 binding.playCastPlayIv.visibility = View.GONE
@@ -411,15 +415,17 @@ class PlayCastActivity : AppCompatActivity() {
             }
         }
     }
-/*
-    private fun updateLyricsHighlight() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
-        fragment?.let {
-            (it.binding.scriptRv.adapter as? ScriptAdapter)?.updateCurrentTime(service?.getCurrentPosition() ?: 0L)
-        }
-    }
 
- */
+    /*
+        private fun updateLyricsHighlight() {
+            val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
+            fragment?.let {
+                (it.binding.scriptRv.adapter as? ScriptAdapter)?.updateCurrentTime(service?.getCurrentPosition() ?: 0L)
+            }
+        }
+
+     */
+
 
     // Fragment 전환 함수들
     private fun audioToScript() {
@@ -571,5 +577,4 @@ class PlayCastActivity : AppCompatActivity() {
         service?.clearLoop()  // 반복 구간을 해제하는 메소드
     }
 }
-
 

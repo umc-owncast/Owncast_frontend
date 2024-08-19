@@ -18,7 +18,8 @@ import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.player.CastWithPlaylistId
 import retrofit2.create
 
-class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<kr.dori.android.own_cast.player.ScriptAdapter.Holder>() {
+
+class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<ScriptAdapter.Holder>() {
     var dataList: List<NewSentences> = emptyList() //여기에 센텐스 아이디도 담겨있음
     var bookmarkList: List<String> = emptyList()
 
@@ -61,7 +62,6 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
         val data = dataList[position]
         holder.bind(data, position == currentHighlightedPosition, position == repeatPosition)
     }
-
 
     override fun getItemCount(): Int = dataList.size
 

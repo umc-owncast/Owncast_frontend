@@ -1,8 +1,12 @@
 package kr.dori.android.own_cast
 
 import android.app.Activity
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -12,7 +16,22 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.ActivityMainBinding
+import kr.dori.android.own_cast.forApiData.AuthResponse
+
+import kr.dori.android.own_cast.forApiData.CastHomeDTO
+import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.forApiData.PostPlaylist
+import kr.dori.android.own_cast.forApiData.UserPostPlaylist
+import kr.dori.android.own_cast.forApiData.getRetrofit
+import kr.dori.android.own_cast.keyword.KeywordAppData
+import kr.dori.android.own_cast.player.BackgroundPlayService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
 import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.playlist.PlaylistFragment
 import kr.dori.android.own_cast.search.SearchFragment
@@ -24,30 +43,72 @@ class MainActivity : AppCompatActivity() {
 
     private var playlistTableVisible: Boolean = false // playlistTable의 현재 상태를 저장하는 변수
 
+    private var service: BackgroundPlayService? = null
+    private var isBound = false
+
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            val binder = service as BackgroundPlayService.LocalBinder
+            this@MainActivity.service = binder.getService()
+            isBound = true
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            service = null
+            isBound = false
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val intent = Intent(this, BackgroundPlayService::class.java)
+        bindService(intent, connection, Context.BIND_AUTO_CREATE)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (isBound) {
+            unbindService(connection)
+            isBound = false
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 플레이리스트 관련 코드
-        playCastActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        // 주석 처리된 부분 - 키워드 이동
+        // binding.goKeywordIv.setOnClickListener {
+        //     initKeyword()
+        // }
+        initBottomNavigation()
+
+
+        //play table call back process
+        playCastActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
+
             handleActivityResult(result)
         }
 
         binding.activityMainRealClickConstraint.setOnClickListener {
             val intent = Intent(this, PlayCastActivity::class.java)
+            intent.putExtra("fromMainActivity", true)  // MainActivity에서 넘어왔음을 표시
             playCastActivityResultLauncher.launch(intent)
         }
 
+
         binding.activityMainPauseIv.setOnClickListener {
-            binding.activityMainPauseIv.visibility = View.GONE
-            binding.activityMainPlayIv.visibility = View.VISIBLE
+            pauseAudio()
         }
 
         binding.activityMainPlayIv.setOnClickListener {
-            binding.activityMainPauseIv.visibility = View.VISIBLE
-            binding.activityMainPlayIv.visibility = View.GONE
+            playAudio()
+        }
+
+        binding.activityMainNextIv.setOnClickListener {
+            playNextAudio()
         }
 
         if (SignupData.profile_detail_interest == "완료") {
@@ -128,6 +189,7 @@ class MainActivity : AppCompatActivity() {
             StudyFragment::class.java -> studyButton.setImageResource(R.drawable.bottom_navi_study_focused)
             SearchFragment::class.java -> searchButton.setImageResource(R.drawable.bottom_navi_search_focused)
             ProfileFragment::class.java -> profileButton.setImageResource(R.drawable.bottom_navi_profile_focused)
+
         }
     }
 
@@ -173,4 +235,34 @@ class MainActivity : AppCompatActivity() {
             binding.playlistTable.visibility = View.GONE
         }
     }
+
+    private fun pauseAudio() {
+        if (service != null && isBound) {
+            service?.pauseAudio()
+            binding.activityMainPauseIv.visibility = View.GONE
+            binding.activityMainPlayIv.visibility = View.VISIBLE
+        }
+    }
+
+    private fun playAudio(){
+        if(service != null && isBound){
+            service?.resumeAudio()
+            binding.activityMainPauseIv.visibility = View.VISIBLE
+            binding.activityMainPlayIv.visibility = View.GONE
+        }
+    }
+
+    private fun playNextAudio() {
+        if (service != null && isBound) {
+            val nextCast = CastPlayerData.playNext()
+            nextCast?.let {
+                service?.playAudio(it.castTitle)
+                binding.activityMainPauseIv.visibility = View.VISIBLE
+                binding.activityMainPlayIv.visibility = View.GONE
+            }
+        }
+    }
+
+
 }
+

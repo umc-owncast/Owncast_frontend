@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kr.dori.android.own_cast.player.BackgroundPlayService
 
 
 class SplashActivity : AppCompatActivity() {
@@ -34,10 +35,35 @@ class SplashActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
         }
 
-        // 회원가입 버튼 클릭 이벤트 설정
-        findViewById<Button>(R.id.signUpBtn).setOnClickListener {
-            startActivity(Intent(this, SignupFirstActivity::class.java))
-        }
+        // 화면전환
+        prepareForActivityTransition()
+
+        // BackgroundPlayService를 시작합니다.
+        val serviceIntent = Intent(this, BackgroundPlayService::class.java)
+        startService(serviceIntent) // 서비스가 없으면 생성, 있으면 유지됩니다.
+
+    }
+
+    private fun showTextViewAndImageView() {
+        // 1초 후에 텍스트 뷰를 숨기고 이미지 뷰를 표시
+        Handler(Looper.getMainLooper()).postDelayed({
+            textView.visibility = View.GONE
+            imageView.visibility = View.VISIBLE
+
+            hideMainSectionAndSubSection()
+            moveImageViewOffScreen()
+
+        }, 2000)
+    }
+
+    private fun hideMainSectionAndSubSection() {
+
+        // 1초 후에 텍스트 뷰를 숨기고 이미지 뷰를 표시
+        Handler(Looper.getMainLooper()).postDelayed({
+            mainSection.visibility = View.GONE
+            subSection.visibility = View.GONE
+
+        }, 2000)
     }
 
     private fun moveImageViewOffScreen() {

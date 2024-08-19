@@ -26,10 +26,12 @@ import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.FragmentPlaylistBinding
 import kr.dori.android.own_cast.editAudio.EditAudio
+import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.GetAllPlaylist
 import kr.dori.android.own_cast.forApiData.Playlist
 
 import kr.dori.android.own_cast.getRetrofit
+import kr.dori.android.own_cast.keyword.AddCategoryDialog
 import kr.dori.android.own_cast.player.CastWithPlaylistId
 import kr.dori.android.own_cast.player.PlayCastActivity
 
@@ -218,6 +220,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
     }
 
     override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
+
         // 현재 서비스가 재생 중인지 확인하고 중지
         //val currentService = getCurrentServiceInstance()
       //  service?.stopAudio()
@@ -227,7 +230,6 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
         activityResultLauncher.launch(intent)
     }
-
 
 
     override fun getCategoryData(position: Long): GetAllPlaylist {
@@ -278,7 +280,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 
     }
 
-    override fun ToEditAudio() {
+    override fun ToEditAudio(id: Long, playlistId:Long) {
         TODO("Not yet implemented")
 
     }

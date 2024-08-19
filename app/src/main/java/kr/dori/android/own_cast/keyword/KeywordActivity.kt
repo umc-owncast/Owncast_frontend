@@ -8,6 +8,8 @@ import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 
+import androidx.activity.enableEdgeToEdge
+
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -55,8 +57,7 @@ class KeywordActivity : AppCompatActivity() {
 
         sharedViewModel = ViewModelProvider(this).get(KeywordViewModel::class.java)
 
-
-
+        enableEdgeToEdge()
 
         initCategoryInViewModel()
         if(savedInstanceState == null&&searchText!=null){//연관 키워드를 클릭한 경우

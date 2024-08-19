@@ -3,6 +3,8 @@ package kr.dori.android.own_cast.forApiData
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serial
+
+
 import java.io.Serializable
 
 //자신이 필요한 수신 데이터 계층 쓰기
@@ -29,11 +31,18 @@ data class AuthResponse<T> (
     @SerializedName(value = "result") val result: T? = null
 )
 
+data class ErrorResponse (
+    @SerializedName(value = "isSuccess") val isSuccess: Boolean,
+    @SerializedName(value = "code") val code: String,
+    @SerializedName(value = "message") val message: String?
+)
+
 // 2 계층
 data class CastHomeDTO(//검색 홈 API,
     @SerializedName(value = "id") val id: Long,
-    @SerializedName(value = "audioLength") val audioLength: String,
     @SerializedName(value = "title") val title: String,
+    @SerializedName(value = "imagePath") val imagePath: String,
+    @SerializedName(value = "audioLength") val audioLength: String,
     @SerializedName(value = "memberName") val memberName : String,
     @SerializedName(value = "playlistName") val playlistName : String
 )
@@ -70,15 +79,26 @@ data class GetUserPlaylist(
 
 data class PostCastForResponse(
     @SerializedName(value = "id") val id: Long,
+    @SerializedName(value = "fileUrl") val fileUrl: String,
     @SerializedName(value = "sentences") val sentences: List<Sentences>
 )
 
+data class PostOtherPlaylist(
+    @SerializedName(value = "castPlaylistId") val castPlaylistId: Long,
+    @SerializedName(value = "memberId") val memberId: Long
+)
 
 data class GetAllPlaylist(
     val name: String,
     val imagePath: String,
     val playlistId: Long,
     val totalCast: Int
+):Serializable
+
+data class SetPlaylist(
+    val name: String,
+    val imagePath: String,
+    val playlistId: Long
 )
 
 data class CastInfo(
@@ -102,6 +122,7 @@ data class GetBookmark(
 
 data class Cast(
     @SerializedName(value = "castId") val castId: Long,
+    @SerializedName(value = "playlistId")val playlistId: Long,
     @SerializedName(value = "castTitle") val castTitle: String,
     @SerializedName(value = "isPublic") val isPublic: Boolean,
     @SerializedName(value = "castCreator") val castCreator: String,

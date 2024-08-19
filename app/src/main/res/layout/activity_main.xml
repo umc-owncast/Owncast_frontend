@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="#FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -71,7 +72,7 @@
             app:srcCompat="@drawable/play_table_pause" />
 
         <ImageView
-            android:id="@+id/imageView25"
+            android:id="@+id/activity_main_next_iv"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="24dp"
@@ -87,7 +88,7 @@
             android:layout_marginEnd="8dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView25"
+            app:layout_constraintEnd_toStartOf="@+id/activity_main_next_iv"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/activity_main_play" />
 

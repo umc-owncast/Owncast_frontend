@@ -2,6 +2,7 @@ package kr.dori.android.own_cast.playlist
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -11,11 +12,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.FragmentMover
+import kr.dori.android.own_cast.data.CastPlayerData
+import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.PlaylistCategoryItemBinding
+import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.GetAllPlaylist
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.player.CastWithPlaylistId
+import retrofit2.Response
 
 class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, private val activityMover: ActivityMover, private val fragmentMover: FragmentMover) : RecyclerView.Adapter<PlaylistCategoryAdapter.Holder>() {
 
@@ -86,6 +91,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                         withContext(Dispatchers.Main) {
                             playlistInfo?.let {
                                 val castList = it.castList.toMutableList()
+
                                 val castListWithPlaylistId = castList.map{
                                     cast ->
                                     CastWithPlaylistId(

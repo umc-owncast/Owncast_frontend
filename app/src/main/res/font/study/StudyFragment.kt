@@ -9,10 +9,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+<<<<<<<< HEAD:app/src/main/res/font/study/StudyFragment.kt
+========
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+>>>>>>>> 02ba2e804e9f150bfb670f917a0aa454078a7e32:app/src/main/java/kr/dori/android/own_cast/study/StudyFragment.kt
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.data.cardData
 import kr.dori.android.own_cast.databinding.FragmentStudyBinding
+import kr.dori.android.own_cast.forApiData.Playlist
+import kr.dori.android.own_cast.getRetrofit
 
 class StudyFragment : Fragment() {
 
@@ -54,6 +62,26 @@ class StudyFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        CoroutineScope(Dispatchers.IO).launch{
+            val getAllPlaylist = getRetrofit().create(Playlist::class.java)
+
+            try{
+                val response = getAllPlaylist.getAllPlaylist()
+                if(response.isSuccessful){
+                    var allPlaylist = response.body()?.result
+
+                }else{
+
+                }
+
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
+
+        }
+
+
 
         binding = FragmentStudyBinding.inflate(inflater, container, false)
         studyAdapter.dataList = dummyData
