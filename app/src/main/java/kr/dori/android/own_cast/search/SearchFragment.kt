@@ -2,6 +2,7 @@ package kr.dori.android.own_cast.search
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -20,6 +21,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -217,6 +219,20 @@ class SearchFragment : Fragment(), SearchMover {
             titleTv.text = castHomeDTO[i].title
             categoryTv.text = "${castHomeDTO[i].memberName}-${castHomeDTO[i].playlistName}"
             durationTv.text = formatTime(castHomeDTO[i].audioLength.toInt())
+
+
+            if (castHomeDTO[i].imagePath.startsWith("http")) {
+                // URL로부터 이미지 로드 (Glide 사용)
+                Glide.with(itemView.context)
+                    .load(castHomeDTO[i].imagePath)
+                    .into(thumbButton)
+            } else {
+                // 로컬 파일에서 이미지 로드
+                val bitmap = BitmapFactory.decodeFile(castHomeDTO[i].imagePath)
+                thumbButton.setImageBitmap(bitmap)
+            }
+
+
             thumbButton.setOnClickListener {
                 goPlayCast(castHomeDTO, castHomeDTO[i].id)
             }

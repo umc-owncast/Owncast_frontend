@@ -19,7 +19,7 @@ class SearchTwoAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Se
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val data = dataList[position]
-        holder.setText(data)
+        holder.setText(data, holder)
     }
 
     override fun getItemCount(): Int {
@@ -33,18 +33,18 @@ class SearchTwoAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Se
 
         }
 
-        fun setText(data: CastHomeDTO) {
-            /*val imagePath = dat
+        fun setText(data: CastHomeDTO, holder: Holder) {
+            val imagePath = data.imagePath
             if (data.imagePath.startsWith("http")) {
                 // URL로부터 이미지 로드 (Glide 사용)
                 Glide.with(holder.itemView.context)
                     .load(data.imagePath)
-                    .into(binding.categoryImg)
+                    .into(binding.searchIv)
             } else {
                 // 로컬 파일에서 이미지 로드
                 val bitmap = BitmapFactory.decodeFile(data.imagePath)
                 binding.searchIv.setImageBitmap(bitmap)
-            }*/
+            }
             binding.searchTitleTv.text = data.title
             binding.searchCreator.text = "${data.memberName}-${data.playlistName}"
             binding.searchDurationTv.text = formatTime(data.audioLength.toInt())

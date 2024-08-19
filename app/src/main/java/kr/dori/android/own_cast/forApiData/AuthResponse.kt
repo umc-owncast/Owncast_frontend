@@ -44,8 +44,9 @@ data class ErrorResponse (
 // 2 계층
 data class CastHomeDTO(//검색 홈 API,
     @SerializedName(value = "id") val id: Long,
-    @SerializedName(value = "audioLength") val audioLength: String,
     @SerializedName(value = "title") val title: String,
+    @SerializedName(value = "imagePath") val imagePath: String,
+    @SerializedName(value = "audioLength") val audioLength: String,
     @SerializedName(value = "memberName") val memberName : String,
     @SerializedName(value = "playlistName") val playlistName : String
 )
