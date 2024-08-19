@@ -14,11 +14,17 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kr.dori.android.own_cast.databinding.FragmentHomeBinding
+import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.keyword.KeywordActivity
 import kr.dori.android.own_cast.keyword.KeywordAppData
 
 import kr.dori.android.own_cast.keyword.KeywordData
+import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
 import kr.dori.android.own_cast.keyword.KeywordViewModel
 import kr.dori.android.own_cast.playlist.SharedViewModel
 
@@ -36,16 +42,17 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-
-
-
-
         //데이터 설정
+        if(SignupData.interest!=null){
+            binding.mainInterstTv.text = SignupData.interest
+            binding.homefrKeywordTopicTv.text = SignupData.interest
+        }
         if (SignupData.nickname!=null) binding.homefrFavorTv.text ="${SignupData.nickname}님,\n어떤걸 좋아하세요?"
-
         //밑줄 추가하는 함수
         initTextUi()
-        initKeyword()
+        if(KeywordAppData.detailTopic.isNullOrEmpty()){
+            initData()
+        }
 
 
         binding.insertKeyw.setOnClickListener {//검색창 이동
@@ -106,5 +113,34 @@ class HomeFragment : Fragment() {
         content = SpannableString(binding.homefrKeywordTopicTv.getText().toString());
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
         binding.homefrKeywordTopicTv.text = content
+    }
+
+    fun initData(){
+        val getKeyword = getRetrofit().create(CastInterface::class.java)
+        val dialog = KeywordLoadingDialog(requireContext(),"데이터를 불러오고 있어요")
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.show()
+        CoroutineScope(Dispatchers.IO).launch() {
+            launch {
+
+                try {
+                    dialog.dismiss()
+                    val response = getKeyword.getKeywordHome()
+                    if (response.isSuccessful) {
+                        response.body()?.result?.let{
+                            KeywordAppData.updateDetailTopic(it)
+                        }
+                        initKeyword()
+                        dialog.dismiss()
+
+                    } else {
+
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 }

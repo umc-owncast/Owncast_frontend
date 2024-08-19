@@ -82,6 +82,7 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
             binding.keywordAudEt.visibility = View.GONE
             binding.keAudsetUnderline.visibility = View.GONE
             binding.keywordAudiosetSb.visibility = View.GONE
+            binding.keyVoiceLenghtTv.visibility = View.GONE
         }
         /////////////////////////////////////
         initVoiceList()//사용자의 언어-발음에 따라 dropdownmenu변경

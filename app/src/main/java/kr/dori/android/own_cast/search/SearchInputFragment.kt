@@ -48,6 +48,11 @@ class SearchInputFragment : Fragment() {
 
         binding.searchInputSearchIv.setOnClickListener {
             val output = SearchOutputFragment()
+
+            var bundle = Bundle()
+
+            bundle.putString("detail_interest",binding.fragmentSearchInputTextTv.text.toString())
+            output.arguments = bundle
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main_frm, output)
                 .addToBackStack(null) // 백 스택에 추가

@@ -138,7 +138,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
                     Log.d("apiTest-CreateCast", "코루틴도 성공하였음")
                     sharedViewModel.setSentences(it.result!!.sentences)//viewModel로 받아온 정보 넘기기
                     sharedViewModel.setCastId(it.result!!.id)
-
+                    sharedViewModel.setUrl(it.result!!.fileUrl)
 
                     if(binding.keywordAudiosetVp.currentItem==0){
                         if(alreadyVisit){//이미 생성된 프래그먼트일때는 생명주기때문에 여기서 실행해줘야함
@@ -168,11 +168,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
                 Log.d("apiTest-CreateCast", "저장성공: ${response.body()?.result}")
                 response.body()
             } else {
-                Log.d("apiTest-CreateCast", response.toString())
-                Log.d("apiTest-CreateCast", "연결실패 코드: ${response.code()}")
-
-                Log.d("apiTest-CreateCast", "오류 이유: ${response.body()?.message}")
-
+                Log.d("apiTest-CreateCast", "연결실패 에러바디: ${response.errorBody().toString()}")
                 null
             }
         } catch (e: Exception) {
@@ -204,6 +200,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
                     Log.d("apiTest-CreateCast", "코루틴도 성공하였음")
                     sharedViewModel.setSentences(it.result!!.sentences)//viewModel로 받아온 정보 넘기기
                     sharedViewModel.setCastId(it.result!!.id)
+                    sharedViewModel.setUrl(it.result!!.fileUrl)
                     if(binding.keywordAudiosetVp.currentItem==0){
                         if(alreadyVisit){//이미 생성된 프래그먼트일때는 생명주기때문에 여기서 실행해줘야함
                             keywordAdapter.getFragment().initPlayer()

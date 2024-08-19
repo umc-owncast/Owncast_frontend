@@ -120,7 +120,7 @@ class KeyvpAudioScriptFragment:Fragment() {
     fun initPlayer(){//새로 만들어올떄만 필요
         binding.keyAudScriptSb.progress=0
 
-        steamingUrl = "https://owncast-s3.s3.ap-northeast-2.amazonaws.com/07918ecb-464a-44fa-8bcd-5ab0025d964d"
+        steamingUrl = sharedViewModel.streamingUrl
         //deprecated 됐다길래;
         val mediaItem = androidx.media3.common.MediaItem.fromUri(steamingUrl)
         player.setMediaItem(mediaItem)

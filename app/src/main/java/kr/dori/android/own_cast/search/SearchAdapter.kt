@@ -5,9 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.ItemSearchFrBinding
+import kr.dori.android.own_cast.forApiData.CastHomeDTO
 
 class SearchAdapter(private val mover: SearchMover) : RecyclerView.Adapter<SearchAdapter.Holder>() {
-    var dataList: MutableList<SongData> = mutableListOf()
+    var dataList: List<CastHomeDTO> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val binding = ItemSearchFrBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -28,23 +29,39 @@ class SearchAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Searc
     inner class Holder(val binding: ItemSearchFrBinding):RecyclerView.ViewHolder(binding.root){
 
         init{
-            binding.itemThumbIv.setOnClickListener {
-                mover.goPlayCast()
-            }
-            binding.searchfrItemAddCategoryOffIv.setOnClickListener {
-                /*binding.searchfrItemAddCategoryOffIv.visibility = View.GONE
-                binding.searchfrItemAddCategoryOnIv.visibility = View.VISIBLE*/
-                mover.goAddCast()
-            }
+
+
 
 
         }
 
-        fun setData(data: SongData){
-            binding.itemThumbIv.setImageResource(data.Img)
+        fun setData(data: CastHomeDTO){
+            /*val imagePath = dat
+            if (data.imagePath.startsWith("http")) {
+                // URL로부터 이미지 로드 (Glide 사용)
+                Glide.with(holder.itemView.context)
+                    .load(data.imagePath)
+                    .into(binding.categoryImg)
+            } else {
+                // 로컬 파일에서 이미지 로드
+                val bitmap = BitmapFactory.decodeFile(data.imagePath)
+                binding.searchIv.setImageBitmap(bitmap)
+            }*/
             binding.searchfrItemTitleTv.text = data.title
-            binding.searchfrItemCategoryTv.text = "${data.creator}-${data.category}"
-            binding.searchfrItemDurationTv.text = "${data.duration/60}:${String.format("%02d", data.duration % 60)}"
+            binding.searchfrItemCategoryTv.text = "${data.memberName}-${data.playlistName}"
+            binding.searchfrItemDurationTv.text = formatTime(data.audioLength.toInt())
+
+            binding.searchfrItemAddCategoryOffIv.setOnClickListener {
+                mover.goAddCast(data.id)
+            }
+            binding.itemThumbIv.setOnClickListener {
+                mover.goPlayCast(dataList,data.id)
+            }
+        }
+        private fun formatTime(totalSeconds:Int): String {
+            val minutes = totalSeconds / 60
+            val seconds = totalSeconds % 60
+            return String.format("%d:%02d", minutes, seconds)
         }
 
     }

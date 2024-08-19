@@ -21,6 +21,8 @@ class KeywordViewModel(application: Application) : AndroidViewModel(application)
     private val _postCastScript = MutableLiveData<PostCastByScript>()//스크립트로 생성했을 때 데이터
     private val _getPlayList = MutableLiveData<MutableList<PlaylistText>>(mutableListOf())
 
+    private var _streamingUrl :String = ""
+
 
 
 
@@ -35,6 +37,8 @@ class KeywordViewModel(application: Application) : AndroidViewModel(application)
 
 
     val getPlayList : LiveData<MutableList<PlaylistText>> get() = _getPlayList
+
+    val streamingUrl : String get() = _streamingUrl
 
 
     /*-----------------------setter----------------------*/
@@ -64,9 +68,11 @@ class KeywordViewModel(application: Application) : AndroidViewModel(application)
 
     fun addGetPlayList(data: PlaylistText){
         _getPlayList.value?.add(data)
-
     }
 
+    fun setUrl(data :String){
+        _streamingUrl = data
+    }
 
 }
 data class PlaylistText(

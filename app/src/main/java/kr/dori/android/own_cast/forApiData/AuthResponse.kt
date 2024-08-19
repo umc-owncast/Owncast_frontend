@@ -35,6 +35,12 @@ data class AuthResponse<T> (
     @SerializedName(value = "result") val result: T? = null
 )
 
+data class ErrorResponse (
+    @SerializedName(value = "isSuccess") val isSuccess: Boolean,
+    @SerializedName(value = "code") val code: String,
+    @SerializedName(value = "message") val message: String?
+)
+
 // 2 계층
 data class CastHomeDTO(//검색 홈 API,
     @SerializedName(value = "id") val id: Long,
@@ -76,7 +82,13 @@ data class GetUserPlaylist(
 
 data class PostCastForResponse(
     @SerializedName(value = "id") val id: Long,
+    @SerializedName(value = "fileUrl") val fileUrl: String,
     @SerializedName(value = "sentences") val sentences: List<Sentences>
+)
+
+data class PostOtherPlaylist(
+    @SerializedName(value = "castPlaylistId") val castPlaylistId: Long,
+    @SerializedName(value = "memberId") val memberId: Long
 )
 
 
@@ -85,7 +97,7 @@ data class GetAllPlaylist(
     val imagePath: String,
     val playlistId: Long,
     val totalCast: Int
-)
+):Serializable
 
 data class CastInfo(
     @SerializedName(value = "id") val id: Long,

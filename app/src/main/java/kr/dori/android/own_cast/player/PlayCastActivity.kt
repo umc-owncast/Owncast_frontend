@@ -178,7 +178,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         // Fragment 전환 부분 추가
         binding.activityPlayCastScriptOffIv.setOnClickListener {
-            audioToScript()
+            audioToScript()//
         }
 
         binding.activityPlayCastPlaylistOffIv.setOnClickListener {

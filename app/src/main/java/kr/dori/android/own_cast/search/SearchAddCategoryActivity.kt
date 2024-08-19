@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.ActivitySearchAddCategoryBinding
+import kr.dori.android.own_cast.forApiData.CastHomeDTO
+import kr.dori.android.own_cast.forApiData.GetAllPlaylist
 import kr.dori.android.own_cast.playlist.AddCategoryAdapter
 
 class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
@@ -17,26 +19,25 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
 
     private lateinit var binding: ActivitySearchAddCategoryBinding
     private var searchadapter = AddCategoryAdapter(this)
-    private val dummyData = mutableListOf(
-        SongData("Cast1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
-        SongData("Cast2", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "monkey"),
-        SongData("Cast3", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
-        SongData("Cast4", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
-        SongData("Cast5", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug"),
-        SongData("Cast1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
-        SongData("Cast2", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "monkey"),
-        SongData("Cast3", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
-        SongData("Cast4", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
-        SongData("Cast5", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug")
-    )
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivitySearchAddCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        searchadapter.dataList = dummyData
+        val playlist = intent.getSerializableExtra("categoryList") as? ArrayList<GetAllPlaylist>
+        val id = intent.getLongExtra("id",-1)
+        playlist?.let{
+            searchadapter.dataList = it
+        }
+        id?.let {
+            searchadapter.id = it
+        }
+        if(playlist == null){
+            Toast.makeText(this,"잠시후 다시 시도해주세요",Toast.LENGTH_SHORT)
+        }
         binding.activitySearchAddCategoryRv.adapter = searchadapter
         binding.activitySearchAddCategoryRv.layoutManager = LinearLayoutManager(this)
         binding.activitySearchAddCategoryExitIv.setOnClickListener {
@@ -44,11 +45,11 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
         }
     }
 
-    override fun goPlayCast() {
+    override fun goPlayCast(list: List<CastHomeDTO>, id:Long) {
         TODO("Not yet implemented")
     }
 
-    override fun goAddCast() {
+    override fun goAddCast(id:Long) {
         TODO("Not yet implemented")
     }
 

@@ -1,9 +1,11 @@
 package kr.dori.android.own_cast.search
 
-interface SearchMover {
-    fun goPlayCast()
+import kr.dori.android.own_cast.forApiData.CastHomeDTO
 
-    fun goAddCast()
+interface SearchMover {
+    fun goPlayCast(list: List<CastHomeDTO>, id:Long)
+
+    fun goAddCast(id:Long)
 
     fun backSearch()
 }
