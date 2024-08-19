@@ -1,3 +1,5 @@
+package kr.dori.android.own_cast.player
+
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +17,7 @@ import kr.dori.android.own_cast.forApiData.NewSentences
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.player.CastWithPlaylistId
 import retrofit2.create
+
 
 class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<ScriptAdapter.Holder>() {
     var dataList: List<NewSentences> = emptyList() //여기에 센텐스 아이디도 담겨있음

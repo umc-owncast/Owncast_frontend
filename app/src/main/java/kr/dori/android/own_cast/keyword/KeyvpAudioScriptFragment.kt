@@ -33,7 +33,6 @@ class KeyvpAudioScriptFragment:Fragment() {
     private lateinit var adapter:KeyvpAudioScriptRVAdapter
 
 
-
     /*-------exoPlayer용 변수--------------------*/
     lateinit var player: ExoPlayer
     private lateinit var steamingUrl : String
@@ -42,7 +41,6 @@ class KeyvpAudioScriptFragment:Fragment() {
     private var mills: Float =0f
 
     /*---------------------------*/
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -67,7 +65,6 @@ class KeyvpAudioScriptFragment:Fragment() {
                 listener?.createCastByKeyword(sharedViewModel.postCastKeyword.value!!)
             }
         }
-
 
 
         player = ExoPlayer.Builder(requireContext()).build()
@@ -294,11 +291,9 @@ class KeyvpAudioScriptFragment:Fragment() {
             binding.keyAudScriptRv.adapter = adapter
         }
 
-
     }
 
     fun updateLyricsHighlight(){
-
 
     }
 }

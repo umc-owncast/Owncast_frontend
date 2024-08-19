@@ -11,13 +11,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ChangePasswordActivity : ComponentActivity() {
 
-    // UI 요소 클래스 레벨 변수로 선언
     private lateinit var etPassword: EditText
     private lateinit var etNewPs: EditText
     private lateinit var etNewPsConfirm: EditText
@@ -28,6 +31,7 @@ class ChangePasswordActivity : ComponentActivity() {
     private lateinit var passwordError: TextView
     private lateinit var newPsError: TextView
     private lateinit var newPsConfirmError: TextView
+    private lateinit var newPs : String
 
     private var result_1 : Int = 0
     private var result_2 : Int = 0
@@ -36,8 +40,8 @@ class ChangePasswordActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_password)
+        enableEdgeToEdge()
 
-        // UI 요소 초기화
         etPassword = findViewById(R.id.etPassword)
         etNewPs = findViewById(R.id.etNewPs)
         etNewPsConfirm = findViewById(R.id.etNewPsConfirm)
@@ -53,7 +57,6 @@ class ChangePasswordActivity : ComponentActivity() {
         result_2 = 0
         result_3 = 0
 
-        // 비밀번호 필드의 X 버튼 처리
         clearPasswordButton.setOnClickListener {
             etPassword.text.clear()
             clearPasswordButton.isVisible = false
@@ -74,14 +77,44 @@ class ChangePasswordActivity : ComponentActivity() {
         }
 
         btnNext.setOnClickListener {
-            SignupData.password = etNewPs.toString()
+            SignupData.password = newPs
 
-            Toast.makeText(this, "비밀번호 변경 완료", Toast.LENGTH_SHORT).show()
+            // 비밀번호 업데이트 요청 데이터 클래스 생성
+            val updatePasswordRequest = UpdatePasswordRequest(password = SignupData.password)
 
-            SignupData.profile_detail_interest = "완료"
-            val intent = Intent(this, MainActivity ::class.java)
-            startActivity(intent)
+            // 사용자 토큰 가져오기
+            val userToken = "Bearer ${SignupData.token}"
+
+            // 서버에 비밀번호 업데이트 요청
+            RetrofitClient.instance.updatePassword(userToken, updatePasswordRequest).enqueue(object :
+                Callback<UpdatePasswordResponse> {
+                override fun onResponse(call: Call<UpdatePasswordResponse>, response: Response<UpdatePasswordResponse>) {
+                    if (response.isSuccessful) {
+                        val updatePasswordResponse = response.body()
+                        if (updatePasswordResponse?.isSuccess == true) {
+                            // 비밀번호 업데이트 성공
+                            Toast.makeText(this@ChangePasswordActivity, "비밀번호 변경 완료", Toast.LENGTH_SHORT).show()
+
+                            // 메인 화면으로 이동
+                            SignupData.profile_detail_interest = "완료"
+                            val intent = Intent(this@ChangePasswordActivity, MainActivity::class.java)
+                            startActivity(intent)
+
+                        } else {
+                            // 실패 메시지 처리
+                            handleError(updatePasswordResponse?.message ?: "비밀번호 업데이트 실패")
+                        }
+                    } else {
+                        handleError("비밀번호 업데이트 요청 실패")
+                    }
+                }
+
+                override fun onFailure(call: Call<UpdatePasswordResponse>, t: Throwable) {
+                    handleError("비밀번호 업데이트 요청 중 오류 발생")
+                }
+            })
         }
+
 
         // 각 EditText의 텍스트 변경 시 이벤트 리스너
         etPassword.addTextChangedListener(object : TextWatcher {
@@ -136,6 +169,11 @@ class ChangePasswordActivity : ComponentActivity() {
 
     }
 
+    // 서버 연결 확인 오류 토스트메시지 함수
+    fun handleError(message: String) {
+        Toast.makeText(this@ChangePasswordActivity, message, Toast.LENGTH_SHORT).show()
+    }
+
     // 실시간으로 현재 비밀번호를 검사하는 함수
     private fun validateCurrentPassword() : Boolean {
         val currentPassword = etPassword.text.toString()
@@ -162,6 +200,8 @@ class ChangePasswordActivity : ComponentActivity() {
             return false
         } else {
             newPsError.isVisible = false
+
+            newPs = newPassword
 
             return true
         }

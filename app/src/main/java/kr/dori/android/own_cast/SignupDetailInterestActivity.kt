@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 
 class SignupDetailInterestActivity : ComponentActivity() {
@@ -30,6 +31,7 @@ class SignupDetailInterestActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup_detail_interest)
+        enableEdgeToEdge()
 
         val num = when (SignupData.interest) {
             "movie" -> 1

@@ -134,7 +134,6 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
         binding.activityEditAudioDelete.setOnClickListener {
             mode = true
             deleteCast()
-
         }
     }
 
@@ -536,6 +535,5 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
     }
 
 //------------------------------------------------------------갤러리 참조용 함수 종료
-
 
 }

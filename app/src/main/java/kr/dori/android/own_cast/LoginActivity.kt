@@ -9,14 +9,21 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Call
 
 class LoginActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        enableEdgeToEdge()
 
         val backButton = findViewById<ImageView>(R.id.backButton)
         val btnLogin = findViewById<Button>(R.id.login_btn)
@@ -57,25 +64,61 @@ class LoginActivity : ComponentActivity() {
             val enteredId = etId.text.toString().trim()
             val enteredPassword = etPassword.text.toString().trim()
 
-            // 유효성 검사
-            if (isValidLogin(enteredId, enteredPassword)) {
-                // 메인 페이지로 이동
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-            } else {
-                // 에러 메시지 표시
-                errorMsg.visibility = TextView.VISIBLE
+            // 유효성 검사 및 로그인 시도
+            isValidLogin(enteredId, enteredPassword) { isSuccess, errorMessage ->
+                if (isSuccess) {
+                    // 로그인 성공 시 메인 페이지로 이동
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    // 에러 메시지 표시
+                    errorMsg.visibility = TextView.VISIBLE
+                    errorMsg.text = errorMessage
+                }
             }
         }
     }
 
-    private fun isValidLogin(id: String, password: String): Boolean {
+    private fun isValidLogin(id: String, password: String, callback: (Boolean, String) -> Unit) {
+        // 로그인 요청 데이터 생성
+        val loginRequest = LoginRequest(loginId = id, password = password)
 
-        // 이곳에 서버 연결하기 -> 아이디와 비번 쌍을 줘서 해당 정보가 서버에 있는지 확인하기, 서버에서 9개 전역변수들의 값을 불러와서 전역변수에 각각 저장하기
-        val validIds = listOf("user1", "user2", "user3")
-        val validPasswords = listOf("password1!", "password2@", "password3#")
+        // 서버에 로그인 요청
+        val call = RetrofitClient.instance.login(loginRequest)
 
-        return validIds.contains(id) && validPasswords.contains(password)
+        // 비동기 처리
+        call.enqueue(object : retrofit2.Callback<LoginResponse> {
+            override fun onResponse(
+                call: Call<LoginResponse>,
+                response: retrofit2.Response<LoginResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val loginResponse = response.body()
+                    if (loginResponse?.isSuccess == true) {
+                        // 로그인 성공 시, 토큰과 ID를 저장
+                        SignupData.id = id
+                        SignupData.token = loginResponse.result ?: ""
+
+                        // 성공 콜백 호출
+                        callback(true, "")
+                    } else {
+                        // 로그인 실패 시 콜백 호출
+                        callback(
+                            false,
+                            "로그인 실패: ${loginResponse?.message ?: "아이디 또는 비밀번호가 올바르지 않습니다."}"
+                        )
+                    }
+                } else {
+                    // 서버 오류 또는 응답 실패
+                    callback(false, "서버 오류: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                // 네트워크 오류
+                callback(false, "네트워크 오류: ${t.message}")
+            }
+        })
     }
-
 }

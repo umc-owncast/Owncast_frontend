@@ -57,7 +57,6 @@ class SearchOutputFragment : Fragment(), SearchMover , CoroutineScope {
         }
 
 
-
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 Log.d("ifsuccess", "success")
@@ -88,9 +87,6 @@ class SearchOutputFragment : Fragment(), SearchMover , CoroutineScope {
         searchViewModel.text.observe(viewLifecycleOwner, Observer { newText ->
             binding.fragmentSearchOutputTitleTv.text = newText
         })
-
-
-
 
         return binding.root
     }

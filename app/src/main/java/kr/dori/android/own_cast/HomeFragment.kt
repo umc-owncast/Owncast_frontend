@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +20,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 import kotlinx.coroutines.withContext
-
 import kr.dori.android.own_cast.databinding.FragmentHomeBinding
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.Playlist
@@ -47,6 +45,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
+
         //데이터 설정
         if(SignupData.interest!=null){
             binding.mainInterstTv.text = SignupData.interest
@@ -75,8 +74,6 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
 
-
-
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val data: Intent? = result.data
@@ -100,6 +97,7 @@ class HomeFragment : Fragment() {
         textList.add(binding.homefrTdKeyword4Tv)
         textList.add(binding.homefrTdKeyword5Tv)
         textList.add(binding.homefrTdKeyword6Tv)
+
     }
     private fun initKeyword(){
         //Log.d("initDataFinish","${KeywordAppData.detailTopic.size}")

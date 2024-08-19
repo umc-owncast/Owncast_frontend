@@ -12,7 +12,6 @@ import android.view.ViewGroup
 
 import android.widget.GridLayout
 import android.widget.ImageView
-
 import android.widget.TextView
 
 
@@ -51,6 +50,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 import kr.dori.android.own_cast.player.PlayCastActivity
+
 import kr.dori.android.own_cast.playlist.SharedViewModel
 
 class SearchFragment : Fragment(), SearchMover {
@@ -59,11 +59,11 @@ class SearchFragment : Fragment(), SearchMover {
     private val searchAdapter = SearchAdapter(this)
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     lateinit var gridLayoutManager: GridLayoutManager
+
     lateinit var inflaterLayout: LayoutInflater
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private var categoryList : List<GetAllPlaylist> = listOf()
     private var detail_interest : String? = null
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -166,6 +166,7 @@ class SearchFragment : Fragment(), SearchMover {
     override fun backSearch() {
         TODO("Not yet implemented")
     }
+
     fun initSearchCastData(){
         val apiService = getRetrofit().create(CastInterface::class.java)
         apiService.searchHome().enqueue(object: Callback<AuthResponse<List<CastHomeDTO>>> {

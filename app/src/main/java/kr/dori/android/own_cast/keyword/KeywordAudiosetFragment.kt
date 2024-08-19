@@ -168,7 +168,9 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
                 Log.d("apiTest-CreateCast", "저장성공: ${response.body()?.result}")
                 response.body()
             } else {
+
                 Log.d("apiTest-CreateCast", "연결실패 에러바디: ${response.errorBody().toString()}")
+
                 null
             }
         } catch (e: Exception) {
@@ -180,12 +182,14 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
 
     override fun createCastByKeyword(postCastByKeyword: PostCastByKeyword){
         corutineJob = Job()
+
         var dialogText : String
 
         if(binding.keywordAudiosetVp.currentItem==0)dialogText = "스크립트를 생성 중이에요"
         else dialogText = "스크립트를 다시 생성 중이에요"
 
         val dialog = KeywordLoadingDialog(requireContext(),dialogText)
+
         dialog.setCancelable(false)
         dialog.setCanceledOnTouchOutside(false)
         dialog.show()
@@ -200,6 +204,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
                     Log.d("apiTest-CreateCast", "코루틴도 성공하였음")
                     sharedViewModel.setSentences(it.result!!.sentences)//viewModel로 받아온 정보 넘기기
                     sharedViewModel.setCastId(it.result!!.id)
+
                     sharedViewModel.setUrl(it.result!!.fileUrl)
                     if(binding.keywordAudiosetVp.currentItem==0){
                         if(alreadyVisit){//이미 생성된 프래그먼트일때는 생명주기때문에 여기서 실행해줘야함
@@ -212,6 +217,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
                         keywordAdapter.getFragment().initPlayer()
                         keywordAdapter.getFragment().initRecyclerView()
                     }
+
                 } ?: run {
                     // 실패 시 처리
                     Log.d("apiTest-CreateCast", "API 호출 실패 또는 결과 없음")
@@ -249,9 +255,11 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
     override fun onDestroy() {
         super.onDestroy()
         // 액티비티가 파괴될 때 모든 코루틴 취소
+
         if (::corutineJob.isInitialized) {
             corutineJob.cancel() // 또는 다른 적절한 작업
         }
+
     }
 
 }

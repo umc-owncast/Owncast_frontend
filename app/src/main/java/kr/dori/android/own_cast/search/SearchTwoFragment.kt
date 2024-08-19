@@ -62,8 +62,6 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
         }
 
 
-
-
         activityResultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 if (result.resultCode == Activity.RESULT_OK) {
@@ -80,6 +78,7 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
 
         return binding.root
     }
+
     fun searchOtherCast(keyword:String){
         corutineJob = Job()
         var dialogText : String = "로딩 중이에요"

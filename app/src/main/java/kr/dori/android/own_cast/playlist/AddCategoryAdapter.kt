@@ -36,7 +36,9 @@ class AddCategoryAdapter(private val mover: SearchMover) : RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val data = dataList[position]
+
         holder.setText(data, holder)
+
     }
 
     override fun getItemCount(): Int {

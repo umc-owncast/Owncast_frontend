@@ -31,6 +31,7 @@
             android:layout_weight="1"
             android:paddingLeft="10dp"
             android:text="언어 선택"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="20sp"
             android:gravity="left"/>
     </LinearLayout>
@@ -60,6 +61,7 @@
         android:layout_height="wrap_content"
         android:text="배우고 싶은 언어를 선택해주세요"
         android:textSize="14sp"
+        android:fontFamily="@font/pretendard_regular"
         android:layout_gravity="center"
         android:paddingTop="30dp"
         android:paddingBottom="24dp"/>
@@ -83,6 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="영어"
+            android:fontFamily="@font/pretendard_regular"
             android:layout_marginStart="16dp"
             android:textSize="16sp" />
 
@@ -187,6 +190,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="일본어"
+            android:fontFamily="@font/pretendard_regular"
             android:layout_marginStart="16dp"
             android:textSize="16sp" />
 
@@ -274,6 +278,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="스페인어"
+            android:fontFamily="@font/pretendard_regular"
             android:layout_marginStart="16dp"
             android:textSize="16sp" />
 

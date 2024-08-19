@@ -64,6 +64,7 @@ class KeywordViewModel(application: Application) : AndroidViewModel(application)
     fun setGetPlayList(data : List<PlaylistText>){
         _getPlayList.value?.clear()
         _getPlayList.value?.addAll(data)
+
     }
 
     fun addGetPlayList(data: PlaylistText){
