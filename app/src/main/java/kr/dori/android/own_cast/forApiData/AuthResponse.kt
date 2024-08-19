@@ -81,6 +81,13 @@ data class GetAllPlaylist(
     val totalCast: Int
 )
 
+data class SetPlaylist(
+    val name: String,
+    val imagePath: String,
+    val playlistId: Long
+)
+
+
 data class CastInfo(
     @SerializedName(value = "id") val id: Long,
     @SerializedName(value = "title") val title: String,
