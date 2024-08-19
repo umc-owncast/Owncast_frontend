@@ -249,7 +249,9 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
     override fun onDestroy() {
         super.onDestroy()
         // 액티비티가 파괴될 때 모든 코루틴 취소
-        corutineJob.cancel()
+        if (::corutineJob.isInitialized) {
+            corutineJob.cancel() // 또는 다른 적절한 작업
+        }
     }
 
 }
