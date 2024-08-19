@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#FFFFFF"
     android:layout_height="540dp">
 
 
@@ -52,9 +53,10 @@
             android:layout_width="41dp"
             android:layout_height="16dp"
             android:layout_marginStart="4dp"
-            android:layout_marginTop="14dp"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_cast_playlist_title"
             app:layout_constraintStart_toEndOf="@+id/fragment_cast_playlist_title"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/fragment_cast_playlist_title"
+            app:layout_constraintVertical_bias="0.6"
             app:srcCompat="@drawable/cast_item_duration" />
 
         <TextView

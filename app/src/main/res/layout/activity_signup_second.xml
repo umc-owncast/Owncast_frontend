@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".SignupSecondActivity">
 
 
@@ -140,7 +141,10 @@
             android:hint="닉네임 입력(영문, 한글, 숫자, - , _만 포함 10자 이내)"
             android:padding="12dp"
             android:textColorHint="@color/hint_color"
-            android:textSize="@dimen/TitleMediumSize"/>
+            android:maxLines="1"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:ellipsize="none"/>
 
     </LinearLayout>
 

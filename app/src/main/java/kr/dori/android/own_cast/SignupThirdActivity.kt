@@ -33,7 +33,7 @@ class SignupThirdActivity : AppCompatActivity() {
         var passwordconfirm = SignupData.passwordconfirm
 
         val nickname = SignupData.nickname
-        findViewById<TextView>(R.id.main_text).text = "($nickname)님,\n로그인에 필요한 정보를 입력해주세요"
+        findViewById<TextView>(R.id.main_text).text = "${nickname}님,\n로그인에 필요한 정보를 입력해주세요"
 
         // 이전 내용 복원
         if (name != getString(R.string.signup_info_first)) {
@@ -173,7 +173,7 @@ class SignupThirdActivity : AppCompatActivity() {
         return when {
             password.isEmpty() -> null
             password.length !in 8..16 -> "8~16자로 구성해주세요"
-            !password.any { it.isUpperCase() } || !password.any { it.isLowerCase() } || !password.any { it.isDigit() } || !password.any { it in "@#\$%^&+=!" } -> "영문 대/소문자, 숫자, 특수문자를 각 1자 이상 사용해주세요"
+            !password.any { it.isUpperCase() } || !password.any { it.isLowerCase() } || !password.any { it.isDigit() } || !password.any { it in "@#~\$%^&+=!" } -> "영문 대/소문자, 숫자, 특수문자를 각 1자 이상 사용해주세요"
             else -> null
         }
     }
@@ -181,7 +181,7 @@ class SignupThirdActivity : AppCompatActivity() {
     // 비밀번호 확인 유효성 검사
     private fun validatePasswordConfirm(password: String, passwordConfirm: String): String? {
         return if (password != passwordConfirm) {
-            "입력한 비밀번호가 서로 다릅니다. 동일한 비밀번호를 입력해 주세요"
+            "입력한 비밀번호가 서로 다릅니다."
         } else {
             null
         }

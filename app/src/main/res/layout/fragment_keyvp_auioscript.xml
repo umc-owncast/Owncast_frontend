@@ -8,6 +8,7 @@
 
 
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/key_aud_script_rv"
         android:layout_width="0dp"
@@ -37,8 +38,8 @@
         android:layout_height="wrap_content"
         android:thumb="@null"
         android:progressDrawable="@drawable/key_audset_seekbar_bar"
-        android:max="100"
-        android:progress="20"
+        android:max="100000"
+        android:progress="0"
         android:scaleType="centerCrop"
         android:maxHeight="4dp"
         android:minHeight="4dp"
@@ -86,31 +87,45 @@
         app:layout_constraintEnd_toEndOf="parent">
         <ImageView
             android:id="@+id/key_aud_script_playbtn_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:src="@drawable/ic_play_btn"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
         <ImageView
+            android:id="@+id/key_aud_script_stop_btn_iv"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/play_cast_pause"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+        <ImageView
             android:id="@+id/key_aud_scr_add_second_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/key_aud_scr_add_sec"
-            app:layout_constraintStart_toEndOf="@id/key_aud_script_playbtn_iv"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginStart="36.75dp"/>
+            android:layout_marginEnd="73.75dp"/>
         <ImageView
             android:id="@+id/key_aud_scr_min_second_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/key_aud_scr_min_sec"
-            app:layout_constraintEnd_toStartOf="@id/key_aud_script_playbtn_iv"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginEnd="36.75dp"/>
+            android:layout_marginStart="73.75dp"/>
         <ToggleButton
             android:id="@+id/key_aud_scr_repeat_iv"
             android:layout_width="36dp"
@@ -141,7 +156,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/key_aud_scr_speed_tool_cl"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="0dp"
         app:layout_constraintWidth_percent="0.911111111"
         android:layout_height="0dp"

@@ -6,23 +6,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-
     <ImageView
         android:id="@+id/playlist_category_play_iv"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="56dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/playlist_category_edit_iv"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/playlistfr_play_iv" />
 
     <ImageView
         android:id="@+id/playlist_category_edit_iv"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
 
         android:layout_marginEnd="25dp"
         app:layout_constraintBottom_toBottomOf="parent"

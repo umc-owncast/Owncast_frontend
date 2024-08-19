@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CategoryFragment"
+    tools:context=".playlist.CategoryFragment"
     android:background="#FFFFFF">
 
 
@@ -60,7 +60,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/playlistName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -71,15 +71,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/castSizeTotalLength"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="캐스트 개수, 총 재생시간"
             android:textSize="13sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+            app:layout_constraintStart_toStartOf="@+id/playlistName"
+            app:layout_constraintTop_toBottomOf="@+id/playlistName" />
 
         <ImageView
             android:id="@+id/fragment_category_play_iv"
@@ -92,7 +92,7 @@
             android:src="@drawable/fragment_cast_play_new"
             app:layout_constraintEnd_toStartOf="@+id/fragment_category_shuffle_iv"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+            app:layout_constraintTop_toBottomOf="@+id/castSizeTotalLength" />
 
         <ImageView
             android:id="@+id/fragment_category_shuffle_iv"

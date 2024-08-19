@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="540dp"
-    tools:context=".CastAudioFragment">
+    android:background="#FFFFFF"
+    tools:context=".player.CastAudioFragment">
 
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/castTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
@@ -30,17 +31,17 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/castTitle" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="260dp"
         android:layout_height="260dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="90dp"
         android:src="@drawable/playlistfr_dummy_iv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView11"
@@ -70,12 +71,12 @@
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
     <TextView
-        android:id="@+id/textView31"
+        android:id="@+id/creatorCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="크리에이터-카테고리"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/castTitle" />
 </androidx.constraintlayout.widget.ConstraintLayout>

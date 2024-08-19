@@ -1,15 +1,10 @@
 package kr.dori.android.own_cast.keyword
 
 
-import android.app.Application
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
-import android.text.SpannableString
 import android.text.TextWatcher
-import android.text.style.UnderlineSpan
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -18,11 +13,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.SharedViewModel
 import kr.dori.android.own_cast.databinding.FragmentKeywordSearchBinding
 
 
@@ -43,11 +34,11 @@ class KeywordSearchFragment:Fragment() {
         binding.backMainIv.setOnClickListener {
             activity?.finish()
         }
-        keywordData = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        /*keywordData = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arguments?.getParcelable("keywordData", KeywordData::class.java)
         } else {
             arguments?.getParcelable("keywordData")
-        }
+        }*/
         /*sharedViewModel = ViewModelProvider(requireActivity(),
             ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)).get(KeywordViewModel::class.java)
 
@@ -79,13 +70,13 @@ class KeywordSearchFragment:Fragment() {
 
         for(i:Int in 0..5){
             //view모델 안에 실제 데이터가 있다면 그걸 텍스트 뷰에 그대로 반영
-            if (keywordData==null){
+            if (KeywordAppData.detailTopic==null){
                 binding.keywordSearchTopicTv.text = "로딩 실패"
                 textViewList[i].text = "로딩 실패"
                 return
             }
-            if(i<keywordData?.keywordList!!.size){
-                textViewList[i].text = keywordData?.keywordList!![i]
+            if(i<KeywordAppData.detailTopic.size){
+                textViewList[i].text = KeywordAppData.detailTopic[i]
                 textViewList[i].setOnClickListener {
                     val intent = Intent(getActivity(), KeywordActivity::class.java)
                     intent.putExtra("searchText",textViewList[i].text.toString())
@@ -126,6 +117,7 @@ class KeywordSearchFragment:Fragment() {
                 binding.keywordEt.text.clear()
             }
         }
+        //text가 비어있으면, isText가 변한다.
         binding.keywordEt.addTextChangedListener(object :
             TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -146,6 +138,8 @@ class KeywordSearchFragment:Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
+
+        //엔터키를 눌렀을때 searchFinish를 실행(검색하는거)
         binding.keywordEt.setOnEditorActionListener { v, actionId, event ->
             // Check if the action is the "Enter" key
             if (actionId == EditorInfo.IME_ACTION_DONE ||

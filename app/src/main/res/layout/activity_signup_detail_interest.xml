@@ -60,7 +60,7 @@
                 android:id="@+id/pop_exit_button"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/btn_exit2"
+                android:src="@drawable/btn_exit"
                 android:contentDescription="pop_exit_button"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:layout_alignParentTop="true"

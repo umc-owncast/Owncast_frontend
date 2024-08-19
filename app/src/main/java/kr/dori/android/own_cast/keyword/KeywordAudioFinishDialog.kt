@@ -5,14 +5,19 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.WindowManager
+import com.bumptech.glide.Glide
+import kr.dori.android.own_cast.SignupData
 import kr.dori.android.own_cast.databinding.FragmentKeywordOutDialogBinding
 import kr.dori.android.own_cast.databinding.KeywordFinishDialogBinding
 
-class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAudioFinishListener) : Dialog(context) {
+class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAudioFinishListener
+,val title : String, val category : String, val uri: Uri?
+) : Dialog(context) {
     lateinit var binding : KeywordFinishDialogBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,10 +29,24 @@ class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAu
         binding.keyFinHomeTv.setOnClickListener {
             listener.goHomeFragment()
         }
+        initData()
 
-        //context.dialogResize(this, 0.945f,0.335f)
-        //context.dialogResize(this, 1f,0.7f)
+        context.dialogResize(this, 0.9f,0.335f)
+
         window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+    private fun initData(){
+        binding.keyFinCastTitleTv.text = title
+        binding.keyFinScrpit1stTv.text = SignupData.name
+        binding.keyFinCastCategoryTv.text = category
+        if(uri!=null){
+            Glide.with(context)
+                .load(uri)
+                .centerCrop() // ImageView에 맞게 이미지 크기를 조정
+                .into(binding.keyFinCastImgIv)
+        }else{
+
+        }
     }
 
     private fun Context.dialogResize(dialog: Dialog, width: Float, height: Float){
