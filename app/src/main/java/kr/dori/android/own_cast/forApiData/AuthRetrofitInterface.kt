@@ -26,10 +26,12 @@ interface CastInterface{
     @DELETE("/api/cast/{castId}")
     fun deleteCast(@Path("castId") castId:Long): Call<AuthResponse<String>>
     @GET("/api/cast/{castId}/scripts")
-
     suspend fun getCastScript(@Path("castId") castId:Long): Response<AuthResponse<List<Script>>>
     @GET("/api/cast/{castId}/audio")
     suspend fun getCastPlay(@Path("castId") castId: Long): Response<ResponseBody>
+
+
+
 
     @GET("/api/cast/search/home") // 검색 홈 API(검색 화면 상위 4개 castdata받아옴)
     fun searchHome(): Call<AuthResponse<List<CastHomeDTO>>>
@@ -99,6 +101,22 @@ interface Playlist{
 
 
 
-interface bookmark{
 
+interface Bookmark {
+    @POST("/api/bookmark")
+    suspend fun postBookmark(@Query("sentenceId") sentenceId: Int): Response<AuthResponse<Long>>
+
+    @DELETE("/api/bookmark")
+    suspend fun deleteBookmark(@Query("sentenceId") sentenceId: Int):
+            Response<AuthResponse<Long>>
+
+    @GET("/api/study/{playlistId}")
+    suspend fun getBookmark(@Path("playlistId") playlistId: Int):
+            Response<AuthResponse<List<GetBookmark>>>
+
+    @GET("/api/study/savedcast")
+    suspend fun getSaved(): Response<AuthResponse<List<GetBookmark>>>
+
+    @GET("/api/study/mycast")
+    suspend fun getMy(): Response<AuthResponse<List<GetBookmark>>>
 }

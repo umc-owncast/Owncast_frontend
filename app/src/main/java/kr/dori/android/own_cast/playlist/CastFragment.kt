@@ -63,13 +63,20 @@ class CastFragment(var playlistIdList : MutableList<Long>) : Fragment(), Activit
                                     playlistList.addAll(it.castList)
                                     Log.d("xibal", "$playlistList")
 
-                                    castAdapter.dataList = if (isSave) {
-                                        // isSave가 true일 때 필터링
-                                        playlistList.filter { cast -> cast.castCreator == "헬로" }
-                                    } else {
-                                        // isSave가 false일 때 필터링
-                                        playlistList.filter { cast -> cast.castCreator != "헬로" }
-                                    }.toMutableList()
+                                    var filteringData =
+                                        if (isSave) {
+                                            // isSave가 true일 때 필터링
+                                            playlistList.filter { cast -> cast.castCreator == "헬로" }
+                                        } else {
+                                            // isSave가 false일 때 필터링
+                                            playlistList.filter { cast -> cast.castCreator != "헬로" }
+                                        }.toMutableList()
+
+                                    val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(filteringData)
+                                    Log.d("TotalAudioLength", "총 오디오 길이 (초): $totalAudioLengthInSeconds")
+                                    binding.castInfo.text = "${filteringData.size}개, ${formatTime(totalAudioLengthInSeconds)}"
+
+                                    castAdapter.dataList = filteringData
 
                                     // 어댑터에 알림
                                     castAdapter.notifyDataSetChanged()
@@ -82,14 +89,14 @@ class CastFragment(var playlistIdList : MutableList<Long>) : Fragment(), Activit
                         e.printStackTrace()
                     }
                 }
-        }
+            }
 
             if(isSave){
                 binding.fragmentCastMaintitleTv.text = "내가 만든 캐스트"
-                binding.fragmentCastTitleTv.text = "${castAdapter.itemCount},"
+                // binding.fragmentCastTitleTv.text = "${castAdapter.itemCount},"
             }else{
                 binding.fragmentCastMaintitleTv.text = "담아온 캐스트"
-                binding.fragmentCastTitleTv.text = "${castAdapter.itemCount},"
+                // binding.fragmentCastTitleTv.text = "${castAdapter.itemCount},"
             }
         }
 
@@ -100,18 +107,18 @@ class CastFragment(var playlistIdList : MutableList<Long>) : Fragment(), Activit
 
 
 
-/*
-        // ViewModel 데이터 관찰
-        sharedViewModel.data.observe(viewLifecycleOwner, Observer { newData ->
-            val savedData = arguments?.getParcelableArrayList<SongData>("isSave")
-            val unsavedData = arguments?.getParcelableArrayList<SongData>("isNotSave")
-            val data = savedData ?: unsavedData ?: arrayListOf()
-            castAdapter.dataList =
-            castAdapter.notifyDataSetChanged()
-        })
+        /*
+                // ViewModel 데이터 관찰
+                sharedViewModel.data.observe(viewLifecycleOwner, Observer { newData ->
+                    val savedData = arguments?.getParcelableArrayList<SongData>("isSave")
+                    val unsavedData = arguments?.getParcelableArrayList<SongData>("isNotSave")
+                    val data = savedData ?: unsavedData ?: arrayListOf()
+                    castAdapter.dataList =
+                    castAdapter.notifyDataSetChanged()
+                })
 
 
-        */
+                */
 
         // Initialize ActivityResultLauncher
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -144,20 +151,14 @@ class CastFragment(var playlistIdList : MutableList<Long>) : Fragment(), Activit
     }
 
     override fun ToPlayCast(castList: List<Cast>) {
-        val currentCast = CastPlayerData.currentCast
+        //   val currentCast = CastPlayerData.currentCast
 
-        if (currentCast != null && castList.contains(currentCast)) {
-            // 첫 번째 케이스: 현재 재생 중인 캐스트를 클릭한 경우
-            val intent = Intent(requireContext(), PlayCastActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT // 기존 Activity 재사용
-            activityResultLauncher.launch(intent)
-        } else {
-            // 두 번째 케이스: 다른 캐스트를 클릭한 경우
-            CastPlayerData.setCastList(castList) // 새로운 캐스트 리스트 설정
-            val intent = Intent(requireContext(), PlayCastActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK // 새로운 Activity 생성
-            activityResultLauncher.launch(intent)
-        }
+        CastPlayerData.setCast(castList)
+
+        val intent = Intent(requireContext(), PlayCastActivity::class.java)
+
+        activityResultLauncher.launch(intent)
+
     }
 
 
@@ -165,5 +166,33 @@ class CastFragment(var playlistIdList : MutableList<Long>) : Fragment(), Activit
         val intent = Intent(requireContext(), EditAudioActivity::class.java)
         startActivity(intent)
     }
-}
 
+    fun parseTimeToSeconds(input: String): Int {
+        return if (input.contains(":")) {
+            // 입력이 "분:초" 형식인 경우
+            val parts = input.split(":")
+            val minutes = parts[0].toIntOrNull() ?: 0
+            val seconds = parts[1].toIntOrNull() ?: 0
+            (minutes * 60) + seconds
+        } else {
+            // 입력이 이미 초 단위인 경우
+            input.toIntOrNull() ?: 0
+        }
+    }
+
+    fun getTotalAudioLengthInSeconds(castList: List<Cast>): Int {
+        return castList.sumOf { cast ->
+            parseTimeToSeconds(cast.audioLength)
+        }
+    }
+
+    fun formatTime(input: Int): String {
+
+        val totalSeconds = input ?: return "00:00" // 입력이 숫자가 아닌 경우 대비
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+        val formatTime = String.format("%02d:%02d", minutes, seconds)
+        return formatTime
+    }
+
+}

@@ -1,61 +1,51 @@
 package kr.dori.android.own_cast.data
 
+
+import android.util.Log
 import kr.dori.android.own_cast.forApiData.Cast
 
 object CastPlayerData {
-    private val castList = mutableListOf<Cast>()
-    private var currentIndex = -1
-    var currentPosition: Long = 0L
-    var playbackSpeed: Float = 1.0f
+    private val allCastList = mutableListOf<Cast>()
+    var currentPosition : Int = 0
+    lateinit var currentCast: Cast
 
-    val currentCast: Cast?
-        get() = if (currentIndex in castList.indices) castList[currentIndex] else null
+    // 이 부분에 id검사 기능도 넣어야 됨
+    fun setCast(testList: List<Cast>) {
+        allCastList.addAll(testList)
 
-    fun setCastList(newCastList: List<Cast>) {
-        castList.clear()
-        castList.addAll(newCastList)
-        currentIndex = 0
-        resetPlaybackState()
-    }
+        // testPosition 계산 후 유효한지 확인합니다. -> position의 초기 설정입니다.
+        currentPosition = allCastList.size - testList.size
 
-    fun addCast(cast: Cast) {
-        if (!castList.contains(cast)) {
-            castList.add(cast)
-        }
-        currentIndex = castList.indexOf(cast)
-        resetPlaybackState()
-    }
-
-    fun playNext(): Cast? {
-        return if (currentIndex + 1 in castList.indices) {
-            currentIndex++
-            resetPlaybackState()
-            currentCast
+        if (currentPosition in 0 until allCastList.size) {
+            currentCast = allCastList[currentPosition]
+            Log.d("test", "currentPosition: ${currentPosition}, receiveCastListSize: ${testList.size}, AllCastListSize: ${allCastList.size}, currentCast:${currentCast}, AllCast: ${allCastList}")
         } else {
-            null
+            Log.e("test", "Invalid testPosition: $currentPosition, testList size: ${testList.size}, ${allCastList.size},${currentPosition}")
         }
     }
 
-    fun playPrevious(): Cast? {
-        return if (currentIndex - 1 >= 0) {
-            currentIndex--
-            resetPlaybackState()
-            currentCast
-        } else {
-            null
+
+    fun playNext(): Cast {
+        if(currentPosition +1 in 0 until allCastList.size){
+            currentPosition++
+            currentCast = allCastList[currentPosition]
+
+        }else{
+            Log.e("playNext", "Next position is out of bounds: $currentPosition")
         }
+        return currentCast
     }
 
-    fun updatePlaybackPosition(position: Long) {
-        currentPosition = position
+    fun playPrevious(): Cast {
+        if(currentPosition -1 in 0 until allCastList.size){
+            currentPosition--
+            currentCast = allCastList[currentPosition]
+
+        }else{
+            Log.e("playNext", "Next position is out of bounds: $currentPosition")
+        }
+        return currentCast
     }
 
-    fun updatePlaybackSpeed(speed: Float) {
-        playbackSpeed = speed
-    }
 
-    private fun resetPlaybackState() {
-        currentPosition = 0L
-        playbackSpeed = 1.0f
-    }
 }

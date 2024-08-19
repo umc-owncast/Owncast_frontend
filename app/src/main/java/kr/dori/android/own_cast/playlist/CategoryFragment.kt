@@ -30,7 +30,7 @@ import kr.dori.android.own_cast.getRetrofit
 import kr.dori.android.own_cast.player.PlayCastActivity
 import retrofit2.create
 
-class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
+class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragment(), ActivityMover {
 
     private lateinit var binding: FragmentCategoryBinding
     private val sharedViewModel: SharedViewModel by activityViewModels()
@@ -64,6 +64,11 @@ class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
                             Log.d("castInfo","${it.castList}")
                             sendCastIdList = it.castList
                             castAdapter.notifyDataSetChanged()
+
+                            // 총 오디오 길이 계산
+                            val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(it.castList)
+                            Log.d("TotalAudioLength", "총 오디오 길이 (초): $totalAudioLengthInSeconds")
+                            binding.castSizeTotalLength.text = "${it.castList.size}개, ${formatTime(totalAudioLengthInSeconds)}"
                         }
                     }
                 } else {
@@ -77,6 +82,9 @@ class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
         binding.fragmentCategoryBackIv.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
+
+        binding.playlistName.text = playlistName
+
 
         // Initialize ActivityResultLauncher
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -92,7 +100,9 @@ class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
         binding.fragmentCategoryRv.layoutManager = LinearLayoutManager(context)
 
 
-// 이 부분은 재생목록 부분이어서 어떻게 수정할건지 생각을 해봐야 됨 -> 재생목록 순서를 어떻게 정할 것인가?
+
+// 이 부분은 재생목록 부분이어서 어떻게 수정할건지 생각을 해봐야 됨 -> 재생목록 순서를 어떻게 정할 것인가? -> 해결함
+
         binding.fragmentCategoryPlayIv.setOnClickListener {
             ToPlayCast(sendCastIdList)
            // Log.d("Cast","$sendCastIdList")
@@ -106,20 +116,16 @@ class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
     }
 
     override fun ToPlayCast(castList: List<Cast>) {
-        val currentCast = CastPlayerData.currentCast
 
-        if (currentCast != null && castList.contains(currentCast)) {
-            // 첫 번째 케이스: 현재 재생 중인 캐스트를 클릭한 경우
-            val intent = Intent(requireContext(), PlayCastActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT // 기존 Activity 재사용
-            activityResultLauncher.launch(intent)
-        } else {
-            // 두 번째 케이스: 다른 캐스트를 클릭한 경우
-            CastPlayerData.setCastList(castList) // 새로운 캐스트 리스트 설정
-            val intent = Intent(requireContext(), PlayCastActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK // 새로운 Activity 생성
-            activityResultLauncher.launch(intent)
-        }
+        //   val currentCast = CastPlayerData.currentCast
+
+        CastPlayerData.setCast(castList)
+
+        val intent = Intent(requireContext(), PlayCastActivity::class.java)
+
+        activityResultLauncher.launch(intent)
+
+
     }
 
 
@@ -127,5 +133,36 @@ class CategoryFragment(val playlistId: Long) : Fragment(), ActivityMover {
         val intent = Intent(requireContext(), EditAudioActivity::class.java)
         startActivity(intent)
     }
+
+    fun getTotalAudioLengthInSeconds(castList: List<Cast>): Int {
+        return castList.sumOf { cast ->
+            parseTimeToSeconds(cast.audioLength)
+        }
+    }
+
+    fun parseTimeToSeconds(input: String): Int {
+        return if (input.contains(":")) {
+            // 입력이 "분:초" 형식인 경우
+            val parts = input.split(":")
+            val minutes = parts[0].toIntOrNull() ?: 0
+            val seconds = parts[1].toIntOrNull() ?: 0
+            (minutes * 60) + seconds
+        } else {
+            // 입력이 이미 초 단위인 경우
+            input.toIntOrNull() ?: 0
+        }
+    }
+
+
+    fun formatTime(input: Int): String {
+
+            val totalSeconds = input ?: return "00:00" // 입력이 숫자가 아닌 경우 대비
+            val minutes = totalSeconds / 60
+            val seconds = totalSeconds % 60
+            val formatTime = String.format("%02d:%02d", minutes, seconds)
+            return formatTime
+    }
+
+
 }
 

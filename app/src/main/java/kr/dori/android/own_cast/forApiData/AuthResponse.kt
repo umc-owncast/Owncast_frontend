@@ -111,6 +111,11 @@ data class CastInfo(
 
 
 
+data class GetBookmark(
+    @SerializedName(value = "castId") val castId: Long,
+    @SerializedName(value = "originalSentence") val originalSentence: String,
+    @SerializedName(value = "translatedSentence") val translatedSentence: String
+)
 
 
 // 3 계층
@@ -134,7 +139,8 @@ data class NewSentences(
     @SerializedName(value = "id") val id: Long,
     @SerializedName(value = "originalSentence") val originalSentence: String,
     @SerializedName(value = "translatedSentence") val translatedSentence: String,
-    @SerializedName(value = "timePoint") val audioLength: Double
+
+    @SerializedName(value = "timePoint") val timePoint: Double
 )
 
 

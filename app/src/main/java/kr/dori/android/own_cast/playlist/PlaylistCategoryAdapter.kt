@@ -54,7 +54,8 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val selectedPlaylistId = dataList[position].playlistId
-                    fragmentMover.playlistToCategory(selectedPlaylistId)
+                    val selectedPlaylistName = dataList[position].name
+                    fragmentMover.playlistToCategory(selectedPlaylistId, selectedPlaylistName)
                 }
             }
         }
@@ -89,7 +90,9 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                         withContext(Dispatchers.Main) {
                             playlistInfo?.let {
                                 val castList = it.castList.toMutableList()
-                                CastPlayerData.setCastList(castList)  // 캐스트 리스트를 저장
+
+                                //CastPlayerData.setCastList(castList)  // 캐스트 리스트를 저장
+
                                 activityMover.ToPlayCast(castList)
                             }
                         }

@@ -218,31 +218,37 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         }
     }
 
+
+    override fun ToPlayCast(castList: List<Cast>) {
+        // 현재 서비스가 재생 중인지 확인하고 중지
+        //val currentService = getCurrentServiceInstance()
+      //  service?.stopAudio()
+
+        // 캐스트 설정 및 새 액티비티로 이동
+        CastPlayerData.setCast(castList)
+        val intent = Intent(requireContext(), PlayCastActivity::class.java)
+        activityResultLauncher.launch(intent)
+    }
+
+
+
+
     override fun getCategoryData(position: Long): GetAllPlaylist {
         return sharedViewModel.data.value?.get(position.toInt())
             ?: throw IndexOutOfBoundsException("Invalid position: $position")
 
     }
-
+/*
     override fun ToPlayCast(castList: List<Cast>) {
-        val currentCast = CastPlayerData.currentCast
-
-        if (currentCast != null && castList.contains(currentCast)) {
-            // 첫 번째 케이스: 현재 재생 중인 캐스트를 클릭한 경우
-            val intent = Intent(requireContext(), PlayCastActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT // 기존 Activity 재사용
-            activityResultLauncher.launch(intent)
-        } else {
-            // 두 번째 케이스: 다른 캐스트를 클릭한 경우
-            CastPlayerData.setCastList(castList) // 새로운 캐스트 리스트 설정
-            val intent = Intent(requireContext(), PlayCastActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK // 새로운 Activity 생성
-            activityResultLauncher.launch(intent)
-        }
+        CastPlayerData.setCast(castList)
+        val intent = Intent(requireContext(), PlayCastActivity::class.java)
+        activityResultLauncher.launch(intent)
     }
-    override fun playlistToCategory(playlistId: Long) {
+ */
 
-        val categoryFragment = CategoryFragment(playlistId)
+    override fun playlistToCategory(playlistId: Long, playlistName: String) {
+
+        val categoryFragment = CategoryFragment(playlistId, playlistName)
 
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.main_frm, categoryFragment)

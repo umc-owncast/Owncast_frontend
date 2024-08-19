@@ -6,13 +6,12 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/textView14"
+        android:id="@+id/originalSentence_tv"
         android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:minLines="2"
+        android:layout_marginBottom="3dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,17 +19,17 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/notFocusOff"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/imageView6"
+        app:layout_constraintEnd_toEndOf="@+id/loofOff"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/fragment_script_bookmark_3" />
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/loofOff"
         android:layout_width="16dp"
         android:layout_height="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -39,7 +38,7 @@
         app:srcCompat="@drawable/fragment_script_change_1" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/onFocusOn"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginEnd="20dp"
@@ -50,12 +49,35 @@
         app:srcCompat="@drawable/fragment_script_bookmark_2" />
 
     <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:id="@+id/loofOn"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/fragment_script_change_2" />
+
+    <TextView
+        android:id="@+id/translationSentence_tv"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="6dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/originalSentence_tv" />
+
+    <ImageView
+        android:id="@+id/notFocusOn"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="20dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/fragment_script_bookmark_1" />
 </androidx.constraintlayout.widget.ConstraintLayout>
