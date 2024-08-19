@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         // binding.goKeywordIv.setOnClickListener {
         //     initKeyword()
         // }
-        initBottomNavigation()
+       // initBottomNavigation()
 
 
         //play table call back process
