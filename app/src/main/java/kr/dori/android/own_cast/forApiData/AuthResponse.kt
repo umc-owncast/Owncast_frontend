@@ -123,6 +123,7 @@ data class GetBookmark(
 
 data class Cast(
     @SerializedName(value = "castId") val castId: Long,
+    @SerializedName(value = "playlistId")val playlistId: Long,
     @SerializedName(value = "castTitle") val castTitle: String,
     @SerializedName(value = "isPublic") val isPublic: Boolean,
     @SerializedName(value = "castCreator") val castCreator: String,
