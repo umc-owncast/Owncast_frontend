@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 
 class SignupSelfActivity : ComponentActivity() {
@@ -18,6 +19,7 @@ class SignupSelfActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup_self)
+        enableEdgeToEdge()
 
         val etSelf = findViewById<EditText>(R.id.etSelf)
         val textNum = findViewById<TextView>(R.id.text_num)

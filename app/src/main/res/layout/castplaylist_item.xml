@@ -56,7 +56,6 @@
             android:backgroundTint="#00051F"
             android:text="4:18"
             android:lineSpacingExtra="3sp"
-
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="11sp"

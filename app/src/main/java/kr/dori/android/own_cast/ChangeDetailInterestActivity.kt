@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 
 
@@ -31,6 +32,7 @@ class ChangeDetailInterestActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_detail_interest)
+        enableEdgeToEdge()
 
         val num = when (SignupData.temp_interest) {
             "movie" -> 1

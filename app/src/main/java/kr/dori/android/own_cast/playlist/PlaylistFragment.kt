@@ -219,7 +219,6 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         }
     }
 
-
     override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
 
         // 현재 서비스가 재생 중인지 확인하고 중지
@@ -231,8 +230,6 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
         activityResultLauncher.launch(intent)
     }
-
-
 
 
     override fun getCategoryData(position: Long): GetAllPlaylist {

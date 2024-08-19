@@ -1,6 +1,5 @@
 package kr.dori.android.own_cast.data
 
-
 import android.util.Log
 import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.player.CastWithPlaylistId
@@ -47,6 +46,5 @@ object CastPlayerData {
         }
         return currentCast
     }
-
 
 }

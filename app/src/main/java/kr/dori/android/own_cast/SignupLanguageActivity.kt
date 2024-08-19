@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 
 class SignupLanguageActivity : ComponentActivity() {
@@ -19,6 +20,7 @@ class SignupLanguageActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup_language)
+        enableEdgeToEdge()
 
         val backButton = findViewById<ImageView>(R.id.backButton)
         nextButton = findViewById(R.id.btn_next)

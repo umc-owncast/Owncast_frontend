@@ -79,11 +79,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
     private var isText = false
     private var id : Long? = null
 
-
-
-    private lateinit var dialog:AddCategoryDialog
-
-
+    private lateinit var dialog: AddCategoryDialog
     private lateinit var imageResultLauncher: ActivityResultLauncher<Intent>
 
     /*postCast에 쓰일 정보들*/
@@ -94,8 +90,6 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
 
     //finish dialog
     private var uri: Uri? = null
-
-
 
 
 
@@ -141,7 +135,6 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                     .centerCrop() // ImageView에 맞게 이미지 크기를 조정
                     .into(binding.keyAudSaveThumbIv)
                 //아래의 코드로 이제 서버쪽으로 이미지를 보낼 수 있게 해줌.
-
                 uri = it//finish dialog로 사진 정보 넘겨줘야함
 
                 body = createMultipartBodyFromUri(it, requireContext())
@@ -268,6 +261,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                 when(pos){
 
                     playlistName.size-1 ->{//이 부분이 카테고리 생성하는 부분, api 추가해주기
+
                         binding.keyAudSaveCategorySp.setSelection(currentPos)
                         dialog.show()
                     }
@@ -276,7 +270,6 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                         Toast.makeText(requireContext(), value, Toast.LENGTH_SHORT).show()
                     }
                 }
-
 
                 //다시 포커스 안된거처럼 색깔을 바꿔줘야 함
             }
@@ -432,6 +425,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                         }
                         binding.keyAudSaveCategorySp.setSelection(playlistName.size-2)
                         dialog.dismiss()
+
                         Toast.makeText(requireContext(),"추가되었습니다.",Toast.LENGTH_SHORT).show()
                     }
                     else ->{

@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 
 
@@ -21,6 +22,7 @@ class ChangeSelfActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_self)
+        enableEdgeToEdge()
 
         val etSelf = findViewById<EditText>(R.id.etSelf)
         val textNum = findViewById<TextView>(R.id.text_num)

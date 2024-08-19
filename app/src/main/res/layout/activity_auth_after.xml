@@ -52,6 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="나만의 맞춤형 오디오"
+        android:fontFamily="@font/pretendard_regular"
         android:textSize="25sp"
         android:textColor="@color/black"
         android:textAlignment="center"

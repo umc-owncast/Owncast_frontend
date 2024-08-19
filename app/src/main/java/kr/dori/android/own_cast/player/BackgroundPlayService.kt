@@ -142,7 +142,10 @@ class BackgroundPlayService : Service() {
                         }
                     }
                 } else {
-                    Log.e("BackgroundPlayService", "Failed to get cast info: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "BackgroundPlayService",
+                        "Failed to get cast info: ${response.errorBody()?.string()}"
+                    )
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

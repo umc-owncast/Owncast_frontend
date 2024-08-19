@@ -34,6 +34,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="14dp"
             android:text="오디오 제목"
+            android:fontFamily="@font/pretendard_regular"
             android:textSize="16sp"
             android:textStyle="normal"
             app:layout_constraintStart_toEndOf="@+id/fragment_playlist_cast_iv"

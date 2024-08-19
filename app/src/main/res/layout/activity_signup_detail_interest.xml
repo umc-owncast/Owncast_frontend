@@ -35,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="회원가입"
+                android:fontFamily="@font/pretendard_regular"
                 android:textColor="@color/black"
                 android:textSize="@dimen/TitleLargeSize" />
 

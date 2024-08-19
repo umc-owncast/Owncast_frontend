@@ -1,5 +1,6 @@
 package kr.dori.android.own_cast.keyword
 
+
 import android.animation.ObjectAnimator
 import android.app.Dialog
 import android.content.Context
@@ -17,12 +18,15 @@ import kr.dori.android.own_cast.databinding.FragmentAddCategoryDialogBinding
 import kr.dori.android.own_cast.databinding.KeywordLoadingDialogBinding
 
 
+
 class KeywordLoadingDialog(context: Context, val loadingText : String):Dialog(context) {
+
     private lateinit var binding: KeywordLoadingDialogBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = KeywordLoadingDialogBinding.inflate(LayoutInflater.from(context))
         setContentView(binding.root)
+
         binding.loadingText.text = loadingText
 
         /*binding.loadingCircle.pivotX = (binding.loadingCircle.width / 2).toFloat()
@@ -66,5 +70,6 @@ class KeywordLoadingDialog(context: Context, val loadingText : String):Dialog(co
 
             window?.setLayout(x, y)
         }
+
     }
 }
