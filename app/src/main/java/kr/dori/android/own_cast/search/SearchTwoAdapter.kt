@@ -56,6 +56,8 @@ class SearchTwoAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Se
                 mover.goPlayCast(dataList, data.id)
             }
         }
+    }
+
 
 
         private fun formatTime(totalSeconds: Int): String {
@@ -63,6 +65,7 @@ class SearchTwoAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Se
             val seconds = totalSeconds % 60
             return String.format("%d:%02d", minutes, seconds)
         }
+
     }
 
 }

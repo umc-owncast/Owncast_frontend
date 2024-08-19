@@ -79,7 +79,8 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
     private var isText = false
     private var id : Long? = null
 
-    private lateinit var dialog:AddCategoryDialog
+    private lateinit var dialog: AddCategoryDialog
+
     private lateinit var imageResultLauncher: ActivityResultLauncher<Intent>
 
     /*postCast에 쓰일 정보들*/
