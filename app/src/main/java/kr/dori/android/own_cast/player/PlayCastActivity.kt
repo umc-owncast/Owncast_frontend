@@ -33,7 +33,7 @@ class PlayCastActivity : AppCompatActivity() {
     private var service: BackgroundPlayService? = null
     private var isBound = false
     private val handler = Handler()
-
+    var stateListener: Int = 0
 
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, binder: IBinder) {
@@ -85,8 +85,6 @@ class PlayCastActivity : AppCompatActivity() {
             speedTableViewModel.setData(1.0f)
         }
 
-
-
         // 서비스 바인딩
         val intent = Intent(this, BackgroundPlayService::class.java)
         bindService(intent, connection, Context.BIND_AUTO_CREATE)
@@ -94,7 +92,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         // 초기 Fragment 설정
         supportFragmentManager.beginTransaction()
-            .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle, CastPlayerData.currentCast.castCreator, CastPlayerData.currentCast.castCategory))
+            .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast))
             .commit()
 
 
@@ -105,7 +103,7 @@ class PlayCastActivity : AppCompatActivity() {
                     service?.seekTo(progress * 1000L)
                     // CastPlayerData.updatePlaybackPosition(service?.getCurrentPosition() ?: 0L)
                     binding.startTv.text = formatTime(service?.getCurrentPosition() ?: 0L)
-                    updateLyricsHighlight()
+                    //updateLyricsHighlight()
                 }
             }
 
@@ -118,7 +116,7 @@ class PlayCastActivity : AppCompatActivity() {
                 service?.seekTo(seekBar?.progress?.times(1000L) ?: 0L)
                 //CastPlayerData.updatePlaybackPosition(service?.getCurrentPosition() ?: 0L)
                 binding.startTv.text = formatTime(service?.getCurrentPosition() ?: 0L)
-                updateLyricsHighlight()
+                    //  updateLyricsHighlight()
             }
         })
 
@@ -147,9 +145,7 @@ class PlayCastActivity : AppCompatActivity() {
                 xibalCast(nextCast.castId)  // 새로운 캐스트 재생
                 Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
             }
-            supportFragmentManager.beginTransaction()
-                .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle,CastPlayerData.currentCast.castCreator,CastPlayerData.currentCast.castCategory))
-                .commit()
+            missFortune()
 
         }
 
@@ -164,9 +160,7 @@ class PlayCastActivity : AppCompatActivity() {
                 xibalCast(previousCast.castId)  // 새로운 캐스트 재생
                 Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
             }
-            supportFragmentManager.beginTransaction()
-                .add(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle,CastPlayerData.currentCast.castCreator,CastPlayerData.currentCast.castCategory))
-                .commit()
+            missFortune()
         }
 
         binding.to10next.setOnClickListener {
@@ -351,7 +345,7 @@ class PlayCastActivity : AppCompatActivity() {
         }
     }
     private fun startSeekBarUpdate() {
-        handler.postDelayed(updateSeekBar, 1000)
+        handler.postDelayed(updateSeekBar, 10) //이건 첫번째 객체
     }
 
     private fun stopSeekBarUpdate() {
@@ -364,11 +358,15 @@ class PlayCastActivity : AppCompatActivity() {
                 val currentPosition = it.getCurrentPosition()
                 binding.seekBar.progress = (currentPosition / 1000).toInt() // 현재 위치를 초 단위로 설정
                 binding.startTv.text = formatTime(currentPosition)
+
+                // CastScriptFragment에 시간 정보 전달
+                val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
+                fragment?.updateCurrentTime(currentPosition)
+                Log.d("UpdateTime", "Activity: $currentPosition")
             }
-            handler.postDelayed(this, 1000)
+            handler.postDelayed(this, 300) // 주기적으로 업데이트
         }
     }
-
 
     private fun formatTime(ms: Long): String {
         val minutes = TimeUnit.MILLISECONDS.toMinutes(ms)
@@ -413,13 +411,15 @@ class PlayCastActivity : AppCompatActivity() {
             }
         }
     }
-
+/*
     private fun updateLyricsHighlight() {
         val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
         fragment?.let {
             (it.binding.scriptRv.adapter as? ScriptAdapter)?.updateCurrentTime(service?.getCurrentPosition() ?: 0L)
         }
     }
+
+ */
 
     // Fragment 전환 함수들
     private fun audioToScript() {
@@ -431,9 +431,23 @@ class PlayCastActivity : AppCompatActivity() {
         binding.activityPlayCastNotAudioExit.visibility = View.VISIBLE
         binding.playcastActivitySaveBackIv.visibility = View.GONE
 
+        disableLoopForSentence()
+        // 새로운 CastScriptFragment 생성 및 추가
+        val scriptFragment = CastScriptFragment(CastPlayerData.currentCast)
         supportFragmentManager.beginTransaction()
-            .replace(R.id.play_cast_frm, CastScriptFragment())
+            .replace(R.id.play_cast_frm, scriptFragment)
             .commitAllowingStateLoss()
+
+        // 프래그먼트가 추가된 후에 바로 콜백 메소드 설정
+        scriptFragment.adapter.onRepeatToggleListener = { position, isRepeatOn ->
+            if (isRepeatOn) {
+                enableLoopForSentence(position)
+                Log.d("loop","${position},${isRepeatOn}")
+            } else {
+                disableLoopForSentence()
+            }
+        }
+        stateListener = 1
     }
 
     private fun scriptToAudio() {
@@ -446,9 +460,10 @@ class PlayCastActivity : AppCompatActivity() {
         binding.playcastActivitySaveBackIv.visibility = View.VISIBLE
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle,CastPlayerData.currentCast.castCreator,CastPlayerData.currentCast.castCategory))
+            .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast))
             .commitAllowingStateLoss()
 
+        stateListener = 0
     }
 
     private fun audioToPlaylist() {
@@ -463,6 +478,8 @@ class PlayCastActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.play_cast_frm, CastPlaylistFragment())
             .commitAllowingStateLoss()
+
+        stateListener = 2
     }
 
     private fun playlistToAudio() {
@@ -475,8 +492,44 @@ class PlayCastActivity : AppCompatActivity() {
         binding.playcastActivitySaveBackIv.visibility = View.VISIBLE
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast.castTitle,CastPlayerData.currentCast.castCreator,CastPlayerData.currentCast.castCategory))
+            .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast))
             .commitAllowingStateLoss()
+
+        stateListener = 0
+    }
+
+    fun missFortune() {
+
+        when(stateListener){
+            0 ->             supportFragmentManager.beginTransaction()
+                .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast))
+                .commit()
+
+            1 -> {
+                disableLoopForSentence()
+                val scriptFragment = CastScriptFragment(CastPlayerData.currentCast)
+
+                // 콜백 설정
+                scriptFragment.adapter.onRepeatToggleListener = { position, isRepeatOn ->
+                    if (isRepeatOn) {
+                        enableLoopForSentence(position)
+                        Log.d("loop","${position},${isRepeatOn}")
+                    } else {
+                        disableLoopForSentence()
+                    }
+                }
+
+                // 프래그먼트 교체
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.play_cast_frm, scriptFragment)
+                    .commitAllowingStateLoss()
+            }
+
+
+            2 ->         supportFragmentManager.beginTransaction()
+                .replace(R.id.play_cast_frm, CastPlaylistFragment())
+                .commitAllowingStateLoss()
+        }
 
     }
 
@@ -496,7 +549,27 @@ class PlayCastActivity : AppCompatActivity() {
         val seconds = input % 60
         return String.format("%02d:%02d", minutes, seconds)
     }
-}
 
+    // 특정 문장을 반복하도록 설정
+    private fun enableLoopForSentence(position: Int) {
+        val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
+        val sentence = fragment?.adapter?.dataList?.get(position)
+        val nextSentence = fragment?.adapter?.dataList?.getOrNull(position + 1)  // 다음 문장이 없을 수도 있으므로 null을 처리
+
+        if (sentence != null && nextSentence != null) {
+            val startTime = (sentence.timePoint * 1000).toLong()
+            val endTime = ((nextSentence.timePoint * 1000)-10).toLong()
+            Log.d("loop", "Start: $startTime, End: $endTime")
+            service?.setLoopForSegment(startTime, endTime)
+        } else {
+            Log.e("loop", "Invalid sentence data for looping")
+        }
+    }
+
+    // 반복을 해제
+    private fun disableLoopForSentence() {
+        service?.clearLoop()  // 반복 구간을 해제하는 메소드
+    }
+}
 
 

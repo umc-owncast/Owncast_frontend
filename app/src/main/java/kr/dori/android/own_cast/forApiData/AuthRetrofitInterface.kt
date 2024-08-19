@@ -96,6 +96,22 @@ interface Playlist{
 
 
 
-interface bookmark{
+interface Bookmark{
+    @POST("/api/bookmark")
+    suspend fun postBookmark(@Query("sentenceId")sentenceId: Int): Response<AuthResponse<Long>>
+
+    @DELETE("/api/bookmark")
+    suspend fun deleteBookmark(@Query("sentenceId")sentenceId: Int):
+            Response<AuthResponse<Long>>
+
+    @GET("/api/study/{playlistId}")
+    suspend fun getBookmark(@Path("playlistId")playlistId: Int):
+            Response<AuthResponse<List<GetBookmark>>>
+
+    @GET("/api/study/savedcast")
+    suspend fun getSaved():Response<AuthResponse<List<GetBookmark>>>
+
+    @GET("/api/study/mycast")
+    suspend fun getMy():Response<AuthResponse<List<GetBookmark>>>
 
 }

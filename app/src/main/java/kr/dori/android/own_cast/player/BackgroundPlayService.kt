@@ -20,9 +20,18 @@ class BackgroundPlayService : Service() {
     private val binder = LocalBinder()
     private lateinit var player: ExoPlayer
     private val handler = Handler()
+    private var loopStartTime: Long? = null
+    private var loopEndTime: Long? = null
+
 
     inner class LocalBinder : Binder() {
         fun getService(): BackgroundPlayService = this@BackgroundPlayService
+    }
+
+    fun clearLoop() {
+        loopStartTime = null
+        loopEndTime = null
+        handler.removeCallbacks(loopRunnable)
     }
 
     override fun onBind(intent: Intent?): IBinder = binder
@@ -69,6 +78,12 @@ class BackgroundPlayService : Service() {
 
     fun stopAudio() {
         player.stop()  // 현재 재생 중인 음원을 중지
+    }
+
+    fun setLoopForSegment(startTimeMs: Long, endTimeMs: Long) {
+        loopStartTime = startTimeMs
+        loopEndTime = endTimeMs
+        startLooping()
     }
 
     fun seekTo(positionMs: Long) {
@@ -159,6 +174,23 @@ class BackgroundPlayService : Service() {
         } else {
             // 입력이 이미 초 단위인 경우
             input.toIntOrNull() ?: 0
+        }
+    }
+
+    private fun startLooping() {
+        handler.post(loopRunnable)
+    }
+
+    private val loopRunnable = object : Runnable {
+        override fun run() {
+            loopStartTime?.let { start ->
+                loopEndTime?.let { end ->
+                    if (player.currentPosition >= end) {
+                        player.seekTo(start)
+                    }
+                }
+            }
+            handler.postDelayed(this, 100)  // 짧은 간격으로 반복 실행
         }
     }
 

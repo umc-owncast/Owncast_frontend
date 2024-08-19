@@ -8,8 +8,9 @@ import android.view.ViewGroup
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.FragmentCastAudioBinding
+import kr.dori.android.own_cast.forApiData.Cast
 
-class CastAudioFragment(val castName: String, val castCreator: String, val castCategory: String) : Fragment() {
+class CastAudioFragment(val currentCast: Cast) : Fragment() {
 
     lateinit var binding: FragmentCastAudioBinding
 
@@ -20,10 +21,10 @@ class CastAudioFragment(val castName: String, val castCreator: String, val castC
         // Inflate the layout for this fragment
         binding = FragmentCastAudioBinding.inflate(inflater,container,false)
 
-        binding.castTitle.text = castName
+        binding.castTitle.text = currentCast.castTitle
 
-        if(castCreator != "헬로"){
-            binding.creatorCategory.text = "${castCreator}-${castCategory}"
+        if(currentCast.castCreator != "헬로"){
+            binding.creatorCategory.text = "${currentCast.castCreator}-${currentCast.castCategory}"
         }else{
             binding.creatorCategory.visibility = View.GONE
         }
