@@ -24,7 +24,7 @@ import java.util.Objects
 
 interface CastInterface{
     @DELETE("/api/cast/{castId}")
-    fun deleteCast(@Path("castId") castId:Long): Call<AuthResponse<String>>
+    suspend fun deleteCast(@Path("castId") castId:Long): Response<AuthResponse<String>>
     @GET("/api/cast/{castId}/scripts")
     suspend fun getCastScript(@Path("castId") castId:Long): Response<AuthResponse<List<Script>>>
     @GET("/api/cast/{castId}/audio")
@@ -39,8 +39,7 @@ interface CastInterface{
     suspend fun getKeywordHome() : Response<AuthResponse<List<String>>>
     @Multipart
     @PATCH("/api/cast/{castId}")//캐스트 수정 api, 이미지 파일로 보내야함
-
-    fun patchCast(@Path("castId") castId:Long,@Part("updateInfo") updateInfo: UpdateInfo, @Part image: MultipartBody.Part):Call<AuthResponse<String>>
+    suspend fun patchCast(@Path("castId") castId:Long,@Part("updateInfo") updateInfo: UpdateInfo, @Part image: MultipartBody.Part):Response<AuthResponse<String>>
 
     @Multipart
     @POST("/api/cast/{castId}")//캐스트 저장 api keyvpSaveFragment에서 쓰인다
@@ -68,10 +67,13 @@ interface CastInterface{
 
 interface PlayListInterface{
     @DELETE("/api/cast/{playlistId}")
-    fun deleteCast(@Path("playlistId") playlistId:Long): Call<AuthResponse<DeletePlaylist>>
+    suspend fun deleteCast(@Path("playlistId") playlistId:Long): Response<AuthResponse<DeletePlaylist>>
     @GET("/api/playlist/view")// 사용자 플레이리스트 목록 받아오기
     //GetPlayList잘못만든거같던데..
     fun getPlayList() : Call<AuthResponse<List<GetUserPlaylist>>>
+
+    @GET("/api/playlist/view")// 사용자 플레이리스트 목록 받아오기
+    suspend fun getPlayListCorutine() : Response<AuthResponse<List<GetUserPlaylist>>>
     @POST("/api/playlist")
     fun postPlayList(@Query("playlistName") playlistName: String) : Call<AuthResponse<PostPlaylist>>
 

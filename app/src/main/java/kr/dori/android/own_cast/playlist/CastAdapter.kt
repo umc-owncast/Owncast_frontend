@@ -55,7 +55,7 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
                 binding.castItemCreator.visibility = View.GONE
                 binding.castItemEditIv.visibility = View.VISIBLE
                 binding.castItemEditIv.setOnClickListener {
-                    activityMover.ToEditAudio()
+                    activityMover.ToEditAudio(data.castId,data.playlistId)
                 }
                 if(data.isPublic) {
                     binding.castItemLockIv.visibility = View.GONE

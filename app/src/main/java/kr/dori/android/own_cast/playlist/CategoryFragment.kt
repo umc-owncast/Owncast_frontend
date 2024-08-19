@@ -129,8 +129,10 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
     }
 
 
-    override fun ToEditAudio() {
+    override fun ToEditAudio(id: Long,playlistId:Long) {
         val intent = Intent(requireContext(), EditAudioActivity::class.java)
+        intent.putExtra("id",id)
+        intent.putExtra("playlistId",playlistId)
         startActivity(intent)
     }
 

@@ -65,7 +65,7 @@ import java.io.IOException
 class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategoryListener,
     EditAudio {
     lateinit var binding: FragmentKeyvpAudiosaveBinding
-    private val list: MutableList<String> = mutableListOf<String>("카테고리1","카테고리2","카테고리3","카테고리4","카테고리5","추가할 카테고리 이름 입력")
+
     var currentPos:Int = 0//카테고리 새로 추가할때, dismiss되면 그대로 유지해야되서 만듦
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
 
@@ -247,11 +247,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     fun initSpinnerAdapter() {
         //마지막 칸이 category를 생성하는 기능이기 때문에 다이얼로그를 받아온다.
         dialog = AddCategoryDialog(requireContext(), this, this)
-        /*if(_list.isNullOrEmpty()){
-            adapter = KeyAudSaveDropdownAdapter(requireContext(), R.layout.item_aud_set_spinner, list)
-        }else{
 
-        }*/
 
         // 뷰모델의 MutableLiveData로부터 playlistName들을 추출하여 List로 만들기
         for(i :Int in 0..sharedViewModel.getPlayList.value!!.size-1){
@@ -272,7 +268,6 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                 when(pos){
 
                     playlistName.size-1 ->{//이 부분이 카테고리 생성하는 부분, api 추가해주기
-
                         binding.keyAudSaveCategorySp.setSelection(currentPos)
                         dialog.show()
                     }
@@ -282,12 +277,12 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                     }
                 }
 
-                binding.keyAudSaveCategorySp.setBackgroundResource(R.drawable.key_audset_dropdown_off_bg)
+
                 //다시 포커스 안된거처럼 색깔을 바꿔줘야 함
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 // 선택되지 않은 경우
-                binding.keyAudSaveCategorySp.setBackgroundResource(R.drawable.key_audset_dropdown_off_bg)
+
             }
 
         }
@@ -437,6 +432,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                         }
                         binding.keyAudSaveCategorySp.setSelection(playlistName.size-2)
                         dialog.dismiss()
+                        Toast.makeText(requireContext(),"추가되었습니다.",Toast.LENGTH_SHORT).show()
                     }
                     else ->{
                         Log.d("apiTest-playlistAdd","연결실패 코드 : ${resp.code}")
@@ -454,18 +450,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     }
 
     private fun initEditText(){
-        /*binding.keyAudSaveTitleEt.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
-            if (hasFocus) {
-                // 포커스가 잡혔을 때 실행할 코드
-                binding.keyAudSaveTitleEt.backgroundTintList = ColorStateList.
-                valueOf(ContextCompat.getColor(this.requireContext(), R.color.main_color))
 
-            } else {
-                // 포커스가 해제되었을 때 실행할 코드
-                binding.keyAudSaveTitleEt.backgroundTintList = ColorStateList.
-                valueOf(ContextCompat.getColor(this.requireContext(), R.color.hint_color))
-            }
-        }*/
         binding.keyAudSaveTitleEt.addTextChangedListener(object :
             TextWatcher {
             override fun afterTextChanged(s: Editable?) {

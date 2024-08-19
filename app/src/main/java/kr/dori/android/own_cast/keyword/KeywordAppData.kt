@@ -18,7 +18,7 @@ class KeywordAppData: Application() {
         var mainTopic = ""
         var detailTopic : List<String> = listOf()
         fun getDetailTopic(key: String, defaultValue: String): List<String> {
-            return KeywordAppData.detailTopic ?: listOf("로딩중","로딩중","로딩중","로딩중","로딩중","로딩중")
+            return KeywordAppData.detailTopic
         }
         fun updateDetailTopic(data: List<String>) {
             detailTopic = data

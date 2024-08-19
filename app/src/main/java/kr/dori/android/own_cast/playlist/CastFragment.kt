@@ -162,8 +162,10 @@ class CastFragment(var playlistIdList : MutableList<Long>) : Fragment(), Activit
     }
 
 
-    override fun ToEditAudio() {
+    override fun ToEditAudio(id: Long,playlistId:Long) {
         val intent = Intent(requireContext(), EditAudioActivity::class.java)
+        intent.putExtra("id",id)
+        intent.putExtra("playlistId",playlistId)
         startActivity(intent)
     }
 

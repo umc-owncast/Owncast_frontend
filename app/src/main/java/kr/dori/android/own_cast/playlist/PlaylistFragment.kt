@@ -281,7 +281,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 
     }
 
-    override fun ToEditAudio() {
+    override fun ToEditAudio(id: Long, playlistId:Long) {
         TODO("Not yet implemented")
 
     }
