@@ -21,7 +21,7 @@ import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
 
-class CastScriptFragment(val currentCast: Cast) : Fragment() {
+class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
     lateinit var binding: FragmentCastScriptBinding
     private val playCastViewModel: PlayCastViewModel2 by activityViewModels()
     private val handler = Handler()
@@ -60,26 +60,20 @@ class CastScriptFragment(val currentCast: Cast) : Fragment() {
             }
             launch {
                 try{
-                  //  val allBookmark = getBookmark.getBookmark(currentCast.castId)
+                    val response = getBookmark.getBookmark(currentCast.playlistId)
+                    if(response.isSuccessful){
+                        val bookmark = response.body()?.result
+                        val filteredBookmark = bookmark?.filter{bookmark -> bookmark.castId == currentCast.castId }
+                        Log.d("bookmark","playlistId: ${currentCast.playlistId}, castId: ${currentCast.castId}, bookmark: ${bookmark}, filtering: ${filteredBookmark} ")
+                    }
+
+
                 }catch (e:Exception){
                     e.printStackTrace()
+                    Log.d("bookmark","fucked")
                 }
             }
         }
-
-
-        // val lyricsList = parseLyrics(rawLyrics)
-
-        val adapter = ScriptAdapter()
-    //    adapter.dataList = lyricsList
-
-/*
-        playCastViewModel.currentTime.observe(viewLifecycleOwner, Observer { currentTime ->
-            adapter.updateCurrentTime(currentTime)
-        })
-
- */
-
 
         return binding.root
     }

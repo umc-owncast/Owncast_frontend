@@ -27,6 +27,7 @@ import kr.dori.android.own_cast.editAudio.EditAudioActivity
 import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.getRetrofit
+import kr.dori.android.own_cast.player.CastWithPlaylistId
 import kr.dori.android.own_cast.player.PlayCastActivity
 import retrofit2.create
 
@@ -36,7 +37,7 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var castAdapter: CastAdapter
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
-    lateinit var sendCastIdList: List<Cast>
+    lateinit var sendCastIdList: List<CastWithPlaylistId>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,16 +60,29 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
                     val playlistInfo = response.body()?.result
                     withContext(Dispatchers.Main) {
                         playlistInfo?.let {
-                            // 데이터를 캐스트 리스트로 변환하여 어댑터에 설정
-                            castAdapter.dataList = it.castList.toMutableList()
-                            Log.d("castInfo","${it.castList}")
-                            sendCastIdList = it.castList
+                            // 각 Cast를 CastWithPlaylistId로 변환하여 어댑터에 설정
+                            val castListWithPlaylistId = it.castList.map { cast ->
+                                CastWithPlaylistId(
+                                    castId = cast.castId,
+                                    playlistId = playlistId,
+                                    castTitle = cast.castTitle,
+                                    isPublic = cast.isPublic,
+                                    castCreator = cast.castCreator,
+                                    castCategory = cast.castCategory,
+                                    audioLength = cast.audioLength
+                                )
+                            }
+
+                            // 데이터를 어댑터에 설정
+                            castAdapter.dataList = castListWithPlaylistId.toMutableList()
+                            Log.d("castInfo","${castListWithPlaylistId}")
+                            sendCastIdList = castListWithPlaylistId
                             castAdapter.notifyDataSetChanged()
 
                             // 총 오디오 길이 계산
-                            val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(it.castList)
+                            val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(castListWithPlaylistId)
                             Log.d("TotalAudioLength", "총 오디오 길이 (초): $totalAudioLengthInSeconds")
-                            binding.castSizeTotalLength.text = "${it.castList.size}개, ${formatTime(totalAudioLengthInSeconds)}"
+                            binding.castSizeTotalLength.text = "${castListWithPlaylistId.size}개, ${formatTime(totalAudioLengthInSeconds)}"
                         }
                     }
                 } else {
@@ -113,7 +127,7 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
         return binding.root
     }
 
-    override fun ToPlayCast(castList: List<Cast>) {
+    override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
         //   val currentCast = CastPlayerData.currentCast
 
         CastPlayerData.setCast(castList)
@@ -130,7 +144,7 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
         startActivity(intent)
     }
 
-    fun getTotalAudioLengthInSeconds(castList: List<Cast>): Int {
+    fun getTotalAudioLengthInSeconds(castList: List<CastWithPlaylistId>): Int {
         return castList.sumOf { cast ->
             parseTimeToSeconds(cast.audioLength)
         }

@@ -11,6 +11,7 @@ import kr.dori.android.own_cast.databinding.ScriptItemBinding
 import kr.dori.android.own_cast.forApiData.NewSentences
 class ScriptAdapter : RecyclerView.Adapter<ScriptAdapter.Holder>() {
     var dataList: List<NewSentences> = emptyList()
+    var bookmarkList: List<String> = emptyList()
 
     // 이 콜백을 통해 Activity에 반복 요청을 전달합니다.
     var onRepeatToggleListener: ((position: Int, isRepeatOn: Boolean) -> Unit)? = null

@@ -10,7 +10,7 @@ import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.FragmentCastAudioBinding
 import kr.dori.android.own_cast.forApiData.Cast
 
-class CastAudioFragment(val currentCast: Cast) : Fragment() {
+class CastAudioFragment(val currentCast: CastWithPlaylistId) : Fragment() {
 
     lateinit var binding: FragmentCastAudioBinding
 
