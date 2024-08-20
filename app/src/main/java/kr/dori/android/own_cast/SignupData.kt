@@ -75,15 +75,10 @@ class SignupData : Application() {
 
 
         var token: String
-            get() = getString("token", "")
-            set(value) = setString("token", value)
-
-        /*
-        var token: String
             get() = getString("toekn", "닉네임")
             set(value) = setString("toekn", value)
 
-         */
+
 
     }
 
