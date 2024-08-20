@@ -416,17 +416,6 @@ class PlayCastActivity : AppCompatActivity() {
         }
     }
 
-    /*
-        private fun updateLyricsHighlight() {
-            val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
-            fragment?.let {
-                (it.binding.scriptRv.adapter as? ScriptAdapter)?.updateCurrentTime(service?.getCurrentPosition() ?: 0L)
-            }
-        }
-
-     */
-
-
     // Fragment 전환 함수들
     private fun audioToScript() {
         binding.activityPlayCastPlaylistOnIv.visibility = View.GONE

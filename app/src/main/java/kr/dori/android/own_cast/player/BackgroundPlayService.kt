@@ -23,6 +23,8 @@ class BackgroundPlayService : Service() {
     private val handler = Handler()
     private var loopStartTime: Long? = null
     private var loopEndTime: Long? = null
+    private var isPlaying: Boolean = false  // 재생 상태를 추적하는 변수
+
 
 
     inner class LocalBinder : Binder() {
@@ -44,33 +46,41 @@ class BackgroundPlayService : Service() {
 
     fun prepareAudio(url: String) {
         player.stop()  // 기존 재생 중지
+        isPlaying = false  // 재생 상태를 갱신
         val mediaItem = MediaItem.fromUri(url)
         player.setMediaItem(mediaItem)
         player.prepare()  // 오디오 준비
         // 재생은 하지 않음
     }
 
+
     fun isPlaying(): Boolean {
         return player.isPlaying
     }
 
     fun playAudio(url: String) {
-        // 이전 재생을 중지하고 새로 재생
         player.stop()  // 기존 재생 중지
+        isPlaying = false  // 재생 상태를 갱신
         val mediaItem = MediaItem.fromUri(url)
         player.setMediaItem(mediaItem)
         player.prepare()
         player.play()  // 재생 시작
+        isPlaying = true  // 재생 상태를 갱신
         startSeekBarUpdate()
     }
 
+
     fun pauseAudio() {
         player.pause()
+        isPlaying = false  // 재생 상태를 갱신
     }
+
 
     fun resumeAudio() {
         player.play()
+        isPlaying = true  // 재생 상태를 갱신
     }
+
 
     // 반복 모드 설정
     fun setRepeatMode(repeatMode: Int) {
@@ -79,7 +89,9 @@ class BackgroundPlayService : Service() {
 
     fun stopAudio() {
         player.stop()  // 현재 재생 중인 음원을 중지
+        isPlaying = false  // 재생 상태를 갱신
     }
+
 
     fun setLoopForSegment(startTimeMs: Long, endTimeMs: Long) {
         loopStartTime = startTimeMs
@@ -117,13 +129,14 @@ class BackgroundPlayService : Service() {
 
     private val updateSeekBar = object : Runnable {
         override fun run() {
-            if (player.isPlaying) {
+            if (isPlaying) {  // player.isPlaying 대신 isPlaying 변수를 사용
                 val currentPosition = player.currentPosition
                 // 이 위치에서 UI 업데이트를 Activity로 전송하는 로직 추가
             }
             handler.postDelayed(this, 1000)
         }
     }
+
 
     fun getCastInfo(castId: Long, onInfoReceived: (String?, Int) -> Unit) {
         val getCastInfo = getRetrofit().create(Playlist::class.java)
