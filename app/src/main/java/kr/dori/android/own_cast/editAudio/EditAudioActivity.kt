@@ -109,6 +109,12 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
         initCategoryData()//카테고리를 받아오고, 성공시 spinner를 초기화
         initCastData()//캐스트도 받아오게
         initEditText()//비어있으면은 수정 못하게
+
+        initClickListener()
+
+    }
+
+    fun initClickListener(){
         binding.activityEditAudioOk.setOnClickListener {
 
         }
@@ -134,7 +140,12 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
         binding.activityEditAudioDelete.setOnClickListener {
             mode = true
             deleteCast()
-
+        }
+        binding.imageView17.setOnClickListener{
+            selectGallery()
+        }
+        binding.imageView18.setOnClickListener{
+            selectGallery()
         }
     }
 
@@ -197,10 +208,10 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                                         // 로컬 파일에서 이미지 로드
                                         val bitmap = BitmapFactory.decodeFile(imageUrl)
                                         binding.imageView17.setImageBitmap(bitmap)
+
                                     }
                                     createMultipartBodyFromUrl(imageUrl, context){ part->
                                         if (part != null) {
-
                                         } else {
                                             Toast.makeText(context,"파일 변환 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
                                         }

@@ -15,7 +15,7 @@ import kr.dori.android.own_cast.SignupData
 import kr.dori.android.own_cast.databinding.FragmentKeywordOutDialogBinding
 import kr.dori.android.own_cast.databinding.KeywordFinishDialogBinding
 
-class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAudioFinishListener
+class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAudioOutListener
 ,val title : String, val category : String, val uri: Uri?
 ) : Dialog(context) {
     lateinit var binding : KeywordFinishDialogBinding
@@ -27,7 +27,9 @@ class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAu
 
 
         binding.keyFinHomeTv.setOnClickListener {
-            listener.goHomeFragment()
+            dismiss()
+            listener.getOut()
+
         }
         initData()
 

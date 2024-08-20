@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 
 import androidx.fragment.app.FragmentManager
@@ -34,7 +36,8 @@ import kotlin.coroutines.CoroutineContext
 class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnClickListener, CoroutineScope {
     lateinit var binding: FragmentKeywordAudiosetBinding
     private lateinit var sharedViewModel: KeywordViewModel
-    private var alreadyVisit : Boolean = false
+    private var alreadyVisit : Boolean = false//이미 audioScript에서 exoPlayer를 생성했는지 확인.
+    //하지만.. 그냥 여기다가 할당하는 방식이 맞는거같은데 실수한거같음
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + corutineJob
     private lateinit var corutineJob: Job
@@ -58,20 +61,13 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
             dialog.show()
         }
 
-        binding.keyAudBackIv.setOnClickListener{
-            if(binding.keywordAudiosetVp.currentItem==0){
-                val isHome = (arguments?.getBoolean("isHome"))
-                if(isHome==null||isHome==false){
-                    requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
-                    requireActivity().supportFragmentManager.popBackStack()
-                }else{//홈프래그먼트에서 키워드 클릭하고 바로오면은, 그냥 액티비티 종료
-                    getOut()
-                }
-            }
-            else{
-                prevPage()
 
-            }
+        //뒤로가기 버튼 눌렀을때 모션 처리
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            prevPage()
+        }
+        binding.keyAudBackIv.setOnClickListener{
+            prevPage()
         }
 
         return binding.root
@@ -110,11 +106,28 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
         //현재 위치의 배경을 칠해줌
     }
     private fun prevPage(){
-        binding.keywordAudiosetTb.getTabAt(binding.keywordAudiosetVp.currentItem)?.view?.
-        setBackgroundColor(resources.getColor(R.color.gray,null))
-        if(binding.keywordAudiosetVp.currentItem == 1)alreadyVisit = true
+        if(binding.keywordAudiosetVp.currentItem==0){
+            val isHome = (arguments?.getBoolean("isHome"))
+            if(isHome==null||isHome==false){
+                requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
+                requireActivity().supportFragmentManager.popBackStack()
+            }else{//홈프래그먼트에서 키워드 클릭하고 바로오면은, 그냥 액티비티 종료
+                getOut()
+            }
+        }else{
+            binding.keywordAudiosetTb.getTabAt(binding.keywordAudiosetVp.currentItem)?.view?.
+            setBackgroundColor(resources.getColor(R.color.gray,null))
 
-        binding.keywordAudiosetVp.currentItem -= 1
+            if(binding.keywordAudiosetVp.currentItem == 1){
+                alreadyVisit = true
+                binding.keywordAudiosetVp.currentItem -= 1
+            }else{
+                binding.keywordAudiosetVp.currentItem -= 1
+            }
+        }
+
+
+
     }
 
     override fun createCastByScript(postCastByScript: PostCastByScript){
@@ -135,7 +148,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
                 dialog.dismiss()
                 apiResult?.let {
                     // 성공적인 API 결과를 UI에 반영
-                    Log.d("apiTest-CreateCast", "코루틴도 성공하였음")
+
                     sharedViewModel.setSentences(it.result!!.sentences)//viewModel로 받아온 정보 넘기기
                     sharedViewModel.setCastId(it.result!!.id)
                     sharedViewModel.setUrl(it.result!!.fileUrl)
@@ -160,18 +173,20 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
     }
     private suspend fun createCastByScriptLauncher(postCastByScript: PostCastByScript): AuthResponse<PostCastForResponse>?{
         val apiService = getRetrofit().create(CastInterface::class.java)
-
+        val context = requireContext()
         return try {
             val response = apiService.postCastByScript(postCastByScript)
 
-            if (response.code().equals("200")||response.body()?.code.equals("COMMON200")) {
+            if (response.isSuccessful) {
                 Log.d("apiTest-CreateCast", "저장성공: ${response.body()?.result}")
                 response.body()
             } else {
                 Log.d("apiTest-CreateCast", "연결실패 에러바디: ${response.errorBody().toString()}")
+                Toast.makeText(context, "API 호출 실패\n 오류코드 : ${response.code()}",Toast.LENGTH_SHORT).show()
                 null
             }
         } catch (e: Exception) {
+            Toast.makeText(context, "API 호출 실패\n 잠시후 다시 시도해주세요.",Toast.LENGTH_SHORT).show()
             Log.d("apiTest-CreateCast", "API 호출 실패: ${e.message}")
             null
         }
@@ -197,7 +212,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
                 dialog.dismiss()
                 apiResult?.let {
                     // 성공적인 API 결과를 UI에 반영
-                    Log.d("apiTest-CreateCast", "코루틴도 성공하였음")
+
                     sharedViewModel.setSentences(it.result!!.sentences)//viewModel로 받아온 정보 넘기기
                     sharedViewModel.setCastId(it.result!!.id)
                     sharedViewModel.setUrl(it.result!!.fileUrl)
@@ -221,23 +236,21 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
     }
     private suspend fun createCastByKeywordLauncher(postCastByKeyword: PostCastByKeyword):AuthResponse<PostCastForResponse>?{
         val apiService = getRetrofit().create(CastInterface::class.java)
-
+        val context = requireContext()
         return try {
             val response = apiService.postCastByKeyword(postCastByKeyword)
 
             if (response.code().equals("200")||response.body()?.code.equals("COMMON200")) {
 
-                Log.d("apiTest-CreateCast", "저장성공: ${response.body()?.result}")
+
                 response.body()
             } else {
-                Log.d("apiTest-CreateCast", response.toString())
-                Log.d("apiTest-CreateCast", "연결실패 코드: ${response.code()}")
 
-                Log.d("apiTest-CreateCast", "오류 이유: ${response.body()?.message}")
-
+                Toast.makeText(context, "API 호출 실패\n 오류코드 : ${response.code()}",Toast.LENGTH_SHORT).show()
                 null
             }
         } catch (e: Exception) {
+            Toast.makeText(context, "API 호출 실패\n 잠시후 다시 시도해주세요.",Toast.LENGTH_SHORT).show()
             Log.d("apiTest-CreateCast", "API 호출 실패: ${e.message}")
             null
         }

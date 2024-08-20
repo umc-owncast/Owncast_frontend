@@ -61,11 +61,14 @@ class KeyvpAudioScriptFragment:Fragment() {
             listener?.onButtonClick()
         }
         binding.keyAudScrRemakeIv.setOnClickListener{
+            binding.keyAudScriptPlaybtnIv.visibility = View.GONE
+            binding.keyAudScriptStopBtnIv.visibility = View.VISIBLE
             if(sharedViewModel.postCastScript.value!= null){
                 listener?.createCastByScript(sharedViewModel.postCastScript.value!!)
             }else{
                 listener?.createCastByKeyword(sharedViewModel.postCastKeyword.value!!)
             }
+
         }
 
 
@@ -178,12 +181,33 @@ class KeyvpAudioScriptFragment:Fragment() {
         binding.keyAudScrAddSecondIv.setOnClickListener{
             val currentPosition = player.currentPosition
             val newPosition = currentPosition + 10_000L // 10초 앞으로
-            player.seekTo(newPosition)
+            if (player.isPlaying) {
+                player.seekTo(newPosition)
+            }else{
+                // 정지 상태로 유지
+                player.seekTo(newPosition)
+                player.playWhenReady = false
+
+            }
+            player.pause()
+            binding.keyAudScriptPlaybtnIv.visibility = View.GONE
+            binding.keyAudScriptStopBtnIv.visibility = View.VISIBLE
         }
         binding.keyAudScrMinSecondIv.setOnClickListener {
             val currentPosition = player.currentPosition
             val newPosition = currentPosition - 10_000L // 10초 앞으로
-            player.seekTo(newPosition)
+            if (player.isPlaying) {
+                player.seekTo(newPosition)
+            }else{
+                // 정지 상태로 유지
+                player.seekTo(newPosition)
+                player.playWhenReady = false
+
+            }
+            player.pause()
+            binding.keyAudScriptPlaybtnIv.visibility = View.GONE
+            binding.keyAudScriptStopBtnIv.visibility = View.VISIBLE
+
         }
         binding.keyAudScriptPlaybtnIv.setOnClickListener{
             player.play()
@@ -194,6 +218,7 @@ class KeyvpAudioScriptFragment:Fragment() {
         }
         binding.keyAudScriptStopBtnIv.setOnClickListener{
             player.pause()
+
             binding.keyAudScriptPlaybtnIv.visibility = View.VISIBLE
             binding.keyAudScriptStopBtnIv.visibility = View.GONE
         }
@@ -259,7 +284,7 @@ class KeyvpAudioScriptFragment:Fragment() {
 
 
                 player.setPlaybackSpeed(speed)//미디어 플레이어 재생속도 설정
-                player.playWhenReady = true//자동 재생해줌
+
 
 
                 //#8050F2는 MainColro

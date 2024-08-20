@@ -61,10 +61,8 @@ class HomeFragment : Fragment() {
         initTextUi()
         if(KeywordAppData.detailTopic.isNullOrEmpty()){
             initData()
-
         }else{
             initKeyword()
-
         }
 
 

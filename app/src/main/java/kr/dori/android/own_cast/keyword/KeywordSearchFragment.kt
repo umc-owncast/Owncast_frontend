@@ -67,7 +67,6 @@ class KeywordSearchFragment:Fragment() {
         binding.keywordSearchTopicTv.text = keywordData?.mainKeyword
 
 
-
         for(i:Int in 0..5){
             //view모델 안에 실제 데이터가 있다면 그걸 텍스트 뷰에 그대로 반영
             if (KeywordAppData.detailTopic==null){

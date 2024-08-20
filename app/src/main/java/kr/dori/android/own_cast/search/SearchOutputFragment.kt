@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentSearchOutputBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
@@ -30,6 +31,7 @@ import kr.dori.android.own_cast.forApiData.CastHomeDTO
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
+import kr.dori.android.own_cast.player.CastWithPlaylistId
 import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.playlist.SharedViewModel
 import kotlin.coroutines.CoroutineContext
@@ -41,6 +43,7 @@ class SearchOutputFragment : Fragment(), SearchMover , CoroutineScope {
     private val searchAdapter = SearchAdapter(this)
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private val sharedViewModel: SharedViewModel by activityViewModels()
+    private var detail_interest : String? = null
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + corutineJob
     private lateinit var corutineJob: Job
@@ -51,7 +54,7 @@ class SearchOutputFragment : Fragment(), SearchMover , CoroutineScope {
     ): View? {
         binding = FragmentSearchOutputBinding.inflate(inflater, container, false)
 
-        val detail_interest = arguments?.getString("detail_interest","야구")
+        detail_interest = arguments?.getString("detail_interest","야구")
         detail_interest?.let{
             searchOtherCast(it)
         }
@@ -97,8 +100,23 @@ class SearchOutputFragment : Fragment(), SearchMover , CoroutineScope {
 
     override fun goPlayCast(list: List<CastHomeDTO>, id:Long) {
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
-        intent.putExtra("list",ArrayList(list))
-        intent.putExtra("id",id)
+        var data = list.map{
+            CastWithPlaylistId(
+                castId= it.id,
+                playlistId = -1L,
+                castTitle = it.title,
+                isPublic = true,
+                castCreator = it.memberName,
+                castCategory = detail_interest?:"로딩실패",
+                audioLength = it.audioLength
+            )
+        }
+        var imageData = list.map{
+            it.imagePath
+        }
+        CastPlayerData.setCast(data)//데이터 초기화
+        CastPlayerData.setCurrentPos(id)//
+        CastPlayerData.setImagePath(imageData)
         activityResultLauncher.launch(intent)
     }
 

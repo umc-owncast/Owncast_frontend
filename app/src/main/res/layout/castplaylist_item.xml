@@ -6,6 +6,17 @@
     android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cast_touchzone"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="60dp"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cast_playlist_container"
         android:layout_width="409dp"
         android:layout_height="64dp"

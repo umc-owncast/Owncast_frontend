@@ -51,6 +51,8 @@ data class CastHomeDTO(//검색 홈 API,
     @SerializedName(value = "playlistName") val playlistName : String
 )
 
+
+
 data class PostPlaylist(
     @SerializedName(value = "playlistId") val playlistId: Long
 )
