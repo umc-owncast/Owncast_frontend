@@ -73,12 +73,9 @@ class SignupData : Application() {
             get() = getString("detail_interest", "닉네임")
             set(value) = setString("detail_interest", value)
 
-
         var token: String
             get() = getString("toekn", "닉네임")
             set(value) = setString("toekn", value)
-
-
 
     }
 
