@@ -36,8 +36,10 @@ import kotlin.coroutines.CoroutineContext
 class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnClickListener, CoroutineScope {
     lateinit var binding: FragmentKeywordAudiosetBinding
     private lateinit var sharedViewModel: KeywordViewModel
+
     private var alreadyVisit : Boolean = false//이미 audioScript에서 exoPlayer를 생성했는지 확인.
     //하지만.. 그냥 여기다가 할당하는 방식이 맞는거같은데 실수한거같음
+
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + corutineJob
     private lateinit var corutineJob: Job
@@ -106,6 +108,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
         //현재 위치의 배경을 칠해줌
     }
     private fun prevPage(){
+
         if(binding.keywordAudiosetVp.currentItem==0){
             val isHome = (arguments?.getBoolean("isHome"))
             if(isHome==null||isHome==false){
@@ -125,6 +128,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
                 binding.keywordAudiosetVp.currentItem -= 1
             }
         }
+
 
 
 
@@ -181,8 +185,10 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
                 Log.d("apiTest-CreateCast", "저장성공: ${response.body()?.result}")
                 response.body()
             } else {
+
                 Log.d("apiTest-CreateCast", "연결실패 에러바디: ${response.errorBody().toString()}")
                 Toast.makeText(context, "API 호출 실패\n 오류코드 : ${response.code()}",Toast.LENGTH_SHORT).show()
+
                 null
             }
         } catch (e: Exception) {
@@ -195,12 +201,14 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
 
     override fun createCastByKeyword(postCastByKeyword: PostCastByKeyword){
         corutineJob = Job()
+
         var dialogText : String
 
         if(binding.keywordAudiosetVp.currentItem==0)dialogText = "스크립트를 생성 중이에요"
         else dialogText = "스크립트를 다시 생성 중이에요"
 
         val dialog = KeywordLoadingDialog(requireContext(),dialogText)
+
         dialog.setCancelable(false)
         dialog.setCanceledOnTouchOutside(false)
         dialog.show()
@@ -215,6 +223,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
 
                     sharedViewModel.setSentences(it.result!!.sentences)//viewModel로 받아온 정보 넘기기
                     sharedViewModel.setCastId(it.result!!.id)
+
                     sharedViewModel.setUrl(it.result!!.fileUrl)
                     if(binding.keywordAudiosetVp.currentItem==0){
                         if(alreadyVisit){//이미 생성된 프래그먼트일때는 생명주기때문에 여기서 실행해줘야함
@@ -227,6 +236,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
                         keywordAdapter.getFragment().initPlayer()
                         keywordAdapter.getFragment().initRecyclerView()
                     }
+
                 } ?: run {
                     // 실패 시 처리
                     Log.d("apiTest-CreateCast", "API 호출 실패 또는 결과 없음")
@@ -265,6 +275,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
         if (::corutineJob.isInitialized) {
             corutineJob.cancel() // 또는 다른 적절한 작업
         }
+
     }
 
 }

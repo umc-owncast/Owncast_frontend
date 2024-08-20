@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -15,6 +16,7 @@ class ClearSignupActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_clear_signup)
+        enableEdgeToEdge()
 
         findViewById<Button>(R.id.StartBtn).setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))

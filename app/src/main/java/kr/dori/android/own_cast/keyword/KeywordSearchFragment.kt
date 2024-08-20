@@ -77,9 +77,17 @@ class KeywordSearchFragment:Fragment() {
             if(i<KeywordAppData.detailTopic.size){
                 textViewList[i].text = KeywordAppData.detailTopic[i]
                 textViewList[i].setOnClickListener {
-                    val intent = Intent(getActivity(), KeywordActivity::class.java)
-                    intent.putExtra("searchText",textViewList[i].text.toString())
-                    startActivity(intent)
+                    val fragmentTransaction =
+                        (context as KeywordActivity).supportFragmentManager.beginTransaction()
+                    // 백 스택에 추가하여 뒤로 가기 버튼을 통해 이전 프래그먼트로 돌아갈 수 있습니다.
+                    var bundle = Bundle()
+                    var fragment = KeywordAudioSetFragment()
+                    bundle.putString("searchText", textViewList[i].text.toString())
+                    //검색입력어를 같이 넘겨야해서 bundle넣음
+                    fragment.arguments = bundle
+                    fragmentTransaction.replace(R.id.keyword_fragment_frm, fragment)
+                    fragmentTransaction.addToBackStack(null)//뒤로가기 버튼으로 돌아갈 수 있음.
+                    fragmentTransaction.commit()
                 }
             }else{
                 textViewList[i].visibility = View.GONE

@@ -19,6 +19,7 @@ class SearchTwoAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Se
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val data = dataList[position]
+
         holder.setText(data, holder)
     }
 
@@ -53,7 +54,9 @@ class SearchTwoAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Se
                 mover.goAddCast(data.id)
             }
             binding.searchPlayIv.setOnClickListener {
+
                 mover.goPlayCast(dataList,data.id)
+
             }
         }
 
@@ -65,4 +68,15 @@ class SearchTwoAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Se
         return String.format("%d:%02d", minutes, seconds)
     }
     }
+
+
+
+        private fun formatTime(totalSeconds: Int): String {
+            val minutes = totalSeconds / 60
+            val seconds = totalSeconds % 60
+            return String.format("%d:%02d", minutes, seconds)
+        }
+
+
+
 }

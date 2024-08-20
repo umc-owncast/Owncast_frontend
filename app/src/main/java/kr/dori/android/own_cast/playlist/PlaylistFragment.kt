@@ -29,8 +29,7 @@ import kr.dori.android.own_cast.editAudio.EditAudio
 import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.GetAllPlaylist
 import kr.dori.android.own_cast.forApiData.Playlist
-
-import kr.dori.android.own_cast.getRetrofit
+import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.AddCategoryDialog
 import kr.dori.android.own_cast.player.CastWithPlaylistId
 import kr.dori.android.own_cast.player.PlayCastActivity
@@ -231,7 +230,6 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
         activityResultLauncher.launch(intent)
     }
-
 
 
 

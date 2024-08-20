@@ -81,8 +81,10 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
     private var id : Long? = null
 
 
+
     private var listener: KeywordAudioOutListener? = null
     private lateinit var dialog:AddCategoryDialog
+
 
 
     private lateinit var imageResultLauncher: ActivityResultLauncher<Intent>
@@ -96,6 +98,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
     //finish dialog
     private var uri: Uri? = null
 
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = parentFragment as? KeywordAudioOutListener
@@ -104,6 +107,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
         super.onDetach()
         listener = null
     }
+
 
 
     override fun onCreateView(
@@ -382,6 +386,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //2. AuthResponse에 응답으로 넘어오는 result 값의 제네릭 넣어주기 AuthResponse<List<CastHomeDTO>>
         //3. COMMON200이 성공 코드이고, resp에서 필요한 값 받기
         val playlistId : Long = sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].id
+
         var findialog : KeywordAudioFinishDialog= try{
             KeywordAudioFinishDialog(requireContext(), listener!!, castTitle,
                 sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].playlistName, uri)//저장 타이틀, 카테고리, 길이, 사진
@@ -389,6 +394,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             Toast.makeText(requireContext(), "리스너 오류. 문의 부탁드립니다.",Toast.LENGTH_SHORT).show()
             return
         }
+
 
 
         apiService.postCast(sharedViewModel.castId.value!!, SaveInfo(castTitle,playlistId,binding.keyAudPublicBtnIv.isChecked), body!!).enqueue(object: Callback<AuthResponse<String>> {
@@ -445,6 +451,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                         }
                         binding.keyAudSaveCategorySp.setSelection(playlistName.size-2)
                         dialog.dismiss()
+
                         Toast.makeText(requireContext(),"추가되었습니다.",Toast.LENGTH_SHORT).show()
                     }
                     else ->{

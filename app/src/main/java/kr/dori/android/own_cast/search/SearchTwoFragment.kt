@@ -31,7 +31,9 @@ import kr.dori.android.own_cast.forApiData.PostCastByScript
 import kr.dori.android.own_cast.forApiData.PostCastForResponse
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
+
 import kr.dori.android.own_cast.player.CastWithPlaylistId
+
 import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.playlist.SharedViewModel
 import retrofit2.Response
@@ -45,11 +47,16 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
     private val searchTwoAdapter = SearchTwoAdapter(this)
 
 
+
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + corutineJob
     private lateinit var corutineJob: Job
+
+
+
+
 
     private var detail_interest : String? = null
     override fun onCreateView(
@@ -59,10 +66,12 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
     ): View? {
         binding = FragmentSearchTwoBinding.inflate(inflater, container, false)
 
+
         detail_interest = arguments?.getString("detail_interest","야구")
         detail_interest?.let{
             searchOtherCast(it)
         }
+
 
 
 
@@ -86,6 +95,7 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
     fun searchOtherCast(keyword:String){
         corutineJob = Job()
         var dialogText : String = "로딩 중이에요"
+
 
         val dialog = KeywordLoadingDialog(requireContext(), dialogText)
         dialog.setCancelable(false)
@@ -135,6 +145,7 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
     }
     override fun goPlayCast(list: List<CastHomeDTO>, id:Long) {
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
+
         var data = list.map{
             CastWithPlaylistId(
                 castId= it.id,
@@ -152,6 +163,7 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
         CastPlayerData.setCast(data)//데이터 초기화
         CastPlayerData.setCurrentPos(id)//
         CastPlayerData.setImagePath(imageData)
+
         activityResultLauncher.launch(intent)
     }
 

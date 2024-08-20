@@ -9,11 +9,13 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.ActivityMainBinding
@@ -29,7 +31,6 @@ import kr.dori.android.own_cast.player.BackgroundPlayService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
 
 import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.playlist.PlaylistFragment
@@ -72,23 +73,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        Log.d("token1","${SignupData.token}")
         // 주석 처리된 부분 - 키워드 이동
         // binding.goKeywordIv.setOnClickListener {
         //     initKeyword()
         // }
-        initBottomNavigation()
+
+
+        /*initBottomNavigation()*/
+
 
 
         //play table call back process
         playCastActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
+
             handleActivityResult(result)
         }
 
@@ -117,57 +121,79 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.main_frm, ProfileFragment())
                 .commitAllowingStateLoss()
+            updateBottomNavigationIcons(ProfileFragment::class.java)
+        } else {
+            val homeFragment = HomeFragment()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.main_frm, homeFragment)
+                .commitAllowingStateLoss()
+            updateBottomNavigationIcons(HomeFragment::class.java)
+        }
+
+        initBottomButtons()
+    }
+
+    private fun initBottomButtons() {
+        val homeButton: ImageView = findViewById(R.id.navi_home)
+        val playlistButton: ImageView = findViewById(R.id.navi_playlist)
+        val studyButton: ImageView = findViewById(R.id.navi_study)
+        val searchButton: ImageView = findViewById(R.id.navi_search)
+        val profileButton: ImageView = findViewById(R.id.navi_profile)
+
+        homeButton.setOnClickListener {
+            replaceFragment(HomeFragment())
+            updateBottomNavigationIcons(HomeFragment::class.java)
+        }
+
+        playlistButton.setOnClickListener {
+            replaceFragment(PlaylistFragment())
+            updateBottomNavigationIcons(PlaylistFragment::class.java)
+        }
+
+        studyButton.setOnClickListener {
+            replaceFragment(StudyFragment())
+            updateBottomNavigationIcons(StudyFragment::class.java)
+        }
+
+        searchButton.setOnClickListener {
+            replaceFragment(SearchFragment())
+            updateBottomNavigationIcons(SearchFragment::class.java)
+        }
+
+        profileButton.setOnClickListener {
+            replaceFragment(ProfileFragment())
+            updateBottomNavigationIcons(ProfileFragment::class.java)
         }
     }
 
-    private fun initBottomNavigation() {
-        val bottomNavigationView: BottomNavigationView =
-            findViewById(R.id.main_bnv) as BottomNavigationView
-        bottomNavigationView.selectedItemId = R.id.homeFragment
-
+    private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-            .add(R.id.main_frm, HomeFragment())
+            .replace(R.id.main_frm, fragment)
             .commitAllowingStateLoss()
+    }
 
-        binding.mainBnv.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.homeFragment -> {
-                    restorePlaylistTableVisibility()
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_frm, HomeFragment())
-                        .commitAllowingStateLoss()
-                    true
-                }
-                R.id.playlistFragment -> {
-                    restorePlaylistTableVisibility()
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_frm, PlaylistFragment())
-                        .commitAllowingStateLoss()
-                    true
-                }
-                R.id.studyFragment -> {
-                    hidePlaylistTable()
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_frm, StudyFragment())
-                        .commitAllowingStateLoss()
-                    true
-                }
-                R.id.searchFragment -> {
-                    restorePlaylistTableVisibility()
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_frm, SearchFragment())
-                        .commitAllowingStateLoss()
-                    true
-                }
-                R.id.profileFragment -> {
-                    restorePlaylistTableVisibility()
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_frm, ProfileFragment())
-                        .commitAllowingStateLoss()
-                    true
-                }
-                else -> false
-            }
+    private fun updateBottomNavigationIcons(fragmentClass: Class<out Fragment>) {
+        val homeButton: ImageView = findViewById(R.id.navi_home)
+        val playlistButton: ImageView = findViewById(R.id.navi_playlist)
+        val studyButton: ImageView = findViewById(R.id.navi_study)
+        val searchButton: ImageView = findViewById(R.id.navi_search)
+        val profileButton: ImageView = findViewById(R.id.navi_profile)
+
+        // 초기화: 모든 버튼의 이미지를 비활성화 상태로 설정
+        homeButton.setImageResource(R.drawable.bottom_navi_home_unfocused)
+        playlistButton.setImageResource(R.drawable.bottom_navi_playlist_unfocused)
+        studyButton.setImageResource(R.drawable.bottom_navi_study_unfocused)
+        searchButton.setImageResource(R.drawable.bottom_navi_search_unfocused)
+        profileButton.setImageResource(R.drawable.bottom_navi_profile_unfocused)
+
+        // 현재 선택된 Fragment에 맞는 아이콘 활성화 상태로 설정
+        when (fragmentClass) {
+            HomeFragment::class.java -> homeButton.setImageResource(R.drawable.bottom_navi_home_focused)
+            PlaylistFragment::class.java -> playlistButton.setImageResource(R.drawable.bottom_navi_playlist_focused)
+            StudyFragment::class.java -> studyButton.setImageResource(R.drawable.bottom_navi_study_focused)
+            SearchFragment::class.java -> searchButton.setImageResource(R.drawable.bottom_navi_search_focused)
+            ProfileFragment::class.java -> profileButton.setImageResource(R.drawable.bottom_navi_profile_focused)
+
         }
     }
 
@@ -185,9 +211,9 @@ class MainActivity : AppCompatActivity() {
         binding.playlistTable.visibility = View.GONE
     }
 
-    fun handleActivityResult(result: ActivityResult){
+    fun handleActivityResult(result: ActivityResult) {
         if (result.resultCode == Activity.RESULT_OK) {
-            Log.d("ifsuccess","success")
+            Log.d("ifsuccess", "success")
             val data: Intent? = result.data
             val isSuccess = data?.getBooleanExtra("result", false) ?: false
             if (isSuccess) {
@@ -206,9 +232,9 @@ class MainActivity : AppCompatActivity() {
         playlistTableVisible = visible
         if (visible) {
             binding.playlistTable.visibility = View.VISIBLE
-            binding.playlistTable.bringToFront()//뷰를 가장 최상위로
-            binding.playlistTable.invalidate()//화면 무효화 및 재작성
-            binding.playlistTable.requestLayout()//크기 위치 재계산
+            binding.playlistTable.bringToFront()
+            binding.playlistTable.invalidate()
+            binding.playlistTable.requestLayout()
         } else {
             binding.playlistTable.visibility = View.GONE
         }

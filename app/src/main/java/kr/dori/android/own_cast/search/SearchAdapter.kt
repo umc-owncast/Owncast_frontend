@@ -19,6 +19,7 @@ class SearchAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Searc
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val data = dataList[position]
+
         holder.setData(data,holder)
     }
 
@@ -29,8 +30,6 @@ class SearchAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Searc
     inner class Holder(val binding: ItemSearchFrBinding):RecyclerView.ViewHolder(binding.root){
 
         init{
-
-
 
 
         }

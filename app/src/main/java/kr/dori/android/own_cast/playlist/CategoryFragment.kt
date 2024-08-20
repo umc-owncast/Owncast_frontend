@@ -26,7 +26,7 @@ import kr.dori.android.own_cast.databinding.FragmentCategoryBinding
 import kr.dori.android.own_cast.editAudio.EditAudioActivity
 import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.Playlist
-import kr.dori.android.own_cast.getRetrofit
+import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.player.CastWithPlaylistId
 import kr.dori.android.own_cast.player.PlayCastActivity
 import retrofit2.create
@@ -112,7 +112,6 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
 
         binding.fragmentCategoryRv.adapter = castAdapter
         binding.fragmentCategoryRv.layoutManager = LinearLayoutManager(context)
-
 
 
 // 이 부분은 재생목록 부분이어서 어떻게 수정할건지 생각을 해봐야 됨 -> 재생목록 순서를 어떻게 정할 것인가? -> 해결함

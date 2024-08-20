@@ -37,7 +37,9 @@ import kr.dori.android.own_cast.forApiData.PlayListInterface
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.PostPlaylist
 import kr.dori.android.own_cast.forApiData.UpdateInfo
-import kr.dori.android.own_cast.getRetrofit
+
+import kr.dori.android.own_cast.forApiData.getRetrofit
+
 import kr.dori.android.own_cast.keyword.AddCategoryDialog
 import kr.dori.android.own_cast.keyword.KeywordAppData
 import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
@@ -110,11 +112,13 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
         initCastData()//캐스트도 받아오게
         initEditText()//비어있으면은 수정 못하게
 
+
         initClickListener()
 
     }
 
     fun initClickListener(){
+
         binding.activityEditAudioOk.setOnClickListener {
 
         }
@@ -140,12 +144,14 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
         binding.activityEditAudioDelete.setOnClickListener {
             mode = true
             deleteCast()
+
         }
         binding.imageView17.setOnClickListener{
             selectGallery()
         }
         binding.imageView18.setOnClickListener{
             selectGallery()
+
         }
     }
 
@@ -209,9 +215,11 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                                         val bitmap = BitmapFactory.decodeFile(imageUrl)
                                         binding.imageView17.setImageBitmap(bitmap)
 
+
                                     }
                                     createMultipartBodyFromUrl(imageUrl, context){ part->
                                         if (part != null) {
+
                                         } else {
                                             Toast.makeText(context,"파일 변환 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
                                         }

@@ -61,7 +61,6 @@ class KeywordActivity : AppCompatActivity() {
         enableEdgeToEdge()
 
 
-
         initCategoryInViewModel()
         if(savedInstanceState == null&&searchText!=null){//연관 키워드를 클릭한 경우
             var bundle = Bundle()

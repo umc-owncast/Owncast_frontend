@@ -14,7 +14,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.forApiData.Playlist
-import kr.dori.android.own_cast.getRetrofit
+import kr.dori.android.own_cast.forApiData.getRetrofit
+
 class BackgroundPlayService : Service() {
 
     private val binder = LocalBinder()
@@ -142,7 +143,10 @@ class BackgroundPlayService : Service() {
                         }
                     }
                 } else {
-                    Log.e("BackgroundPlayService", "Failed to get cast info: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "BackgroundPlayService",
+                        "Failed to get cast info: ${response.errorBody()?.string()}"
+                    )
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -99,6 +99,7 @@
         android:textColor="@color/black"
         android:lineSpacingExtra="3sp"
         android:translationY="-1.65sp"
+        android:fontFamily="@font/pretendard_regular"
         android:gravity="right|top"
         app:layout_constraintTop_toBottomOf="@id/homefr_td_keyword_cl"
         app:layout_constraintEnd_toEndOf="@id/homefr_td_keyword_cl"

@@ -6,7 +6,6 @@ import java.io.Serial
 
 
 
-
 import java.io.Serializable
 
 
@@ -101,6 +100,14 @@ data class GetAllPlaylist(
     val playlistId: Long,
     val totalCast: Int
 ):Serializable
+
+
+data class SetPlaylist(
+    val name: String,
+    val imagePath: String,
+    val playlistId: Long
+)
+
 
 data class CastInfo(
     @SerializedName(value = "id") val id: Long,

@@ -82,6 +82,7 @@
         android:lineSpacingExtra="3sp"
         android:gravity="center_vertical"
         android:text="카테고리"
+        android:fontFamily="@font/pretendard_regular"
         android:textSize="14sp"
         android:letterSpacing="0.01"
         android:textColor="#00051F"
@@ -110,6 +111,7 @@
         android:gravity="center_vertical"
         android:text="비공개로 설정"
         android:textSize="14sp"
+        android:fontFamily="@font/pretendard_regular"
         android:letterSpacing="0.01"
         android:textColor="#00051F"
 

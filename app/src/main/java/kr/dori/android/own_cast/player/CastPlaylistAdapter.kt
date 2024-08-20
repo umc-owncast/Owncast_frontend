@@ -13,6 +13,7 @@ import kr.dori.android.own_cast.databinding.CastplaylistItemBinding
 import java.util.Collections
 
 class CastPlaylistAdapter: RecyclerView.Adapter<CastPlaylistAdapter.Holder>() {
+
     lateinit var itemTouchHelper: ItemTouchHelper
     fun swapItems(fromPosition: Int, toPosition: Int) {
         Collections.swap(CastPlayerData.getAllCastList(), fromPosition, toPosition)
@@ -40,6 +41,7 @@ class CastPlaylistAdapter: RecyclerView.Adapter<CastPlaylistAdapter.Holder>() {
         //타 사용자 title, img, creator, isLock = false, duration, isSave = false, category이렇게 해서 받아오면 되것군
         //isSave를 통해서 자신과 타사용자를 구분한다? -> 그렇네
         //자기가 저장한걸 따로 구분해서 또 띄우나?
+
         fun setText(data: CastWithPlaylistId, position : Int) {
             binding.castPlaylistTitle.text = data.castTitle
             binding.castTouchzone.setOnClickListener {
@@ -54,6 +56,7 @@ class CastPlaylistAdapter: RecyclerView.Adapter<CastPlaylistAdapter.Holder>() {
             }
             binding.castPlaylistDuration.text = formatTime(data.audioLength.toInt())
             if(data.playlistId != -1L){//-1로 데이터 넣어서 플레이어가 저장 안한걸로 뜨게 할거임
+
                 binding.castPlaylistCreator.visibility = View.GONE
                 if(!data.isPublic){
                     binding.castPlaylistLockIv.visibility = View.VISIBLE

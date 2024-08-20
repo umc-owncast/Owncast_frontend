@@ -25,7 +25,7 @@ import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.databinding.FragmentCastBinding
 import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.Playlist
-import kr.dori.android.own_cast.getRetrofit
+import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.player.CastWithPlaylistId
 
 class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), ActivityMover {

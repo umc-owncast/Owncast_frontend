@@ -52,6 +52,7 @@ class PlayCastActivity : AppCompatActivity() {
                         binding.endTv.text = formatTime(audioLength.toInt())
                     }
                 }
+
             } else {
                 // 새로운 캐스트를 준비
                 stopCurrentAudio()
@@ -116,7 +117,9 @@ class PlayCastActivity : AppCompatActivity() {
                 service?.seekTo(seekBar?.progress?.times(1000L) ?: 0L)
                 //CastPlayerData.updatePlaybackPosition(service?.getCurrentPosition() ?: 0L)
                 binding.startTv.text = formatTime(service?.getCurrentPosition() ?: 0L)
+
                 //  updateLyricsHighlight()
+
             }
         })
 
@@ -333,6 +336,7 @@ class PlayCastActivity : AppCompatActivity() {
         currentCast?.let {
             binding.seekBar.max = service?.getDuration()?.toInt()?.div(1000) ?: 0
             binding.seekBar.progress = (service?.getCurrentPosition()?.div(1000))?.toInt() ?: 0
+
             //  binding.seekbar
 
             if (service?.isPlaying() == true) {
@@ -411,6 +415,8 @@ class PlayCastActivity : AppCompatActivity() {
             }
         }
     }
+
+
     /*
         private fun updateLyricsHighlight() {
             val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
@@ -420,6 +426,8 @@ class PlayCastActivity : AppCompatActivity() {
         }
 
      */
+
+
 
     // Fragment 전환 함수들
     private fun audioToScript() {

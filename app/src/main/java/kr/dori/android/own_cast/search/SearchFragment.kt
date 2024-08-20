@@ -12,8 +12,9 @@ import android.view.ViewGroup
 
 import android.widget.GridLayout
 import android.widget.ImageView
-
 import android.widget.TextView
+
+
 import android.widget.Toast
 
 
@@ -31,7 +32,9 @@ import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.SignupData
+
 import kr.dori.android.own_cast.data.CastPlayerData
+
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentSearchBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
@@ -47,7 +50,9 @@ import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.KeywordAudioSetFragment
 import kr.dori.android.own_cast.keyword.PlaylistText
+
 import kr.dori.android.own_cast.player.CastWithPlaylistId
+
 
 import retrofit2.Call
 import retrofit2.Callback
@@ -56,12 +61,15 @@ import retrofit2.Response
 import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.playlist.SharedViewModel
 
+
+
 class SearchFragment : Fragment(), SearchMover {
 
     lateinit var binding: FragmentSearchBinding
     private val searchAdapter = SearchAdapter(this)
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     lateinit var gridLayoutManager: GridLayoutManager
+
     lateinit var inflaterLayout: LayoutInflater
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private var categoryList : List<GetAllPlaylist> = listOf()
@@ -80,7 +88,9 @@ class SearchFragment : Fragment(), SearchMover {
         //searchDataUpdate()//다른 유저 정보 받아오는 함수
 
         initSearchCastData()
-        val getAllPlaylist = kr.dori.android.own_cast.getRetrofit().create(Playlist::class.java)
+
+        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
+
         CoroutineScope(Dispatchers.IO).launch() {
             launch {
                 try {
@@ -152,6 +162,7 @@ class SearchFragment : Fragment(), SearchMover {
 
     override fun goPlayCast(list: List<CastHomeDTO>, id:Long) {//여기다간 캐스트 정보 담아야함
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
+
         var data = list.map{
             CastWithPlaylistId(
                 castId= it.id,
@@ -169,6 +180,7 @@ class SearchFragment : Fragment(), SearchMover {
         CastPlayerData.setCast(data)//데이터 초기화
         CastPlayerData.setCurrentPos(id)//
         CastPlayerData.setImagePath(imageData)
+
         activityResultLauncher.launch(intent)
     }
 
@@ -184,10 +196,12 @@ class SearchFragment : Fragment(), SearchMover {
     override fun backSearch() {
         TODO("Not yet implemented")
     }
+
     fun initSearchCastData(){
         val apiService = getRetrofit().create(CastInterface::class.java)
         apiService.searchHome().enqueue(object: Callback<AuthResponse<List<CastHomeDTO>>> {
             override fun onResponse(call: Call<AuthResponse<List<CastHomeDTO>>>, response: Response<AuthResponse<List<CastHomeDTO>>>) {
+
                 if(response.isSuccessful) {
                     val resp: AuthResponse<List<CastHomeDTO>> = response.body()!!
                     resp.result?.let {
@@ -197,6 +211,7 @@ class SearchFragment : Fragment(), SearchMover {
                     }
                 }else{
                     Toast.makeText(context, "서버 오류 코드 : ${response.code()}",Toast.LENGTH_SHORT).show()
+
                     val resp= response.errorBody()?.string()
                     resp?.let {
                         try {
@@ -208,11 +223,15 @@ class SearchFragment : Fragment(), SearchMover {
                             Log.d("apiTest-searchHome", "에러 응답 파싱 실패: ${e.message}")
                         }
                     } ?: run {
+
+
                     }
                 }
             }
             override fun onFailure(call: Call<AuthResponse<List<CastHomeDTO>>>, t: Throwable) {
+
                 Toast.makeText(context, "서버 연결 실패",Toast.LENGTH_SHORT).show()
+
             }
         })
     }

@@ -1,5 +1,7 @@
 package kr.dori.android.own_cast.forApiData
 
+import android.util.Log
+import kr.dori.android.own_cast.SignupData
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -10,13 +12,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 const val BASE_URL = "http://15.164.140.239:8080"
 
 // 사용자 토큰 입니다,,, -> 로그인 시점마다 변경되도록 로직을 구현해야 합니다.
-const val TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VySWQiOjE5LCJpYXQiOjE3MjM4MTQ0ODcsImV4cCI6MTcyNjQwNjQ4N30.K1B3wb1Q6bvKtNLyN490zcrmM3wTTHXVNqnweQoGDWk"
+val TOKEN = SignupData.token
+
+    /*"eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VySWQiOjE5LCJpYXQiOjE3MjM4MTQ0ODcsImV4cCI6MTcyNjQwNjQ4N30.K1B3wb1Q6bvKtNLyN490zcrmM3wTTHXVNqnweQoGDWk"
+
+    eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJJZCI6NjEsImlhdCI6MTcyNDE1MTU3MSwiZXhwIjoxNzI0MjM3OTcxfQ.bQXbHQKtblHzUtuVVCJv38_ZN5SJ-5XFH0KeP6qGZRo
+     */
 
 
 fun getRetrofit(): Retrofit {
     val interceptor = Interceptor { chain ->
+        val token = TOKEN
         val request: Request = chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer $TOKEN")
+            .addHeader("Authorization", "Bearer $token")
             .build()
         chain.proceed(request)
     }
@@ -33,7 +41,8 @@ fun getRetrofit(): Retrofit {
         .build()
 }
 
-/*
+
+/*  
 flow
 0. 데이터 클래스 생성 # 사실 .addConverterFactory가 있기 때문에 굳이 @Serializable을 사용할 필요는 없다.
 1. 레트로핏 객체 생성 ( NetworkModule.kt )

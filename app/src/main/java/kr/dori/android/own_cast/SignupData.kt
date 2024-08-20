@@ -3,6 +3,7 @@ package kr.dori.android.own_cast
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import java.lang.reflect.Array.getInt
 
 class SignupData : Application() {
     companion object {
@@ -71,6 +72,19 @@ class SignupData : Application() {
         var detail_interest: String
             get() = getString("detail_interest", "닉네임")
             set(value) = setString("detail_interest", value)
+
+
+        var token: String
+            get() = getString("token", "")
+            set(value) = setString("token", value)
+
+        /*
+        var token: String
+            get() = getString("toekn", "닉네임")
+            set(value) = setString("toekn", value)
+
+         */
+
     }
 
     override fun onCreate() {

@@ -61,8 +61,10 @@ class KeyvpAudioScriptFragment:Fragment() {
             listener?.onButtonClick()
         }
         binding.keyAudScrRemakeIv.setOnClickListener{
+
             binding.keyAudScriptPlaybtnIv.visibility = View.GONE
             binding.keyAudScriptStopBtnIv.visibility = View.VISIBLE
+
             if(sharedViewModel.postCastScript.value!= null){
                 listener?.createCastByScript(sharedViewModel.postCastScript.value!!)
             }else{
@@ -72,6 +74,13 @@ class KeyvpAudioScriptFragment:Fragment() {
         }
 
 
+        player = ExoPlayer.Builder(requireContext()).build()
+        //이 작업을 전체 관리하는 listener에서 해주고 있음.
+        //화면을 나갔을때의 pause와 resume과 재생성했을때의 pause를 재 관리 해줘야할거같은데..
+        initPlayer()
+        initRecyclerView()//sentnences를 받아와 출력
+        //스크립트 재생성했을때 이 두개를 다시 실행시켜야함
+
 
         player = ExoPlayer.Builder(requireContext()).build()
         //이 작업을 전체 관리하는 listener에서 해주고 있음.
@@ -79,6 +88,7 @@ class KeyvpAudioScriptFragment:Fragment() {
         initPlayer()
         initRecyclerView()//sentnences를 받아와 출력
         //스크립트 재생성했을때 이 두개를 다시 실행시켜야함
+
 
         initSpeedUi()
         return binding.root
@@ -181,6 +191,7 @@ class KeyvpAudioScriptFragment:Fragment() {
         binding.keyAudScrAddSecondIv.setOnClickListener{
             val currentPosition = player.currentPosition
             val newPosition = currentPosition + 10_000L // 10초 앞으로
+
             if (player.isPlaying) {
                 player.seekTo(newPosition)
             }else{
@@ -192,10 +203,12 @@ class KeyvpAudioScriptFragment:Fragment() {
             player.pause()
             binding.keyAudScriptPlaybtnIv.visibility = View.GONE
             binding.keyAudScriptStopBtnIv.visibility = View.VISIBLE
+
         }
         binding.keyAudScrMinSecondIv.setOnClickListener {
             val currentPosition = player.currentPosition
             val newPosition = currentPosition - 10_000L // 10초 앞으로
+
             if (player.isPlaying) {
                 player.seekTo(newPosition)
             }else{
@@ -207,6 +220,7 @@ class KeyvpAudioScriptFragment:Fragment() {
             player.pause()
             binding.keyAudScriptPlaybtnIv.visibility = View.GONE
             binding.keyAudScriptStopBtnIv.visibility = View.VISIBLE
+
 
         }
         binding.keyAudScriptPlaybtnIv.setOnClickListener{
@@ -287,6 +301,8 @@ class KeyvpAudioScriptFragment:Fragment() {
 
 
 
+
+
                 //#8050F2는 MainColro
                 //이전거 버튼 비활성화
                 speedList[curSpeed].setTextColor(Color.parseColor("#00051F"))
@@ -326,4 +342,6 @@ class KeyvpAudioScriptFragment:Fragment() {
 
 
     }
+
+
 }

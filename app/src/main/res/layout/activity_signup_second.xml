@@ -36,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="회원가입"
+                android:fontFamily="@font/pretendard_regular"
                 android:textColor="@color/black"
                 android:textSize="@dimen/TitleLargeSize" />
 
@@ -116,6 +117,7 @@
                 android:layout_height="wrap_content"
                 android:text="닉네임"
                 android:textSize="18dp"
+                android:fontFamily="@font/pretendard_regular"
                 android:textColor="@color/black"
                 android:layout_below="@+id/sub_text"
                 tools:ignore="ObsoleteLayoutParam" />
