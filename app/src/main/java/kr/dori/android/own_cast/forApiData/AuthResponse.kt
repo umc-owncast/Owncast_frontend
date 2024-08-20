@@ -138,7 +138,8 @@ data class Cast(
     @SerializedName(value = "isPublic") val isPublic: Boolean,
     @SerializedName(value = "castCreator") val castCreator: String,
     @SerializedName(value = "castCategory") val castCategory: String,
-    @SerializedName(value = "audioLength") val audioLength: String
+    @SerializedName(value = "audioLength") val audioLength: String,
+    @SerializedName(value = "imagePath") val imagePath: String
 ): Serializable
 
 data class Sentences(

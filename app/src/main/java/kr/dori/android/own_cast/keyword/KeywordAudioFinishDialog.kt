@@ -16,7 +16,7 @@ import kr.dori.android.own_cast.databinding.FragmentKeywordOutDialogBinding
 import kr.dori.android.own_cast.databinding.KeywordFinishDialogBinding
 
 
-class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAudioOutListener
+class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAudioFinishListener
 
 ,val title : String, val category : String, val uri: Uri?
 ) : Dialog(context) {
@@ -30,8 +30,12 @@ class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAu
 
         binding.keyFinHomeTv.setOnClickListener {
             dismiss()
-            listener.getOut()
+            listener.goHomeFragment()
 
+        }
+        binding.keyFinGohearTv.setOnClickListener {
+            dismiss()
+            listener.goPlayCast()
         }
         initData()
 

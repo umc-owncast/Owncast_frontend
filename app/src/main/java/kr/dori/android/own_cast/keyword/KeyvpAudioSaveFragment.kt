@@ -34,17 +34,25 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.playlist.AddCategoryListener
 import kr.dori.android.own_cast.editAudio.EditAudio
 import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAudiosaveBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.PlayListInterface
+import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.PostPlaylist
 
 import kr.dori.android.own_cast.forApiData.SaveInfo
 import kr.dori.android.own_cast.forApiData.getRetrofit
+import kr.dori.android.own_cast.player.CastWithPlaylistId
+import kr.dori.android.own_cast.player.PlayCastActivity
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 
@@ -79,10 +87,10 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
 
     private var isText = false
     private var id : Long? = null
+    private var playlistId: Long = 0
 
 
 
-    private var listener: KeywordAudioOutListener? = null
     private lateinit var dialog:AddCategoryDialog
 
 
@@ -101,11 +109,11 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        listener = parentFragment as? KeywordAudioOutListener
+
     }
     override fun onDetach() {
         super.onDetach()
-        listener = null
+
     }
 
 
@@ -319,6 +327,11 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         activity?.finish()
     }
 
+    override fun goPlayCast() {
+        super.goPlayCast()
+        getCastInfo(playlistId)
+    }
+
     //addCategory같이 카테고리 추가하는 기능
     override fun onCategoryAdded(categoryName: String) {
         //list.add(list.size-1,categoryName)원랜 이걸로 변환됐다고 해줘야되는데
@@ -385,10 +398,10 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //1. apiService후, 자신이 만들어놓은 인터페이스(함수 지정해주기)
         //2. AuthResponse에 응답으로 넘어오는 result 값의 제네릭 넣어주기 AuthResponse<List<CastHomeDTO>>
         //3. COMMON200이 성공 코드이고, resp에서 필요한 값 받기
-        val playlistId : Long = sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].id
+        playlistId = sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].id
 
         var findialog : KeywordAudioFinishDialog= try{
-            KeywordAudioFinishDialog(requireContext(), listener!!, castTitle,
+            KeywordAudioFinishDialog(requireContext(), this, castTitle,
                 sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].playlistName, uri)//저장 타이틀, 카테고리, 길이, 사진
         } catch (e: NullPointerException){
             Toast.makeText(requireContext(), "리스너 오류. 문의 부탁드립니다.",Toast.LENGTH_SHORT).show()
@@ -401,33 +414,20 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             override fun onResponse(call: Call<AuthResponse<String>>, response: Response<AuthResponse<String>>) {
                 Log.d("apiTest-castPost", "저장 시도 중 ${ response.toString() }")
                 val resp = response.body()
-                if(resp!=null){
-                    when(resp.code) {
-                        "COMMON200" -> {
+                if(response.isSuccessful){
+                    findialog.setCancelable(false)//dialog는 여기서
+                    findialog.setCanceledOnTouchOutside(false)
 
-                            Log.d("apiTest-castPost",resp.result.toString())
-
-                            findialog.setCancelable(false)//dialog는 여기서
-                            findialog.setCanceledOnTouchOutside(false)
-
-                            findialog.show()
-
-                        }
-                        else ->{
-                            Log.d("apiTest-castPost","연결실패 코드 : ${resp.code}")
-
-                        }
-                    }
+                    findialog.show()
                 }else{
-                    Toast.makeText(requireContext(), "서버가 불안정합니다 잠시후 다시 시도해주세요", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "서버 오류 코드 ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
 
             }
-
-
             override fun onFailure(call: Call<AuthResponse<String>>, t: Throwable) {
-                Log.d("apiTest-castPost", t.message.toString())
-                Toast.makeText(requireContext(), "서버가 불안정합니다 잠시후 다시 시도해주세요", Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(requireContext(), "서버가 불안정합니다. 오류 메시지\n" +
+                        "${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -493,6 +493,59 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
+    fun getCastInfo(playlistId: Long) {
+        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
+        val dialog = KeywordLoadingDialog(requireContext(),"이동 중입니다.")
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.show()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 5)
+                if (response.isSuccessful) {
+                    val playlistInfo = response.body()?.result
+                    withContext(Dispatchers.Main) {
+                        dialog.dismiss()
+                        playlistInfo?.let {
+                            val castList = it.castList.toMutableList()
+
+                            val castListWithPlaylistId = castList.map{
+                                    cast ->
+                                CastWithPlaylistId(
+                                    castId = cast.castId,
+                                    playlistId = playlistId,
+                                    castTitle = cast.castTitle,
+                                    isPublic = cast.isPublic,
+                                    castCreator = cast.castCreator,
+                                    castCategory = cast.castCategory,
+                                    audioLength = cast.audioLength
+                                )
+                            }
+                            CastPlayerData.setCast(castListWithPlaylistId)  // 캐스트 리스트를 저장
+                            var imageData = it.castList.map{
+                                it.imagePath
+                            }
+                            CastPlayerData.setImagePath(imageData)
+                            //괜히 id쓰는것보다 어차피 마지막 가있을테니깐 넣었음..
+                            CastPlayerData.currentPosition = CastPlayerData.getAllCastList().size -1
+                            CastPlayerData.currentCast = CastPlayerData.getAllCastList()[CastPlayerData.currentPosition]
+                            val intent = Intent(activity, PlayCastActivity::class.java)
+                            startActivity(intent)
+                            activity?.finish()
+
+
+                        }
+                    }
+                } else {
+                    dialog.dismiss()
+                    Log.e("PlaylistCategoryAdapter", "Failed to fetch playlist info")
+                }
+            } catch (e: Exception) {
+                Log.e("PlaylistCategoryAdapter", "Exception during API call", e)
+            }
+        }
+    }
+
 
 }
 
