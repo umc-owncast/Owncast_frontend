@@ -334,17 +334,17 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
         CoroutineScope(Dispatchers.IO).launch() {
             val response = deleteCast.deleteCast(id)
             launch {
-
                 withContext(Dispatchers.Main) {
                     try {
 
                         if (response.isSuccessful) {
                             response.body()?.result?.let{
 
-                                Toast.makeText(context,"삭제되었습니다.",Toast.LENGTH_SHORT).show()
+                                Toast.makeText( this@EditAudioActivity,"삭제되었습니다.",Toast.LENGTH_SHORT).show()
+                                this@EditAudioActivity.finish()
                             }
                         } else {
-                            Toast.makeText(context,"삭제 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@EditAudioActivity,"삭제 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
                         }
 
                     } catch (e: Exception) {
