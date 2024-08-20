@@ -10,6 +10,7 @@ import android.os.IBinder
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -20,7 +21,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.ActivityMainBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
-
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.PostPlaylist
@@ -31,11 +31,14 @@ import kr.dori.android.own_cast.player.BackgroundPlayService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
+import android.util.Base64
 import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.playlist.PlaylistFragment
 import kr.dori.android.own_cast.search.SearchFragment
 import kr.dori.android.own_cast.study.StudyFragment
+import org.json.JSONObject
+import java.util.Date
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -88,6 +91,20 @@ class MainActivity : AppCompatActivity() {
         /*initBottomNavigation()*/
 
 
+        // 로그인 정보 확인 후 토큰 갱신
+        val userId = SignupData.id
+        val userPassword = SignupData.password
+
+        if (userId.isNullOrEmpty() || userPassword.isNullOrEmpty()) {
+            // 로그인 정보가 없을 경우 로그인 화면으로 이동
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        } else {
+            renewToken(userId, userPassword)
+        }
+
+
+
         //play table call back process
         playCastActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
 
@@ -130,6 +147,86 @@ class MainActivity : AppCompatActivity() {
 
         initBottomButtons()
     }
+
+
+
+    @OptIn(ExperimentalEncodingApi::class)
+    private fun isTokenExpired(token: String?): Boolean {
+        if (token.isNullOrEmpty()) return true
+
+        try {
+            // JWT 토큰의 payload 부분을 Base64로 디코딩
+            val parts = token.split(".")
+            if (parts.size < 2) return true
+            val payload = String(Base64.decode(parts[1], Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP))
+
+            // JSON 형식으로 변환 후 exp(만료시간) 추출
+            val jsonObject = JSONObject(payload)
+            val exp = jsonObject.getLong("exp")
+
+            // 현재 시간과 비교
+            val now = Date().time / 1000
+            return exp < now
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return true
+    }
+
+    private fun renewToken(id: String, password: String) {
+        val loginRequest = LoginRequest(loginId = SignupData.id, password = SignupData.password)
+
+        // 서버에 로그인 요청
+        val call = RetrofitClient.instance.login(loginRequest)
+
+        call.enqueue(object : retrofit2.Callback<LoginResponse> {
+            override fun onResponse(
+                call: Call<LoginResponse>,
+                response: retrofit2.Response<LoginResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val loginResponse = response.body()
+                    if (loginResponse?.isSuccess == true) {
+                        // 토큰 갱신 성공 시
+                        SignupData.token = loginResponse.result?.accessToken ?: ""
+                        //Toast.makeText(this@MainActivity, "토큰이 갱신되었습니다.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // 로그인 실패 시 로그인 화면으로 이동
+                        Toast.makeText(
+                            this@MainActivity,
+                            "로그인 실패: ${loginResponse?.message ?: "아이디 또는 비밀번호가 올바르지 않습니다."}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                        finish()
+                    }
+                } else {
+                    // 서버 오류 또는 응답 실패 시 로그인 화면으로 이동
+                    Toast.makeText(
+                        this@MainActivity,
+                        "서버 오류: ${response.message()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                    finish()
+                }
+            }
+
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                // 네트워크 오류 시 로그인 화면으로 이동
+                Toast.makeText(
+                    this@MainActivity,
+                    "네트워크 오류: ${t.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                finish()
+            }
+        })
+    }
+
+
 
     private fun initBottomButtons() {
         val homeButton: ImageView = findViewById(R.id.navi_home)
@@ -191,6 +288,7 @@ class MainActivity : AppCompatActivity() {
             StudyFragment::class.java -> studyButton.setImageResource(R.drawable.bottom_navi_study_focused)
             SearchFragment::class.java -> searchButton.setImageResource(R.drawable.bottom_navi_search_focused)
             ProfileFragment::class.java -> profileButton.setImageResource(R.drawable.bottom_navi_profile_focused)
+
 
         }
     }

@@ -39,4 +39,19 @@ interface ApiService {
     @POST("/api/users/login")
     fun login(@Body loginRequest: LoginRequest): Call<LoginResponse>
 
+
+    // 7. 언어 설정 업데이트
+    @POST("/api/users/setting/language")
+    fun updateLanguage(
+        @Header("Authorization") token: String, // 토큰을 헤더에 추가
+        @Body languageRequest: LanguageRequest
+    ): Call<LanguageResponse>
+
+    // 8. 관심사 설정 업데이트
+    @POST("/api/users/setting/prefer")
+    fun updatePreferences(
+        @Header("Authorization") token: String,
+        @Body preferenceRequest: PreferenceRequest
+    ): Call<PreferenceResponse>
+
 }

@@ -98,10 +98,58 @@ data class LoginRequest(
     val password: String
 )
 
+// 로그인 응답에서 result 데이터를 담는 클래스
+data class LoginResult(
+    val accessToken: String,
+    val refreshToken: String
+)
+
+
 // 로그인 응답 데이터 클래스
 data class LoginResponse(
     val isSuccess: Boolean,
     val code: String,
     val message: String,
-    val result: String? // 서버에서 반환된 토큰을 저장
+
+    val result: LoginResult? // 서버에서 반환된 accessToken과 refreshToken을 저장
 )
+
+
+// 7. 언어 설정 업데이트
+
+data class LanguageRequest(
+    val language: String
+)
+
+data class LanguageResponse(
+    val isSuccess: Boolean,
+    val code: String,
+    val message: String,
+    val result: Result
+) {
+    data class Result(
+        val memberId: Int
+    )
+}
+
+
+// 8. 관심사 설정 업데이트
+
+// 관심사 업데이트 요청 데이터 클래스
+data class PreferenceRequest(
+    val mainCategory: String,
+    val subCategory: String
+)
+
+// 관심사 업데이트 응답 데이터 클래스
+data class PreferenceResponse(
+    val isSuccess: Boolean,
+    val code: String,
+    val message: String,
+    val result: Result
+) {
+    data class Result(
+        val memberId: Int
+    )
+}
+
