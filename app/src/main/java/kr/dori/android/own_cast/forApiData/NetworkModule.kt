@@ -13,7 +13,8 @@ const val BASE_URL = "http://15.164.140.239:8080"
 fun getRetrofit(): Retrofit {
     val interceptor = Interceptor { chain ->
         //이렇게 토큰 변수를 생성객체 내부에 둠으로서 생성마다 최신 토큰을 사용하게 구현함
-        val token = SignupData.token
+        //val token = SignupData.token
+        val token = "eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VySWQiOjYxLCJpYXQiOjE3MjQxODA2ODAsImV4cCI6MTcyNjc3MjY4MH0.Ghi8zlY7kMjC7UGWIXbIprJJMkZWmLtXDwkXM0gz_C0"
         Log.d("token","레트로핏 객체가 사용하는 토큰은: ${token}")
         val request: Request = chain.request().newBuilder()
             .addHeader("Authorization", "Bearer $token")
