@@ -170,7 +170,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
                     }
                 } ?: run {
                     // 실패 시 처리
-                    Log.d("apiTest-CreateCast", "API 호출 실패 또는 결과 없음")
+                    Toast.makeText(requireContext(), "API 호출 실패\n 잠시후 다시 시도해주세요.",Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -187,12 +187,18 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
             } else {
 
                 Log.d("apiTest-CreateCast", "연결실패 에러바디: ${response.errorBody().toString()}")
-                Toast.makeText(context, "API 호출 실패\n 오류코드 : ${response.code()}",Toast.LENGTH_SHORT).show()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "API 호출 실패\n 오류코드 : ${response.code()}", Toast.LENGTH_SHORT).show()
+                }
 
                 null
             }
         } catch (e: Exception) {
-            Toast.makeText(context, "API 호출 실패\n 잠시후 다시 시도해주세요.",Toast.LENGTH_SHORT).show()
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, "API 호출 실패\n 잠시후 다시 시도해주세요.",Toast.LENGTH_SHORT).show()
+            }
+
+
             Log.d("apiTest-CreateCast", "API 호출 실패: ${e.message}")
             null
         }
@@ -239,6 +245,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
 
                 } ?: run {
                     // 실패 시 처리
+                    Toast.makeText(requireContext(), "API 호출 실패\n 잠시후 다시 시도해주세요.",Toast.LENGTH_SHORT).show()
                     Log.d("apiTest-CreateCast", "API 호출 실패 또는 결과 없음")
                 }
             }
@@ -246,21 +253,24 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
     }
     private suspend fun createCastByKeywordLauncher(postCastByKeyword: PostCastByKeyword):AuthResponse<PostCastForResponse>?{
         val apiService = getRetrofit().create(CastInterface::class.java)
-        val context = requireContext()
+
         return try {
             val response = apiService.postCastByKeyword(postCastByKeyword)
 
-            if (response.code().equals("200")||response.body()?.code.equals("COMMON200")) {
-
-
+            if (response.isSuccessful) {
                 response.body()
             } else {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "API 호출 실패\n 오류코드 : ${response.code()}", Toast.LENGTH_SHORT).show()
+                }
 
-                Toast.makeText(context, "API 호출 실패\n 오류코드 : ${response.code()}",Toast.LENGTH_SHORT).show()
                 null
             }
         } catch (e: Exception) {
-            Toast.makeText(context, "API 호출 실패\n 잠시후 다시 시도해주세요.",Toast.LENGTH_SHORT).show()
+            withContext(Dispatchers.Main) {
+                Toast.makeText(requireContext(), "API 호출 실패\n 잠시후 다시 시도해주세요.",Toast.LENGTH_SHORT).show()
+            }
+
             Log.d("apiTest-CreateCast", "API 호출 실패: ${e.message}")
             null
         }
@@ -276,6 +286,10 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
             corutineJob.cancel() // 또는 다른 적절한 작업
         }
 
+    }
+
+    fun getCurrentPagePosition(): Int {
+        return binding.keywordAudiosetVp.currentItem
     }
 
 }

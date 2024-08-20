@@ -48,7 +48,7 @@ class SearchAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Searc
             }
             binding.searchfrItemTitleTv.text = data.title
             binding.searchfrItemCategoryTv.text = "${data.memberName}-${data.playlistName}"
-            binding.searchfrItemDurationTv.text = formatTime(data.audioLength.toInt())
+            binding.searchfrItemDurationTv.text = data.audioLength
 
             binding.searchfrItemAddCategoryOffIv.setOnClickListener {
                 mover.goAddCast(data.id)

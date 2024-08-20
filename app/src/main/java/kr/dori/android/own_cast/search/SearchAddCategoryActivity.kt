@@ -30,6 +30,8 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
         val playlist = intent.getSerializableExtra("categoryList") as? ArrayList<GetAllPlaylist>
         val id = intent.getLongExtra("id",-1)
         playlist?.let{
+            it.removeAt(0)
+            it.removeAt(0)
             searchadapter.dataList = it
         }
         id?.let {

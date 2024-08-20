@@ -45,7 +45,7 @@ class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAu
     }
     private fun initData(){
         binding.keyFinCastTitleTv.text = title
-        binding.keyFinScrpit1stTv.text = SignupData.name
+        binding.keyFinScrpit1stTv.text = SignupData.nickname
         binding.keyFinCastCategoryTv.text = category
         if(uri!=null){
             Glide.with(context)

@@ -75,7 +75,7 @@ class SignupData : Application() {
 
 
         var token: String
-            get() = getString("toekn", "닉네임")
+            get() = getString("toekn", "eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VySWQiOjE5LCJpYXQiOjE3MjM4MTQ0ODcsImV4cCI6MTcyNjQwNjQ4N30.K1B3wb1Q6bvKtNLyN490zcrmM3wTTHXVNqnweQoGDWk")
             set(value) = setString("toekn", value)
 
 

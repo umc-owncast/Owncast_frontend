@@ -148,12 +148,12 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
 
                 //api 전송용 데이터를 받아옴
                 if(formality.equals("CASUAL")){
-                    Toast.makeText(requireContext(), voiceList.styleCasual.dataType[p2].toString(), Toast.LENGTH_SHORT).show()
+
                     voice = voiceList.styleCasual.dataType[p2]
                 }
                 else{
 
-                    Toast.makeText(requireContext(), voiceList.styleBusiness.dataType[p2].toString(), Toast.LENGTH_SHORT).show()
+
                     voice = voiceList.styleBusiness.dataType[p2]
                 }
 

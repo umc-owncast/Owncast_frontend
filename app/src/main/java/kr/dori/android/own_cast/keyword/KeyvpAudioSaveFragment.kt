@@ -20,6 +20,7 @@ import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -106,9 +107,10 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
     //finish dialog
     private var uri: Uri? = null
 
-
+    private var currentPage = 0
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
 
     }
     override fun onDetach() {
@@ -280,21 +282,36 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         Log.d("apitest-getPlaylist",sharedViewModel.getPlayList.value!!.toString())
 
+        binding.keyAudSaveCategorySp.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (binding.keyAudSaveCategorySp.count == 1) {
+
+                    dialog.show()
+                    return@setOnTouchListener true
+                }
+            }
+            false  // 이벤트가 처리되지 않았음을 나타냅니다.
+        }
 
         binding.keyAudSaveCategorySp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
                 val value = binding.keyAudSaveCategorySp.getItemAtPosition(pos).toString()
-                when(pos){
+                if((parent?.count == 1)){
 
-                    playlistName.size-1 ->{//이 부분이 카테고리 생성하는 부분, api 추가해주기
-                        binding.keyAudSaveCategorySp.setSelection(currentPos)
-                        dialog.show()
-                    }
-                    else ->{
-                        currentPos = pos
-                        Toast.makeText(requireContext(), value, Toast.LENGTH_SHORT).show()
+                }else{
+                    when(pos){
+
+                        playlistName.size-1 ->{//이 부분이 카테고리 생성하는 부분, api 추가해주기
+                            binding.keyAudSaveCategorySp.setSelection(currentPos)
+                            dialog.show()
+                        }
+                        else ->{
+                            currentPos = pos
+
+                        }
                     }
                 }
+
 
 
                 //다시 포커스 안된거처럼 색깔을 바꿔줘야 함
@@ -326,7 +343,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         activity?.supportFragmentManager?.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         activity?.finish()
     }
-
+        //캐스트 이동
     override fun goPlayCast() {
         super.goPlayCast()
         getCastInfo(playlistId)
@@ -334,11 +351,10 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
     //addCategory같이 카테고리 추가하는 기능
     override fun onCategoryAdded(categoryName: String) {
-        //list.add(list.size-1,categoryName)원랜 이걸로 변환됐다고 해줘야되는데
-        //setSelection 써야 우리가 작성한 카테고리가 선택됨
-        //selection 효과가 기본적으로 구현돼있는듯
+
         addPlaylist(categoryName)
         adapter.notifyDataSetChanged()
+        dialog.dismiss()
 
         //새로 생성하면 키워드 생성하기 메뉴가 size-1, 새로 생성된 메뉴가 size-2
 
@@ -409,15 +425,15 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         }
 
 
+        //캐스트 저장 api호출
 
-        apiService.postCast(sharedViewModel.castId.value!!, SaveInfo(castTitle,playlistId,binding.keyAudPublicBtnIv.isChecked), body!!).enqueue(object: Callback<AuthResponse<String>> {
+        apiService.postCast(sharedViewModel.castId.value!!, SaveInfo(castTitle,playlistId,!binding.keyAudPublicBtnIv.isChecked), body!!).enqueue(object: Callback<AuthResponse<String>> {
             override fun onResponse(call: Call<AuthResponse<String>>, response: Response<AuthResponse<String>>) {
                 Log.d("apiTest-castPost", "저장 시도 중 ${ response.toString() }")
                 val resp = response.body()
                 if(response.isSuccessful){
                     findialog.setCancelable(false)//dialog는 여기서
                     findialog.setCanceledOnTouchOutside(false)
-
                     findialog.show()
                 }else{
                     Toast.makeText(requireContext(), "서버 오류 코드 ${response.code()}", Toast.LENGTH_SHORT).show()
@@ -438,10 +454,9 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         apiService.postPlayList(categoryName).enqueue(object: Callback<AuthResponse<PostPlaylist>> {
             override fun onResponse(call: Call<AuthResponse<PostPlaylist>>, response: Response<AuthResponse<PostPlaylist>>) {
                 Log.d("apiTest1", response.toString())
-                val resp : AuthResponse<PostPlaylist> = response.body()!!
-                when(resp.code) {
-                    "COMMON200" -> {
-
+                if(response.isSuccessful){
+                    response.body()?.let {
+                        val resp : AuthResponse<PostPlaylist> = it
                         Log.d("apiTest-playlistAdd", "저장성공 id: ${ resp.result.toString() } 제목 : ${categoryName}")
                         id =  resp.result!!.playlistId
                         id?.let {
@@ -453,12 +468,15 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                         dialog.dismiss()
 
                         Toast.makeText(requireContext(),"추가되었습니다.",Toast.LENGTH_SHORT).show()
-                    }
-                    else ->{
-                        Log.d("apiTest-playlistAdd","연결실패 코드 : ${resp.code}")
-
+                    } ?: run{
+                        Toast.makeText(requireContext(),"응답값이 비었습니다",Toast.LENGTH_SHORT).show()
                     }
                 }
+                else{
+                    Log.d("apiTest-playlistAdd","연결실패 코드 : ${response.code()}")
+
+                }
+
             }
 
             override fun onFailure(call: Call<AuthResponse<PostPlaylist>>, t: Throwable) {

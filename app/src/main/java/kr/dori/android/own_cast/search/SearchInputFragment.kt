@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.SignupData
 import kr.dori.android.own_cast.databinding.FragmentSearchInputBinding
 import kr.dori.android.own_cast.keyword.KeywordActivity
 import kr.dori.android.own_cast.keyword.KeywordAppData
@@ -27,6 +28,7 @@ class SearchInputFragment : Fragment() {
     ): View? {
         binding = FragmentSearchInputBinding.inflate(inflater, container, false)
 
+        binding.searchInputTopicTv.text = SignupData.interest
         binding.fragmentSearchInputTextTv.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (s != null) {

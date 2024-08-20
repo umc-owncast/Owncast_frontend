@@ -3,6 +3,7 @@ package kr.dori.android.own_cast
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -11,6 +12,14 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.forApiData.getRetrofit
+import kr.dori.android.own_cast.keyword.KeywordAppData
+import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
 
 
 class ChangeDetailInterestActivity : ComponentActivity() {
@@ -110,9 +119,8 @@ class ChangeDetailInterestActivity : ComponentActivity() {
             SignupData.detail_interest = SignupData.temp_detail_interest
 
             Toast.makeText(this, "관심사 변경 완료", Toast.LENGTH_SHORT).show()
+            initData()
 
-            val intent = Intent(this, MainActivity ::class.java)
-            startActivity(intent)
         }
 
         // 닫기 버튼
@@ -127,7 +135,42 @@ class ChangeDetailInterestActivity : ComponentActivity() {
             startActivity(intent)
         }
     }
+    fun initData(){
 
+        Log.d("initDataCheck","${KeywordAppData.detailTopic.isNullOrEmpty()}, ${KeywordAppData.detailTopic}")
+
+        val getKeyword = getRetrofit().create(CastInterface::class.java)
+        val dialog = KeywordLoadingDialog(this,"데이터를 불러오고 있어요")
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.show()
+        CoroutineScope(Dispatchers.IO).launch() {
+            val response = getKeyword.getKeywordHome()
+            launch {
+                withContext(Dispatchers.Main) {
+                    try {
+                        dialog.dismiss()
+                        if (response.isSuccessful) {
+                            response.body()?.result?.let{
+                                KeywordAppData.updateDetailTopic(it)
+                            }
+                        } else {
+                            Log.d("initDataFinish","failed code : ${response.code()}")
+                            Log.d("initDataFinish","${KeywordAppData.detailTopic.size}")
+                            Toast.makeText(this@ChangeDetailInterestActivity,"데이터를 받아오는데 실패했습니다.\n 에러코드 : ${response.code()}",Toast.LENGTH_SHORT).show()
+                        }
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
+                val intent = Intent(this@ChangeDetailInterestActivity, MainActivity ::class.java)
+                startActivity(intent)
+
+            }
+        }
+    }
     private fun setSectionText(textViewId: Int, text: String) {
         val textView = findViewById<TextView>(textViewId)
         textView.text = text

@@ -170,6 +170,7 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
     override fun goAddCast(id:Long) {//여기다가 카테고리 정보 담아야함
         val intent = Intent(requireContext(), SearchAddCategoryActivity::class.java)
         sharedViewModel.data.value?.let{
+
             intent.putExtra("categoryList",ArrayList(it))
         }
         intent.putExtra("id",id)

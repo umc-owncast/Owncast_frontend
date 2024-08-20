@@ -100,6 +100,7 @@ class SearchFragment : Fragment(), SearchMover {
                         var playlistCategoryData = response.body()?.result
                         withContext(Dispatchers.Main) {
                             playlistCategoryData?.let {
+
                                 sharedViewModel.setData(it.toMutableList())
                                 Log.d("apitest-searchHome","${it.toString()}")
                             }
@@ -152,11 +153,6 @@ class SearchFragment : Fragment(), SearchMover {
                 .commitAllowingStateLoss()
         }
 
-
-
-
-
-
         return binding.root
     }
 
@@ -205,6 +201,7 @@ class SearchFragment : Fragment(), SearchMover {
                 if(response.isSuccessful) {
                     val resp: AuthResponse<List<CastHomeDTO>> = response.body()!!
                     resp.result?.let {
+                        //왜 오류처리가 안될까?
                         setItemData(it)
                     } ?: run{
                         Toast.makeText(context, "검색 결과가 없습니다",Toast.LENGTH_SHORT).show()
@@ -248,7 +245,8 @@ class SearchFragment : Fragment(), SearchMover {
             val durationTv = itemView.findViewById<TextView>(R.id.searchfr_item_duration_tv)
             titleTv.text = castHomeDTO[i].title
             categoryTv.text = "${castHomeDTO[i].memberName}-${castHomeDTO[i].playlistName}"
-            durationTv.text = formatTime(castHomeDTO[i].audioLength.toInt())
+            Log.d("searchFragment_apicheck","${castHomeDTO[i].audioLength}")
+            durationTv.text = castHomeDTO[i].audioLength
 
 
             if (castHomeDTO[i].imagePath.startsWith("http")) {

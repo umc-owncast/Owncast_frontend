@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.google.android.exoplayer2.C
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.data.SongData
@@ -30,7 +32,7 @@ class CastPlaylistFragment : Fragment() {
         binding.fragmentCastPlaylistRv.layoutManager = LinearLayoutManager(context)
 
         initTouchHeleper()
-
+        initPlayItem()
         return binding.root
     }
 
@@ -51,6 +53,9 @@ class CastPlaylistFragment : Fragment() {
                     //currentCast를 바꾸는 작업을 해준다.
                     CastPlayerData.currentPosition = toPosition
                     CastPlayerData.currentCast = CastPlayerData.getAllCastList()[toPosition]
+                }else if(toPosition== CastPlayerData.currentPosition){
+                    CastPlayerData.currentPosition = fromPosition
+                    CastPlayerData.currentCast = CastPlayerData.getAllCastList()[fromPosition]
                 }
                 castPlaylistAdapter.swapItems(fromPosition, toPosition)
                 return true
@@ -64,5 +69,19 @@ class CastPlaylistFragment : Fragment() {
         // ItemTouchHelper를 RecyclerView에 연결
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(binding.fragmentCastPlaylistRv)
+        castPlaylistAdapter.itemTouchHelper = itemTouchHelper
+    }
+
+    fun initPlayItem(){
+        CastPlayerData.getAllcastImagePath()[CastPlayerData.currentPosition].let{
+            Glide.with(binding.root)
+                .load(it)
+                .centerCrop() // ImageView에 맞게 이미지 크기를 조정
+                .into(binding.fragmentPlaylistCastIv)
+        }
+        binding.fragmentPlaylistCastIv
+        binding.fragmentCastPlaylistDuration.text = CastPlayerData.currentCast.audioLength
+        binding.fragmentCastPlaylistTitle.text = CastPlayerData.currentCast.castTitle
+        binding.fragmentCastPlaylistCreator.text = "${CastPlayerData.currentCast.castCreator} - ${CastPlayerData.currentCast.castCategory}"
     }
 }

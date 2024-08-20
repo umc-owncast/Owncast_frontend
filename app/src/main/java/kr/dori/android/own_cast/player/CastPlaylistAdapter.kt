@@ -1,5 +1,6 @@
 package kr.dori.android.own_cast.player
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -17,6 +18,7 @@ class CastPlaylistAdapter: RecyclerView.Adapter<CastPlaylistAdapter.Holder>() {
     lateinit var itemTouchHelper: ItemTouchHelper
     fun swapItems(fromPosition: Int, toPosition: Int) {
         Collections.swap(CastPlayerData.getAllCastList(), fromPosition, toPosition)
+        Log.d("재생목록테스트",CastPlayerData.getAllCastList().toString())
         notifyItemMoved(fromPosition, toPosition)
     }
 
@@ -28,7 +30,12 @@ class CastPlaylistAdapter: RecyclerView.Adapter<CastPlaylistAdapter.Holder>() {
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val data = CastPlayerData.getAllCastList()[position]
         holder.setText(data, position)
-        holder.setDragHandle(holder)
+        holder.binding.castPlaylistMenuIv.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                itemTouchHelper.startDrag(holder)
+            }
+            false
+        }
     }
 
     override fun getItemCount(): Int {
@@ -47,21 +54,22 @@ class CastPlaylistAdapter: RecyclerView.Adapter<CastPlaylistAdapter.Holder>() {
             binding.castTouchzone.setOnClickListener {
                 //클릭시 재생되게
             }
-            val currentPos = CastPlayerData.currentPosition
-            CastPlayerData.getAllcastImagePath()[currentPos].let{
+
+            CastPlayerData.getAllcastImagePath()[position].let{
                 Glide.with(binding.root)
                     .load(it)
                     .centerCrop() // ImageView에 맞게 이미지 크기를 조정
                     .into(binding.castPlaylistIv)
             }
-            binding.castPlaylistDuration.text = formatTime(data.audioLength.toInt())
+            binding.castPlaylistDuration.text = data.audioLength
             if(data.playlistId != -1L){//-1로 데이터 넣어서 플레이어가 저장 안한걸로 뜨게 할거임
-
+                Log.d("캐스트저장",data.isPublic.toString())
                 binding.castPlaylistCreator.visibility = View.GONE
-                if(!data.isPublic){
-                    binding.castPlaylistLockIv.visibility = View.VISIBLE
-                }else{
+                if(data.isPublic){
                     binding.castPlaylistLockIv.visibility = View.GONE
+
+                }else{
+                    binding.castPlaylistLockIv.visibility = View.VISIBLE
                 }
             }else{
                 binding.castPlaylistLockIv.visibility = View.GONE
@@ -69,12 +77,7 @@ class CastPlaylistAdapter: RecyclerView.Adapter<CastPlaylistAdapter.Holder>() {
             }
         }
         fun setDragHandle(holder:Holder){
-            binding.castPlaylistMenuIv.setOnTouchListener { _, event ->
-                if (event.action == MotionEvent.ACTION_DOWN) {
-                    itemTouchHelper.startDrag(holder)
-                }
-                false
-            }
+
         }
     }
     private fun formatTime(totalSeconds:Int): String {
