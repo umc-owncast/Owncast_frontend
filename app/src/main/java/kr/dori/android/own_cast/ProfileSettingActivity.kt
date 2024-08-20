@@ -110,7 +110,8 @@ class ProfileSettingActivity : AppCompatActivity() {
             val userToken = "Bearer ${SignupData.token}"
 
             // Retrofit을 통해 서버에 프로필 업데이트 요청
-            RetrofitClient.instance.updateProfile(userToken, updateProfileRequest).enqueue(object : Callback<UpdateProfileResponse> {
+            RetrofitClient.instance.updateProfile(userToken, updateProfileRequest).enqueue(object
+                : Callback<UpdateProfileResponse> {
                 override fun onResponse(call: Call<UpdateProfileResponse>, response: Response<UpdateProfileResponse>) {
                     if (response.isSuccessful) {
                         val updateProfileResponse = response.body()
@@ -128,7 +129,7 @@ class ProfileSettingActivity : AppCompatActivity() {
                             handleError(updateProfileResponse?.message ?: "프로필 업데이트 실패")
                         }
                     } else {
-                        handleError("프로필 업데이트 요청 실패")
+                        handleError("실패 (이름은 5글자 이내)")
                     }
                 }
 

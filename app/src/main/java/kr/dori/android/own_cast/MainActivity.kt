@@ -98,10 +98,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         } else {
-            if (isTokenExpired(SignupData.token)) {
-                // 토큰이 만료된 경우 자동 갱신
-                renewToken(userId, userPassword)
-            }
+            renewToken(userId, userPassword)
         }
 
 
@@ -175,7 +172,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun renewToken(id: String, password: String) {
-        val loginRequest = LoginRequest(loginId = id, password = password)
+        val loginRequest = LoginRequest(loginId = SignupData.id, password = SignupData.password)
 
         // 서버에 로그인 요청
         val call = RetrofitClient.instance.login(loginRequest)
@@ -189,8 +186,8 @@ class MainActivity : AppCompatActivity() {
                     val loginResponse = response.body()
                     if (loginResponse?.isSuccess == true) {
                         // 토큰 갱신 성공 시
-                        SignupData.token = loginResponse.result?.refreshToken ?: ""
-                        Toast.makeText(this@MainActivity, "토큰이 갱신되었습니다.", Toast.LENGTH_SHORT).show()
+                        SignupData.token = loginResponse.result?.accessToken ?: ""
+                        //Toast.makeText(this@MainActivity, "토큰이 갱신되었습니다.", Toast.LENGTH_SHORT).show()
                     } else {
                         // 로그인 실패 시 로그인 화면으로 이동
                         Toast.makeText(

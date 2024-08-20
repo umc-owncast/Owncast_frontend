@@ -12,6 +12,9 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class ChangeLanguageActivity: ComponentActivity() {
@@ -39,14 +42,68 @@ class ChangeLanguageActivity: ComponentActivity() {
         nextButton.setOnClickListener {
             if ( SignupData.temp_language != getString(R.string.signup_info_first) && SignupData.temp_accent != getString(R.string.signup_info_first) ) {
 
-                SignupData.language = SignupData.temp_language
-                SignupData.accent = SignupData.temp_accent
+                // 서버로 전송할 language 값을 설정
+                val language = when (SignupData.temp_accent) {
+                    "usa" -> "US"
+                    "eng" -> "UK"
+                    "aus" -> "AUS"
+                    "ind" -> "IND"
+                    "jp"  -> "JA"
+                    "sp"  -> "ES"
+                    else -> "US"
+                }
 
-                Toast.makeText(this, "언어 변경 완료", Toast.LENGTH_SHORT).show()
+                // 요청 객체 생성
+                val languageRequest = LanguageRequest(language)
 
-                SignupData.profile_detail_interest = "완료"
-                val intent = Intent(this, MainActivity ::class.java)
-                startActivity(intent)
+                // Retrofit 클라이언트 인스턴스를 통해 ApiService 호출
+                val apiService = RetrofitClient.instance
+
+                // 사용자 토큰 가져오기
+                val userToken = "Bearer ${SignupData.token}"
+
+                // 네트워크 호출, 토큰을 헤더에 포함
+                apiService.updateLanguage(userToken, languageRequest)
+                    .enqueue(object : Callback<LanguageResponse> {
+                        override fun onResponse(
+                            call: Call<LanguageResponse>,
+                            response: Response<LanguageResponse>
+                        ) {
+                            // 응답이 성공적이고 요청이 성공했는지 확인
+                            if (response.isSuccessful && response.body()?.isSuccess == true) {
+                                // 성공적인 응답 처리
+                                SignupData.language = SignupData.temp_language
+                                SignupData.accent = SignupData.temp_accent
+                                SignupData.profile_detail_interest = "완료"
+
+                                Toast.makeText(
+                                    this@ChangeLanguageActivity,
+                                    "언어 변경 완료",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
+                                val intent = Intent(this@ChangeLanguageActivity, MainActivity::class.java)
+                                startActivity(intent)
+                            } else {
+                                // 응답 오류 처리
+                                Toast.makeText(
+                                    this@ChangeLanguageActivity,
+                                    "서버 오류: ${response.body()?.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<LanguageResponse>, t: Throwable) {
+                            // 네트워크 호출 실패 처리
+                            t.printStackTrace()
+                            Toast.makeText(
+                                this@ChangeLanguageActivity,
+                                "언어 설정 변경 실패",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    })
             }
         }
     }
