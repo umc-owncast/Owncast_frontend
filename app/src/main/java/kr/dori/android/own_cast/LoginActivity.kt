@@ -96,9 +96,9 @@ class LoginActivity : ComponentActivity() {
                 if (response.isSuccessful) {
                     val loginResponse = response.body()
                     if (loginResponse?.isSuccess == true) {
-                        // 로그인 성공 시, 토큰과 ID를 저장
+                        // 로그인 성공 시, ID와 refreshToken을 저장
                         SignupData.id = id
-                        SignupData.token = loginResponse.result ?: ""
+                        SignupData.token = loginResponse.result?.refreshToken ?: ""
 
                         // 성공 콜백 호출
                         callback(true, "")
