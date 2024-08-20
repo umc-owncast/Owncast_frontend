@@ -8,6 +8,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import kr.dori.android.own_cast.ActivityMover
+import kr.dori.android.own_cast.SignupData
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.CastItemLayoutBinding
 import kr.dori.android.own_cast.forApiData.Cast
@@ -52,7 +53,7 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
             binding.castItemTitleTv.text = data.castTitle
             binding.timeTableTv.text = formatTime(data.audioLength)
 
-            if(data.castCreator == "헬로") {
+            if(data.castCreator == SignupData.nickname) {
                 binding.castItemCreator.visibility = View.GONE
                 binding.castItemEditIv.visibility = View.VISIBLE
                 binding.castItemEditIv.setOnClickListener {

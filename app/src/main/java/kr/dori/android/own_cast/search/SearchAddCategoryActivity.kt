@@ -7,11 +7,23 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.ActivitySearchAddCategoryBinding
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
+import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.GetAllPlaylist
+import kr.dori.android.own_cast.forApiData.GetUserPlaylist
+import kr.dori.android.own_cast.forApiData.PlayListInterface
+import kr.dori.android.own_cast.forApiData.UpdateInfo
+import kr.dori.android.own_cast.forApiData.getRetrofit
+import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
+import kr.dori.android.own_cast.keyword.PlaylistText
+import kr.dori.android.own_cast.player.CastWithPlaylistId
 import kr.dori.android.own_cast.playlist.AddCategoryAdapter
 
 class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
@@ -33,6 +45,8 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
             it.removeAt(0)
             it.removeAt(0)
             searchadapter.dataList = it
+        } ?: run {
+            initCategoryData()
         }
         id?.let {
             searchadapter.id = it
@@ -74,6 +88,46 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
             duration = Toast.LENGTH_LONG
             view = layout
             show()
+        }
+    }
+
+    fun initCategoryData(){
+        val getCategory = getRetrofit().create(PlayListInterface::class.java)
+        val loadingDialog = KeywordLoadingDialog(this,"데이터를 불러오고 있어요")
+        loadingDialog.setCancelable(false)
+        loadingDialog.setCanceledOnTouchOutside(false)
+        loadingDialog.show()
+        CoroutineScope(Dispatchers.IO).launch() {
+
+            val response = getCategory.getPlayListCorutine()
+            launch {
+
+                withContext(Dispatchers.Main) {
+                    try {
+                        loadingDialog.dismiss()
+                        if (response.isSuccessful) {
+                            response.body()?.result?.let{
+                                var data = it.map{
+                                    GetAllPlaylist(
+                                        name = it.name,
+                                        imagePath = it.imagePath,
+                                        playlistId = it.playlistId,
+                                        totalCast = it.totalCast
+                                    )
+                                }
+                                searchadapter.dataList.addAll(data)
+                            }
+                        } else {
+                            Toast.makeText(this@SearchAddCategoryActivity,"재생목록 불러오기 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
+                        }
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
+
+            }
         }
     }
 }

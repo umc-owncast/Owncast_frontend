@@ -221,12 +221,12 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                                         if (part != null) {
 
                                         } else {
-                                            Toast.makeText(context,"파일 변환 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(this@EditAudioActivity,"파일 변환 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
                                         }
                                     }
                                 }
                             } else {
-                                Toast.makeText(context,"캐스트 정보 불러오기 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@EditAudioActivity,"캐스트 정보 불러오기 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
                             }
 
                         } catch (e: Exception) {
@@ -266,7 +266,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                                 initSpinner()
                             }
                         } else {
-                            Toast.makeText(context,"재생목록 불러오기 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@EditAudioActivity,"재생목록 불러오기 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
                         }
 
                     } catch (e: Exception) {
@@ -316,10 +316,11 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                         if (response.isSuccessful) {
                             response.body()?.result?.let{
 
-                                Toast.makeText(context,"수정되었습니다.",Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@EditAudioActivity,"수정되었습니다.",Toast.LENGTH_SHORT).show()
+                                this@EditAudioActivity.finish()
                             }
                         } else {
-                            Toast.makeText(context,"수정 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@EditAudioActivity,"수정 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
                         }
 
                     } catch (e: Exception) {
@@ -341,7 +342,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                             response.body()?.result?.let{
 
                                 Toast.makeText( this@EditAudioActivity,"삭제되었습니다.",Toast.LENGTH_SHORT).show()
-                                this@EditAudioActivity.finish()
+
                             }
                         } else {
                             Toast.makeText(this@EditAudioActivity,"삭제 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()

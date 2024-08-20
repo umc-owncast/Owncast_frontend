@@ -77,7 +77,7 @@ data class GetUserPlaylist(
     @SerializedName(value = "name") val name: String,
     @SerializedName(value = "imagePath") val imagePath: String,
     @SerializedName(value = "playlistId") val playlistId: Long,
-    @SerializedName(value = "totalCast") val totalCast: Long
+    @SerializedName(value = "totalCast") val totalCast: Int
 
 )
 

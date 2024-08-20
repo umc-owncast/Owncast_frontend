@@ -29,6 +29,7 @@ import kr.dori.android.own_cast.databinding.ActivityPlayCastBinding
 import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.getRetrofit
+import kr.dori.android.own_cast.search.SearchAddCategoryActivity
 import java.util.concurrent.TimeUnit
 
 class PlayCastActivity : AppCompatActivity() {
@@ -135,11 +136,12 @@ class PlayCastActivity : AppCompatActivity() {
 
         // 카테고리 추가 버튼
         binding.addCategoryOffBtn.setOnClickListener{
-
+            addCast()
         }
         // 카테고리 해제 버튼
         binding.addCategoryOnBtn.setOnClickListener {
             deleteCast()
+
         }
 
         // Play 버튼 클릭 이벤트 처리
@@ -299,11 +301,14 @@ class PlayCastActivity : AppCompatActivity() {
         }
     }
 
-    fun classifyCast(){
+    fun classifyCast(){//이게 자기 캐스트인지 담아온 캐스트인지 구분
         if(CastPlayerData.currentCast.playlistId == -1L&&!SignupData.nickname.equals(CastPlayerData.currentCast.castCreator)){
             binding.addCategoryOffBtn.visibility = View.VISIBLE
         }else if(CastPlayerData.currentCast.playlistId != -1L&&!SignupData.nickname.equals(CastPlayerData.currentCast.castCreator)){
             binding.addCategoryOnBtn.visibility =View.VISIBLE
+        }else{
+            binding.addCategoryOnBtn.visibility =View.GONE
+            binding.addCategoryOffBtn.visibility = View.GONE
         }
     }
 
@@ -609,6 +614,13 @@ class PlayCastActivity : AppCompatActivity() {
         service?.clearLoop()  // 반복 구간을 해제하는 메소드
     }
 
+    private fun addCast(){
+        val intent = Intent(this, SearchAddCategoryActivity::class.java)
+        intent.putExtra("id",CastPlayerData.currentCast.castId)
+        startActivity(intent)
+        classifyCast()
+    }
+
     //담아온 프래그먼트 제거하는 함수
     private fun deleteCast(){
         val deleteCast = getRetrofit().create(CastInterface::class.java)
@@ -624,6 +636,7 @@ class PlayCastActivity : AppCompatActivity() {
                                 //삭제 했으니깐 버튼 바꿔주기
                                 binding.addCategoryOffBtn.visibility = View.VISIBLE
                                 binding.addCategoryOnBtn.visibility = View.GONE
+                                classifyCast()//혹시 몰라서 한번 더 함
                             }
                         } else {
                             Toast.makeText(this@PlayCastActivity,"카테고리 해제 실패,\n 오류코드 : $${response.code()}", Toast.LENGTH_SHORT).show()
