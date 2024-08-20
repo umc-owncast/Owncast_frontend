@@ -77,7 +77,7 @@ class SearchFragment : Fragment(), SearchMover {
         //searchDataUpdate()//다른 유저 정보 받아오는 함수
 
         initSearchCastData()
-        val getAllPlaylist = kr.dori.android.own_cast.getRetrofit().create(Playlist::class.java)
+        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
         CoroutineScope(Dispatchers.IO).launch() {
             launch {
                 try {

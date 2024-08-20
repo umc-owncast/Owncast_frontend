@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "441962934969",
+    "project_id": "own-cast",
+    "storage_bucket": "own-cast.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441962934969:android:8aac05d56d7219ca646168",
+        "android_client_info": {
+          "package_name": "kr.dori.android.own_cast"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUSQ8xR7m1q9bcX6_SMVTnjMERbAl4Ku8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

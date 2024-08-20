@@ -104,11 +104,13 @@ data class LoginResult(
     val refreshToken: String
 )
 
+
 // 로그인 응답 데이터 클래스
 data class LoginResponse(
     val isSuccess: Boolean,
     val code: String,
     val message: String,
+
     val result: LoginResult? // 서버에서 반환된 accessToken과 refreshToken을 저장
 )
 
@@ -150,3 +152,4 @@ data class PreferenceResponse(
         val memberId: Int
     )
 }
+

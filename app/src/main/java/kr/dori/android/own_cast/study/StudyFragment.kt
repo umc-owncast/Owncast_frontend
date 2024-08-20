@@ -17,7 +17,7 @@ import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.data.cardData
 import kr.dori.android.own_cast.databinding.FragmentStudyBinding
 import kr.dori.android.own_cast.forApiData.Playlist
-import kr.dori.android.own_cast.getRetrofit
+import kr.dori.android.own_cast.forApiData.getRetrofit
 
 class StudyFragment : Fragment() {
 
@@ -259,3 +259,10 @@ class StudyFragment : Fragment() {
         Log.d("text","$actualPosition")
     }
 }
+
+
+
+
+
+
+
