@@ -66,6 +66,6 @@ class SearchTwoAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Se
             return String.format("%d:%02d", minutes, seconds)
         }
 
-    }
+
 
 }

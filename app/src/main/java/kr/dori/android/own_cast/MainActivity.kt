@@ -79,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        Log.d("token1","${SignupData.token}")
         // 주석 처리된 부분 - 키워드 이동
         // binding.goKeywordIv.setOnClickListener {
         //     initKeyword()

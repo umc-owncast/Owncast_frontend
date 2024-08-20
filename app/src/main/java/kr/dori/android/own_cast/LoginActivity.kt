@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -99,6 +100,8 @@ class LoginActivity : ComponentActivity() {
                         // 로그인 성공 시, 토큰과 ID를 저장
                         SignupData.id = id
                         SignupData.token = loginResponse.result ?: ""
+                        Log.d("token","${SignupData.token}")
+
 
                         // 성공 콜백 호출
                         callback(true, "")
