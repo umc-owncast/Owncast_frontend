@@ -154,3 +154,7 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
         }
     }
 }
+
+
+
+

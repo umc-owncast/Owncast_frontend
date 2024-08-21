@@ -11,7 +11,6 @@ import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.search.SearchMover
-import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.PlaylistCategoryItemBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.CastHomeDTO

@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.ActivitySearchAddCategoryBinding
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
 import kr.dori.android.own_cast.forApiData.GetAllPlaylist

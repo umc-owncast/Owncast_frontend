@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentSearchTwoBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.CastHomeDTO

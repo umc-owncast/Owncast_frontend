@@ -4,18 +4,20 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kr.dori.android.own_cast.data.SongData
+import com.bumptech.glide.Glide
+import kr.dori.android.own_cast.data.PlaylistInfo
 
 import kr.dori.android.own_cast.databinding.StudyCategoryItemBinding
 
 class StudyAdapter() : RecyclerView.Adapter<StudyAdapter.Holder>() {
-    var dataList: MutableList<SongData> = mutableListOf()
+    var dataList: MutableList<PlaylistInfo> = mutableListOf()
     var selectedPosition : Int = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val binding = StudyCategoryItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return Holder(binding)
     }
+
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val data = dataList[position]
         holder.setText(data)
@@ -43,11 +45,12 @@ class StudyAdapter() : RecyclerView.Adapter<StudyAdapter.Holder>() {
 
         init{
             binding.root.setOnClickListener {
+                //데이터 세팅 부분을 구현해보도록 하자
             }
         }
-        fun setText(data: SongData){
-            binding.studyCategoryIv.setImageResource(data.Img)
-            binding.studyCategoryTv.text = data.category
+        fun setText(data: PlaylistInfo){
+            Glide.with(itemView.context).load(data.imagePath.toInt()).into(binding.studyCategoryIv)
+            binding.studyCategoryTv.text = data.playlistName
         }
     }
 }

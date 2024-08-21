@@ -234,12 +234,18 @@ class MainActivity : AppCompatActivity() {
 
             if (isSuccess) {
                 setPlaylistTableVisibility(true)
+                playlistTableVisible = true
+
                 updatePlaybackUI()  // 재생 상태에 따라 UI 업데이트
             } else {
                 setPlaylistTableVisibility(false)
+                playlistTableVisible = false
+
             }
         } else {
             setPlaylistTableVisibility(false)
+            playlistTableVisible = false
+
         }
     }
 

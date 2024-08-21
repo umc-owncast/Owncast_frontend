@@ -26,12 +26,6 @@ class StudyCustomAdapter() :
         val actualPosition = position % itemList.size
         val item = itemList[actualPosition]
         holder.bind(item)
-
-        // 초기 상태: 모든 아이템을 기본 크기로 설정
-        //holder.itemView.layoutParams.width = 5000
-        //holder.itemView.layoutParams.height = 2000
-
-        // 레이아웃 재계산
         holder.itemView.requestLayout()
 
     }

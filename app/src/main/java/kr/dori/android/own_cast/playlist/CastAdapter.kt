@@ -8,7 +8,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import kr.dori.android.own_cast.ActivityMover
-import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.CastItemLayoutBinding
 import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.player.CastWithPlaylistId

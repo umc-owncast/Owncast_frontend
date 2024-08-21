@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentCastPlaylistBinding
 
 
