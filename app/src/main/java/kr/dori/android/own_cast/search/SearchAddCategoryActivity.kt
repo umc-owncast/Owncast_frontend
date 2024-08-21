@@ -1,6 +1,7 @@
 package kr.dori.android.own_cast.search
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
@@ -30,7 +31,7 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
 
 
     private lateinit var binding: ActivitySearchAddCategoryBinding
-    private var searchadapter = AddCategoryAdapter(this)
+    private var searchadapter = AddCategoryAdapter(this,this)
 
 
 
@@ -39,23 +40,30 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
 
         binding = ActivitySearchAddCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val playlist = intent.getSerializableExtra("categoryList") as? ArrayList<GetAllPlaylist>
+        val playlist = intent.getSerializableExtra("categoryList") as? ArrayList<GetAllPlaylist>?
         val id = intent.getLongExtra("id",-1)
-        playlist?.let{
-            it.removeAt(0)
-            it.removeAt(0)
-            searchadapter.dataList = it
-        } ?: run {
-            initCategoryData()
+
+
+        if(!playlist.isNullOrEmpty()){
+            //내가 만든거 담아온거 없애야 돼서
+            playlist.removeAt(0)
+            playlist.removeAt(0)
+            searchadapter.dataList = playlist
+            binding.activitySearchAddCategoryRv.adapter = searchadapter
+            binding.activitySearchAddCategoryRv.layoutManager = LinearLayoutManager(this)
+            if(playlist.isNullOrEmpty()){
+                Toast.makeText(this,"재생목록이 비어있습니다.",Toast.LENGTH_SHORT).show()
+            }
+        }else {
+            initCategoryData()//이 함수에서 아래 내용 해줄거임
+            /*binding.activitySearchAddCategoryRv.adapter = searchadapter
+            binding.activitySearchAddCategoryRv.layoutManager = LinearLayoutManager(this)*/
         }
         id?.let {
             searchadapter.id = it
         }
-        if(playlist == null){
-            Toast.makeText(this,"잠시후 다시 시도해주세요",Toast.LENGTH_SHORT)
-        }
-        binding.activitySearchAddCategoryRv.adapter = searchadapter
-        binding.activitySearchAddCategoryRv.layoutManager = LinearLayoutManager(this)
+
+
         binding.activitySearchAddCategoryExitIv.setOnClickListener {
             finish()
         }
@@ -98,10 +106,8 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
         loadingDialog.setCanceledOnTouchOutside(false)
         loadingDialog.show()
         CoroutineScope(Dispatchers.IO).launch() {
-
             val response = getCategory.getPlayListCorutine()
             launch {
-
                 withContext(Dispatchers.Main) {
                     try {
                         loadingDialog.dismiss()
@@ -116,6 +122,11 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
                                     )
                                 }
                                 searchadapter.dataList.addAll(data)
+                                searchadapter.dataList.removeAt(0)
+                                searchadapter.dataList.removeAt(0)
+                                binding.activitySearchAddCategoryRv.adapter = searchadapter
+                                binding.activitySearchAddCategoryRv.layoutManager = LinearLayoutManager(this@SearchAddCategoryActivity)
+                                Log.d("카테고리 추가","성공 \n ${data.toString()}")
                             }
                         } else {
                             Toast.makeText(this@SearchAddCategoryActivity,"재생목록 불러오기 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()

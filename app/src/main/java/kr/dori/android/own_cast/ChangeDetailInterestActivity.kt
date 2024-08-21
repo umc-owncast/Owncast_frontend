@@ -163,9 +163,8 @@ class ChangeDetailInterestActivity : ComponentActivity() {
                             SignupData.detail_interest = SignupData.temp_detail_interest
 
                             Toast.makeText(this@ChangeDetailInterestActivity, "관심사 변경 완료", Toast.LENGTH_SHORT).show()
+                            initData()
 
-                            val intent = Intent(this@ChangeDetailInterestActivity, MainActivity ::class.java)
-                            startActivity(intent)
 
                         } else {
                             // 응답 오류 처리
@@ -231,10 +230,17 @@ class ChangeDetailInterestActivity : ComponentActivity() {
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
+                    Intent(this@ChangeDetailInterestActivity,MainActivity::class.java).apply{
+                        // 기존 Activity 스택에서 AActivity를 포함한 그 위의 모든 Activity들을 제거
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        // 새로운 AActivity를 생성하지 않고, 기존 AActivity를 그대로 사용
+                        addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                        startActivity(this)
+                    }
+                    this@ChangeDetailInterestActivity.finish()
 
                 }
-                val intent = Intent(this@ChangeDetailInterestActivity, MainActivity ::class.java)
-                startActivity(intent)
+
 
             }
         }

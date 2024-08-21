@@ -118,6 +118,15 @@ data class CastInfo(
     @SerializedName(value = "sentences") val sentences: List<NewSentences>
     )
 
+data class SimpleCastDTO(
+    @SerializedName(value = "id") val id: Long,
+    @SerializedName(value = "title") val title: String,
+    @SerializedName(value = "imagePath") val imagePath: String,
+    @SerializedName(value = "audioLength") val audioLength: String,
+    @SerializedName(value = "isPublic") val isPublic: Boolean,
+    @SerializedName(value = "hits") val hits: Long
+)
+
 
 
 

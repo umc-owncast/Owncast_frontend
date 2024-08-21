@@ -509,6 +509,7 @@ class PlayCastActivity : AppCompatActivity() {
         stateListener = 0
     }
 
+    //플레이스트 시작
     private fun audioToPlaylist() {
         binding.activityPlayCastPlaylistOnIv.visibility = View.VISIBLE
         binding.activityPlayCastPlaylistOffIv.visibility = View.GONE

@@ -63,11 +63,9 @@ class HomeFragment : Fragment() {
         //밑줄 추가하는 함수
         initTextUi()
         if(KeywordAppData.detailTopic.isNullOrEmpty()){
-            initData()
-
+            initData()//여기서도 결국 초기화는 해줌
         }else{
             initKeyword()
-
         }
 
 
@@ -96,6 +94,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun textViewBinding(){
+        if(!textList.isNullOrEmpty()) textList.clear()
         textList.add(binding.homefrTdKeyword1Tv)
         textList.add(binding.homefrTdKeyword2Tv)
         textList.add(binding.homefrTdKeyword3Tv)

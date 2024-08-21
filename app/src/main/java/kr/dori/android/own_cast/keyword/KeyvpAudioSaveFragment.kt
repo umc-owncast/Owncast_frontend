@@ -133,7 +133,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
         initSaveBtn()//여기서 저장하기 버튼, 저장 api 호출
 
         //기존에 있던 사진을 우선적으로 저장함, 나중에 init으로 변경하기ㅕ
-        body = prepareFilePartFromDrawable(requireContext(), R.drawable.save_keyword_thumb_ex1, "image")
+
 
 
 
@@ -409,6 +409,8 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
     }
 
+
+
     fun postCastSave(){//api저장하는 버튼
         val apiService = getRetrofit().create(CastInterface::class.java)
         //1. apiService후, 자신이 만들어놓은 인터페이스(함수 지정해주기)
@@ -418,34 +420,37 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         var findialog : KeywordAudioFinishDialog= try{
             KeywordAudioFinishDialog(requireContext(), this, castTitle,
-                sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].playlistName, uri)//저장 타이틀, 카테고리, 길이, 사진
+                sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].playlistName, uri, sharedViewModel.songDuration)//저장 타이틀, 카테고리, 길이, 사진
         } catch (e: NullPointerException){
             Toast.makeText(requireContext(), "리스너 오류. 문의 부탁드립니다.",Toast.LENGTH_SHORT).show()
             return
         }
-
-
         //캐스트 저장 api호출
 
-        apiService.postCast(sharedViewModel.castId.value!!, SaveInfo(castTitle,playlistId,!binding.keyAudPublicBtnIv.isChecked), body!!).enqueue(object: Callback<AuthResponse<String>> {
-            override fun onResponse(call: Call<AuthResponse<String>>, response: Response<AuthResponse<String>>) {
-                Log.d("apiTest-castPost", "저장 시도 중 ${ response.toString() }")
-                val resp = response.body()
-                if(response.isSuccessful){
-                    findialog.setCancelable(false)//dialog는 여기서
-                    findialog.setCanceledOnTouchOutside(false)
-                    findialog.show()
-                }else{
-                    Toast.makeText(requireContext(), "서버 오류 코드 ${response.code()}", Toast.LENGTH_SHORT).show()
+        CoroutineScope(Dispatchers.IO).launch() {
+            Log.d("캐스트 저장","저장할 때 타이틀 ${castTitle}")
+            val response = apiService.postCast(sharedViewModel.castId.value!!, castTitle,body, !binding.keyAudPublicBtnIv.isChecked,playlistId )
+            launch {
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            findialog.setCancelable(false)//dialog는 여기서
+                            findialog.setCanceledOnTouchOutside(false)
+                            findialog.show()
+
+                        } else {
+                            Toast.makeText(requireContext(), "서버 오류 코드 ${response.code()}", Toast.LENGTH_SHORT).show()
+
+                        }
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
 
-            }
-            override fun onFailure(call: Call<AuthResponse<String>>, t: Throwable) {
 
-                Toast.makeText(requireContext(), "서버가 불안정합니다. 오류 메시지\n" +
-                        "${t.message}", Toast.LENGTH_SHORT).show()
             }
-        })
+        }
     }
 
 
@@ -532,13 +537,14 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                                 CastWithPlaylistId(
                                     castId = cast.castId,
                                     playlistId = playlistId,
-                                    castTitle = cast.castTitle,
+                                    castTitle = cast.castTitle?:"제목못받음",//서버에서 바로 저장이 안돼서 그런거같음;
                                     isPublic = cast.isPublic,
                                     castCreator = cast.castCreator,
                                     castCategory = cast.castCategory,
                                     audioLength = cast.audioLength
                                 )
                             }
+
                             CastPlayerData.setCast(castListWithPlaylistId)  // 캐스트 리스트를 저장
                             var imageData = it.castList.map{
                                 it.imagePath

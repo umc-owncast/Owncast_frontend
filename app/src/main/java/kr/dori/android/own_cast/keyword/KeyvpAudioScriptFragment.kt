@@ -31,7 +31,7 @@ class KeyvpAudioScriptFragment:Fragment() {
     private lateinit var sharedViewModel: KeywordViewModel
     private var curSpeed:Int = 2
     private lateinit var adapter:KeyvpAudioScriptRVAdapter
-
+    private var isFinish = false
 
 
     /*-------exoPlayer용 변수--------------------*/
@@ -147,9 +147,20 @@ class KeyvpAudioScriptFragment:Fragment() {
                 if (playbackState == Player.STATE_READY) {//재생상태가 준비되었음
                     //binding.keyAudScriptSb.max = (player.duration / 1000).toInt() // SeekBar 최대값 설정
                     binding.keyAudSetMediaTimeTv.text = formatTime(player.duration)
+                    sharedViewModel.setSongDuration(formatTime(player.duration))
                     //사용자가 화면을 나갔을때 다시 progressbar 코루틴을 다시 실행시키기 위해 만듦
                     startSeekBarUpdate()
                     player.play()
+                }else if(playbackState == Player.STATE_ENDED){
+                    if(binding.keyAudScrRepeatIv.isChecked){
+                        player.seekTo(0)
+                        binding.keyAudSetMediaTimeTv.text = formatTime(player.currentPosition)
+                        player.play()
+                    }else{
+                        binding.keyAudScriptPlaybtnIv.visibility = View.VISIBLE
+                        binding.keyAudScriptStopBtnIv.visibility = View.GONE
+                        isFinish = true
+                    }
                 }
             }
 
@@ -182,6 +193,7 @@ class KeyvpAudioScriptFragment:Fragment() {
                 isSeeking = false // 사용자가 SeekBar 조작을 마침
                 val progress = seekBar?.progress?.toLong() ?: 0L
                 player.seekTo(progress*player.duration/100000L)
+
                 binding.keyAudSetMediaTimeTv.text = formatTime(player.currentPosition) // 현재 재생 위치 업데이트
 
             }
@@ -224,6 +236,10 @@ class KeyvpAudioScriptFragment:Fragment() {
 
         }
         binding.keyAudScriptPlaybtnIv.setOnClickListener{
+            if(isFinish){
+                player.seekTo(0)
+                isFinish = false
+            }
             player.play()
             binding.keyAudScriptPlaybtnIv.visibility = View.GONE
             binding.keyAudScriptStopBtnIv.visibility = View.VISIBLE

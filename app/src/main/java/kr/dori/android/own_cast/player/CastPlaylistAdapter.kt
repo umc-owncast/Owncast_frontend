@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import kr.dori.android.own_cast.SignupData
 import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.CastplaylistItemBinding
@@ -62,12 +63,11 @@ class CastPlaylistAdapter: RecyclerView.Adapter<CastPlaylistAdapter.Holder>() {
                     .into(binding.castPlaylistIv)
             }
             binding.castPlaylistDuration.text = data.audioLength
-            if(data.playlistId != -1L){//-1로 데이터 넣어서 플레이어가 저장 안한걸로 뜨게 할거임
-                Log.d("캐스트저장",data.isPublic.toString())
+            if(SignupData.nickname.equals(data.castCreator)){//유저의 이름과 제작자의 이름이 같은지
+                Log.d("플레이리스트","플레이리스트 : 제목 : ${data.castTitle},  ${data.isPublic}")
                 binding.castPlaylistCreator.visibility = View.GONE
                 if(data.isPublic){
                     binding.castPlaylistLockIv.visibility = View.GONE
-
                 }else{
                     binding.castPlaylistLockIv.visibility = View.VISIBLE
                 }

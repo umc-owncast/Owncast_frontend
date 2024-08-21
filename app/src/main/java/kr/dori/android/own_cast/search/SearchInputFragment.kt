@@ -85,6 +85,9 @@ class SearchInputFragment : Fragment() {
     }
 
     private fun textViewBinding(){
+        if(!textList.isNullOrEmpty()){
+            textList.clear()
+        }
         textList.add(binding.keywordActSuggest1Tv)
         textList.add(binding.keywordActSuggest2Tv)
         textList.add(binding.keywordActSuggest3Tv)

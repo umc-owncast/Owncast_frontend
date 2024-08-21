@@ -79,7 +79,6 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
 
 
             }
-
             // 데이터를 모두 받아온 후 UI 스레드에서 처리
             withContext(Dispatchers.Main) {
                 Log.d("test2", "$playlistList")

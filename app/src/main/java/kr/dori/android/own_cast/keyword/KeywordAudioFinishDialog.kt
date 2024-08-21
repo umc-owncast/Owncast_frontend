@@ -18,7 +18,7 @@ import kr.dori.android.own_cast.databinding.KeywordFinishDialogBinding
 
 class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAudioFinishListener
 
-,val title : String, val category : String, val uri: Uri?
+,val title : String, val category : String, val uri: Uri?, val duration : String
 ) : Dialog(context) {
     lateinit var binding : KeywordFinishDialogBinding
 
@@ -47,6 +47,7 @@ class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAu
         binding.keyFinCastTitleTv.text = title
         binding.keyFinScrpit1stTv.text = SignupData.nickname
         binding.keyFinCastCategoryTv.text = category
+        binding.keyFinCastTimeTv.text = duration
         if(uri!=null){
             Glide.with(context)
                 .load(uri)
@@ -81,6 +82,18 @@ class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAu
             val y = (rect.height() * height).toInt()
 
             window?.setLayout(x, y)
+        }
+    }
+    fun parseTimeToSeconds(input: String): Int {
+        return if (input.contains(":")) {
+            // 입력이 "분:초" 형식인 경우
+            val parts = input.split(":")
+            val minutes = parts[0].toIntOrNull() ?: 0
+            val seconds = parts[1].toIntOrNull() ?: 0
+            (minutes * 60) + seconds
+        } else {
+            // 입력이 이미 초 단위인 경우
+            input.toIntOrNull() ?: 0
         }
     }
 }
