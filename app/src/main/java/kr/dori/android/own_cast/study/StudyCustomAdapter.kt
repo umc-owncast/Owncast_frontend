@@ -7,20 +7,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.data.cardData
 import kr.dori.android.own_cast.databinding.StudyItemViewBinding
 import kr.dori.android.own_cast.forApiData.GetBookmark
 
-class StudyCustomAdapter() :
+class StudyCustomAdapter :
     RecyclerView.Adapter<StudyCustomAdapter.CenteredItemViewHolder>() {
 
     var itemList: MutableList<GetBookmark> = mutableListOf()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CenteredItemViewHolder {
         val binding = StudyItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CenteredItemViewHolder(binding,parent.context)
+        return CenteredItemViewHolder(binding, parent.context)
     }
 
     override fun onBindViewHolder(holder: CenteredItemViewHolder, position: Int) {
@@ -28,13 +27,12 @@ class StudyCustomAdapter() :
         val item = itemList[actualPosition]
         holder.bind(item)
         holder.itemView.requestLayout()
-
     }
 
+    // 실제 itemList의 크기를 반환하여 무한 스크롤을 방지함
     override fun getItemCount(): Int {
-        return if (itemList.isNotEmpty()) 1000 else 0
+        return itemList.size
     }
-
 
     class CenteredItemViewHolder(private val binding: StudyItemViewBinding, context: Context) : RecyclerView.ViewHolder(binding.root) {
         private var isFront = true
@@ -77,6 +75,7 @@ class StudyCustomAdapter() :
             binding.cardBack.text = item.translatedSentence
         }
     }
+
     fun adjustItemSize(recyclerView: RecyclerView) {
         val layoutManager = recyclerView.layoutManager as LinearLayoutManager
         val midPoint = recyclerView.width / 2
@@ -93,9 +92,4 @@ class StudyCustomAdapter() :
             }
         }
     }
-
 }
-
-
-
-

@@ -24,7 +24,6 @@ import kr.dori.android.own_cast.forApiData.getRetrofit
 class StudyFragment : Fragment() {
 
     private var dataCount = 0
-
     private val snapHelper = LinearSnapHelper()
     private lateinit var binding: FragmentStudyBinding
     private val customAdapter = StudyCustomAdapter()
@@ -35,7 +34,9 @@ class StudyFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentStudyBinding.inflate(inflater, container, false)
-        studyAdapter = StudyAdapter()
+        studyAdapter = StudyAdapter { position ->
+            handleItemClick(position)
+        }
 
         // 빈 리스트로 어댑터 연결
         studyAdapter.dataList = mutableListOf()
@@ -57,38 +58,36 @@ class StudyFragment : Fragment() {
 
         snapHelper.attachToRecyclerView(binding.studyCustomAdapterRv)
 
-        binding.studyCustomAdapterRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dataCount > 0) {
-                    customAdapter.adjustItemSize(recyclerView)
-                }
-            }
+        // Next, Previous 버튼 추가
+        binding.fragmentStudyNextIv.setOnClickListener {
+            scrollToNextItem()
+        }
 
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (dataCount > 0 && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val firstPosition = layoutManager.findFirstVisibleItemPosition()
-                    val lastPosition = layoutManager.findLastVisibleItemPosition()
+        binding.fragmentStudyBackIv.setOnClickListener {
+            scrollToPreviousItem()
+        }
 
-                    if (firstPosition <= dataCount) {
-                        recyclerView.scrollToPosition(firstPosition + dataCount)
-                    } else if (lastPosition >= layoutManager.itemCount - dataCount) {
-                        recyclerView.scrollToPosition(lastPosition - dataCount)
-                    }
-                }
-            }
-        })
-
-        binding.studyCustomAdapterRv.post {
-            if (dataCount > 0) {
-                customAdapter.adjustItemSize(binding.studyCustomAdapterRv)
+        // 처음에 첫 번째 아이템을 보여줌
+        if (customAdapter.itemList.isNotEmpty()) {
+            binding.studyCustomAdapterRv.post {
+                val firstPosition = 0
+                binding.studyCustomAdapterRv.scrollToPosition(firstPosition)
+                adjustSelectedItem()
             }
         }
 
         val margin = resources.getDimensionPixelSize(R.dimen.study_item_margin)
         binding.studyCustomAdapterRv.addItemDecoration(HorizontalMarginItemDecoration(margin))
+    }
+
+    private fun adjustSelectedItem() {
+        val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
+        val centerView = snapHelper.findSnapView(layoutManager)
+        centerView?.let {
+            val position = layoutManager.getPosition(it)
+            val actualPosition = position % dataCount
+            binding.fragmentStudyStateTv.text = "${setText(actualPosition)}/$dataCount"
+        }
     }
 
     private fun loadPlaylistData() {
@@ -166,6 +165,82 @@ class StudyFragment : Fragment() {
         }
     }
 
+    private fun loadNotSaved() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val getAllBookmark = getRetrofit().create(Bookmark::class.java)
+
+            try {
+                val response = getAllBookmark.getMy()
+                if (response.isSuccessful) {
+                    val allBookmarks = response.body()?.result ?: emptyList()
+                    Log.d("StudyFragment", "Bookmarks loaded successfully: ${allBookmarks.size}")
+
+                    withContext(Dispatchers.Main) {
+                        dataCount = allBookmarks.size
+                        if (dataCount > 0) {
+                            customAdapter.itemList = allBookmarks.toMutableList()
+                            customAdapter.notifyDataSetChanged()
+                            binding.fragmentStudyStateTv.text = "1/$dataCount"
+                        } else {
+                            // 데이터가 비어 있을 때 UI 요소 비활성화
+                            handleEmptyData()
+                        }
+                    }
+                } else {
+                    Log.e("StudyFragment", "Failed to load bookmarks: ${response.errorBody()?.string()}")
+                    withContext(Dispatchers.Main) {
+                        handleEmptyData()
+                    }
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("StudyFragment", "Error loading bookmarks", e)
+                withContext(Dispatchers.Main) {
+                    handleEmptyData()
+                }
+            }
+        }
+    }
+
+    private fun loadCategoryBookmark(playlistId: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val getAllBookmark = getRetrofit().create(Bookmark::class.java)
+
+            try {
+                val response = getAllBookmark.getBookmark(playlistId)
+                if (response.isSuccessful) {
+                    val allBookmarks = response.body()?.result ?: emptyList()
+                    Log.d("StudyFragment", "Bookmarks loaded successfully: ${allBookmarks.size}")
+
+                    withContext(Dispatchers.Main) {
+                        dataCount = allBookmarks.size
+                        if (dataCount > 0) {
+                            customAdapter.itemList = allBookmarks.toMutableList()
+                            customAdapter.notifyDataSetChanged()
+                            binding.fragmentStudyStateTv.text = "1/$dataCount"
+                        } else {
+                            // 데이터가 비어 있을 때 UI 요소 비활성화
+                            handleEmptyData()
+                        }
+                    }
+                } else {
+                    Log.e("StudyFragment", "Failed to load bookmarks: ${response.errorBody()?.string()}")
+                    withContext(Dispatchers.Main) {
+                        handleEmptyData()
+                    }
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("StudyFragment", "Error loading bookmarks", e)
+                withContext(Dispatchers.Main) {
+                    handleEmptyData()
+                }
+            }
+        }
+    }
+
     private fun handleEmptyData() {
         // 데이터가 비어 있을 때 UI 요소 비활성화 및 초기화
         dataCount = 0
@@ -183,26 +258,20 @@ class StudyFragment : Fragment() {
     }
 
     private fun scrollToNextItem() {
-        if (dataCount > 0) {
-            val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
-            val centerView = snapHelper.findSnapView(layoutManager)
-            centerView?.let {
-                val position = layoutManager.getPosition(it)
-                Log.d("StudyFragment", "Scrolling to next item from position: $position")
-                binding.studyCustomAdapterRv.smoothScrollToPosition(position + 1)
-            }
+        val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
+        val currentPosition = layoutManager.findFirstVisibleItemPosition()
+        if (currentPosition < customAdapter.itemList.size - 1) {
+            binding.studyCustomAdapterRv.smoothScrollToPosition(currentPosition + 1)
+            adjustSelectedItem()
         }
     }
 
-    private fun scrollToBackItem() {
-        if (dataCount > 0) {
-            val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
-            val centerView = snapHelper.findSnapView(layoutManager)
-            centerView?.let {
-                val position = layoutManager.getPosition(it)
-                Log.d("StudyFragment", "Scrolling to previous item from position: $position")
-                binding.studyCustomAdapterRv.smoothScrollToPosition(position - 1)
-            }
+    private fun scrollToPreviousItem() {
+        val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
+        val currentPosition = layoutManager.findFirstVisibleItemPosition()
+        if (currentPosition > 0) {
+            binding.studyCustomAdapterRv.smoothScrollToPosition(currentPosition - 1)
+            adjustSelectedItem()
         }
     }
 
@@ -232,7 +301,7 @@ class StudyFragment : Fragment() {
         }
 
         binding.fragmentStudyBackIv.setOnClickListener {
-            scrollToBackItem()
+            scrollToPreviousItem()
         }
 
         binding.fragmentStudyShuffleIv.setOnClickListener {
@@ -252,13 +321,7 @@ class StudyFragment : Fragment() {
                 )
                 binding.studyCustomAdapterRv.post {
                     customAdapter.adjustItemSize(binding.studyCustomAdapterRv)
-                    val centerView = snapHelper.findSnapView(layoutManager)
-                    centerView?.let {
-                        val position = layoutManager.getPosition(it)
-                        val actualPosition = position % dataCount
-                        binding.fragmentStudyStateTv.text = "${setText(actualPosition)}/$dataCount"
-                        Log.d("text", "$actualPosition")
-                    }
+                    adjustSelectedItem()
                 }
             }
         }
@@ -269,6 +332,20 @@ class StudyFragment : Fragment() {
             actualPosition - 4
         } else {
             actualPosition + dataCount - 4
+        }
+    }
+
+    private fun handleItemClick(position: Int) {
+        when (position) {
+            0 -> loadInitialCustomAdapterData() // 첫 번째 아이템 클릭 시 초기 데이터 로드
+            1 -> loadNotSaved() // 두 번째 아이템 클릭 시 저장되지 않은 북마크 로드
+            else -> {
+                val filteredData = studyAdapter.dataList
+                if (filteredData.isNotEmpty() && position < filteredData.size) {
+                    val playlistId = filteredData[position].playlistId
+                    loadCategoryBookmark(playlistId) // 그 외의 경우 해당 카테고리의 북마크 로드
+                }
+            }
         }
     }
 }

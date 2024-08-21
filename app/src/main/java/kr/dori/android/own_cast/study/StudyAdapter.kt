@@ -1,6 +1,7 @@
 package kr.dori.android.own_cast.study
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,7 +10,7 @@ import kr.dori.android.own_cast.data.PlaylistInfo
 
 import kr.dori.android.own_cast.databinding.StudyCategoryItemBinding
 
-class StudyAdapter() : RecyclerView.Adapter<StudyAdapter.Holder>() {
+class StudyAdapter(private val itemClickListener: (Int) -> Unit) : RecyclerView.Adapter<StudyAdapter.Holder>() {
     var dataList: MutableList<PlaylistInfo> = mutableListOf()
     var selectedPosition : Int = -1
 
@@ -22,21 +23,32 @@ class StudyAdapter() : RecyclerView.Adapter<StudyAdapter.Holder>() {
         val data = dataList[position]
         holder.setText(data)
 
+        Log.d("StudyAdapter", "Binding position: $position, selectedPosition: $selectedPosition, playlistName: ${data.playlistName}")
+
         if (position == selectedPosition) {
             holder.binding.studyCategoryTv.setTextColor(Color.parseColor("#8050F2")) // 보라색
         } else {
             holder.binding.studyCategoryTv.setTextColor(Color.BLACK) // 검은색
         }
+
         holder.binding.studyCategoryIv.setOnClickListener {
             val previousPosition = selectedPosition
             selectedPosition = position
 
-            // 이전에 선택된 항목 갱신
-            notifyItemChanged(previousPosition)
-            // 현재 선택된 항목 갱신
-            notifyItemChanged(selectedPosition)
+            Log.d("StudyAdapter", "Clicked position: $position, selectedPosition: $selectedPosition")
+
+            // 전체 항목 갱신
+            notifyDataSetChanged()
+
+            // 이 코드를 사용하여 특정 항목만 갱신하려면:
+            // notifyItemChanged(previousPosition)
+            // notifyItemChanged(selectedPosition)
+
+            itemClickListener(position)
         }
     }
+
+
     override fun getItemCount(): Int {
         return dataList.size
     }
