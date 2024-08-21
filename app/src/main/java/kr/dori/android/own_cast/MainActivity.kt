@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.ActivityMainBinding
-
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
 import kr.dori.android.own_cast.forApiData.CastInterface
