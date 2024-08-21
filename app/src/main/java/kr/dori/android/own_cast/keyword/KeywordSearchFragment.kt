@@ -43,7 +43,7 @@ class KeywordSearchFragment:Fragment() {
 
         Log.d("KeywordSearchFragment_checkInit","onCrete")
         initTextInputListener()
-        initKeyword()
+        bindingView()
 
         return binding.root
     }
@@ -53,24 +53,27 @@ class KeywordSearchFragment:Fragment() {
 
     }
 
-    fun initKeyword() {//관련 텍스트들을 초기화하는 함수
-        //클래스 내 전역변수로 선언한 textList에 바인딩 목록들을 넣고 초기화한다.
-
+    fun bindingView(){
+        if(!textViewList.isNullOrEmpty()) textViewList.clear()
         textViewList.add(binding.keywordActSuggest1Tv)
         textViewList.add(binding.keywordActSuggest2Tv)
         textViewList.add(binding.keywordActSuggest3Tv)
         textViewList.add(binding.keywordActSuggest4Tv)
         textViewList.add(binding.keywordActSuggest5Tv)
         textViewList.add(binding.keywordActSuggest6Tv)
+        initKeyword()
+    }
+    fun initKeyword() {//관련 텍스트들을 초기화하는 함수
+        //클래스 내 전역변수로 선언한 textList에 바인딩 목록들을 넣고 초기화한다.
         binding.keywordSearchTopicTv.text = SignupData.interest
-
-        (context as KeywordActivity).runOnUiThread {
             for (i: Int in 0..5) {
                 //view모델 안에 실제 데이터가 있다면 그걸 텍스트 뷰에 그대로 반영
 
                 if (i < KeywordAppData.detailTopic.size) {
-                    Log.d("KeywordSearchFragment_checkInit", "${KeywordAppData.detailTopic[i]}")
+
+                    Log.d("KeywordSearchFragment_checkInit", "변경 전 :${textViewList[i].text}")
                     textViewList[i].text = KeywordAppData.detailTopic[i]
+                    Log.d("KeywordSearchFragment_checkInit", "변경 후 :${textViewList[i].text}")
                     textViewList[i].setOnClickListener {
                         val fragmentTransaction =
                             (context as KeywordActivity).supportFragmentManager.beginTransaction()
@@ -88,7 +91,7 @@ class KeywordSearchFragment:Fragment() {
                     textViewList[i].visibility = View.GONE
                 }
             }
-        }
+
 
     }
 

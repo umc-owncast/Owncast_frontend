@@ -288,8 +288,6 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
 
     }
 
-    fun getCurrentPagePosition(): Int {
-        return binding.keywordAudiosetVp.currentItem
-    }
+
 
 }

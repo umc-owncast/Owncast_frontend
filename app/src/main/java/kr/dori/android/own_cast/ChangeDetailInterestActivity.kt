@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,6 +21,11 @@ import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.KeywordAppData
 import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
+
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
 
 
 class ChangeDetailInterestActivity : ComponentActivity() {
@@ -113,15 +119,77 @@ class ChangeDetailInterestActivity : ComponentActivity() {
         // 초기에는 완료 버튼을 비활성화
         confirmButton.isEnabled = false
         confirmButton.setOnClickListener {
-            SignupData.profile_detail_interest = "완료"
 
-            SignupData.interest = SignupData.temp_interest
-            SignupData.detail_interest = SignupData.temp_detail_interest
+            // interest 값을 변환
+            val mainCategory = when (SignupData.temp_interest) {
+                "movie" -> "드라마/영화"
+                "sports" -> "스포츠"
+                "music" -> "음악"
+                "food" -> "음식"
+                "book" -> "책"
+                "news" -> "시사/뉴스"
+                "art" -> "미술"
+                "self" -> "직접입력"
+                else -> "드라마/영화"
+            }
 
-            Toast.makeText(this, "관심사 변경 완료", Toast.LENGTH_SHORT).show()
-            initData()
+
+            // 요청 객체 생성
+            val preferenceRequest = PreferenceRequest(
+                mainCategory = mainCategory,
+                subCategory = SignupData.temp_interest
+            )
+
+            // Retrofit 클라이언트 인스턴스를 통해 ApiService 호출
+            val apiService = RetrofitClient.instance
+
+            // 사용자 토큰 가져오기
+            val userToken = "Bearer ${SignupData.token}"
+
+            // 네트워크 호출, 토큰을 헤더에 포함
+            apiService.updatePreferences(userToken, preferenceRequest)
+                .enqueue(object : Callback<PreferenceResponse> {
+                    override fun onResponse(
+                        call: Call<PreferenceResponse>,
+                        response: Response<PreferenceResponse>
+                    ) {
+                        // 응답이 성공적이고 요청이 성공했는지 확인
+                        if (response.isSuccessful && response.body()?.isSuccess == true) {
+
+                            // 성공적인 응답 처리
+                            SignupData.profile_detail_interest = "완료"
+
+                            SignupData.interest = SignupData.temp_interest
+                            SignupData.detail_interest = SignupData.temp_detail_interest
+
+                            Toast.makeText(this@ChangeDetailInterestActivity, "관심사 변경 완료", Toast.LENGTH_SHORT).show()
+
+                            val intent = Intent(this@ChangeDetailInterestActivity, MainActivity ::class.java)
+                            startActivity(intent)
+
+                        } else {
+                            // 응답 오류 처리
+                            Toast.makeText(
+                                this@ChangeDetailInterestActivity,
+                                "서버 오류: ${response.body()?.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<PreferenceResponse>, t: Throwable) {
+                        // 네트워크 호출 실패 처리
+                        t.printStackTrace()
+                        Toast.makeText(
+                            this@ChangeDetailInterestActivity,
+                            "관심사 변경 실패",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                })
 
         }
+
 
         // 닫기 버튼
         findViewById<ImageView>(R.id.pop_exit_button).setOnClickListener {
