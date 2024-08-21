@@ -102,7 +102,7 @@ class LoginActivity : ComponentActivity() {
 
                         // 로그인 성공 시, ID와 refreshToken을 저장
                         SignupData.id = id
-                        SignupData.token = loginResponse.result?.refreshToken ?: ""
+                        SignupData.token = loginResponse.result?.accessToken ?: ""
 
                         // 성공 콜백 호출
                         callback(true, "")

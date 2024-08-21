@@ -107,66 +107,55 @@ class MainActivity : AppCompatActivity() {
 
 
         // 로그인 정보 확인 후 토큰 갱신
-        val userId = SignupData.id
-        val userPassword = SignupData.password
-
-        if (userId.isNullOrEmpty() || userPassword.isNullOrEmpty()) {
-            // 로그인 정보가 없을 경우 로그인 화면으로 이동
-            startActivity(Intent(this, LoginActivity::class.java))
+        // 토큰 만료 여부 확인
+        if (isTokenExpired(SignupData.token)) {
+            startActivity(Intent(this@MainActivity, LoginActivity::class.java))
             finish()
-        } else {
-            renewToken(userId, userPassword)
         }
 
 
         //play table call back process
-        playCastActivityResultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        playCastActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result: ActivityResult ->
+
+            handleActivityResult(result)
+        }
+
+        binding.activityMainRealClickConstraint.setOnClickListener {
+            val intent = Intent(this, PlayCastActivity::class.java)
+            intent.putExtra("fromMainActivity", true)  // MainActivity에서 넘어왔음을 표시
+            playCastActivityResultLauncher.launch(intent)
+        }
 
 
-                // play table call back process
-                playCastActivityResultLauncher =
-                    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-                        handleActivityResult(result)
-                    }
+        binding.activityMainPauseIv.setOnClickListener {
+            pauseAudio()
+        }
 
-                binding.activityMainRealClickConstraint.setOnClickListener {
-                    val intent = Intent(this, PlayCastActivity::class.java)
-                    intent.putExtra("fromMainActivity", true)  // MainActivity에서 넘어왔음을 표시
-                    playCastActivityResultLauncher.launch(intent)
-                }
+        binding.activityMainPlayIv.setOnClickListener {
+            playAudio()
+        }
 
-                binding.activityMainPauseIv.setOnClickListener {
-                    pauseAudio()
-                }
+        binding.activityMainNextIv.setOnClickListener {
+            playNextAudio()
+        }
 
-                binding.activityMainPlayIv.setOnClickListener {
-                    playAudio()
-                }
+        if (SignupData.profile_detail_interest == "완료") {
+            SignupData.profile_detail_interest = ""
 
-                binding.activityMainNextIv.setOnClickListener {
-                    playNextAudio()
-                }
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.main_frm, ProfileFragment())
+                .commitAllowingStateLoss()
+            updateBottomNavigationIcons(ProfileFragment::class.java)
+        } else {
+            val homeFragment = HomeFragment()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.main_frm, homeFragment)
+                .commitAllowingStateLoss()
+            updateBottomNavigationIcons(HomeFragment::class.java)
+        }
 
+        initBottomButtons()
 
-
-                if (SignupData.profile_detail_interest == "완료") {
-                    SignupData.profile_detail_interest = ""
-
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_frm, ProfileFragment())
-                        .commitAllowingStateLoss()
-                    updateBottomNavigationIcons(ProfileFragment::class.java)
-                } else {
-                    val homeFragment = HomeFragment()
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_frm, homeFragment)
-                        .commitAllowingStateLoss()
-                    updateBottomNavigationIcons(HomeFragment::class.java)
-                }
-
-                initBottomButtons()
-            }
     }
 
 
