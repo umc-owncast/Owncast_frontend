@@ -7,9 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,18 +18,20 @@ import kr.dori.android.own_cast.forApiData.CastInfo
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kotlinx.coroutines.async
+import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.forApiData.Bookmark
 import kr.dori.android.own_cast.forApiData.GetBookmark
 
 class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
     lateinit var binding: FragmentCastScriptBinding
-    private val bookmarkViewModel: BookmarkViewModel by activityViewModels()
     private val handler = Handler()
     val adapter = ScriptAdapter(currentCast)
     lateinit var castInfo: CastInfo
     lateinit var allBookmark: List<GetBookmark>
     lateinit var filteredBookmark: List<Long>
-    lateinit var  previousBookmark : List<Long>
+    lateinit var previousBookmark: List<Long>
+    private val bookmarks: MutableList<Long> = mutableListOf() // 내부 변수로 북마크 관리
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,7 +42,6 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
         val getScript = getRetrofit().create(Playlist::class.java)
         val getBookmark = getRetrofit().create(Bookmark::class.java)
 
-
         CoroutineScope(Dispatchers.IO).launch {
             val castInfoDeferred = async {
                 val response = getScript.getCast(currentCast.castId)
@@ -53,39 +51,39 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
                     null
                 }
             }
-            val bookmarkInfoDeffered = async {
+            val bookmarkInfoDeferred = async {
                 val response = getBookmark.getBookmark(currentCast.playlistId)
                 if(response.isSuccessful){
                     response.body()?.result
-                }else{
+                } else {
                     null
                 }
             }
 
             castInfo = castInfoDeferred.await() ?: CastInfo(0, "", "", "", "", emptyList())
-            allBookmark = bookmarkInfoDeffered.await() ?: emptyList()
+            allBookmark = bookmarkInfoDeferred.await() ?: emptyList()
+
+
             filteredBookmark = allBookmark
                 .filter { it.castId == currentCast.castId }
                 .map { it.sentenceId }
-            val testBookmark = allBookmark.map{it.sentenceId}
-            val testCastSentence = castInfo.sentences.map{it.id}
+            val testBookmark = allBookmark.map { it.sentenceId }
+            val testCastSentence = castInfo.sentences.map { it.id }
             previousBookmark = filteredBookmark
 
-                withContext(Dispatchers.Main) {
+            // 내부 변수에 북마크 추가
+            bookmarks.addAll(filteredBookmark)
+
+            withContext(Dispatchers.Main) {
                 Log.d("script", "${castInfo.sentences}")
                 Log.d("script", "playlistId: ${currentCast.playlistId}, castId: ${currentCast.castId}")
 
                 adapter.dataList = castInfo.sentences
-
+                adapter.bookmarkList = bookmarks
                 binding.scriptRv.adapter = adapter
                 binding.scriptRv.layoutManager = LinearLayoutManager(context)
 
-
-                    // ViewModel에 필터링된 북마크를 추가
-                    filteredBookmark.forEach { sentenceId ->
-                        bookmarkViewModel.addBookmark(sentenceId)
-                    }
-                    Log.d("bookmarkTest","현재 캐스트의 북마크 아이디들: ${filteredBookmark} //////// 플레이리스트의 북마크 아이디들: ${testBookmark},///////, 캐스트의 센텐스 아이디들: ${testCastSentence},")
+                Log.d("bookmarkTest", "현재 캐스트의 북마크 아이디들: $filteredBookmark //////// 플레이리스트의 북마크 아이디들: $testBookmark, ///////, 캐스트의 센텐스 아이디들: $testCastSentence,")
             }
         }
         return binding.root
@@ -95,16 +93,18 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
         Log.d("UpdateTime", "Fragment: $currentTime")
         adapter.updateCurrentTime(currentTime)
     }
+
     override fun onStop() {
         super.onStop()
 
-        val currentBookmarks = bookmarkViewModel.bookmarkId.value ?: emptyList()
+        val currentBookmarks = CastPlayerData.currentBookmarkList
+        Log.d("Bookmark","${currentBookmarks}")
 
-        // 추가된 북마크
-        val addedBookmarks = listOf(2406L, 2407L) // 더미 데이터 사용 중
-        // 삭제된 북마크
-        //val removedBookmarks = previousBookmark.filterNot { it in currentBookmarks }
-        val removedBookmarks = listOf(2379L, 2380L,2404L, 2405L)
+        // 추가된 북마크: previousBookmark에는 없고 currentBookmarks에 있는 것들
+        val addedBookmarks = currentBookmarks.filter { it !in previousBookmark }
+
+        // 삭제된 북마크: currentBookmarks에는 없고 previousBookmark에 있는 것들
+        val removedBookmarks = previousBookmark.filter { it !in currentBookmarks }
         val bookmarkService = getRetrofit().create(Bookmark::class.java)
 
         GlobalScope.launch(Dispatchers.IO) {
@@ -144,13 +144,7 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
                 Log.d("Bookmark", "Error during bookmark sync: ${e.localizedMessage}", e)
             }
         }
-
     }
-
-
-
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,6 +155,7 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("Bookmark", "onViewCreated")
     }
+
     override fun onStart() {
         super.onStart()
         Log.d("Bookmark", "onStart")
@@ -180,6 +175,4 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
         super.onDetach()
         Log.d("Bookmark", "onDetach")
     }
-
-
 }

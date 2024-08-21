@@ -6,21 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.ScriptItemBinding
 import kr.dori.android.own_cast.forApiData.NewSentences
-import kr.dori.android.own_cast.forApiData.getRetrofit
-import kr.dori.android.own_cast.player.CastWithPlaylistId
-import retrofit2.create
 
 
 class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<ScriptAdapter.Holder>() {
-    var dataList: List<NewSentences> = emptyList() //여기에 센텐스 아이디도 담겨있음
-    var bookmarkList: List<String> = emptyList()
+    var dataList: List<NewSentences> = emptyList()
+    var bookmarkList: MutableList<Long> = mutableListOf()
 
     var onRepeatToggleListener: ((position: Int, isRepeatOn: Boolean) -> Unit)? = null
 
@@ -29,7 +22,6 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val binding = ScriptItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        Log.d("sentence","${dataList}")
         return Holder(binding)
     }
 
@@ -67,14 +59,40 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
 
     inner class Holder(val binding: ScriptItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-
         fun bind(data: NewSentences, isHighlighted: Boolean, isRepeatOn: Boolean) {
             binding.originalSentenceTv.text = data.originalSentence
             binding.translationSentenceTv.text = data.translatedSentence
 
             if (isHighlighted) {
+                // 하이라이트된 문장에 대한 로직
                 binding.translationSentenceTv.setTextColor(Color.parseColor("#000000"))
                 binding.originalSentenceTv.setTextColor(Color.parseColor("#000000"))
+
+                if (bookmarkList.contains(data.id)) {
+                    binding.onFocusOn.visibility = View.VISIBLE
+                    binding.notFocusOff.visibility = View.GONE
+                } else {
+                    binding.onFocusOn.visibility = View.GONE
+                    binding.notFocusOff.visibility = View.VISIBLE
+                }
+
+                binding.onFocusOn.setOnClickListener {
+                    binding.onFocusOn.visibility = View.GONE
+                    binding.notFocusOff.visibility = View.VISIBLE
+                    bookmarkList.remove(data.id)
+                    CastPlayerData.currentBookmarkList = bookmarkList
+
+                    Log.d("Bookmark","Removed: ${data.id}, Current List: ${bookmarkList}")
+                }
+
+                binding.notFocusOff.setOnClickListener {
+                    binding.onFocusOn.visibility = View.VISIBLE
+                    binding.notFocusOff.visibility = View.GONE
+                    bookmarkList.add(data.id)
+                    CastPlayerData.currentBookmarkList = bookmarkList
+
+                    Log.d("Bookmark","Added: ${data.id}, Current List: ${bookmarkList}")
+                }
 
                 if (isRepeatOn) {
                     binding.loofOff.visibility = View.GONE
@@ -100,14 +118,39 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
                     notifyDataSetChanged()
                 }
             } else {
+                // 하이라이트되지 않은 문장에 대한 로직
                 binding.translationSentenceTv.setTextColor(Color.parseColor("#808080"))
                 binding.originalSentenceTv.setTextColor(Color.parseColor("#808080"))
+
+                if (bookmarkList.contains(data.id)) {
+                    binding.notFocusOn.visibility = View.VISIBLE
+                    binding.notFocusOff.visibility = View.GONE
+                } else {
+                    binding.notFocusOn.visibility = View.GONE
+                    binding.notFocusOff.visibility = View.VISIBLE
+                }
+
+                binding.notFocusOn.setOnClickListener {
+                    binding.notFocusOn.visibility = View.GONE
+                    binding.notFocusOff.visibility = View.VISIBLE
+                    bookmarkList.remove(data.id)
+                    CastPlayerData.currentBookmarkList = bookmarkList
+
+                    Log.d("Bookmark","Removed: ${data.id}, Current List: ${bookmarkList}")
+                }
+
+                binding.notFocusOff.setOnClickListener {
+                    binding.notFocusOn.visibility = View.VISIBLE
+                    binding.notFocusOff.visibility = View.GONE
+                    bookmarkList.add(data.id)
+                    CastPlayerData.currentBookmarkList = bookmarkList
+
+                    Log.d("Bookmark","Added: ${data.id}, Current List: ${bookmarkList}")
+                }
+
                 binding.loofOff.visibility = View.VISIBLE
                 binding.loofOn.visibility = View.GONE
             }
         }
     }
-
-
-
 }
