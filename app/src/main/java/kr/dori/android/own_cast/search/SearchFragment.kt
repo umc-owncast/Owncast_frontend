@@ -235,6 +235,7 @@ class SearchFragment : Fragment(), SearchMover {
 
 
     fun setItemData(castHomeDTO: List<CastHomeDTO>){
+        if(castHomeDTO.size == 0) Toast.makeText(requireContext(),"유사한 검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
         for (i in 0 until castHomeDTO.size) {
             // item_layout.xml을 inflate하여 GridLayout에 추가
             val itemView = inflaterLayout.inflate(R.layout.item_search_fr, binding.gridLayout, false)

@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kr.dori.android.own_cast.keyword.KeywordAppData
 
 class ProfileFragment : Fragment() {
 
@@ -109,7 +110,7 @@ class ProfileFragment : Fragment() {
         // 로그아웃 버튼 클릭 시
         dialogView.findViewById<View>(R.id.btn_logout).setOnClickListener {
             SignupData.id = getString(R.string.signup_info_first) // 로그아웃 기능
-
+            KeywordAppData.updateDetailTopic(listOf())//회원가입할때 다 비움
             dialog.dismiss()
             overlayView.visibility = View.GONE
             // '스플래시' 페이지로 이동
@@ -152,6 +153,8 @@ class ProfileFragment : Fragment() {
 
             dialog.dismiss()
             overlayView.visibility = View.GONE
+
+            KeywordAppData.updateDetailTopic(listOf())//회원가입할때 다 비움
 
             // '스플래시' 페이지로 이동
             val intent = Intent(requireContext(), SplashActivity::class.java)
