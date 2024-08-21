@@ -13,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.ActivitySearchAddCategoryBinding
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
 import kr.dori.android.own_cast.forApiData.CastInterface

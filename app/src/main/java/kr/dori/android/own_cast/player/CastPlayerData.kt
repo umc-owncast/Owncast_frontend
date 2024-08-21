@@ -9,7 +9,11 @@ object CastPlayerData {
     private val allCastList = mutableListOf<CastWithPlaylistId>()
     var currentPosition : Int = 0
     lateinit var currentCast: CastWithPlaylistId
+
     private val castImagePath = mutableListOf<String>()
+
+    lateinit var currentBookmarkList: MutableList<Long>
+
 
     // 이 부분에 id검사 기능도 넣어야 됨
     fun setCast(testList: List<CastWithPlaylistId>) {

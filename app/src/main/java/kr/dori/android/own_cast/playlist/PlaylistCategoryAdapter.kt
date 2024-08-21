@@ -13,7 +13,6 @@ import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.FragmentMover
 import kr.dori.android.own_cast.data.CastPlayerData
-import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.PlaylistCategoryItemBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.GetAllPlaylist

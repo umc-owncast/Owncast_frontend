@@ -33,12 +33,12 @@ import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.SignupData
 
+
 import kr.dori.android.own_cast.data.CastPlayerData
 
-import kr.dori.android.own_cast.data.SongData
+
 import kr.dori.android.own_cast.databinding.FragmentSearchBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
-
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
 
 import kr.dori.android.own_cast.forApiData.CastInterface

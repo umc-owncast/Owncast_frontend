@@ -21,7 +21,6 @@ import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.data.CastPlayerData
-import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentCategoryBinding
 import kr.dori.android.own_cast.editAudio.EditAudioActivity
 import kr.dori.android.own_cast.forApiData.Cast

@@ -111,17 +111,13 @@ interface Playlist{
 
 interface Bookmark {
     @POST("/api/bookmark")
-    suspend fun postBookmark(@Query("sentenceId") sentenceId: Int): Response<AuthResponse<Long>>
+    suspend fun postBookmark(@Query("sentenceId") sentenceId: Long): Response<AuthResponse<BookmarkId>>
 
     @DELETE("/api/bookmark")
-    suspend fun deleteBookmark(@Query("sentenceId") sentenceId: Int):
-            Response<AuthResponse<Long>>
+    suspend fun deleteBookmark(@Query("sentenceId") sentenceId: Long): Response<AuthResponse<BookmarkId>>
 
     @GET("/api/study/{playlistId}")
-
-    suspend fun getBookmark(@Path("playlistId")playlistId: Long):
-
-            Response<AuthResponse<List<GetBookmark>>>
+    suspend fun getBookmark(@Path("playlistId")playlistId: Long): Response<AuthResponse<List<GetBookmark>>>
 
     @GET("/api/study/savedcast")
     suspend fun getSaved(): Response<AuthResponse<List<GetBookmark>>>

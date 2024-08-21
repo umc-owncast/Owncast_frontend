@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.SearchItemBinding
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
 

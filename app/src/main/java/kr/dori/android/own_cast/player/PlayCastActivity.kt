@@ -464,6 +464,7 @@ class PlayCastActivity : AppCompatActivity() {
 
 
 
+
     // Fragment 전환 함수들
     private fun audioToScript() {
         binding.activityPlayCastPlaylistOnIv.visibility = View.GONE
