@@ -83,15 +83,12 @@ class LoginActivity : ComponentActivity() {
 
     private fun isValidLogin(id: String, password: String, callback: (Boolean, String) -> Unit) {
 
-        //로그인 할 때마다 기존에 싱글톤에 있던 토큰을 초기화
-        SignupData.token = ""
-
-
         // 로그인 요청 데이터 생성
         val loginRequest = LoginRequest(loginId = id, password = password)
 
         // 서버에 로그인 요청
         val call = RetrofitClient.instance.login(loginRequest)
+
 
         // 비동기 처리
         call.enqueue(object : retrofit2.Callback<LoginResponse> {
@@ -102,11 +99,10 @@ class LoginActivity : ComponentActivity() {
                 if (response.isSuccessful) {
                     val loginResponse = response.body()
                     if (loginResponse?.isSuccess == true) {
-                        // 로그인 성공 시, 토큰과 ID를 저장
-                        SignupData.id = id
-                        SignupData.token = loginResponse.result ?: ""
-                        Log.d("token","${SignupData.token}")
 
+                        // 로그인 성공 시, ID와 refreshToken을 저장
+                        SignupData.id = id
+                        SignupData.token = loginResponse.result?.refreshToken ?: ""
 
                         // 성공 콜백 호출
                         callback(true, "")
@@ -116,38 +112,17 @@ class LoginActivity : ComponentActivity() {
                             false,
                             "로그인 실패: ${loginResponse?.message ?: "아이디 또는 비밀번호가 올바르지 않습니다."}"
                         )
-                        Log.d("token","failGetToken")
                     }
                 } else {
                     // 서버 오류 또는 응답 실패
                     callback(false, "서버 오류: ${response.message()}")
                 }
-                Log.d("token","failGetTokenByServerError")
-
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 // 네트워크 오류
                 callback(false, "네트워크 오류: ${t.message}")
-                Log.d("token","failGetTokenByServerError2")
-
             }
         })
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
