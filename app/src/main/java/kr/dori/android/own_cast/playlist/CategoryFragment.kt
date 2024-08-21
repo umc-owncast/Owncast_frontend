@@ -21,7 +21,6 @@ import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.data.CastPlayerData
-import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentCategoryBinding
 import kr.dori.android.own_cast.editAudio.EditAudioActivity
 import kr.dori.android.own_cast.forApiData.Cast
@@ -113,6 +112,7 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
         binding.fragmentCategoryRv.adapter = castAdapter
         binding.fragmentCategoryRv.layoutManager = LinearLayoutManager(context)
 
+
 // 이 부분은 재생목록 부분이어서 어떻게 수정할건지 생각을 해봐야 됨 -> 재생목록 순서를 어떻게 정할 것인가? -> 해결함
 
         binding.fragmentCategoryPlayIv.setOnClickListener {
@@ -137,6 +137,7 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
 
         activityResultLauncher.launch(intent)
+
 
     }
 

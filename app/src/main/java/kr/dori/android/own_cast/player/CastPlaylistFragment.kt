@@ -5,9 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.google.android.exoplayer2.C
 import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.data.SongData
+
+import kr.dori.android.own_cast.data.CastPlayerData
+
+
 import kr.dori.android.own_cast.databinding.FragmentCastPlaylistBinding
 
 
@@ -15,19 +22,7 @@ class CastPlaylistFragment : Fragment() {
 
     private lateinit var binding: FragmentCastPlaylistBinding
     private lateinit var castPlaylistAdapter: CastPlaylistAdapter
-    private var dummy_data = mutableListOf<SongData>(
-        SongData("캐스트1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
-        SongData("캐스트1", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "monkey"),
-        SongData("캐스트1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
-        SongData("캐스트1", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
-        SongData("캐스트1", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug"),
-        SongData("캐스트1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
-        SongData("캐스트1", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "monkey"),
-        SongData("캐스트1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
-        SongData("캐스트1", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
-        SongData("캐스트1", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug")
 
-    )
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,10 +30,60 @@ class CastPlaylistFragment : Fragment() {
         binding = FragmentCastPlaylistBinding.inflate(inflater,container,false)
 
         castPlaylistAdapter = CastPlaylistAdapter()
-        castPlaylistAdapter.dataList = dummy_data
         binding.fragmentCastPlaylistRv.adapter = castPlaylistAdapter
         binding.fragmentCastPlaylistRv.layoutManager = LinearLayoutManager(context)
 
+        initTouchHeleper()
+        initPlayItem()
         return binding.root
+    }
+
+    fun initTouchHeleper(){
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val fromPosition = viewHolder.adapterPosition
+                val toPosition = target.adapterPosition
+
+                // 아이템의 순서를 바꿉니다.
+                if(fromPosition == CastPlayerData.currentPosition){//만약 현재 재생중인걸 바꿨다면 currentPostion과
+                    //currentCast를 바꾸는 작업을 해준다.
+                    CastPlayerData.currentPosition = toPosition
+                    CastPlayerData.currentCast = CastPlayerData.getAllCastList()[toPosition]
+                }else if(toPosition== CastPlayerData.currentPosition){
+                    CastPlayerData.currentPosition = fromPosition
+                    CastPlayerData.currentCast = CastPlayerData.getAllCastList()[fromPosition]
+                }
+                castPlaylistAdapter.swapItems(fromPosition, toPosition)
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                // 스와이프 동작이 필요 없으므로 비워둡니다.
+            }
+        }
+
+        // ItemTouchHelper를 RecyclerView에 연결
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(binding.fragmentCastPlaylistRv)
+        castPlaylistAdapter.itemTouchHelper = itemTouchHelper
+    }
+
+    fun initPlayItem(){
+        CastPlayerData.getAllcastImagePath()[CastPlayerData.currentPosition].let{
+            Glide.with(binding.root)
+                .load(it)
+                .centerCrop() // ImageView에 맞게 이미지 크기를 조정
+                .into(binding.fragmentPlaylistCastIv)
+        }
+        binding.fragmentPlaylistCastIv
+        binding.fragmentCastPlaylistDuration.text = CastPlayerData.currentCast.audioLength
+        binding.fragmentCastPlaylistTitle.text = CastPlayerData.currentCast.castTitle
+        binding.fragmentCastPlaylistCreator.text = "${CastPlayerData.currentCast.castCreator} - ${CastPlayerData.currentCast.castCategory}"
     }
 }

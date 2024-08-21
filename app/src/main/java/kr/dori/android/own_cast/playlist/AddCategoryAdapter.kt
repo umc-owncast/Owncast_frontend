@@ -1,5 +1,6 @@
 package kr.dori.android.own_cast.playlist
 
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,7 +12,6 @@ import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.search.SearchMover
-import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.PlaylistCategoryItemBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
@@ -25,7 +25,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class AddCategoryAdapter(private val mover: SearchMover) : RecyclerView.Adapter<AddCategoryAdapter.Holder>() {
+class AddCategoryAdapter(val context: Context, private val mover: SearchMover) : RecyclerView.Adapter<AddCategoryAdapter.Holder>() {
     var dataList: ArrayList<GetAllPlaylist> = arrayListOf()
     var id:Long = -1
 
@@ -71,7 +71,7 @@ class AddCategoryAdapter(private val mover: SearchMover) : RecyclerView.Adapter<
                 if(id!=(-1L)){
                     saveOtherCast(id,data.playlistId)
                 }else{
-
+                    Toast.makeText(context," 캐스트아이디 오류",Toast.LENGTH_SHORT).show()
                 }
 
 
@@ -84,33 +84,17 @@ class AddCategoryAdapter(private val mover: SearchMover) : RecyclerView.Adapter<
         apiService.postOtherPlaylistCast(PostOtherPlaylistCast(castId, playlistId)).enqueue(object: Callback<AuthResponse<PostOtherPlaylist>> {
             override fun onResponse(call: Call<AuthResponse<PostOtherPlaylist>>, response: Response<AuthResponse<PostOtherPlaylist>>) {
                 Log.d("apiTest-저장","${castId},${playlistId},${response.toString()}")
-                if(response.code().equals("COMMON200")){
-                    val resp: AuthResponse<PostOtherPlaylist> = response.body()!!
-                    when(resp.code) {
-                        "COMMON200" -> {
-                            Log.d("apiTest-저장","저장성공, resp값: ${resp.result.toString()}}")
-                            mover.backSearch()
-                        }
-                        else ->{
-                            Log.d("apiTest-저장","연결실패 코드 : ${resp.code}, ${resp.message}")
-
-                        }
-                    }
+                if(response.isSuccessful){
+                    Toast.makeText(context,"저장 성공",Toast.LENGTH_SHORT).show()
                 }
                 else{
-                    val resp= response.errorBody()?.string()
-                    resp?.let {
-                        try {
-                            // Gson을 사용해 에러 응답을 파싱
-                            val gson = Gson()
-                            val errorResponse = gson.fromJson(it, ErrorResponse::class.java)
-                            Log.d("apiTest-저장", "오류 발생: ${errorResponse.code}, ${errorResponse.message}")
-                        } catch (e: Exception) {
-                            Log.d("apiTest-저장", "에러 응답 파싱 실패: ${e.message}")
-                        }
-                    } ?: run {
-                        Log.d("apiTest-저장", "에러 바디가 없음: ${response.code()}")
+                    Log.d("apiTest-searchHome","연결실패 ${response.code()}")
+                    Log.d("apiTest-searchHome","연결실패 ${response.body()?.result}")
+                    Log.d("apiTest-searchHome","연결실패 ${response.body()?.message}")
+                    response.errorBody()?.let{
+                        Toast.makeText(context,"이미 추가된 캐스트 입니다.",Toast.LENGTH_SHORT).show()
                     }
+
                 }
                 mover.backSearch()
             }

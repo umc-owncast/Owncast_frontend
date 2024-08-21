@@ -37,7 +37,9 @@ import kr.dori.android.own_cast.forApiData.PlayListInterface
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.PostPlaylist
 import kr.dori.android.own_cast.forApiData.UpdateInfo
+
 import kr.dori.android.own_cast.forApiData.getRetrofit
+
 import kr.dori.android.own_cast.keyword.AddCategoryDialog
 import kr.dori.android.own_cast.keyword.KeywordAppData
 import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
@@ -71,8 +73,8 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
     private lateinit var context: Context
     private lateinit var loadingDialog : KeywordLoadingDialog
     private var mode : Boolean = true //모드 true = 삭제, false는 추가
-
     private lateinit var dialog: AddCategoryDialog
+
 
     //캐스트 정보 받아올 때 사용
     private lateinit var imageUrl : String
@@ -109,6 +111,14 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
         initCategoryData()//카테고리를 받아오고, 성공시 spinner를 초기화
         initCastData()//캐스트도 받아오게
         initEditText()//비어있으면은 수정 못하게
+
+
+        initClickListener()
+
+    }
+
+    fun initClickListener(){
+
         binding.activityEditAudioOk.setOnClickListener {
 
         }
@@ -133,7 +143,17 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
 
         binding.activityEditAudioDelete.setOnClickListener {
             mode = true
-            deleteCast()
+            val dialog = EditAudioDialog(this, this)
+            dialog.show()
+
+
+        }
+        binding.imageView17.setOnClickListener{
+            selectGallery()
+        }
+        binding.imageView18.setOnClickListener{
+            selectGallery()
+
         }
     }
 
@@ -165,6 +185,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
     override fun dialogToEditAudio() {
         if(mode){
             showCustomToast("캐스트가 삭제되었어요")
+            deleteCast()
             finish()
         }else{
             showCustomToast("캐스트가 추가되었어요")
@@ -187,6 +208,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                                     imageUrl =  it.imagePath
                                     title = it.title
                                     binding.editTextText.setText(title)
+
                                     if (imageUrl.startsWith("http")) {
                                         // URL로부터 이미지 로드 (Glide 사용)
                                         Glide.with(context)
@@ -197,16 +219,9 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                                         val bitmap = BitmapFactory.decodeFile(imageUrl)
                                         binding.imageView17.setImageBitmap(bitmap)
                                     }
-                                    createMultipartBodyFromUrl(imageUrl, context){ part->
-                                        if (part != null) {
-
-                                        } else {
-                                            Toast.makeText(context,"파일 변환 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
                                 }
                             } else {
-                                Toast.makeText(context,"캐스트 정보 불러오기 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@EditAudioActivity,"캐스트 정보 불러오기 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
                             }
 
                         } catch (e: Exception) {
@@ -246,7 +261,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                                 initSpinner()
                             }
                         } else {
-                            Toast.makeText(context,"재생목록 불러오기 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@EditAudioActivity,"재생목록 불러오기 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
                         }
 
                     } catch (e: Exception) {
@@ -287,7 +302,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
     private fun editCast(){
         val editCast = getRetrofit().create(CastInterface::class.java)
         CoroutineScope(Dispatchers.IO).launch() {
-            val response = editCast.patchCast(id, UpdateInfo(title,imageUrl,isLock),body!!)
+            val response = editCast.patchCast(id, title,body,!isLock,playlistId)
             launch {
 
                 withContext(Dispatchers.Main) {
@@ -295,36 +310,39 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
 
                         if (response.isSuccessful) {
                             response.body()?.result?.let{
+                                Log.d("캐스트 수정","${response.code()}")
+                                Toast.makeText(this@EditAudioActivity,"수정되었습니다.",Toast.LENGTH_SHORT).show()
 
-                                Toast.makeText(context,"수정되었습니다.",Toast.LENGTH_SHORT).show()
                             }
                         } else {
-                            Toast.makeText(context,"수정 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@EditAudioActivity,"수정 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
                         }
 
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
                 }
+
             }
         }
+        finish()
     }
     private fun deleteCast(){
         val deleteCast = getRetrofit().create(CastInterface::class.java)
         CoroutineScope(Dispatchers.IO).launch() {
             val response = deleteCast.deleteCast(id)
             launch {
-
                 withContext(Dispatchers.Main) {
                     try {
 
                         if (response.isSuccessful) {
                             response.body()?.result?.let{
 
-                                Toast.makeText(context,"삭제되었습니다.",Toast.LENGTH_SHORT).show()
+                                Toast.makeText( this@EditAudioActivity,"삭제되었습니다.",Toast.LENGTH_SHORT).show()
+
                             }
                         } else {
-                            Toast.makeText(context,"삭제 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@EditAudioActivity,"삭제 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
                         }
 
                     } catch (e: Exception) {
@@ -422,45 +440,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
         return MultipartBody.Part.createFormData("photo", tempFile.name, requestFile)
     }
 
-    fun createMultipartBodyFromUrl(url: String, context: Context, callback: (MultipartBody.Part?) -> Unit) {
-        val client = OkHttpClient()
-        val request = Request.Builder().url(url).build()
 
-        client.newCall(request).enqueue(object : okhttp3.Callback {
-            override fun onFailure(call: okhttp3.Call, e: IOException) {
-                // 요청 실패 처리
-                callback(null)
-            }
-
-            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-                if (response.isSuccessful) {
-                    val _body = response.body?.byteStream()
-                    if (_body != null) {
-                        // 임시 파일 생성
-                        val tempFile = File(context.cacheDir, "tempImageFile.png")
-                        tempFile.outputStream().use { outputStream ->
-                            _body.copyTo(outputStream)
-                        }
-
-                        // RequestBody 생성
-                        val requestFile = tempFile.asRequestBody("image/*".toMediaTypeOrNull())
-
-                        // MultipartBody.Part 생성
-                        val part = MultipartBody.Part.createFormData("photo", tempFile.name, requestFile)
-                        body = part
-                        callback(part)
-
-                        // 성공적으로 파일을 다룬 후에는 임시 파일을 삭제할 수 있음
-                         tempFile.delete()
-                    } else {
-                        callback(null)
-                    }
-                } else {
-                    callback(null)
-                }
-            }
-        })
-    }
 
     private fun selectGallery() {
         // Android 버전에 따른 권한 확인
@@ -503,37 +483,11 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
 
 
     //기존 파일을 비트맵으로 바꿔서 서버 api에 보낼 수 있게 하는 방법
-    fun prepareFilePartFromDrawable(context: Context, resourceId: Int, partName: String): MultipartBody.Part {
-        // 리소스에서 Bitmap 가져오기
-        val bitmap = BitmapFactory.decodeResource(context.resources, resourceId)
 
-        // Bitmap을 임시 파일로 변환
-        val file = createTempFile(context, bitmap)
 
-        // 파일을 RequestBody로 변환
-        val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
 
-        // MultipartBody.Part로 변환
-        return MultipartBody.Part.createFormData(partName, file.name, requestFile)
-    }
-
-    fun createTempFile(context: Context, bitmap: Bitmap): File {
-        // 임시 파일 생성
-        val file = File(context.cacheDir, "temp_image.jpg")
-
-        try {
-            // Bitmap을 JPEG 파일로 저장
-            val fos = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
-            fos.flush()
-            fos.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        return file
-    }
 
 //------------------------------------------------------------갤러리 참조용 함수 종료
+
 
 }

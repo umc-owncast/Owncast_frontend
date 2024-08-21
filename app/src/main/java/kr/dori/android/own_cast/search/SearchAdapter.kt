@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.ItemSearchFrBinding
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
 
@@ -31,6 +30,7 @@ class SearchAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Searc
 
         init{
 
+
         }
 
         fun setData(data: CastHomeDTO,holder: Holder){
@@ -47,7 +47,7 @@ class SearchAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Searc
             }
             binding.searchfrItemTitleTv.text = data.title
             binding.searchfrItemCategoryTv.text = "${data.memberName}-${data.playlistName}"
-            binding.searchfrItemDurationTv.text = formatTime(data.audioLength.toInt())
+            binding.searchfrItemDurationTv.text = data.audioLength
 
             binding.searchfrItemAddCategoryOffIv.setOnClickListener {
                 mover.goAddCast(data.id)

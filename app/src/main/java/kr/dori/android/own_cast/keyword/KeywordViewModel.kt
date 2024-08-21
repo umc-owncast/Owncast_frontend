@@ -13,7 +13,7 @@ import kr.dori.android.own_cast.forApiData.Sentences
 
 class KeywordViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _songDuration = MutableLiveData<String>()//노래의 길이를 저장함
+    private var _songDuration = ""//노래의 길이를 저장함
     private val _castId = MutableLiveData<Long>()//재생하고 있는 키워드를 저장함
     private val _inputKeyword = MutableLiveData<String>()//만든 키워드 값을 저장함
     private val _sentences = MutableLiveData<List<Sentences>>()//실시간 가사를 받아온다
@@ -28,7 +28,7 @@ class KeywordViewModel(application: Application) : AndroidViewModel(application)
 
 
     /*-----------------------getter----------------------*/
-    val songDuration : LiveData<String> get () = _songDuration
+    val songDuration : String get () = _songDuration
     val castId : LiveData<Long> get() = _castId
     val inputKeyword : LiveData<String> get() = _inputKeyword
     val sentences : LiveData<List<Sentences>> get()= _sentences
@@ -43,7 +43,7 @@ class KeywordViewModel(application: Application) : AndroidViewModel(application)
 
     /*-----------------------setter----------------------*/
     fun setSongDuration(data: String) {
-        _songDuration.value = data
+        _songDuration = data
     }
     fun setCastId(data: Long){
         _castId.value = data

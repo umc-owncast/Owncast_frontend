@@ -21,8 +21,10 @@ class KeywordAppData: Application() {
             return KeywordAppData.detailTopic
         }
         fun updateDetailTopic(data: List<String>) {
+            Log.d("update완료","${data}")
             detailTopic = data
         }
+
 
 
     }

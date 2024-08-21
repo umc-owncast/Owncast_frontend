@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.SearchItemBinding
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
 
@@ -31,6 +30,7 @@ class SearchTwoAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Se
 
         init {
 
+
         }
 
         fun setText(data: CastHomeDTO, holder: Holder) {
@@ -47,15 +47,25 @@ class SearchTwoAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Se
             }
             binding.searchTitleTv.text = data.title
             binding.searchCreator.text = "${data.memberName}-${data.playlistName}"
-            binding.searchDurationTv.text = formatTime(data.audioLength.toInt())
+            binding.searchDurationTv.text = data.audioLength
             binding.searchAddCategoryOffIv.setOnClickListener {
 
                 mover.goAddCast(data.id)
             }
             binding.searchPlayIv.setOnClickListener {
-                mover.goPlayCast(dataList, data.id)
+
+                mover.goPlayCast(dataList,data.id)
+
             }
         }
+
+
+
+    private fun formatTime(totalSeconds:Int): String {
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+        return String.format("%d:%02d", minutes, seconds)
+    }
     }
 
 

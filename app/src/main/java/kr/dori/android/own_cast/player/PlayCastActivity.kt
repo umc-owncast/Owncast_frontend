@@ -10,6 +10,7 @@ import android.os.IBinder
 import android.util.Log
 import android.view.View
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -17,12 +18,18 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.exoplayer.ExoPlayer
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.SignupData
 import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.ActivityPlayCastBinding
 import kr.dori.android.own_cast.forApiData.Cast
+import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.forApiData.getRetrofit
+import kr.dori.android.own_cast.search.SearchAddCategoryActivity
 import java.util.concurrent.TimeUnit
 
 class PlayCastActivity : AppCompatActivity() {
@@ -77,6 +84,10 @@ class PlayCastActivity : AppCompatActivity() {
         // 처음 앱에 들어갔을 때의 초기 UI 설정
         binding.playCastPlayIv.visibility = View.VISIBLE
         binding.playCastPauseIv.visibility = View.GONE
+        classifyCast()
+
+        //playlistId가 -1이고 유저와 생성한 사람의 이름이 다르면 add가 뜸, 어 근데 이미 추가 된거면? -> 삭제되게
+
 
         speedTableViewModel = ViewModelProvider(this).get(SpeedTableViewModel::class.java)
 
@@ -123,6 +134,16 @@ class PlayCastActivity : AppCompatActivity() {
             }
         })
 
+        // 카테고리 추가 버튼
+        binding.addCategoryOffBtn.setOnClickListener{
+            addCast()
+        }
+        // 카테고리 해제 버튼
+        binding.addCategoryOnBtn.setOnClickListener {
+            deleteCast()
+
+        }
+
         // Play 버튼 클릭 이벤트 처리
         binding.playCastPlayIv.setOnClickListener {
             binding.playCastPlayIv.visibility = View.GONE
@@ -147,6 +168,7 @@ class PlayCastActivity : AppCompatActivity() {
                 stopCurrentAudio()  // 기존 음원 중지
                 xibalCast(nextCast.castId)  // 새로운 캐스트 재생
                 Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
+                classifyCast()//추가 안한 캐스트면 창뜨게 해야함
             }
             missFortune()
 
@@ -162,7 +184,9 @@ class PlayCastActivity : AppCompatActivity() {
                 stopCurrentAudio()  // 기존 음원 중지
                 xibalCast(previousCast.castId)  // 새로운 캐스트 재생
                 Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
+                classifyCast()
             }
+
             missFortune()
         }
 
@@ -274,6 +298,17 @@ class PlayCastActivity : AppCompatActivity() {
         binding.speedTableOffIv.setOnClickListener {
             binding.speedTable.visibility = View.VISIBLE
             binding.speedTable.bringToFront()
+        }
+    }
+
+    fun classifyCast(){//이게 자기 캐스트인지 담아온 캐스트인지 구분
+        if(CastPlayerData.currentCast.playlistId == -1L&&!SignupData.nickname.equals(CastPlayerData.currentCast.castCreator)){
+            binding.addCategoryOffBtn.visibility = View.VISIBLE
+        }else if(CastPlayerData.currentCast.playlistId != -1L&&!SignupData.nickname.equals(CastPlayerData.currentCast.castCreator)){
+            binding.addCategoryOnBtn.visibility =View.VISIBLE
+        }else{
+            binding.addCategoryOnBtn.visibility =View.GONE
+            binding.addCategoryOffBtn.visibility = View.GONE
         }
     }
 
@@ -416,6 +451,7 @@ class PlayCastActivity : AppCompatActivity() {
         }
     }
 
+
     /*
         private fun updateLyricsHighlight() {
             val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
@@ -425,6 +461,8 @@ class PlayCastActivity : AppCompatActivity() {
         }
 
      */
+
+
 
 
     // Fragment 전환 함수들
@@ -472,6 +510,7 @@ class PlayCastActivity : AppCompatActivity() {
         stateListener = 0
     }
 
+    //플레이스트 시작
     private fun audioToPlaylist() {
         binding.activityPlayCastPlaylistOnIv.visibility = View.VISIBLE
         binding.activityPlayCastPlaylistOffIv.visibility = View.GONE
@@ -575,6 +614,42 @@ class PlayCastActivity : AppCompatActivity() {
     // 반복을 해제
     private fun disableLoopForSentence() {
         service?.clearLoop()  // 반복 구간을 해제하는 메소드
+    }
+
+    private fun addCast(){
+        val intent = Intent(this, SearchAddCategoryActivity::class.java)
+        intent.putExtra("id",CastPlayerData.currentCast.castId)
+        startActivity(intent)
+        classifyCast()
+    }
+
+    //담아온 프래그먼트 제거하는 함수
+    private fun deleteCast(){
+        val deleteCast = getRetrofit().create(CastInterface::class.java)
+        CoroutineScope(Dispatchers.IO).launch() {
+            val response = deleteCast.deleteCast(CastPlayerData.currentCast.castId)
+            launch {
+
+                withContext(Dispatchers.Main) {
+                    try {
+
+                        if (response.isSuccessful) {
+                            response.body()?.result?.let{
+                                //삭제 했으니깐 버튼 바꿔주기
+                                binding.addCategoryOffBtn.visibility = View.VISIBLE
+                                binding.addCategoryOnBtn.visibility = View.GONE
+                                classifyCast()//혹시 몰라서 한번 더 함
+                            }
+                        } else {
+                            Toast.makeText(this@PlayCastActivity,"카테고리 해제 실패,\n 오류코드 : $${response.code()}", Toast.LENGTH_SHORT).show()
+                        }
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
     }
 }
 

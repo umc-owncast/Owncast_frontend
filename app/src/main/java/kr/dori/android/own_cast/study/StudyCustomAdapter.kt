@@ -7,37 +7,31 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.data.cardData
 import kr.dori.android.own_cast.databinding.StudyItemViewBinding
+import kr.dori.android.own_cast.forApiData.GetBookmark
 
-class StudyCustomAdapter() :
+class StudyCustomAdapter :
     RecyclerView.Adapter<StudyCustomAdapter.CenteredItemViewHolder>() {
 
-    var itemList: MutableList<cardData> = mutableListOf()
+    var itemList: MutableList<GetBookmark> = mutableListOf()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CenteredItemViewHolder {
         val binding = StudyItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CenteredItemViewHolder(binding,parent.context)
+        return CenteredItemViewHolder(binding, parent.context)
     }
 
     override fun onBindViewHolder(holder: CenteredItemViewHolder, position: Int) {
         val actualPosition = position % itemList.size
         val item = itemList[actualPosition]
         holder.bind(item)
-
-        // 초기 상태: 모든 아이템을 기본 크기로 설정
-        //holder.itemView.layoutParams.width = 5000
-        //holder.itemView.layoutParams.height = 2000
-
-        // 레이아웃 재계산
         holder.itemView.requestLayout()
-
     }
 
+    // 실제 itemList의 크기를 반환하여 무한 스크롤을 방지함
     override fun getItemCount(): Int {
-        return 1000
+        return itemList.size
     }
 
     class CenteredItemViewHolder(private val binding: StudyItemViewBinding, context: Context) : RecyclerView.ViewHolder(binding.root) {
@@ -76,52 +70,26 @@ class StudyCustomAdapter() :
             }
         }
 
-        fun bind(item: cardData) {
-            binding.cardFront.text = item.front
-            binding.cardBack.text = item.behind
+        fun bind(item: GetBookmark) {
+            binding.cardFront.text = item.originalSentence
+            binding.cardBack.text = item.translatedSentence
         }
     }
+
     fun adjustItemSize(recyclerView: RecyclerView) {
         val layoutManager = recyclerView.layoutManager as LinearLayoutManager
         val midPoint = recyclerView.width / 2
 
-        for (i in 0 until itemCount) {
+        for (i in 0 until itemList.size) { // itemCount가 아닌 itemList.size를 사용
             val view = layoutManager.findViewByPosition(i)
             view?.let {
                 val viewMid = (it.left + it.right) / 2
                 val distanceFromCenter = Math.abs(midPoint - viewMid)
 
-                // 거리에 따라 크기 조정, 원래는 distance와 changeLine의 대소관계로 코드를 작성했으나 좌표값이 음수가 나와서 차의 범위로 로직을 수정했다. -> 원래대로 하면 오른쪽 item의 background가 적용이 안 됐었음
                 val scale = 1f - (distanceFromCenter.toFloat() / midPoint) * 0.17f
                 it.scaleX = scale
                 it.scaleY = scale
-
-
-                //중앙에 위치한 아이템의 포지션 값 출력하기
-                val snapHelper = LinearSnapHelper()
-                val centerView = snapHelper.findSnapView(layoutManager)
-                val position = layoutManager.getPosition(centerView!!)
-
-                Log.d("Center Position in adjustItemSize"," $position")
-/*
-                val distance = abs(midPoint - viewMid)
-                val changeLine = abs(midPoint/1.05f)
-                val absoluteValue = abs(distance - changeLine)
-
-
-                if( absoluteValue <100){
-                    it.setBackgroundResource(R.drawable.study_korean_side)
-                }else{
-                    it.setBackgroundResource(R.drawable.study_korean_center)
-                }
-                Log.d("test","${distanceFromCenter},${distance},${changeLine},${absoluteValue}")
-
- */
             }
         }
     }
 }
-
-
-
-

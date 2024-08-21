@@ -7,8 +7,10 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 
 import androidx.activity.enableEdgeToEdge
+
 
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -58,6 +60,7 @@ class KeywordActivity : AppCompatActivity() {
         sharedViewModel = ViewModelProvider(this).get(KeywordViewModel::class.java)
 
         enableEdgeToEdge()
+
 
         initCategoryInViewModel()
         if(savedInstanceState == null&&searchText!=null){//연관 키워드를 클릭한 경우
@@ -120,20 +123,23 @@ class KeywordActivity : AppCompatActivity() {
 
                 Log.d("apiTest-category", response.toString())
                 Log.d("apiTest-category", response.body().toString())
-                val resp: AuthResponse<List<GetUserPlaylist>> = response.body()!!
-                when(resp.code) {
-                    "COMMON200" -> {
+
+                if(response.isSuccessful){
+                    response.body()?.let{
+                        val resp: AuthResponse<List<GetUserPlaylist>> = it
                         for(i:Int in 0..(resp.result!!.size-1)){//카테고리(플레이리스트 추가)
-                            sharedViewModel.addGetPlayList(PlaylistText(resp.result[i].playlistId,resp.result[i].name))
+                            if (resp.result[i].playlistId>0){
+                                sharedViewModel.addGetPlayList(PlaylistText(resp.result[i].playlistId,resp.result[i].name))
+                            }
+
                         }
-
-                        Log.d("apiTest","연결성공")
                     }
-                    else ->{
-                        Log.d("apiTest","연결실패 코드 : ${resp.code}")
 
-                    }
+                }else{
+                    Toast.makeText(this@KeywordActivity,"카테코리 정보 불러오기 실패",Toast.LENGTH_SHORT).show()
                 }
+
+
             }
 
 

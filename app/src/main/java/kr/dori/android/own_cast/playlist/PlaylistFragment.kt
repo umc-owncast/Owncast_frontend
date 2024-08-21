@@ -45,22 +45,6 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private var playlistIdList: MutableList<Long> = mutableListOf( )
 
-    /*
-    val dummyData = mutableListOf(
-        SongData("category_name1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
-        SongData("category_name2", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "monkey"),
-        SongData("category_name3", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
-        SongData("category_name4", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
-        SongData("category_name5", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug"),
-        SongData("category_name6", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
-        SongData("category_name7", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "monkey"),
-        SongData("category_name8", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
-        SongData("category_name9", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
-        SongData("category_name10", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug")
-
-    )
- */
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -218,6 +202,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         }
     }
 
+
     override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
 
         // 현재 서비스가 재생 중인지 확인하고 중지
@@ -229,6 +214,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
         activityResultLauncher.launch(intent)
     }
+
 
 
     override fun getCategoryData(position: Long): GetAllPlaylist {

@@ -23,6 +23,7 @@ class KeywordAudioOutDialog(context: Context, private val listener: KeywordAudio
         }
         //
         binding.keyAudOutConfirmTv.setOnClickListener {
+            dismiss()
             listener.getOut()//keywordActivity종료
         }
 
