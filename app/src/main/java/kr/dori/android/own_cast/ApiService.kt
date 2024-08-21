@@ -39,6 +39,7 @@ interface ApiService {
     @POST("/api/users/login")
     fun login(@Body loginRequest: LoginRequest): Call<LoginResponse>
 
+
     // 7. 언어 설정 업데이트
     @POST("/api/users/setting/language")
     fun updateLanguage(
@@ -52,4 +53,5 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Body preferenceRequest: PreferenceRequest
     ): Call<PreferenceResponse>
+
 }

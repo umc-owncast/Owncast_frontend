@@ -37,7 +37,7 @@ import kr.dori.android.own_cast.forApiData.PlayListInterface
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.PostPlaylist
 import kr.dori.android.own_cast.forApiData.UpdateInfo
-import kr.dori.android.own_cast.getRetrofit
+import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.AddCategoryDialog
 import kr.dori.android.own_cast.keyword.KeywordAppData
 import kr.dori.android.own_cast.keyword.KeywordLoadingDialog

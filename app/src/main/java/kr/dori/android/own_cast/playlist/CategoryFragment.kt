@@ -26,7 +26,7 @@ import kr.dori.android.own_cast.databinding.FragmentCategoryBinding
 import kr.dori.android.own_cast.editAudio.EditAudioActivity
 import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.Playlist
-import kr.dori.android.own_cast.getRetrofit
+import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.player.CastWithPlaylistId
 import kr.dori.android.own_cast.player.PlayCastActivity
 import retrofit2.create

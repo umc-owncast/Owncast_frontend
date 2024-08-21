@@ -82,10 +82,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        Log.d("token1","${SignupData.token}")
         // 주석 처리된 부분 - 키워드 이동
         // binding.goKeywordIv.setOnClickListener {
         //     initKeyword()
         // }
+
         /*initBottomNavigation()*/
 
 
@@ -145,6 +147,7 @@ class MainActivity : AppCompatActivity() {
 
         initBottomButtons()
     }
+
 
 
     @OptIn(ExperimentalEncodingApi::class)
@@ -285,6 +288,7 @@ class MainActivity : AppCompatActivity() {
             StudyFragment::class.java -> studyButton.setImageResource(R.drawable.bottom_navi_study_focused)
             SearchFragment::class.java -> searchButton.setImageResource(R.drawable.bottom_navi_search_focused)
             ProfileFragment::class.java -> profileButton.setImageResource(R.drawable.bottom_navi_profile_focused)
+
 
         }
     }

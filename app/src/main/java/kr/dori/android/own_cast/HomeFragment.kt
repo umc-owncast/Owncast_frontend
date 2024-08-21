@@ -24,6 +24,7 @@ import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.databinding.FragmentHomeBinding
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.Playlist
+import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.KeywordActivity
 import kr.dori.android.own_cast.keyword.KeywordAppData
 

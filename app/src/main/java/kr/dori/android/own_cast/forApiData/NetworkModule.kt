@@ -1,21 +1,27 @@
 package kr.dori.android.own_cast.forApiData
 
+import android.util.Log
+import kr.dori.android.own_cast.SignupData
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-//기본 주소 입니당
 const val BASE_URL = "http://15.164.140.239:8080"
+
 
 // 사용자 토큰 입니다,,, -> 로그인 시점마다 변경되도록 로직을 구현해야 합니다.
 const val TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VySWQiOjE5LCJpYXQiOjE3MjM4MTQ0ODcsImV4cCI6MTcyNjQwNjQ4N30.K1B3wb1Q6bvKtNLyN490zcrmM3wTTHXVNqnweQoGDWk"
 
+
 fun getRetrofit(): Retrofit {
     val interceptor = Interceptor { chain ->
+        //이렇게 토큰 변수를 생성객체 내부에 둠으로서 생성마다 최신 토큰을 사용하게 구현함
+        val token = SignupData.token
+        Log.d("token","레트로핏 객체가 사용하는 토큰은: ${token}")
         val request: Request = chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer $TOKEN")
+            .addHeader("Authorization", "Bearer $token")
             .build()
         chain.proceed(request)
     }
@@ -30,6 +36,7 @@ fun getRetrofit(): Retrofit {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 }
+
 
 /*
 flow

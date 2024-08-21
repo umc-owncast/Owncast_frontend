@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -81,11 +82,13 @@ class LoginActivity : ComponentActivity() {
     }
 
     private fun isValidLogin(id: String, password: String, callback: (Boolean, String) -> Unit) {
+
         // 로그인 요청 데이터 생성
         val loginRequest = LoginRequest(loginId = id, password = password)
 
         // 서버에 로그인 요청
         val call = RetrofitClient.instance.login(loginRequest)
+
 
         // 비동기 처리
         call.enqueue(object : retrofit2.Callback<LoginResponse> {
@@ -96,6 +99,7 @@ class LoginActivity : ComponentActivity() {
                 if (response.isSuccessful) {
                     val loginResponse = response.body()
                     if (loginResponse?.isSuccess == true) {
+
                         // 로그인 성공 시, ID와 refreshToken을 저장
                         SignupData.id = id
                         SignupData.token = loginResponse.result?.refreshToken ?: ""
