@@ -41,13 +41,14 @@ class SignupLoadingActivity : ComponentActivity() {
         }
 
         // 서버로 전송할 language 값을 설정
-        val language = when (SignupData.accent) {
-            "usa" -> "US"
-            "eng" -> "UK"
-            "aus" -> "AUS"
-            "ind" -> "IND"
-            "jp"  -> "JA"
-            "sp"  -> "ES"
+        val language = when {
+            SignupData.accent == "sp" && SignupData.language == "Spanish" -> "ES"
+            SignupData.accent == "usa" && SignupData.language == "Spanish" -> "ES_US"
+            SignupData.accent == "usa" -> "US"
+            SignupData.accent == "eng" -> "UK"
+            SignupData.accent == "aus" -> "AUS"
+            SignupData.accent == "ind" -> "IND"
+            SignupData.accent == "jp"  -> "JA"
             else -> "US"
         }
 
@@ -60,7 +61,7 @@ class SignupLoadingActivity : ComponentActivity() {
             "book" -> "책"
             "news" -> "시사/뉴스"
             "art" -> "미술"
-            "self" -> "직접입력"
+            "self" -> "직접 입력"
             else -> "드라마/영화"
         }
 
