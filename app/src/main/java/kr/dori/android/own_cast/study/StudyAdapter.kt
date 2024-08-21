@@ -49,7 +49,8 @@ class StudyAdapter() : RecyclerView.Adapter<StudyAdapter.Holder>() {
             }
         }
         fun setText(data: PlaylistInfo){
-            Glide.with(itemView.context).load(data.imagePath.toInt()).into(binding.studyCategoryIv)
+            // 이미지 URL을 Glide로 로드
+            Glide.with(itemView.context).load(data.imagePath).into(binding.studyCategoryIv)
             binding.studyCategoryTv.text = data.playlistName
         }
     }
