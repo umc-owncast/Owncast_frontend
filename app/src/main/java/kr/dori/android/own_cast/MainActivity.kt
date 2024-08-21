@@ -92,7 +92,6 @@ class MainActivity : AppCompatActivity() {
         /*initBottomNavigation()*/
 
 
-
         // 로그인 정보 확인 후 토큰 갱신
         val userId = SignupData.id
         val userPassword = SignupData.password
@@ -104,7 +103,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             renewToken(userId, userPassword)
         }
-
 
 
 

@@ -43,13 +43,14 @@ class ChangeLanguageActivity: ComponentActivity() {
             if ( SignupData.temp_language != getString(R.string.signup_info_first) && SignupData.temp_accent != getString(R.string.signup_info_first) ) {
 
                 // 서버로 전송할 language 값을 설정
-                val language = when (SignupData.temp_accent) {
-                    "usa" -> "US"
-                    "eng" -> "UK"
-                    "aus" -> "AUS"
-                    "ind" -> "IND"
-                    "jp"  -> "JA"
-                    "sp"  -> "ES"
+                val language = when {
+                    SignupData.temp_accent == "sp" && SignupData.temp_language == "Spanish" -> "ES"
+                    SignupData.temp_accent == "usa" && SignupData.temp_language == "Spanish" -> "ES_US"
+                    SignupData.temp_accent == "usa" -> "US"
+                    SignupData.temp_accent == "eng" -> "UK"
+                    SignupData.temp_accent == "aus" -> "AUS"
+                    SignupData.temp_accent == "ind" -> "IND"
+                    SignupData.temp_accent == "jp"  -> "JA"
                     else -> "US"
                 }
 

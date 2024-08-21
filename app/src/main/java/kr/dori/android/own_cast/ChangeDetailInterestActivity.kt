@@ -12,6 +12,9 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,9 +25,7 @@ import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.KeywordAppData
 import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
 
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+
 
 
 
@@ -129,16 +130,17 @@ class ChangeDetailInterestActivity : ComponentActivity() {
                 "book" -> "책"
                 "news" -> "시사/뉴스"
                 "art" -> "미술"
-                "self" -> "직접입력"
+
+                "self" -> "직접 입력"
                 else -> "드라마/영화"
             }
-
 
             // 요청 객체 생성
             val preferenceRequest = PreferenceRequest(
                 mainCategory = mainCategory,
                 subCategory = SignupData.temp_interest
             )
+
 
             // Retrofit 클라이언트 인스턴스를 통해 ApiService 호출
             val apiService = RetrofitClient.instance
@@ -163,7 +165,9 @@ class ChangeDetailInterestActivity : ComponentActivity() {
                             SignupData.detail_interest = SignupData.temp_detail_interest
 
                             Toast.makeText(this@ChangeDetailInterestActivity, "관심사 변경 완료", Toast.LENGTH_SHORT).show()
+
                             initData()
+
 
 
                         } else {

@@ -13,7 +13,9 @@ const val BASE_URL = "http://15.164.140.239:8080"
 
 
 
+
 // 사용자 토큰 입니다,,, -> 로그인 시점마다 변경되도록 로직을 구현해야 합니다.
+
 fun getRetrofit(): Retrofit {
     val interceptor = Interceptor { chain ->
         //이렇게 토큰 변수를 생성객체 내부에 둠으로서 생성마다 최신 토큰을 사용하게 구현함
