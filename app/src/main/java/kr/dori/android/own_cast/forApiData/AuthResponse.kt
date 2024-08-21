@@ -117,6 +117,11 @@ data class GetBookmark(
     @SerializedName(value = "translatedSentence") val translatedSentence: String
 )
 
+data class BookmarkId(
+    @SerializedName(value = "bookmarkId") val bookmarkId: Long
+)
+
+
 
 // 3 계층
 

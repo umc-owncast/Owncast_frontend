@@ -12,7 +12,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.databinding.ScriptItemBinding
-import kr.dori.android.own_cast.forApiData.Bookmark
 import kr.dori.android.own_cast.forApiData.NewSentences
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.player.CastWithPlaylistId
@@ -30,6 +29,7 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val binding = ScriptItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        Log.d("sentence","${dataList}")
         return Holder(binding)
     }
 
@@ -72,29 +72,6 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
             binding.originalSentenceTv.text = data.originalSentence
             binding.translationSentenceTv.text = data.translatedSentence
 
-/*
-            // 북마크 리스트에 현재 문장이 있는지 확인
-            if (bookmarkList.contains(data.originalSentence)) {
-                binding.onFocusOn.visibility = View.VISIBLE
-                binding.notFocusOff.visibility = View.GONE
-            } else {
-                binding.onFocusOn.visibility = View.GONE
-                binding.notFocusOff.visibility = View.VISIBLE
-            }
-
-            binding.onFocusOn.setOnClickListener {
-                binding.onFocusOn.visibility = View.GONE
-                binding.notFocusOff.visibility = View.VISIBLE
-                deleteBookmark(data.id.toInt())
-            }
-
-            binding.notFocusOff.setOnClickListener {
-                binding.onFocusOn.visibility = View.VISIBLE
-                binding.notFocusOff.visibility = View.GONE
-                postBookmark(data.id.toInt())
-            }
- */
-
             if (isHighlighted) {
                 binding.translationSentenceTv.setTextColor(Color.parseColor("#000000"))
                 binding.originalSentenceTv.setTextColor(Color.parseColor("#000000"))
@@ -131,69 +108,6 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
         }
     }
 
-    // Suspend function to get bookmark sentences
-    suspend fun getBookmarkSentence(currentCast: CastWithPlaylistId): List<String>? {
-        val getBookmark = getRetrofit().create(Bookmark::class.java)
-        return try {
-            val response = getBookmark.getBookmark(currentCast.playlistId)
-
-            Log.d("sex","${response.body()?.result?.filter { bookmark ->
-                bookmark.castId == currentCast.castId
-            }?.map { it.originalSentence } }")
-
-            if (response.isSuccessful) {
-                response.body()?.result?.filter { bookmark ->
-                    bookmark.castId == currentCast.castId
-                }?.map { it.originalSentence }
-
-            } else {
-                null
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
 
 
-    fun postBookmark(sentenceId: Int){
-        CoroutineScope(Dispatchers.IO).launch {
-            val postBookmark = getRetrofit().create(Bookmark::class.java)
-            try{
-                val response = postBookmark.postBookmark(sentenceId)
-                //데이터 업데이트
-                loadBookmarkData()
-                notifyDataSetChanged()
-            }catch(e:Exception){
-                e.printStackTrace()
-            }
-        }
-    }
-
-    fun deleteBookmark(sentenceId: Int){
-        CoroutineScope(Dispatchers.IO).launch {
-            val postBookmark = getRetrofit().create(Bookmark::class.java)
-            try{
-                val response = postBookmark.deleteBookmark(sentenceId)
-                //데이터 업데이트
-                loadBookmarkData()
-                notifyDataSetChanged()
-            }catch(e:Exception){
-                e.printStackTrace()
-            }
-        }
-    }
-
-    fun loadBookmarkData() {
-        CoroutineScope(Dispatchers.Main).launch {
-            val bookmarks = withContext(Dispatchers.IO) {
-                getBookmarkSentence(currentCast)
-            }
-            if (bookmarks != null) {
-                bookmarkList = bookmarks
-                Log.d("sex1","$bookmarkList")
-                notifyDataSetChanged() // Update the adapter's data after loading the bookmarks
-            }
-        }
-    }
 }
