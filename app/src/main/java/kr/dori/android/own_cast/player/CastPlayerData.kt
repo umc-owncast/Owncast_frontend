@@ -32,9 +32,6 @@ object CastPlayerData {
     }
 
 
-    fun getAllcastImagePath() : MutableList<String>{
-        return castImagePath
-    }
     fun getAllCastList() : MutableList<CastWithPlaylistId>{
         return allCastList
     }

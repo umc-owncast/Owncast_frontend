@@ -62,7 +62,7 @@ class CastPlaylistAdapter: RecyclerView.Adapter<CastPlaylistAdapter.Holder>() {
                 //클릭시 재생되게
             }
 
-            CastPlayerData.getAllcastImagePath()[position].let{
+            CastPlayerData.getAllCastList()[position].imagePath.let{
                 Glide.with(binding.root)
                     .load(it)
                     .centerCrop() // ImageView에 맞게 이미지 크기를 조정

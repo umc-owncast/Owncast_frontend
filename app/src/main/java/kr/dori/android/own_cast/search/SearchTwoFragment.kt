@@ -156,15 +156,13 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
                 castCreator = it.memberName,
                 castCategory = detail_interest?:"로딩실패",
                 audioLength = it.audioLength,
-                imagePath = ""
+                imagePath = it.imagePath
             )
         }
-        var imageData = list.map{
-            it.imagePath
-        }
+
         CastPlayerData.setCast(data)//데이터 초기화
         CastPlayerData.setCurrentPos(id)//
-        CastPlayerData.setImagePath(imageData)
+
 
         activityResultLauncher.launch(intent)
     }

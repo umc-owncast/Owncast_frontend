@@ -545,10 +545,6 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                             }
 
                             CastPlayerData.setCast(castListWithPlaylistId)  // 캐스트 리스트를 저장
-                            var imageData = it.castList.map{
-                                it.imagePath
-                            }
-                            CastPlayerData.setImagePath(imageData)
                             //괜히 id쓰는것보다 어차피 마지막 가있을테니깐 넣었음..
                             CastPlayerData.currentPosition = CastPlayerData.getAllCastList().size -1
                             CastPlayerData.currentCast = CastPlayerData.getAllCastList()[CastPlayerData.currentPosition]

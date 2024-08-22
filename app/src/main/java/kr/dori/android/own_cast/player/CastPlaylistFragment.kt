@@ -75,7 +75,7 @@ class CastPlaylistFragment : Fragment() {
     }
 
     fun initPlayItem(){
-        CastPlayerData.getAllcastImagePath()[CastPlayerData.currentPosition].let{
+        CastPlayerData.currentCast.imagePath.let{
             Glide.with(binding.root)
                 .load(it)
                 .centerCrop() // ImageView에 맞게 이미지 크기를 조정
