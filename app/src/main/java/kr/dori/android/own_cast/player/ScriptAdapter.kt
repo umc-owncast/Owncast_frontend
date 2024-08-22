@@ -15,6 +15,8 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
     var dataList: List<NewSentences> = emptyList()
     var bookmarkList: MutableList<Long> = mutableListOf()
 
+    var onHighlightPositionChangeListener: ((position: Int) -> Unit)? = null
+
     var onRepeatToggleListener: ((position: Int, isRepeatOn: Boolean) -> Unit)? = null
 
     private var currentHighlightedPosition: Int = -1
@@ -26,29 +28,40 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
     }
 
     fun updateCurrentTime(currentTime: Long) {
+        Log.d("ScriptAdapter", "Current Time: $currentTime")
         val newHighlightedPosition = findCurrentPosition(currentTime)
         if (newHighlightedPosition != currentHighlightedPosition) {
+            val previousHighlightedPosition = currentHighlightedPosition
             currentHighlightedPosition = newHighlightedPosition
-            notifyDataSetChanged()
+            Log.d("ScriptAdapter", "Highlight Position Changed: $previousHighlightedPosition -> $currentHighlightedPosition")
+            // 이전 하이라이트된 위치와 새로운 하이라이트된 위치를 갱신
+            notifyItemChanged(previousHighlightedPosition)
+            notifyItemChanged(currentHighlightedPosition)
+            //하이라이트 위치 업데이트
+            onHighlightPositionChangeListener?.invoke(newHighlightedPosition)
         }
     }
-
     private fun findCurrentPosition(currentTime: Long): Int {
         for (i in dataList.indices) {
-            val sentence = dataList[i]
-            val sentenceTimePoint = (sentence.timePoint * 1000).toLong()
-            val nextSentenceTime = if (i + 1 < dataList.size) {
-                (dataList[i + 1].timePoint * 1000).toLong()
+            val previousSentenceTime = if (i > 0) {
+                (dataList[i - 1].timePoint * 1000).toLong()
             } else {
-                Long.MAX_VALUE
+                0L  // 첫 문장의 경우, 시작을 0으로 설정
             }
 
-            if (currentTime >= sentenceTimePoint && currentTime < nextSentenceTime) {
+            val sentenceTimePoint = (dataList[i].timePoint * 1000).toLong()
+
+            Log.d("ScriptAdapter", "Checking sentence $i: previousSentenceTime = $previousSentenceTime, sentenceTimePoint = $sentenceTimePoint")
+
+            if (currentTime >= previousSentenceTime && currentTime < sentenceTimePoint) {
+                Log.d("ScriptAdapter", "Current sentence index: $i")
                 return i
             }
         }
         return -1
     }
+
+
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val data = dataList[position]
@@ -117,6 +130,7 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
                     onRepeatToggleListener?.invoke(adapterPosition, false)
                     notifyDataSetChanged()
                 }
+
             } else {
                 // 하이라이트되지 않은 문장에 대한 로직
                 binding.translationSentenceTv.setTextColor(Color.parseColor("#808080"))

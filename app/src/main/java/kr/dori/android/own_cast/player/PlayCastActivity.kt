@@ -604,18 +604,23 @@ class PlayCastActivity : AppCompatActivity() {
     // 특정 문장을 반복하도록 설정
     private fun enableLoopForSentence(position: Int) {
         val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
-        val sentence = fragment?.adapter?.dataList?.get(position)
-        val nextSentence = fragment?.adapter?.dataList?.getOrNull(position + 1)  // 다음 문장이 없을 수도 있으므로 null을 처리
+        val currentSentence = fragment?.adapter?.dataList?.get(position)
+        val previousSentence = fragment?.adapter?.dataList?.getOrNull(position - 1)
 
-        if (sentence != null && nextSentence != null) {
-            val startTime = (sentence.timePoint * 1000).toLong()
-            val endTime = ((nextSentence.timePoint * 1000)-10).toLong()
-            Log.d("loop", "Start: $startTime, End: $endTime")
+        if (currentSentence != null) {
+            val startTime = if (previousSentence != null) {
+                (previousSentence.timePoint * 1000).toLong()
+            } else {
+                0L  // 이전 문장이 없는 경우, 시작을 0으로 설정
+            }
+
+            val endTime = (currentSentence.timePoint * 1000).toLong()
             service?.setLoopForSegment(startTime, endTime)
         } else {
             Log.e("loop", "Invalid sentence data for looping")
         }
     }
+
 
     // 반복을 해제
     private fun disableLoopForSentence() {
