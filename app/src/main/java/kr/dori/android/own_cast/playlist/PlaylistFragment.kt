@@ -50,33 +50,9 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         savedInstanceState: Bundle?
     ): View? {
 
-        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
-        CoroutineScope(Dispatchers.IO).launch() {
-            launch {
-                try {
-                    val response =
-                        getAllPlaylist.getAllPlaylist() //변수명이 어지럽지만 첫번째 getAll은 레트로핏 활성화 객체이고, 두번째는 인터페이스 내부 함수이다.
-                    if (response.isSuccessful) {
-                        var playlistCategoryData = response.body()?.result
-                        withContext(Dispatchers.Main) {
-                            playlistCategoryData?.let {
-                                playlistIdList = it.map { playlist -> playlist.playlistId }
-                                    .filter { id -> id != 0L }
-                                    .toMutableList()
-                                sharedViewModel.setData(it.toMutableList())
-                                Log.d("xibal","$playlistIdList")
-                            }
-                        }
-                    } else {
-
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
+        loadPlaylist()
 
 
-        }
 
         binding = FragmentPlaylistBinding.inflate(inflater, container, false)
 
@@ -161,32 +137,29 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         }
     }
 
-    override fun onCategoryEdit(position: Long, newItem: GetAllPlaylist) {
+    override fun onCategoryEdit(position: Long, name: String, playlistId: Long) {
 
-
-        //서버 통신 전에 미리 데이터 업데이트를 시켜서 좀 더 빠릿한 느낌을 줄 수 있다.
-        sharedViewModel.updateDataAt(position, newItem)
 
         val getAllPlaylist = getRetrofit().create(Playlist::class.java)
 
         CoroutineScope(Dispatchers.IO).launch() {
             launch {
                 try {
-                    val playlistId: Long = newItem.playlistId
-                    val playlistName: String = newItem.name
+                    Log.d("집가고 싶다","연결시도, ${name} ${playlistId}")
+
                     val response = getAllPlaylist.patchPlaylist(
                         playlistId,
-                        playlistName
+                        name
                     )
                     if (response.isSuccessful) {
-                        // var playlistCategoryData = response.body()?.result
-
-
+                        Log.d("집가고 싶다","연결 성공")
                     } else {
+                        Log.d("집가고 싶다","연결 실패")
 
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    Log.d("집가고 싶다","서버 문제")
                 }
             }
         }
@@ -258,6 +231,37 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
     override fun ToEditAudio(id: Long, playlistId:Long) {
         TODO("Not yet implemented")
 
+    }
+
+    fun loadPlaylist(){
+        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
+
+        CoroutineScope(Dispatchers.IO).launch() {
+            launch {
+                try {
+                    val response =
+                        getAllPlaylist.getAllPlaylist() //변수명이 어지럽지만 첫번째 getAll은 레트로핏 활성화 객체이고, 두번째는 인터페이스 내부 함수이다.
+                    if (response.isSuccessful) {
+                        var playlistCategoryData = response.body()?.result
+                        withContext(Dispatchers.Main) {
+                            playlistCategoryData?.let {
+                                playlistIdList = it.map { playlist -> playlist.playlistId }
+                                    .filter { id -> id != 0L }
+                                    .toMutableList()
+                                sharedViewModel.setData(it.toMutableList())
+                                Log.d("xibal","$playlistIdList")
+                            }
+                        }
+                    } else {
+
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+
+        }
     }
 }
 

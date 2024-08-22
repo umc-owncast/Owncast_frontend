@@ -1,18 +1,28 @@
 package kr.dori.android.own_cast
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.ScrollView
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class SignupThirdActivity : AppCompatActivity() {
+
+    private lateinit var scrollView: ScrollView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +80,55 @@ class SignupThirdActivity : AppCompatActivity() {
             }
         }
 
+
+        scrollView = findViewById(R.id.scroll_view)
+
+        // dp를 픽셀로 변환
+        var offset = dpToPx(20, this)
+        etName.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                // 스크롤뷰 스크롤
+                scrollView.post {
+                    scrollView.smoothScrollBy(0, +offset)
+                }
+            }
+        }
+
+        // dp를 픽셀로 변환
+        offset = dpToPx(40, this)
+        etId.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                // 스크롤뷰 스크롤
+                scrollView.post {
+                    scrollView.smoothScrollBy(0, +offset)
+                }
+            }
+        }
+
+        // dp를 픽셀로 변환
+        offset = dpToPx(60, this)
+        etPassword.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                // 스크롤뷰 스크롤
+                scrollView.post {
+                    scrollView.smoothScrollBy(0, +offset)
+                }
+            }
+        }
+
+        // dp를 픽셀로 변환
+        offset = dpToPx(80, this)
+        etPasswordConfirm.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                // 스크롤뷰 스크롤
+                scrollView.post {
+                    scrollView.smoothScrollBy(0, +offset)
+                }
+            }
+        }
+
+
+        // 유효성 검사
         etName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -130,6 +189,12 @@ class SignupThirdActivity : AppCompatActivity() {
             }
         })
     }
+
+    private fun dpToPx(dp: Int, context: Context): Int {
+        val density = context.resources.displayMetrics.density
+        return (dp * density).toInt()
+    }
+
 
     private fun validateId(id: String, idError: TextView, etId: EditText, btnNext: Button) {
         if (id.isEmpty()) {

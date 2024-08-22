@@ -34,6 +34,7 @@
             android:background="@color/white"/>
 
         <LinearLayout
+            android:id="@+id/NickName_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -65,6 +66,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/languageFelid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -127,6 +129,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/interestField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
