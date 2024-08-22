@@ -1,6 +1,7 @@
 package kr.dori.android.own_cast.player
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -42,6 +43,11 @@ class CastAudioFragment(val currentCast: CastWithPlaylistId) : Fragment() {
 
     fun setCastTitle(castTitle: String){
         binding.castTitle.text = castTitle
+    }
+
+    fun updateCurrentTime(currentTime: Long) {
+        Log.d("UpdateTime", "Fragment: $currentTime")
+
     }
 
 }

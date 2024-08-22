@@ -411,6 +411,9 @@ class PlayCastActivity : AppCompatActivity() {
                 val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
                 fragment?.updateCurrentTime(currentPosition)
                 Log.d("UpdateTime", "Activity: $currentPosition")
+
+                val audioFragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastAudioFragment
+                audioFragment?.updateCurrentTime(currentPosition)
             }
             handler.postDelayed(this, 300) // 주기적으로 업데이트
         }
