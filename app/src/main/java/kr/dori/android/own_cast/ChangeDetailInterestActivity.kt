@@ -130,7 +130,6 @@ class ChangeDetailInterestActivity : ComponentActivity() {
                 "book" -> "책"
                 "news" -> "시사/뉴스"
                 "art" -> "미술"
-
                 "self" -> "직접 입력"
                 else -> "드라마/영화"
             }
@@ -138,7 +137,7 @@ class ChangeDetailInterestActivity : ComponentActivity() {
             // 요청 객체 생성
             val preferenceRequest = PreferenceRequest(
                 mainCategory = mainCategory,
-                subCategory = SignupData.temp_interest
+                subCategory = SignupData.temp_detail_interest
             )
 
 

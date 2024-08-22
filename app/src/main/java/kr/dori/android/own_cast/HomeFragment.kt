@@ -85,8 +85,8 @@ class HomeFragment : Fragment() {
 
         //데이터 설정
         if(SignupData.interest!=null){
-            binding.mainInterstTv.text = SignupData.interest
-            binding.homefrKeywordTopicTv.text = SignupData.interest
+            binding.mainInterstTv.text = SignupData.detail_interest
+            binding.homefrKeywordTopicTv.text = SignupData.detail_interest
         }
 
 

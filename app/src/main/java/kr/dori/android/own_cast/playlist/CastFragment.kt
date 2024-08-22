@@ -23,7 +23,9 @@ import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.databinding.FragmentCastBinding
+import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.Cast
+import kr.dori.android.own_cast.forApiData.GetPlayList
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.player.CastWithPlaylistId
@@ -36,6 +38,7 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
 
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,82 +49,75 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
 
         val isSave = arguments?.getBoolean("isSave") ?: false
 
-        // CoroutineScope를 사용하여 데이터를 모두 받아온 후에 처리하도록 수정
-        CoroutineScope(Dispatchers.IO).launch {
-            for (playlistId in playlistIdList) {
-                val getAllPlaylist = getRetrofit().create(Playlist::class.java)
-
-                try {
-                    val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 5)
+        val getPlaylist = getRetrofit().create(Playlist::class.java)
+        // API 호출 및 데이터 설정
+        // API 호출 및 데이터 설정
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                if (isSave) {
+                    val response = getPlaylist.getSaved()
+                    Log.d("CastFragment", "getSaved API 호출")
                     if (response.isSuccessful) {
+                        Log.d("CastFragment", "getSaved API 성공")
                         val playlistInfo = response.body()?.result
-                        playlistInfo?.let {
-                            // 각 Cast를 CastWithPlaylistId로 변환하고 리스트에 저장
-                            val castListWithPlaylistId = it.castList.map { cast ->
-                                CastWithPlaylistId(
-                                    castId = cast.castId,
-                                    playlistId = playlistId,
-                                    castTitle = cast.castTitle,
-                                    isPublic = cast.isPublic,
-                                    castCreator = cast.castCreator,
-                                    castCategory = cast.castCategory,
-                                    audioLength = cast.audioLength
-                                )
+                        withContext(Dispatchers.Main) {
+                            playlistInfo?.let {
+                                val castListWithPlaylistId = it.castList.map { cast ->
+                                    CastWithPlaylistId(
+                                        castId = cast.castId,
+                                        playlistId = cast.playlistId,
+                                        castTitle = cast.castTitle?:"untitled",
+                                        isPublic = cast.isPublic,
+                                        castCreator = cast.castCreator,
+                                        castCategory = cast.castCategory,
+                                        audioLength = cast.audioLength,
+                                        imagePath = cast.imagePath
+                                    )
+                                }
+                                castAdapter.dataList = castListWithPlaylistId.toMutableList()
+                                Log.d("realTest","${castListWithPlaylistId.toMutableList()}")
                             }
-                            playlistList.addAll(castListWithPlaylistId)
                         }
                     } else {
-                        // 실패 처리
+                        Log.e("CastFragment", "getSaved API 실패: ${response.errorBody()?.string()}")
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-
-
-            }
-            // 데이터를 모두 받아온 후 UI 스레드에서 처리
-            withContext(Dispatchers.Main) {
-                Log.d("test2", "$playlistList")
-
-                val filteringData = if (isSave) {
-                    playlistList.filter { cast -> cast.castCreator == "헬로" }
                 } else {
-                    playlistList.filter { cast -> cast.castCreator != "헬로" }
-                }.toMutableList()
-
-                val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(filteringData)
-                Log.d("TotalAudioLength", "총 오디오 길이 (초): $totalAudioLengthInSeconds")
-                binding.castInfo.text = "${filteringData.size}개, ${formatTime(totalAudioLengthInSeconds)}"
-
-                Log.d("test2", "$filteringData")
-
-                castAdapter.dataList = filteringData
-
-                // 어댑터에 알림
-                castAdapter.notifyDataSetChanged()
-
-
-                binding.fragmentCastPlayIv.setOnClickListener {
-                    Log.d("test3", "$filteringData")
-                    ToPlayCast(filteringData)
+                    val response = getPlaylist.getMy()
+                    Log.d("CastFragment", "getMy API 호출")
+                    if (response.isSuccessful) {
+                        Log.d("CastFragment", "getMy API 성공")
+                        val playlistInfo = response.body()?.result
+                        withContext(Dispatchers.Main) {
+                            playlistInfo?.let {
+                                val castListWithPlaylistId = it.castList.map { cast ->
+                                    CastWithPlaylistId(
+                                        castId = cast.castId,
+                                        playlistId = cast.playlistId,
+                                        castTitle = cast.castTitle?:"untitled",
+                                        isPublic = cast.isPublic,
+                                        castCreator = cast.castCreator,
+                                        castCategory = cast.castCategory,
+                                        audioLength = cast.audioLength,
+                                        imagePath = cast.imagePath
+                                    )
+                                }
+                                castAdapter.dataList = castListWithPlaylistId.toMutableList()
+                            }
+                        }
+                    } else {
+                        Log.e("CastFragment", "getMy API 실패: ${response.errorBody()?.string()}")
+                    }
                 }
-
-
-                binding.fragmentCastShuffleIv.setOnClickListener {
-                    Log.d("test3", "$filteringData")
-                    ToPlayCast(filteringData)
-                }
-
-
-                // 제목 설정
-                if (isSave) {
-                    binding.fragmentCastMaintitleTv.text = "내가 만든 캐스트"
-                } else {
-                    binding.fragmentCastMaintitleTv.text = "담아온 캐스트"
-                }
-
+                binding.fragmentCastRv.adapter = castAdapter
+                binding.fragmentCastRv.layoutManager = LinearLayoutManager(context)
+            } catch (e: Exception) {
+                Log.e("CastFragment", "API 호출 중 예외 발생", e)
+                e.printStackTrace()
             }
         }
+
+
+
 
         // RecyclerView 설정
         binding.fragmentCastRv.adapter = castAdapter
@@ -189,4 +185,7 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
         val seconds = input % 60
         return String.format("%02d:%02d", minutes, seconds)
     }
+
+
+
 }

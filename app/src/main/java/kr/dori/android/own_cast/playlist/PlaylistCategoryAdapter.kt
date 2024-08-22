@@ -47,6 +47,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val selectedPlaylistId = dataList[position].playlistId
+                    Log.d("playlistID","${selectedPlaylistId},$dataList")
                     getCastInfo(selectedPlaylistId)
                 }
             }
@@ -55,13 +56,14 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                 if (position != RecyclerView.NO_POSITION) {
                     val selectedPlaylistId = dataList[position].playlistId
                     val selectedPlaylistName = dataList[position].name
+                    Log.d("playlistId","$selectedPlaylistId")
                     fragmentMover.playlistToCategory(selectedPlaylistId, selectedPlaylistName)
                 }
             }
         }
 
         fun setText(data: GetAllPlaylist) {
-            Log.d("xibal", "${data.playlistId}")
+            Log.d("된다", "${data.playlistId}")
 
             data.let {
                 Glide.with(binding.root.context).load(data.imagePath).into(binding.categoryImg)
@@ -72,7 +74,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
             binding.playlistCategoryEditIv.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    val dialog = EditCategoryDialog(itemView.context, editListener, position.toLong())
+                    val dialog = EditCategoryDialog(itemView.context, editListener, position.toLong(),data.playlistId)
                     dialog.show()
                 } else {
                     Log.e("PlaylistCategoryAdapter", "Invalid adapter position: $position")
@@ -100,7 +102,8 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                                         isPublic = cast.isPublic,
                                         castCreator = cast.castCreator,
                                         castCategory = cast.castCategory,
-                                        audioLength = cast.audioLength
+                                        audioLength = cast.audioLength,
+                                        imagePath = cast.imagePath
                                     )
                                 }
                                 //CastPlayerData.setCastList(castList)  // 캐스트 리스트를 저장

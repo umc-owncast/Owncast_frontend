@@ -80,7 +80,7 @@ interface PlayListInterface{
     @GET("/api/playlist/view")// 사용자 플레이리스트 목록 받아오기
     suspend fun getPlayListCorutine() : Response<AuthResponse<List<GetUserPlaylist>>>
     @POST("/api/playlist")
-    fun postPlayList(@Query("playlistName") playlistName: String) : Call<AuthResponse<PostPlaylist>>
+    suspend fun postPlayList(@Query("playlistName") playlistName: String) : Response<AuthResponse<PostPlaylist>>
 
 }
 
@@ -90,20 +90,34 @@ interface Playlist{
     @DELETE("/api/playlist/{playlistId}")
     suspend fun deletePlaylist(@Query("playlistId") playlistId: Long): Response<AuthResponse<DeletePlaylist>>
 
+
     @GET("/api/playlist/{playlistId}")
-    suspend fun getPlaylistInfo(@Query("playlistId") playlistId: Long, @Query("page") page: Int, @Query("size") size: Int): Response<AuthResponse<GetPlayList>>
+    suspend fun getPlaylistInfo(
+        @Path("playlistId") playlistId: Long,  // 경로 변수 설정
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): Response<AuthResponse<GetPlayList>>
+
+
+
 
     @GET("/api/playlist/view")
     suspend fun getAllPlaylist():Response<AuthResponse<List<GetAllPlaylist>>>
 
     @PATCH("/api/playlist/{playlistId}")
-    suspend fun patchPlaylist(@Query("playlistId") playlistId: Long, @Query("playlistName") playlistName: String): Response<AuthResponse<PatchPlaylist>>
+    suspend fun patchPlaylist(@Path("playlistId") playlistId: Long, @Query("playlistName") playlistName: String): Response<AuthResponse<PatchPlaylist>>
 
-    @POST("/api/playlist")
-    suspend fun postPlaylist(@Query("playlistName")playlistName: String): Response<AuthResponse<PostPlaylist>>
+    @POST("/api/playlist/{playlistName}")
+    suspend fun postPlaylist(@Path("playlistName")playlistName: String): Response<AuthResponse<PostPlaylist>>
 
     @GET("/api/cast/{castId}")
     suspend fun getCast(@Path("castId")castId: Long): Response<AuthResponse<CastInfo>>
+
+    @GET("/api/playlist/saved")
+    suspend fun getSaved(): Response<AuthResponse<GetPlayList>>
+
+    @GET("/api/playlist/my")
+    suspend fun getMy(): Response<AuthResponse<GetPlayList>>
 }
 
 

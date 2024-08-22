@@ -50,33 +50,9 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         savedInstanceState: Bundle?
     ): View? {
 
-        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
-        CoroutineScope(Dispatchers.IO).launch() {
-            launch {
-                try {
-                    val response =
-                        getAllPlaylist.getAllPlaylist() //변수명이 어지럽지만 첫번째 getAll은 레트로핏 활성화 객체이고, 두번째는 인터페이스 내부 함수이다.
-                    if (response.isSuccessful) {
-                        var playlistCategoryData = response.body()?.result
-                        withContext(Dispatchers.Main) {
-                            playlistCategoryData?.let {
-                                playlistIdList = it.map { playlist -> playlist.playlistId }
-                                    .filter { id -> id != 0L }
-                                    .toMutableList()
-                                sharedViewModel.setData(it.toMutableList())
-                                Log.d("xibal","$playlistIdList")
-                            }
-                        }
-                    } else {
-
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
+        loadPlaylist()
 
 
-        }
 
         binding = FragmentPlaylistBinding.inflate(inflater, container, false)
 
@@ -89,20 +65,11 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 
             categoryAdapter.notifyDataSetChanged()
         })
-        /*
-        if (sharedViewModel.data.value.isNullOrEmpty()) {
-            sharedViewModel.setData(playlistCategoryData)
-        }
-
- */
 
         binding.fragmentPlaylistAddIv.setOnClickListener {
             val dialog = AddCategoryDiaLogPlaylist(requireContext(), this, this)
             dialog.show()
         }
-
-
-        //  val castFragment = CastFragment(playlistIdList)
 
         binding.fragmentPlaylistSaveIv.setOnClickListener {
             val bundle = Bundle().apply {
@@ -149,7 +116,6 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         return binding.root
     }
 
-    // addCategory 부분은 사용자 토큰이 필요하기에 2024-08-16시점에는 기능이 작동하지 않습니다. -> 사용자 정보와, 제목,totalCast, CastList등의 정보가 필요함 ->
     override fun onCategoryAdded(categoryName: String) {
 
 
@@ -171,32 +137,29 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         }
     }
 
-    override fun onCategoryEdit(position: Long, newItem: GetAllPlaylist) {
+    override fun onCategoryEdit(position: Long, name: String, playlistId: Long) {
 
-
-        //서버 통신 전에 미리 데이터 업데이트를 시켜서 좀 더 빠릿한 느낌을 줄 수 있다.
-        sharedViewModel.updateDataAt(position, newItem)
 
         val getAllPlaylist = getRetrofit().create(Playlist::class.java)
 
         CoroutineScope(Dispatchers.IO).launch() {
             launch {
                 try {
-                    val playlistId: Long = newItem.playlistId
-                    val playlistName: String = newItem.name
+                    Log.d("집가고 싶다","연결시도, ${name} ${playlistId}")
+
                     val response = getAllPlaylist.patchPlaylist(
                         playlistId,
-                        playlistName
+                        name
                     )
                     if (response.isSuccessful) {
-                        // var playlistCategoryData = response.body()?.result
-
-
+                        Log.d("집가고 싶다","연결 성공")
                     } else {
+                        Log.d("집가고 싶다","연결 실패")
 
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    Log.d("집가고 싶다","서버 문제")
                 }
             }
         }
@@ -268,6 +231,37 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
     override fun ToEditAudio(id: Long, playlistId:Long) {
         TODO("Not yet implemented")
 
+    }
+
+    fun loadPlaylist(){
+        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
+
+        CoroutineScope(Dispatchers.IO).launch() {
+            launch {
+                try {
+                    val response =
+                        getAllPlaylist.getAllPlaylist() //변수명이 어지럽지만 첫번째 getAll은 레트로핏 활성화 객체이고, 두번째는 인터페이스 내부 함수이다.
+                    if (response.isSuccessful) {
+                        var playlistCategoryData = response.body()?.result
+                        withContext(Dispatchers.Main) {
+                            playlistCategoryData?.let {
+                                playlistIdList = it.map { playlist -> playlist.playlistId }
+                                    .filter { id -> id != 0L }
+                                    .toMutableList()
+                                sharedViewModel.setData(it.toMutableList())
+                                Log.d("xibal","$playlistIdList")
+                            }
+                        }
+                    } else {
+
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+
+        }
     }
 }
 

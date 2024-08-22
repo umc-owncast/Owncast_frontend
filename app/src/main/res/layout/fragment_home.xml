@@ -136,15 +136,19 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
         <TextView
             android:id="@+id/main_interst_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
             android:letterSpacing="0.01"
-            android:text="[    ]"
+
             android:textSize="24sp"
             android:textColor="#FFFFFF"
             android:lineSpacingExtra="3sp"
             android:translationY="-1.65sp"
-            android:gravity="center_horizontal|top"
+            android:gravity="center"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="40sp"
+            android:autoSizeStepGranularity="2sp"
             app:layout_constraintStart_toStartOf="@id/homefr_td_keyword_circle_iv"
             app:layout_constraintEnd_toEndOf="@id/homefr_td_keyword_circle_iv"
             app:layout_constraintTop_toTopOf="@id/homefr_td_keyword_circle_iv"
@@ -167,7 +171,7 @@
 
 
                 android:textColor="@color/black"
-                android:text="키워드 1"
+                android:text=""
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
             <ImageView
@@ -195,7 +199,7 @@
 
 
             android:textColor="@color/black"
-            android:text="키워드 2"
+            android:text=""
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
         <ImageView
@@ -222,7 +226,7 @@
 
 
             android:textColor="@color/black"
-            android:text="키워드 3"
+            android:text=""
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
         <ImageView
@@ -238,19 +242,21 @@
 
         <TextView
             android:id="@+id/homefr_td_keyword4_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
 
 
-            android:gravity="right|top"
-            android:textSize="14sp"
+            android:gravity="center"
+            android:textSize="20sp"
             android:letterSpacing="0.02"
             android:layout_marginTop="170dp"
             android:layout_marginEnd="18dp"
-
-
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeStepGranularity="2sp"
             android:textColor="@color/black"
-            android:text="키워드 4"
+
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
         <ImageView
@@ -278,7 +284,7 @@
 
 
             android:textColor="@color/black"
-            android:text="키워드 5"
+            android:text=""
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
         <ImageView
@@ -306,7 +312,7 @@
 
 
             android:textColor="@color/black"
-            android:text="키워드 6"
+            android:text=""
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
         <ImageView
