@@ -9,12 +9,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.android.exoplayer2.C
-import kr.dori.android.own_cast.R
-
 import kr.dori.android.own_cast.data.CastPlayerData
-
-
 import kr.dori.android.own_cast.databinding.FragmentCastPlaylistBinding
 
 

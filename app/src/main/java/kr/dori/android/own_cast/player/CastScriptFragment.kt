@@ -178,6 +178,10 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
         Log.d("Bookmark", "onResume")
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        handler.removeCallbacksAndMessages(null) // 모든 핸들러 콜백을 제거
+    }
     override fun onDestroy() {
         super.onDestroy()
         Log.d("Bookmark", "onDestroy")

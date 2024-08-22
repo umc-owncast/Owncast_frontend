@@ -492,7 +492,7 @@ class PlayCastActivity : AppCompatActivity() {
         val scriptFragment = CastScriptFragment(CastPlayerData.currentCast)
         supportFragmentManager.beginTransaction()
             .replace(R.id.play_cast_frm, scriptFragment)
-            .commitAllowingStateLoss()
+            .commit()
 
         // 프래그먼트가 추가된 후에 바로 콜백 메소드 설정
         scriptFragment.adapter.onRepeatToggleListener = { position, isRepeatOn ->
@@ -517,7 +517,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast))
-            .commitAllowingStateLoss()
+            .commit()
 
         stateListener = 0
     }
@@ -534,7 +534,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.play_cast_frm, CastPlaylistFragment())
-            .commitAllowingStateLoss()
+            .commit()
 
         stateListener = 2
     }
@@ -550,7 +550,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.play_cast_frm, CastAudioFragment(CastPlayerData.currentCast))
-            .commitAllowingStateLoss()
+            .commit()
 
         stateListener = 0
     }
@@ -579,13 +579,13 @@ class PlayCastActivity : AppCompatActivity() {
                 // 프래그먼트 교체
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.play_cast_frm, scriptFragment)
-                    .commitAllowingStateLoss()
+                    .commit()
             }
 
 
             2 ->         supportFragmentManager.beginTransaction()
                 .replace(R.id.play_cast_frm, CastPlaylistFragment())
-                .commitAllowingStateLoss()
+                .commit()
         }
 
     }
