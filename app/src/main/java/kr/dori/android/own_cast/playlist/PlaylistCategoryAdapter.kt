@@ -48,6 +48,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                 if (position != RecyclerView.NO_POSITION) {
                     val selectedPlaylistId = dataList[position].playlistId
                     Log.d("playlistID","${selectedPlaylistId},$dataList")
+                    //여기서는 dataList가 Cast 메타데이터를 담지 않기 때문에 getCastInfo를 통해서 데이터를 추출한 뒤에 activityMover기능을 구현해야 함
                     getCastInfo(selectedPlaylistId)
                 }
             }
@@ -108,6 +109,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                                     )
                                 }
                                 //CastPlayerData.setCastList(castList)  // 캐스트 리스트를 저장
+                                CastPlayerData.setCast(castListWithPlaylistId, 1)
                                 activityMover.ToPlayCast(castListWithPlaylistId)
 
                             }

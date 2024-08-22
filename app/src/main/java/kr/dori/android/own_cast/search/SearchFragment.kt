@@ -29,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.SignupData
@@ -63,7 +64,8 @@ import kr.dori.android.own_cast.playlist.SharedViewModel
 
 
 
-class SearchFragment : Fragment(), SearchMover {
+class SearchFragment : Fragment(), SearchMover, ActivityMover {
+
 
     lateinit var binding: FragmentSearchBinding
     private val searchAdapter = SearchAdapter(this)
@@ -174,11 +176,11 @@ class SearchFragment : Fragment(), SearchMover {
         var imageData = list.map{
             it.imagePath
         }
-        CastPlayerData.setCast(data)//데이터 초기화
-        CastPlayerData.setCurrentPos(id)//
+        CastPlayerData.setCast(data,1)//데이터 초기화
+        ToPlayCast(data)
+    //    CastPlayerData.setCurrentPos(id)//
 
 
-        activityResultLauncher.launch(intent)
     }
 
     override fun goAddCast(id:Long) {//여기다가 카테고리 정보 담아야함
@@ -278,6 +280,20 @@ class SearchFragment : Fragment(), SearchMover {
         val minutes = totalSeconds / 60
         val seconds = totalSeconds % 60
         return String.format("%d:%02d", minutes, seconds)
+    }
+    override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
+
+        // 현재 서비스가 재생 중인지 확인하고 중지
+        //val currentService = getCurrentServiceInstance()
+        //  service?.stopAudio()
+
+        // 캐스트 설정 및 새 액티비티로 이동
+        val intent = Intent(requireContext(), PlayCastActivity::class.java)
+        activityResultLauncher.launch(intent)
+    }
+
+    override fun ToEditAudio(id: Long, playlistId: Long) {
+        TODO("Not yet implemented")
     }
 
 }

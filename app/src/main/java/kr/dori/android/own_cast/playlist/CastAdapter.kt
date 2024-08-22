@@ -43,8 +43,8 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
                 if (position != RecyclerView.NO_POSITION) {
                     val cast = dataList[position]
                     Log.d("test3","${listOf(cast)}")
-                    CastPlayerData.setCast(dataList)
-                    CastPlayerData.setCurrentPos(cast.castId)
+                    // 이렇게 현재 포지션과
+                    CastPlayerData.setCast(dataList,position)
                     activityMover.ToPlayCast(dataList)
                 }
             }

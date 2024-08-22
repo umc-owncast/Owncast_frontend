@@ -43,7 +43,6 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
     ): View? {
         Log.d("xibal5","${playlistId}")
 
-
         binding =  FragmentCategoryBinding.inflate(inflater,container,false)
 
         castAdapter = CastAdapter(this)
@@ -119,15 +118,18 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
         binding.fragmentCategoryRv.layoutManager = LinearLayoutManager(context)
 
 
-// 이 부분은 재생목록 부분이어서 어떻게 수정할건지 생각을 해봐야 됨 -> 재생목록 순서를 어떻게 정할 것인가? -> 해결함
+// 아
 
         binding.fragmentCategoryPlayIv.setOnClickListener {
+            CastPlayerData.setCast(sendCastIdList, 0)
             ToPlayCast(sendCastIdList)
            // Log.d("Cast","$sendCastIdList")
         }
 
         binding.fragmentCategoryShuffleIv.setOnClickListener {
-            ToPlayCast(sendCastIdList)
+            val shuffledList = sendCastIdList.shuffled()
+            CastPlayerData.setCast(shuffledList,0)
+            ToPlayCast(shuffledList)
         }
 
         return binding.root

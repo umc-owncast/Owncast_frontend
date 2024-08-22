@@ -40,6 +40,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kr.dori.android.own_cast.ActivityMover
+import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.playlist.AddCategoryListener
 import kr.dori.android.own_cast.editAudio.EditAudio
 import kr.dori.android.own_cast.R
@@ -74,8 +76,7 @@ import java.io.IOException
 
 
 //AddCategoryDialog에 toast기능을 넣으면서 EditAudio를 추가로 전달해주는 부분이 playlistFragment에 필요해서 인터페이스 상속을 추가했습니다.
-class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategoryListener,
-    EditAudio {
+class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategoryListener, ActivityMover, EditAudio {
     lateinit var binding: FragmentKeyvpAudiosaveBinding
 
     var currentPos:Int = 0//카테고리 새로 추가할때, dismiss되면 그대로 유지해야되서 만듦
@@ -337,13 +338,16 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             }
 
         }
-        activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-
-                val data: Intent? = result.data
-                val isSuccess = data?.getBooleanExtra("result", false) ?: false
+        // Initialize ActivityResultLauncher
+        activityResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    Log.d("ifsuccess", "success")
+                    val data: Intent? = result.data
+                    val isSuccess = data?.getBooleanExtra("result", false) ?: false
+                    (activity as? MainActivity)?.setPlaylistTableVisibility(isSuccess)
+                }
             }
-        }
     }
 
 
@@ -566,12 +570,14 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                                 )
                             }
 
-                            CastPlayerData.setCast(castListWithPlaylistId)  // 캐스트 리스트를 저장
+                            CastPlayerData.setCast(castListWithPlaylistId, 1)
+                            ToPlayCast(castListWithPlaylistId)
+                            // 캐스트 리스트를 저장
                             //괜히 id쓰는것보다 어차피 마지막 가있을테니깐 넣었음..
-                            CastPlayerData.currentPosition = CastPlayerData.getAllCastList().size -1
-                            CastPlayerData.currentCast = CastPlayerData.getAllCastList()[CastPlayerData.currentPosition]
-                            val intent = Intent(activity, PlayCastActivity::class.java)
-                            startActivity(intent)
+                            //CastPlayerData.currentPosition = CastPlayerData.getAllCastList().size -1
+                            //CastPlayerData.currentCast = CastPlayerData.getAllCastList()[CastPlayerData.currentPosition]
+                            //val intent = Intent(activity, PlayCastActivity::class.java)
+                            //startActivity(intent)
                             activity?.finish()
                             finDialog.dismiss()
                         }
@@ -598,7 +604,21 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             }
         }
     }
+    override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
 
+        // 현재 서비스가 재생 중인지 확인하고 중지
+        //val currentService = getCurrentServiceInstance()
+        //  service?.stopAudio()
+
+        // 캐스트 설정 및 새 액티비티로 이동
+        val intent = Intent(requireContext(), PlayCastActivity::class.java)
+        activityResultLauncher.launch(intent)
+    }
+
+    override fun ToEditAudio(id: Long, playlistId: Long) {
+        TODO("Not yet implemented")
+    }
 
 }
+
 

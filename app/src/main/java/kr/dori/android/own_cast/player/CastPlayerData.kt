@@ -15,13 +15,14 @@ object CastPlayerData {
     lateinit var currentBookmarkList: MutableList<Long>
 
 
-    // 이 부분에 id검사 기능도 넣어야 됨
-    fun setCast(testList: List<CastWithPlaylistId>) {
+    fun setCast(testList: List<CastWithPlaylistId>, position: Int) {
         allCastList.clear()
         allCastList.addAll(testList)
 
-        // testPosition 계산 후 유효한지 확인합니다. -> position의 초기 설정입니다.
-        currentPosition = allCastList.size - testList.size
+        if(position in 0 until testList.size){
+            currentPosition = position
+        }
+        //currentPosition = allCastList.size - testList.size
 
         if (currentPosition in 0 until allCastList.size) {
             currentCast = allCastList[currentPosition]

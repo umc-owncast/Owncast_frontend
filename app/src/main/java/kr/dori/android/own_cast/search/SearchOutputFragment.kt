@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.R
 
@@ -39,7 +40,7 @@ import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.playlist.SharedViewModel
 import kotlin.coroutines.CoroutineContext
 
-class SearchOutputFragment : Fragment(), SearchMover , CoroutineScope {
+class SearchOutputFragment : Fragment(), SearchMover , CoroutineScope, ActivityMover {
 
     private lateinit var binding: FragmentSearchOutputBinding
     private val searchViewModel: SearchViewModel by activityViewModels()
@@ -122,11 +123,8 @@ class SearchOutputFragment : Fragment(), SearchMover , CoroutineScope {
         var imageData = list.map{
             it.imagePath
         }
-        CastPlayerData.setCast(data)//데이터 초기화
-        CastPlayerData.setCurrentPos(id)//
-
-
-        activityResultLauncher.launch(intent)
+        CastPlayerData.setCast(data,1)//데이터 초기화
+        ToPlayCast(data)
     }
 
     override fun goAddCast(id : Long) {
@@ -193,5 +191,20 @@ class SearchOutputFragment : Fragment(), SearchMover , CoroutineScope {
             Log.d("apiTest-SearchOther", "API 호출 실패: ${e.message}")
             null
         }
+    }
+
+    override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
+
+        // 현재 서비스가 재생 중인지 확인하고 중지
+        //val currentService = getCurrentServiceInstance()
+        //  service?.stopAudio()
+
+        // 캐스트 설정 및 새 액티비티로 이동
+        val intent = Intent(requireContext(), PlayCastActivity::class.java)
+        activityResultLauncher.launch(intent)
+    }
+
+    override fun ToEditAudio(id: Long, playlistId: Long) {
+        TODO("Not yet implemented")
     }
 }

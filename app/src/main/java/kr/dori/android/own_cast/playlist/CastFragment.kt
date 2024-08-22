@@ -31,6 +31,7 @@ import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
 import kr.dori.android.own_cast.player.CastWithPlaylistId
 
+
 class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), ActivityMover {
     private lateinit var binding: FragmentCastBinding
     private lateinit var castAdapter: CastAdapter
@@ -147,9 +148,15 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
         }
 
         binding.fragmentCastPlayIv.setOnClickListener {
-
+            CastPlayerData.setCast(castAdapter.dataList, 0)
             ToPlayCast(castAdapter.dataList)
+        }
 
+        binding.fragmentCastShuffleIv.setOnClickListener {
+            val forShuffle: List<CastWithPlaylistId> = castAdapter.dataList
+            val shuffledList = forShuffle.shuffled()
+            CastPlayerData.setCast(shuffledList,0)
+            ToPlayCast(shuffledList)
         }
         return binding.root
     }
@@ -159,7 +166,6 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
 
         //   val currentCast = CastPlayerData.currentCast
 
-        CastPlayerData.setCast(castList)
 
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
 
