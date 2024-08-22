@@ -87,13 +87,13 @@ interface PlayListInterface{
 
 
 interface Playlist{
-    @DELETE("/api/playlist")
+    @DELETE("/api/playlist/{playlistId}")
     suspend fun deletePlaylist(@Query("playlistId") playlistId: Long): Response<AuthResponse<DeletePlaylist>>
 
 
-    @GET("/api/playlist")
+    @GET("/api/playlist/{playlistId}")
     suspend fun getPlaylistInfo(
-        @Query("playlistId") playlistId: Long,  // 경로 변수 설정
+        @Path("playlistId") playlistId: Long,  // 경로 변수 설정
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<AuthResponse<GetPlayList>>
@@ -104,11 +104,11 @@ interface Playlist{
     @GET("/api/playlist/view")
     suspend fun getAllPlaylist():Response<AuthResponse<List<GetAllPlaylist>>>
 
-    @PATCH("/api/playlist")
-    suspend fun patchPlaylist(@Query("playlistId") playlistId: Long, @Query("playlistName") playlistName: String): Response<AuthResponse<PatchPlaylist>>
+    @PATCH("/api/playlist/{playlistId}")
+    suspend fun patchPlaylist(@Path("playlistId") playlistId: Long, @Query("playlistName") playlistName: String): Response<AuthResponse<PatchPlaylist>>
 
-    @POST("/api/playlist")
-    suspend fun postPlaylist(@Query("playlistName")playlistName: String): Response<AuthResponse<PostPlaylist>>
+    @POST("/api/playlist/{playlistName}")
+    suspend fun postPlaylist(@Path("playlistName")playlistName: String): Response<AuthResponse<PostPlaylist>>
 
     @GET("/api/cast/{castId}")
     suspend fun getCast(@Path("castId")castId: Long): Response<AuthResponse<CastInfo>>
