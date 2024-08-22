@@ -63,7 +63,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
         }
 
         fun setText(data: GetAllPlaylist) {
-            Log.d("xibal", "${data.playlistId}")
+            Log.d("된다", "${data.playlistId}")
 
             data.let {
                 Glide.with(binding.root.context).load(data.imagePath).into(binding.categoryImg)
@@ -74,7 +74,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
             binding.playlistCategoryEditIv.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    val dialog = EditCategoryDialog(itemView.context, editListener, position.toLong())
+                    val dialog = EditCategoryDialog(itemView.context, editListener, position.toLong(),data.playlistId)
                     dialog.show()
                 } else {
                     Log.e("PlaylistCategoryAdapter", "Invalid adapter position: $position")

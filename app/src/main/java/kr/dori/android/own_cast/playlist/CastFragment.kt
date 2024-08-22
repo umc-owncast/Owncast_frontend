@@ -75,6 +75,7 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
                                     )
                                 }
                                 castAdapter.dataList = castListWithPlaylistId.toMutableList()
+                                Log.d("realTest","${castListWithPlaylistId.toMutableList()}")
                             }
                         }
                     } else {
