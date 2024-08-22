@@ -34,7 +34,7 @@ class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAu
 
         }
         binding.keyFinGohearTv.setOnClickListener {
-            dismiss()
+
             listener.goPlayCast()
         }
         initData()

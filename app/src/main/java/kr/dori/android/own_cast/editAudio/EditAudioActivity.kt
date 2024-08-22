@@ -315,6 +315,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
 
                             }
                         } else {
+
                             Toast.makeText(this@EditAudioActivity,"수정 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
                         }
 
@@ -355,37 +356,42 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
 
     override fun onCategoryAdded(categoryName: String) {
         addPlaylist(categoryName)
-        editAudioSpinnerAdapter.notifyDataSetChanged()
+
     }
-    fun addPlaylist(categoryName: String) {//playList추가 버튼
-        val apiService = kr.dori.android.own_cast.forApiData.getRetrofit().create(PlayListInterface::class.java)
-        apiService.postPlayList(categoryName).enqueue(object: Callback<AuthResponse<PostPlaylist>> {
-            override fun onResponse(call: Call<AuthResponse<PostPlaylist>>, response: Response<AuthResponse<PostPlaylist>>) {
-                Log.d("apiTest1", response.toString())
-                if(response.isSuccessful){
-                    val resp : AuthResponse<PostPlaylist> = response.body()!!
-                    when(resp.code) {
-                        "COMMON200" -> {
-                            resp.result?.let {
+    fun addPlaylist(categoryName: String){
+        dialog.dismiss()
+        val apiService = getRetrofit().create(PlayListInterface::class.java)
+        val loadingdialog = KeywordLoadingDialog(this,"플리를 생성중이에요")
+        loadingdialog.setCancelable(false)
+        loadingdialog.setCanceledOnTouchOutside(false)
+        loadingdialog.show()
+        CoroutineScope(Dispatchers.IO).launch() {
+            val response = apiService.postPlayList(categoryName)
+            launch {
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            response.body()?.result?.let{
                                 playlistText.add(PlaylistText(it.playlistId,categoryName))
                                 binding.spinner.setSelection(playlistText.size-2)
+                                editAudioSpinnerAdapter.notifyDataSetChanged()
+                                playlistId = it.playlistId
                             }
-                            dialog.dismiss()
-                            Toast.makeText(context,"추가되었습니다.",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@EditAudioActivity,"추가되었습니다.", Toast.LENGTH_SHORT).show()
+
+                        } else {
+                            Toast.makeText(this@EditAudioActivity,"카테고리 추가 실패,\n 오류코드 : ${response.code()}", Toast.LENGTH_SHORT).show()
                         }
-                        else ->{
-                        }
+
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                }else{
-                    val resp = response.errorBody().toString()
-                    Toast.makeText(context,"잠시 후 다시 시도해주세요.\n실패코드 : ${response.code()}",Toast.LENGTH_SHORT).show()
+                    loadingdialog.dismiss()
                 }
             }
-            override fun onFailure(call: Call<AuthResponse<PostPlaylist>>, t: Throwable) {
-                Log.d("apiTest-playlistAdd", t.message.toString())
-            }
-        })
+        }
     }
+
 
 
 

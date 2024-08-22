@@ -80,7 +80,7 @@ interface PlayListInterface{
     @GET("/api/playlist/view")// 사용자 플레이리스트 목록 받아오기
     suspend fun getPlayListCorutine() : Response<AuthResponse<List<GetUserPlaylist>>>
     @POST("/api/playlist")
-    fun postPlayList(@Query("playlistName") playlistName: String) : Call<AuthResponse<PostPlaylist>>
+    suspend fun postPlayList(@Query("playlistName") playlistName: String) : Response<AuthResponse<PostPlaylist>>
 
 }
 

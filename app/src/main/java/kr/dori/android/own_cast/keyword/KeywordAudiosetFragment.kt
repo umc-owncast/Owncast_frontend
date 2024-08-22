@@ -185,7 +185,7 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
                 response.body()
             } else {
 
-                Log.d("apiTest-CreateCast", "연결실패 에러바디: ${response.errorBody().toString()}")
+                Log.d("apiTest-CreateCast", "연결실패 에러바디: ${response.errorBody()?.string()}")
                 withContext(Dispatchers.Main) {
                     Toast.makeText(context, "API 호출 실패\n 오류코드 : ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
