@@ -34,6 +34,7 @@ class StudyFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentStudyBinding.inflate(inflater, container, false)
+
         studyAdapter = StudyAdapter { position ->
             handleItemClick(position)
         }
@@ -86,7 +87,7 @@ class StudyFragment : Fragment() {
         centerView?.let {
             val position = layoutManager.getPosition(it)
             val actualPosition = position % dataCount
-            binding.fragmentStudyStateTv.text = "${setText(actualPosition)}/$dataCount"
+            binding.fragmentStudyStateTv.text = "${actualPosition + 1}/$dataCount"
         }
     }
 
@@ -142,7 +143,9 @@ class StudyFragment : Fragment() {
                         if (dataCount > 0) {
                             customAdapter.itemList = allBookmarks.toMutableList()
                             customAdapter.notifyDataSetChanged()
-                            binding.fragmentStudyStateTv.text = "1/$dataCount"
+
+                            adjustSelectedItem()  // State 텍스트를 업데이트합니다.
+                            enableCustomAdapterUI()  // UI 요소를 활성화합니다.
                         } else {
                             // 데이터가 비어 있을 때 UI 요소 비활성화
                             handleEmptyData()
@@ -180,7 +183,8 @@ class StudyFragment : Fragment() {
                         if (dataCount > 0) {
                             customAdapter.itemList = allBookmarks.toMutableList()
                             customAdapter.notifyDataSetChanged()
-                            binding.fragmentStudyStateTv.text = "1/$dataCount"
+                            adjustSelectedItem()  // State 텍스트를 업데이트합니다.
+                            enableCustomAdapterUI()  // UI 요소를 활성화합니다.
                         } else {
                             // 데이터가 비어 있을 때 UI 요소 비활성화
                             handleEmptyData()
@@ -218,7 +222,8 @@ class StudyFragment : Fragment() {
                         if (dataCount > 0) {
                             customAdapter.itemList = allBookmarks.toMutableList()
                             customAdapter.notifyDataSetChanged()
-                            binding.fragmentStudyStateTv.text = "1/$dataCount"
+                            adjustSelectedItem()  // State 텍스트를 업데이트합니다.
+                            enableCustomAdapterUI()  // UI 요소를 활성화합니다.
                         } else {
                             // 데이터가 비어 있을 때 UI 요소 비활성화
                             handleEmptyData()
@@ -255,6 +260,13 @@ class StudyFragment : Fragment() {
         binding.fragmentStudyNextIv.isEnabled = false
         binding.fragmentStudyBackIv.isEnabled = false
         binding.fragmentStudyShuffleIv.isEnabled = false
+    }
+
+    private fun enableCustomAdapterUI() {
+        binding.studyCustomAdapterRv.isEnabled = true
+        binding.fragmentStudyNextIv.isEnabled = true
+        binding.fragmentStudyBackIv.isEnabled = true
+        binding.fragmentStudyShuffleIv.isEnabled = true
     }
 
     private fun scrollToNextItem() {
@@ -308,10 +320,12 @@ class StudyFragment : Fragment() {
             if (dataCount > 0) {
                 customAdapter.itemList.shuffle()
                 customAdapter.notifyDataSetChanged()
+                adjustSelectedItem()  // State 텍스트를 업데이트합니다.
             }
         }
 
         binding.studyCustomAdapterRv.scrollToPosition(5)
+
         binding.studyCustomAdapterRv.post {
             val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
             if (dataCount > 0) {
@@ -326,14 +340,7 @@ class StudyFragment : Fragment() {
             }
         }
     }
-
-    private fun setText(actualPosition: Int): Int {
-        return if (actualPosition >= 5) {
-            actualPosition - 4
-        } else {
-            actualPosition + dataCount - 4
-        }
-    }
+    // StudyFragment.kt
 
     private fun handleItemClick(position: Int) {
         when (position) {
@@ -348,4 +355,5 @@ class StudyFragment : Fragment() {
             }
         }
     }
+
 }
