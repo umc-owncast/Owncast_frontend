@@ -41,21 +41,24 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d("xibal","${playlistId}")
+        Log.d("xibal5","${playlistId}")
 
 
         binding =  FragmentCategoryBinding.inflate(inflater,container,false)
 
         castAdapter = CastAdapter(this)
-
+        binding.fragmentCategoryRv.adapter = castAdapter
+        binding.fragmentCategoryRv.layoutManager = LinearLayoutManager(context)
 
 
         val getAllPlaylist = getRetrofit().create(Playlist::class.java)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 5)
+                val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 20)
+                Log.d("xibal5","$response")
                 if (response.isSuccessful) {
+                    Log.d("xibal5","연결 성공 ㅅ")
                     val playlistInfo = response.body()?.result
                     withContext(Dispatchers.Main) {
                         playlistInfo?.let {
@@ -63,18 +66,19 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
                             val castListWithPlaylistId = it.castList.map { cast ->
                                 CastWithPlaylistId(
                                     castId = cast.castId,
-                                    playlistId = playlistId,
-                                    castTitle = cast.castTitle,
+                                    playlistId = cast.playlistId,
+                                    castTitle = cast.castTitle?:"untitled",
                                     isPublic = cast.isPublic,
                                     castCreator = cast.castCreator,
                                     castCategory = cast.castCategory,
-                                    audioLength = cast.audioLength
+                                    audioLength = cast.audioLength,
+                                    imagePath = cast.imagePath
                                 )
                             }
 
                             // 데이터를 어댑터에 설정
                             castAdapter.dataList = castListWithPlaylistId.toMutableList()
-                            Log.d("castInfo","${castListWithPlaylistId}")
+                            Log.d("castInfo", "${castListWithPlaylistId}")
                             sendCastIdList = castListWithPlaylistId
                             castAdapter.notifyDataSetChanged()
 
@@ -83,12 +87,14 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
                             Log.d("TotalAudioLength", "총 오디오 길이 (초): $totalAudioLengthInSeconds")
                             binding.castSizeTotalLength.text = "${castListWithPlaylistId.size}개, ${formatTime(totalAudioLengthInSeconds)}"
                         }
+
                     }
                 } else {
-                    Log.d("PlaylistCategory", "Failed to fetch playlist info")
+                    Log.d("xibal5","연결 실패요 ㅛ")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                Log.d("xibal5","서버 문제요 ㅛ")
             }
         }
 
@@ -177,7 +183,6 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
             val formatTime = String.format("%02d:%02d", minutes, seconds)
             return formatTime
     }
-
 
 }
 

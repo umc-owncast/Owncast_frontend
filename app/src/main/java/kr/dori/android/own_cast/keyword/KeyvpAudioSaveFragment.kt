@@ -539,7 +539,8 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                                     isPublic = cast.isPublic,
                                     castCreator = cast.castCreator,
                                     castCategory = cast.castCategory,
-                                    audioLength = cast.audioLength
+                                    audioLength = cast.audioLength,
+                                    imagePath = cast.imagePath
                                 )
                             }
 

@@ -87,16 +87,24 @@ interface PlayListInterface{
 
 
 interface Playlist{
-    @DELETE("/api/playlist/{playlistId}")
+    @DELETE("/api/playlist")
     suspend fun deletePlaylist(@Query("playlistId") playlistId: Long): Response<AuthResponse<DeletePlaylist>>
 
-    @GET("/api/playlist/{playlistId}")
-    suspend fun getPlaylistInfo(@Query("playlistId") playlistId: Long, @Query("page") page: Int, @Query("size") size: Int): Response<AuthResponse<GetPlayList>>
+
+    @GET("/api/playlist")
+    suspend fun getPlaylistInfo(
+        @Query("playlistId") playlistId: Long,  // 경로 변수 설정
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): Response<AuthResponse<GetPlayList>>
+
+
+
 
     @GET("/api/playlist/view")
     suspend fun getAllPlaylist():Response<AuthResponse<List<GetAllPlaylist>>>
 
-    @PATCH("/api/playlist/{playlistId}")
+    @PATCH("/api/playlist")
     suspend fun patchPlaylist(@Query("playlistId") playlistId: Long, @Query("playlistName") playlistName: String): Response<AuthResponse<PatchPlaylist>>
 
     @POST("/api/playlist")
@@ -104,6 +112,12 @@ interface Playlist{
 
     @GET("/api/cast/{castId}")
     suspend fun getCast(@Path("castId")castId: Long): Response<AuthResponse<CastInfo>>
+
+    @GET("/api/playlist/saved")
+    suspend fun getSaved(): Response<AuthResponse<GetPlayList>>
+
+    @GET("/api/playlist/my")
+    suspend fun getMy(): Response<AuthResponse<GetPlayList>>
 }
 
 

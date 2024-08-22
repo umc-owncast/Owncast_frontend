@@ -1,10 +1,12 @@
 package kr.dori.android.own_cast.player
 
+import android.app.Notification
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
+import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -15,6 +17,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.os.Build
+import androidx.core.app.NotificationCompat
+import android.support.v4.media.session.PlaybackStateCompat
+import androidx.media.session.MediaButtonReceiver
+import kr.dori.android.own_cast.MainActivity
 
 class BackgroundPlayService : Service() {
 
@@ -24,6 +35,9 @@ class BackgroundPlayService : Service() {
     private var loopStartTime: Long? = null
     private var loopEndTime: Long? = null
     private var isPlaying: Boolean = false  // 재생 상태를 추적하는 변수
+    //알림창에서 백그라운드 재생 컨트롤을 위한 변수 ㅣ
+    private val CHANNEL_ID = "BackgroundPlayServiceChannel"
+    private lateinit var mediaSession: MediaSessionCompat
 
 
 
@@ -42,7 +56,81 @@ class BackgroundPlayService : Service() {
     override fun onCreate() {
         super.onCreate()
         player = ExoPlayer.Builder(this).build()
+        // 알림창 설정
+        mediaSession = MediaSessionCompat(this, "BackgroundPlayService")
+
+        createNotificationChannel()
     }
+
+    private fun createNotification(): Notification {
+        val playPauseIcon = if (player.isPlaying) {
+            android.R.drawable.ic_media_pause
+        } else {
+            android.R.drawable.ic_media_play
+        }
+
+        val playPauseAction = if (player.isPlaying) {
+            NotificationCompat.Action(
+                playPauseIcon, "Pause",
+                MediaButtonReceiver.buildMediaButtonPendingIntent(
+                    this,
+                    PlaybackStateCompat.ACTION_PAUSE
+                )
+            )
+        } else {
+            NotificationCompat.Action(
+                playPauseIcon, "Play",
+                MediaButtonReceiver.buildMediaButtonPendingIntent(
+                    this,
+                    PlaybackStateCompat.ACTION_PLAY
+                )
+            )
+        }
+        return NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.ic_media_play)
+            .setContentTitle("Now Playing")
+            .setContentText("Your Audio")
+            .setContentIntent(createContentIntent())
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .addAction(playPauseAction)
+            .setStyle(
+                androidx.media.app.NotificationCompat.MediaStyle()
+                    .setMediaSession(mediaSession.sessionToken)
+            )
+            .build()
+    }
+
+    private fun createContentIntent(): PendingIntent {
+        val openPlayCastActivityIntent = Intent(this, PlayCastActivity::class.java)
+        openPlayCastActivityIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        return PendingIntent.getActivity(this, 0, openPlayCastActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val serviceChannel = NotificationChannel(
+                CHANNEL_ID, "Background Play Service Channel",
+                NotificationManager.IMPORTANCE_LOW
+            )
+            val manager = getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(serviceChannel)
+        }
+    }
+
+    private fun updateNotification() {
+        if (player.playWhenReady) {
+            val notification = createNotification()
+            if (notification != null) {
+                val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.notify(1, notification)
+            } else {
+                Log.e("BackgroundPlayService", "Notification update failed.")
+            }
+        }
+    }
+
+
 
     fun prepareAudio(url: String) {
         player.stop()  // 기존 재생 중지
@@ -67,12 +155,18 @@ class BackgroundPlayService : Service() {
         player.play()  // 재생 시작
         isPlaying = true  // 재생 상태를 갱신
         startSeekBarUpdate()
+
+        updateNotification()  // 알림 업데이트
+        startForeground(1, createNotification())
+
     }
 
 
     fun pauseAudio() {
         player.pause()
         isPlaying = false  // 재생 상태를 갱신
+        updateNotification()  // 알림 업데이트
+
     }
 
 
