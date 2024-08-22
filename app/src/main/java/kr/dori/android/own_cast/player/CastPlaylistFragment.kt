@@ -33,8 +33,8 @@ class CastPlaylistFragment : Fragment() {
         binding.fragmentCastPlaylistRv.adapter = castPlaylistAdapter
         binding.fragmentCastPlaylistRv.layoutManager = LinearLayoutManager(context)
 
-        initTouchHeleper()
         initPlayItem()
+        initTouchHeleper()
         return binding.root
     }
 
@@ -49,16 +49,36 @@ class CastPlaylistFragment : Fragment() {
             ): Boolean {
                 val fromPosition = viewHolder.adapterPosition
                 val toPosition = target.adapterPosition
-
+                val cast = CastPlayerData.getAllCastList().removeAt(fromPosition)
                 // 아이템의 순서를 바꿉니다.
-                if(fromPosition == CastPlayerData.currentPosition){//만약 현재 재생중인걸 바꿨다면 currentPostion과
+                if(fromPosition > toPosition){//만약 현재 재생중인걸 바꿨다면 currentPostion과
                     //currentCast를 바꾸는 작업을 해준다.
-                    CastPlayerData.currentPosition = toPosition
-                    CastPlayerData.currentCast = CastPlayerData.getAllCastList()[toPosition]
-                }else if(toPosition== CastPlayerData.currentPosition){
-                    CastPlayerData.currentPosition = fromPosition
-                    CastPlayerData.currentCast = CastPlayerData.getAllCastList()[fromPosition]
+                    CastPlayerData.getAllCastList().add(toPosition, cast)
+                    if(toPosition == CastPlayerData.currentPosition){
+                        CastPlayerData.currentPosition = fromPosition
+                        CastPlayerData.currentCast = CastPlayerData.getAllCastList()[fromPosition]
+                    }else if(fromPosition == CastPlayerData.currentPosition){
+                        CastPlayerData.currentPosition = toPosition
+                        CastPlayerData.currentCast = CastPlayerData.getAllCastList()[toPosition]
+                    }else if((fromPosition>CastPlayerData.currentPosition)&&(toPosition<CastPlayerData.currentPosition)){
+                        CastPlayerData.currentPosition += 1
+                        CastPlayerData.currentCast = CastPlayerData.getAllCastList()[CastPlayerData.currentPosition]
+                    }
+                }else{
+                    CastPlayerData.getAllCastList().add(toPosition-1, cast)
+                    if(toPosition == CastPlayerData.currentPosition){
+                        CastPlayerData.currentPosition = fromPosition
+                        CastPlayerData.currentCast = CastPlayerData.getAllCastList()[fromPosition]
+                    }else if(fromPosition == CastPlayerData.currentPosition){
+                        CastPlayerData.currentPosition = toPosition
+                        CastPlayerData.currentCast = CastPlayerData.getAllCastList()[toPosition]
+                    }else if((fromPosition<CastPlayerData.currentPosition)&&(toPosition>CastPlayerData.currentPosition)){
+                        CastPlayerData.currentPosition -= 1
+                        CastPlayerData.currentCast = CastPlayerData.getAllCastList()[CastPlayerData.currentPosition]
+                    }
                 }
+
+
                 castPlaylistAdapter.swapItems(fromPosition, toPosition)
                 return true
             }

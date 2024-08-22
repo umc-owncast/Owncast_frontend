@@ -40,11 +40,11 @@ interface CastInterface{
     suspend fun getKeywordHome() : Response<AuthResponse<List<String>>>
     @Multipart
     @PATCH("/api/cast/{castId}")//캐스트 수정 api, 이미지 파일로 보내야함
-    suspend fun patchCast(@Path("castId") castId:Long,@Body updateInfo: UpdateInfo, @Part image: MultipartBody.Part?) :Response<AuthResponse<SimpleCastDTO>>
+    suspend fun patchCast(@Path("castId") castId:Long,@Part("updateInfo") updateInfo: UpdateInfo, @Part image: MultipartBody.Part?) :Response<AuthResponse<SimpleCastDTO>>
 
     @Multipart
     @POST("/api/cast/{castId}")//캐스트 저장 api keyvpSaveFragment에서 쓰인다
-    suspend fun postCast(@Path("castId") castId:Long,@Body saveInfo: SaveInfo, @Part image: MultipartBody.Part?) :Response<AuthResponse<SimpleCastDTO>>
+    suspend fun postCast(@Path("castId") castId:Long,@Part("saveInfo") saveInfo: SaveInfo, @Part image: MultipartBody.Part?) :Response<AuthResponse<SimpleCastDTO>>
 
 
 

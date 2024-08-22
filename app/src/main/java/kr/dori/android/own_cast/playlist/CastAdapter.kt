@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kr.dori.android.own_cast.ActivityMover
 
 import kr.dori.android.own_cast.SignupData
+import kr.dori.android.own_cast.data.CastPlayerData
 
 import kr.dori.android.own_cast.databinding.CastItemLayoutBinding
 import kr.dori.android.own_cast.forApiData.Cast
@@ -41,7 +42,9 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
                 if (position != RecyclerView.NO_POSITION) {
                     val cast = dataList[position]
                     Log.d("test3","${listOf(cast)}")
-                    activityMover.ToPlayCast(listOf(cast))
+                    CastPlayerData.setCast(dataList)
+                    CastPlayerData.setCurrentPos(cast.castId)
+                    activityMover.ToPlayCast(dataList)
                 }
             }
         }

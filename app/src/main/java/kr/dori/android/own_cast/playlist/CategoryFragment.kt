@@ -138,10 +138,7 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
 
         //   val currentCast = CastPlayerData.currentCast
 
-        CastPlayerData.setCast(castList)
-
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
-
         activityResultLauncher.launch(intent)
 
 
