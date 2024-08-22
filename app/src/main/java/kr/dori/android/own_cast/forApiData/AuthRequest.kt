@@ -50,3 +50,7 @@ data class SaveInfo(
     @SerializedName("playlistId") val playlistId: Long
 
 )
+
+data class DeleteOtherDto(
+    @SerializedName("castId") val castId: Long
+)

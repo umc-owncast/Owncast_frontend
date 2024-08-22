@@ -141,6 +141,10 @@ data class BookmarkId(
     @SerializedName(value = "bookmarkId") val bookmarkId: Long
 )
 
+data class DeleteOther(
+    @SerializedName(value = "castId") val castId: Long
+)
+
 
 
 // 3 계층

@@ -10,7 +10,12 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.search.SearchMover
 import kr.dori.android.own_cast.databinding.PlaylistCategoryItemBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
@@ -18,9 +23,11 @@ import kr.dori.android.own_cast.forApiData.CastHomeDTO
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.ErrorResponse
 import kr.dori.android.own_cast.forApiData.GetAllPlaylist
+import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.PostOtherPlaylist
 import kr.dori.android.own_cast.forApiData.PostOtherPlaylistCast
 import kr.dori.android.own_cast.forApiData.getRetrofit
+import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -67,41 +74,63 @@ class AddCategoryAdapter(val context: Context, private val mover: SearchMover) :
                 val bitmap = BitmapFactory.decodeFile(data.imagePath)
                 binding.categoryImg.setImageBitmap(bitmap)
             }
-            binding.root.setOnClickListener {
+            binding.categoryItemAll.setOnClickListener {
                 if(id!=(-1L)){
                     saveOtherCast(id,data.playlistId)
                 }else{
                     Toast.makeText(context," 캐스트아이디 오류",Toast.LENGTH_SHORT).show()
                 }
 
-
             }
         }
     }
 
     fun saveOtherCast(castId:Long, playlistId:Long){
+        val dialog = KeywordLoadingDialog(context,"카테고리 추가중입니다.")
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.show()
         val apiService = getRetrofit().create(CastInterface::class.java)
-        apiService.postOtherPlaylistCast(PostOtherPlaylistCast(castId, playlistId)).enqueue(object: Callback<AuthResponse<PostOtherPlaylist>> {
-            override fun onResponse(call: Call<AuthResponse<PostOtherPlaylist>>, response: Response<AuthResponse<PostOtherPlaylist>>) {
-                Log.d("apiTest-저장","${castId},${playlistId},${response.toString()}")
-                if(response.isSuccessful){
-                    Toast.makeText(context,"저장 성공",Toast.LENGTH_SHORT).show()
-                }
-                else{
-                    Log.d("apiTest-searchHome","연결실패 ${response.code()}")
-                    Log.d("apiTest-searchHome","연결실패 ${response.body()?.result}")
-                    Log.d("apiTest-searchHome","연결실패 ${response.body()?.message}")
-                    response.errorBody()?.let{
-                        Toast.makeText(context,"이미 추가된 캐스트 입니다.",Toast.LENGTH_SHORT).show()
+        CoroutineScope(Dispatchers.IO).launch() {
+            val response = apiService.postOtherPlaylistCast(PostOtherPlaylistCast(castId, playlistId))
+            launch {
+                withContext(Dispatchers.Main) {
+                    try {
+                        dialog.dismiss()
+                        if(response.isSuccessful){
+                            Toast.makeText(context,"저장 성공",Toast.LENGTH_SHORT).show()
+                        }
+                        else{
+                            response.errorBody()?.let { errorBody ->
+                                val gson = Gson()
+                                val errorResponse: ErrorResponse = gson.fromJson(errorBody.charStream(), ErrorResponse::class.java)
+
+                                if (errorResponse.code == "CAST4002") {
+                                    Toast.makeText(context, "${errorResponse.message}", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(context, "서버 오류 코드 : ${errorResponse.code} \n${errorResponse.message}", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+
+
+
+                        }
+                    } catch (e: Exception) {
+                        Log.d("카테고리 추가","${e.message}")
+                        e.printStackTrace()
+
+                    } finally {
+                        dialog.dismiss()
+                        mover.backSearch()
                     }
 
+
+
                 }
-                mover.backSearch()
             }
-            override fun onFailure(call: Call<AuthResponse<PostOtherPlaylist>>, t: Throwable) {
-                Log.d("apiTest-searchHome","연결실패 ${t.message}")
-                mover.backSearch()
-            }
-        })
+        }
+
     }
+
+
 }

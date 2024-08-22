@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp">
     <TextView
         android:id="@+id/key_audscr_origin_tv"
         android:text="I will speak ENg"
@@ -16,7 +17,7 @@
         android:textColor="#00051F"
         android:textSize="14sp"
         android:letterSpacing="0.02"
-        android:layout_marginTop="8dp"/>
+        />
     <TextView
         android:id="@+id/key_audscr_trans_tv"
         android:text="한국말로 말하겠다"
@@ -30,6 +31,6 @@
         android:textColor="#00051F"
         android:textSize="14sp"
         android:letterSpacing="0.02"
-
+        android:layout_marginTop="10dp"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

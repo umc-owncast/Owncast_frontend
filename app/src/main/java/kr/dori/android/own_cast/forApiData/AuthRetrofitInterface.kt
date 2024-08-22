@@ -57,7 +57,7 @@ interface CastInterface{
     @POST("/api/cast/script")//스크립트로 캐스트를 생성하는 API, 반환되는 타입이 PostCastFromKeyword
     suspend fun postCastByScript(@Body postCastByScript: PostCastByScript):Response<AuthResponse<PostCastForResponse>>
     @POST("/api/cast/other")
-    fun postOtherPlaylistCast(@Body postOtherPlaylistCast: PostOtherPlaylistCast):Call<AuthResponse<PostOtherPlaylist>>
+    suspend fun postOtherPlaylistCast(@Body postOtherPlaylistCast: PostOtherPlaylistCast):Response<AuthResponse<PostOtherPlaylist>>
     @POST("/api/cast/keyword")//키워드로 캐스트를 생성하는 API
     suspend fun postCastByKeyword(@Body postCastByKeyword: PostCastByKeyword):Response<AuthResponse<PostCastForResponse>>
     @POST("/api/cast/keyword-test")//스크립트로 캐스트를 생성하는 API
@@ -118,6 +118,9 @@ interface Playlist{
 
     @GET("/api/playlist/my")
     suspend fun getMy(): Response<AuthResponse<GetPlayList>>
+
+    @DELETE("/api/playlist/{playlistId}")
+    suspend fun deleteOtherCast(@Path("playlistId") playlistId:Long,@Body deleteOtherDto: DeleteOtherDto ):Response<AuthResponse<DeleteOther>>
 }
 
 

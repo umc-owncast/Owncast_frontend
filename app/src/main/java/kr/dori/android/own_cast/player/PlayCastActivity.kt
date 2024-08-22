@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.exoplayer.ExoPlayer
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,6 +29,9 @@ import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.ActivityPlayCastBinding
 import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.forApiData.DeleteOtherDto
+import kr.dori.android.own_cast.forApiData.ErrorResponse
+import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.search.SearchAddCategoryActivity
 import java.util.concurrent.TimeUnit
@@ -137,6 +141,7 @@ class PlayCastActivity : AppCompatActivity() {
         // 카테고리 추가 버튼
         binding.addCategoryOffBtn.setOnClickListener{
             addCast()
+
         }
         // 카테고리 해제 버튼
         binding.addCategoryOnBtn.setOnClickListener {
@@ -588,6 +593,7 @@ class PlayCastActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         updateUI() // UI 업데이트 시 현재 상태를 반영하여 조정
+        classifyCast()
     }
     fun formatTime(input: Int): String {
         val minutes = input / 60
@@ -623,33 +629,45 @@ class PlayCastActivity : AppCompatActivity() {
         classifyCast()
     }
 
-    //담아온 프래그먼트 제거하는 함수
+    //담아온 캐스트 제거하는 함수
     private fun deleteCast(){
-        val deleteCast = getRetrofit().create(CastInterface::class.java)
-        CoroutineScope(Dispatchers.IO).launch() {
-            val response = deleteCast.deleteCast(CastPlayerData.currentCast.castId)
-            launch {
+        if(CastPlayerData.currentCast.playlistId!=-1L){
+            val deleteCast = getRetrofit().create(Playlist::class.java)
+            CoroutineScope(Dispatchers.IO).launch() {
+                Log.d("캐스트 해제", "플레이 리스트${CastPlayerData.currentCast.playlistId}, 캐스트 아이디${CastPlayerData.currentCast.castId}")
+                val response = deleteCast.deleteOtherCast(CastPlayerData.currentCast.playlistId,
+                    DeleteOtherDto(CastPlayerData.currentCast.castId)
+                )
+                launch {
+                    withContext(Dispatchers.Main) {
+                        try {
+                            Log.d("캐스트 해제","try 진입")
+                            if (response.isSuccessful) {
+                                response.body()?.result?.let{
+                                    //삭제 했으니깐 버튼 바꿔주기
+                                    /*binding.addCategoryOffBtn.visibility = View.VISIBLE
+                                    binding.addCategoryOnBtn.visibility = View.GONE*/
 
-                withContext(Dispatchers.Main) {
-                    try {
+                                }
+                            } else{
+                                Log.d("캐스트 해제","${response.code()}")
+                                response.errorBody()?.let { errorBody ->
+                                    val gson = Gson()
+                                    val errorResponse: ErrorResponse = gson.fromJson(errorBody.charStream(), ErrorResponse::class.java)
+                                    Log.d("캐스트 해제", "${errorResponse.message}, ${errorResponse.code}")
+                                    Toast.makeText(this@PlayCastActivity, "서버 오류 코드 : ${errorResponse.code} \n${errorResponse.message}", Toast.LENGTH_SHORT).show()
 
-                        if (response.isSuccessful) {
-                            response.body()?.result?.let{
-                                //삭제 했으니깐 버튼 바꿔주기
-                                binding.addCategoryOffBtn.visibility = View.VISIBLE
-                                binding.addCategoryOnBtn.visibility = View.GONE
-                                classifyCast()//혹시 몰라서 한번 더 함
+                                }
                             }
-                        } else {
-                            Toast.makeText(this@PlayCastActivity,"카테고리 해제 실패,\n 오류코드 : $${response.code()}", Toast.LENGTH_SHORT).show()
-                        }
 
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
                 }
             }
         }
     }
+
 }
 

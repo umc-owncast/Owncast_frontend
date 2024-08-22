@@ -30,7 +30,7 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
 
 
     private lateinit var binding: ActivitySearchAddCategoryBinding
-    private var searchadapter = AddCategoryAdapter(this,this)
+    private lateinit var searchadapter : AddCategoryAdapter
 
 
 
@@ -47,6 +47,7 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
             //내가 만든거 담아온거 없애야 돼서
             playlist.removeAt(0)
             playlist.removeAt(0)
+            searchadapter = AddCategoryAdapter(this,this)
             searchadapter.dataList = playlist
             binding.activitySearchAddCategoryRv.adapter = searchadapter
             binding.activitySearchAddCategoryRv.layoutManager = LinearLayoutManager(this)
@@ -77,7 +78,7 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
     }
 
     override fun backSearch() {
-        showCustomToast("(카테고리 이름)에 담아드렸어요")
+
         finish()
     }
 
