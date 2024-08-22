@@ -94,8 +94,8 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
         binding.keywordAudiosetSb.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (progress < 2) {
-                    seekBar?.progress = 2
+                if (progress < 1) {
+                    seekBar?.progress = 1
                 } else if (progress % 2 == 0) {
                     audioTime = progress*30
                     binding.keyAudSetCurTimeTv.text = "${progress / 2}분"
