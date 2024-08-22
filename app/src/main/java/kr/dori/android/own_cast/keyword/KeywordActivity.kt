@@ -5,6 +5,7 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
@@ -60,7 +61,11 @@ class KeywordActivity : AppCompatActivity() {
         sharedViewModel = ViewModelProvider(this).get(KeywordViewModel::class.java)
 
         enableEdgeToEdge()
-
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
 
         initCategoryInViewModel()
         if(savedInstanceState == null&&searchText!=null){//연관 키워드를 클릭한 경우

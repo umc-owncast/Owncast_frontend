@@ -83,7 +83,11 @@ class PlayCastActivity : AppCompatActivity() {
         binding = ActivityPlayCastBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
-
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
 
         // 처음 앱에 들어갔을 때의 초기 UI 설정
         binding.playCastPlayIv.visibility = View.VISIBLE

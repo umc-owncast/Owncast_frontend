@@ -62,7 +62,7 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
         fun bind(data: NewSentences, isHighlighted: Boolean, isRepeatOn: Boolean) {
             binding.originalSentenceTv.text = data.originalSentence
             binding.translationSentenceTv.text = data.translatedSentence
-
+            
             if (isHighlighted) {
                 // 하이라이트된 문장에 대한 로직
                 binding.translationSentenceTv.setTextColor(Color.parseColor("#000000"))

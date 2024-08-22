@@ -35,6 +35,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,6 +47,7 @@ import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAudiosaveBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.forApiData.ErrorResponse
 import kr.dori.android.own_cast.forApiData.PlayListInterface
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.PostPlaylist
@@ -137,7 +139,6 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
 
 
 
-
         initEditText()
         binding.keyAudSaveThumbIv.setOnClickListener {
             selectGallery()
@@ -167,7 +168,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
                 body = createMultipartBodyFromUri(it, requireContext())
             }
-
+            Log.d("이미지 변환","${body}")
 
             binding.keyAudSaveGalIc.visibility = View.GONE
 
@@ -175,20 +176,34 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     }
 }
     fun createMultipartBodyFromUri(uri: Uri, context: Context): MultipartBody.Part? {
-        // Open InputStream from the Uri
+        // Uri에서 MIME 타입을 가져옵니다.
+        val mimeType = context.contentResolver.getType(uri) ?: "image/jpeg" // 기본값을 설정할 수 있습니다.
+
+        // Uri에서 InputStream을 가져옵니다.
         val inputStream = context.contentResolver.openInputStream(uri) ?: return null
-        // Create a temp file in the cache directory to store the image
-        val tempFile = File(context.cacheDir, "tempImageFile.png")
-        tempFile.outputStream().use { outputStream ->
-            inputStream.use { inputStream.copyTo(outputStream) }
+
+        // 임시 파일을 생성합니다.
+        val tempFile = File(context.cacheDir, "tempImageFile${System.currentTimeMillis()}.${mimeType.substringAfter("/")}")
+
+        // InputStream의 데이터를 임시 파일로 복사합니다.
+        inputStream.use { input ->
+            FileOutputStream(tempFile).use { output ->
+                input.copyTo(output)
+            }
         }
 
-        // Convert the temp file to RequestBody
-        val requestFile = tempFile.asRequestBody("image/*".toMediaTypeOrNull())
+        // RequestBody를 생성합니다.
+        val requestFile = tempFile.asRequestBody(mimeType.toMediaTypeOrNull())
 
-        // Create MultipartBody.Part from RequestBody
-        return MultipartBody.Part.createFormData("photo", tempFile.name, requestFile)
+        // MultipartBody.Part를 생성합니다.
+        val multipartBody = MultipartBody.Part.createFormData("photo", tempFile.name, requestFile)
+
+        // 임시 파일 삭제 (선택 사항: 파일 사용 후 삭제)
+        tempFile.deleteOnExit()
+
+        return multipartBody
     }
+
 
     private fun selectGallery() {
         // Android 버전에 따른 권한 확인
@@ -426,7 +441,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //캐스트 저장 api호출
 
         CoroutineScope(Dispatchers.IO).launch() {
-            Log.d("캐스트 저장","저장할 때 타이틀 ${castTitle}")
+            Log.d("캐스트 저장","저장할 때 타이틀 ${castTitle}, 사진 파일 ${body}")
             val response = apiService.postCast(sharedViewModel.castId.value!!, SaveInfo(castTitle,  !binding.keyAudPublicBtnIv.isChecked,playlistId) , body)
             launch {
                 withContext(Dispatchers.Main) {
@@ -476,8 +491,14 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                             binding.keyAudSaveCategorySp.setSelection(playlistName.size-2)
 
                         } else {
+                            response.errorBody()?.let { errorBody ->
+                                val gson = Gson()
+                                val errorResponse: ErrorResponse = gson.fromJson(errorBody.charStream(), ErrorResponse::class.java)
+                            }
+                            Log.d("카테고리 추가", "카테고리 추가 실패 : ${response.code()}, ${response.message()}")
                             Toast.makeText(this@KeyvpAudioSaveFragment.requireContext(),"카테고리 추가 실패,\n 오류코드 : ${response.code()}", Toast.LENGTH_SHORT).show()
                         }
+
 
                     } catch (e: Exception) {
                         e.printStackTrace()

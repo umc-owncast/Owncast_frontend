@@ -28,6 +28,7 @@ import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.GetPlayList
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
+import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
 import kr.dori.android.own_cast.player.CastWithPlaylistId
 
 class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), ActivityMover {
@@ -52,6 +53,10 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
         val getPlaylist = getRetrofit().create(Playlist::class.java)
         // API 호출 및 데이터 설정
         // API 호출 및 데이터 설정
+        val loadingdialog = KeywordLoadingDialog(requireContext(),"목록을 받아오는 중이에요")
+        loadingdialog.setCancelable(false)
+        loadingdialog.setCanceledOnTouchOutside(false)
+        loadingdialog.show()
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 if (isSave) {
@@ -113,6 +118,10 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
             } catch (e: Exception) {
                 Log.e("CastFragment", "API 호출 중 예외 발생", e)
                 e.printStackTrace()
+            } finally {
+                withContext(Dispatchers.Main) {
+                    loadingdialog.dismiss()
+                }
             }
         }
 
@@ -137,6 +146,11 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
             }
         }
 
+        binding.fragmentCastPlayIv.setOnClickListener {
+
+            ToPlayCast(castAdapter.dataList)
+
+        }
         return binding.root
     }
 

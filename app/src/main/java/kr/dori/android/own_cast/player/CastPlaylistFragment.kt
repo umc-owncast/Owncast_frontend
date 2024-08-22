@@ -51,28 +51,24 @@ class CastPlaylistFragment : Fragment() {
                 val toPosition = target.adapterPosition
                 val cast = CastPlayerData.getAllCastList().removeAt(fromPosition)
                 // 아이템의 순서를 바꿉니다.
-                if(fromPosition > toPosition){//만약 현재 재생중인걸 바꿨다면 currentPostion과
+                if(fromPosition > toPosition){//아이템 밑을 ㅗ내림
                     //currentCast를 바꾸는 작업을 해준다.
                     CastPlayerData.getAllCastList().add(toPosition, cast)
-                    if(toPosition == CastPlayerData.currentPosition){
-                        CastPlayerData.currentPosition = fromPosition
-                        CastPlayerData.currentCast = CastPlayerData.getAllCastList()[fromPosition]
-                    }else if(fromPosition == CastPlayerData.currentPosition){
+
+                    if(fromPosition == CastPlayerData.currentPosition){
                         CastPlayerData.currentPosition = toPosition
                         CastPlayerData.currentCast = CastPlayerData.getAllCastList()[toPosition]
-                    }else if((fromPosition>CastPlayerData.currentPosition)&&(toPosition<CastPlayerData.currentPosition)){
+                    }else if((fromPosition < CastPlayerData.currentPosition) && (toPosition <= CastPlayerData.currentPosition)){
                         CastPlayerData.currentPosition += 1
                         CastPlayerData.currentCast = CastPlayerData.getAllCastList()[CastPlayerData.currentPosition]
                     }
-                }else{
+                }else{//아이템 위로 올림
                     CastPlayerData.getAllCastList().add(toPosition-1, cast)
-                    if(toPosition == CastPlayerData.currentPosition){
-                        CastPlayerData.currentPosition = fromPosition
-                        CastPlayerData.currentCast = CastPlayerData.getAllCastList()[fromPosition]
-                    }else if(fromPosition == CastPlayerData.currentPosition){
+
+                    if(fromPosition == CastPlayerData.currentPosition){
                         CastPlayerData.currentPosition = toPosition
                         CastPlayerData.currentCast = CastPlayerData.getAllCastList()[toPosition]
-                    }else if((fromPosition<CastPlayerData.currentPosition)&&(toPosition>CastPlayerData.currentPosition)){
+                    }else if((fromPosition > CastPlayerData.currentPosition) && (toPosition >= CastPlayerData.currentPosition)){
                         CastPlayerData.currentPosition -= 1
                         CastPlayerData.currentCast = CastPlayerData.getAllCastList()[CastPlayerData.currentPosition]
                     }

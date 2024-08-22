@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.SignupData
 import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.FragmentCastAudioBinding
 import kr.dori.android.own_cast.forApiData.Cast
@@ -24,7 +25,7 @@ class CastAudioFragment(val currentCast: CastWithPlaylistId) : Fragment() {
 
         binding.castTitle.text = currentCast.castTitle
 
-        if(currentCast.castCreator != "헬로"){
+        if(currentCast.castCreator != SignupData.nickname){
             binding.creatorCategory.text = "${currentCast.castCreator}-${currentCast.castCategory}"
         }else{
             binding.creatorCategory.visibility = View.GONE

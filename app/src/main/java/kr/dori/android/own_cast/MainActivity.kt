@@ -92,6 +92,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -329,6 +330,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun restorePlaylistTableVisibility() {
+        Log.d("테이블 테스트",playlistTableVisible.toString())
         if (playlistTableVisible) {
             binding.playlistTable.visibility = View.VISIBLE
             binding.playlistTable.bringToFront()
@@ -340,11 +342,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun hidePlaylistTable() {
         playlistTableVisible = binding.playlistTable.visibility == View.VISIBLE
+        Log.d("테이블 테스트",playlistTableVisible.toString())
         binding.playlistTable.visibility = View.GONE
         service?.pauseAudio()
         isPlaying = false
         binding.activityMainPauseIv.visibility = View.GONE
         binding.activityMainPlayIv.visibility = View.VISIBLE
+        Log.d("테이블 테스트",playlistTableVisible.toString())
     }
 
     fun handleActivityResult(result: ActivityResult) {

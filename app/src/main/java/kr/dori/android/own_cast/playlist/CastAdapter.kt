@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import kr.dori.android.own_cast.ActivityMover
 
 import kr.dori.android.own_cast.SignupData
@@ -50,7 +51,7 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
         }
 
         fun setText(data: CastWithPlaylistId) {
-
+            Glide.with(binding.root.context).load(data.imagePath).into(binding.playlistCast2Iv)
             val constraintLayout = binding.root as ConstraintLayout
             val constraintSet = ConstraintSet()
             constraintSet.clone(constraintLayout)

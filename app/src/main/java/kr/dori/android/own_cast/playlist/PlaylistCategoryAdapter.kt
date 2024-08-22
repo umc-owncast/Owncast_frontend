@@ -66,6 +66,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
             Log.d("된다", "${data.playlistId}")
 
             data.let {
+                Log.d("플레이리스트", "사진 정보 ${data.imagePath}")
                 Glide.with(binding.root.context).load(data.imagePath).into(binding.categoryImg)
                 binding.playlistCategoryTitleTv.text = it.name
                 binding.playlistCategoryNumTv.text = it.totalCast.toString()

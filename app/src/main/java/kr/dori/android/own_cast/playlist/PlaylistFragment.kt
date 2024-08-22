@@ -1,6 +1,7 @@
 package kr.dori.android.own_cast.playlist
 import android.app.Activity
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -244,6 +246,9 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
                     if (response.isSuccessful) {
                         var playlistCategoryData = response.body()?.result
                         withContext(Dispatchers.Main) {
+
+
+
                             playlistCategoryData?.let {
                                 playlistIdList = it.map { playlist -> playlist.playlistId }
                                     .filter { id -> id != 0L }
