@@ -154,6 +154,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
                         name
                     )
                     if (response.isSuccessful) {
+                        sharedViewModel.updateDataAt(position,name)
                         Log.d("집가고 싶다","연결 성공")
                     } else {
                         Log.d("집가고 싶다","연결 실패")

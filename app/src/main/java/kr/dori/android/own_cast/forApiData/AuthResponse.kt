@@ -95,7 +95,7 @@ data class PostOtherPlaylist(
 
 
 data class GetAllPlaylist(
-    val name: String,
+    var name: String,
     val imagePath: String,
     val playlistId: Long,
     val totalCast: Int
