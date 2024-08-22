@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -13,7 +14,6 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import kr.dori.android.own_cast.keyword.KeywordAppData
 
 class ProfileFragment : Fragment() {
 
@@ -30,13 +30,18 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val profileGreeting: TextView = view.findViewById(R.id.profile_greeting)
-        val profileIcon: ImageView = view.findViewById(R.id.profile_icon)
+
+        val profileIcon: LinearLayout = view.findViewById(R.id.NickName_field)
+
         val setLanguage: TextView = view.findViewById(R.id.set_language)
         val setLanguageFlag: ImageView = view.findViewById(R.id.set_lauguage_flag)
-        val setLanguageIcon: ImageView = view.findViewById(R.id.set_lauguage_icon)
+
+        val setLanguageIcon: LinearLayout = view.findViewById(R.id.languageFelid)
+
         val setInterest: TextView = view.findViewById(R.id.set_interest)
         val setInterestKeyword: TextView = view.findViewById(R.id.set_interest_keyword)
-        val setInterestIcon: ImageView = view.findViewById(R.id.set_interest_icon)
+
+        val setInterestIcon: LinearLayout = view.findViewById(R.id.interestField)
         val logout: TextView = view.findViewById(R.id.logout)
 
         // 사용자 닉네임 설정
@@ -109,8 +114,10 @@ class ProfileFragment : Fragment() {
 
         // 로그아웃 버튼 클릭 시
         dialogView.findViewById<View>(R.id.btn_logout).setOnClickListener {
-            SignupData.id = getString(R.string.signup_info_first) // 로그아웃 기능
-            KeywordAppData.updateDetailTopic(listOf())//회원가입할때 다 비움
+
+            // 전역 변수 초기화
+            resetSignupData()
+
             dialog.dismiss()
             overlayView.visibility = View.GONE
             // '스플래시' 페이지로 이동
@@ -153,8 +160,6 @@ class ProfileFragment : Fragment() {
 
             dialog.dismiss()
             overlayView.visibility = View.GONE
-
-            KeywordAppData.updateDetailTopic(listOf())//회원가입할때 다 비움
 
             // '스플래시' 페이지로 이동
             val intent = Intent(requireContext(), SplashActivity::class.java)
