@@ -108,6 +108,7 @@ class SearchInputFragment : Fragment() {
                     var bundle = Bundle()
                     bundle.putString("detail_interest",KeywordAppData.detailTopic[i])
                     output.arguments = bundle
+                    searchViewModel.addtext(KeywordAppData.detailTopic[i])
                     requireActivity().supportFragmentManager.beginTransaction()
                         .replace(R.id.main_frm, output)
                         .addToBackStack(null) // 백 스택에 추가

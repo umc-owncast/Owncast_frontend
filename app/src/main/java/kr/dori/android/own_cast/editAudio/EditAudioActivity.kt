@@ -78,7 +78,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
 
     //캐스트 정보 받아올 때 사용
     private lateinit var imageUrl : String
-    private lateinit var title : String
+    private var title =""
     private var isText = false
 
 
@@ -206,7 +206,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                             if (response.isSuccessful) {
                                 response.body()?.result?.let{
                                     imageUrl =  it.imagePath
-                                    title = it.title
+                                    title = it.title ?:""
                                     binding.editTextText.setText(title)
 
                                     if (imageUrl.startsWith("http")) {
@@ -302,7 +302,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
     private fun editCast(){
         val editCast = getRetrofit().create(CastInterface::class.java)
         CoroutineScope(Dispatchers.IO).launch() {
-            val response = editCast.patchCast(id, title,body,!isLock,playlistId)
+            val response = editCast.patchCast(id, UpdateInfo(title,!isLock,playlistId),body)
             launch {
 
                 withContext(Dispatchers.Main) {
@@ -315,7 +315,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
 
                             }
                         } else {
-
+                            Log.d("캐스트 수정", "${ response.errorBody()?.string() }")
                             Toast.makeText(this@EditAudioActivity,"수정 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
                         }
 

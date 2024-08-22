@@ -40,15 +40,11 @@ interface CastInterface{
     suspend fun getKeywordHome() : Response<AuthResponse<List<String>>>
     @Multipart
     @PATCH("/api/cast/{castId}")//캐스트 수정 api, 이미지 파일로 보내야함
-    suspend fun patchCast(@Path("castId") castId:Long,@Part("title") title:String,
-                          @Part image: MultipartBody.Part?,@Part("isPublic") isPublic:Boolean,
-                          @Part("playlistId") playlistId: Long) :Response<AuthResponse<SimpleCastDTO>>
+    suspend fun patchCast(@Path("castId") castId:Long,@Body updateInfo: UpdateInfo, @Part image: MultipartBody.Part?) :Response<AuthResponse<SimpleCastDTO>>
 
     @Multipart
     @POST("/api/cast/{castId}")//캐스트 저장 api keyvpSaveFragment에서 쓰인다
-    suspend fun postCast(@Path("castId") castId:Long,@Part("title") title:String,
-                 @Part image: MultipartBody.Part?,@Part("isPublic") isPublic:Boolean,
-                 @Part("playlistId") playlistId: Long) :Response<AuthResponse<SimpleCastDTO>>
+    suspend fun postCast(@Path("castId") castId:Long,@Body saveInfo: SaveInfo, @Part image: MultipartBody.Part?) :Response<AuthResponse<SimpleCastDTO>>
 
 
 
@@ -86,14 +82,18 @@ interface PlayListInterface{
 
 
 
+
+
+
+
 interface Playlist{
-    @DELETE("/api/playlist")
+    @DELETE("/api/playlist/{playlistId}")
     suspend fun deletePlaylist(@Query("playlistId") playlistId: Long): Response<AuthResponse<DeletePlaylist>>
 
 
-    @GET("/api/playlist")
+    @GET("/api/playlist/{playlistId}")
     suspend fun getPlaylistInfo(
-        @Query("playlistId") playlistId: Long,  // 경로 변수 설정
+        @Path("playlistId") playlistId: Long,  // 경로 변수 설정
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<AuthResponse<GetPlayList>>
@@ -104,11 +104,11 @@ interface Playlist{
     @GET("/api/playlist/view")
     suspend fun getAllPlaylist():Response<AuthResponse<List<GetAllPlaylist>>>
 
-    @PATCH("/api/playlist")
-    suspend fun patchPlaylist(@Query("playlistId") playlistId: Long, @Query("playlistName") playlistName: String): Response<AuthResponse<PatchPlaylist>>
+    @PATCH("/api/playlist/{playlistId}")
+    suspend fun patchPlaylist(@Path("playlistId") playlistId: Long, @Query("playlistName") playlistName: String): Response<AuthResponse<PatchPlaylist>>
 
-    @POST("/api/playlist")
-    suspend fun postPlaylist(@Query("playlistName")playlistName: String): Response<AuthResponse<PostPlaylist>>
+    @POST("/api/playlist/{playlistName}")
+    suspend fun postPlaylist(@Path("playlistName")playlistName: String): Response<AuthResponse<PostPlaylist>>
 
     @GET("/api/cast/{castId}")
     suspend fun getCast(@Path("castId")castId: Long): Response<AuthResponse<CastInfo>>
@@ -119,6 +119,7 @@ interface Playlist{
     @GET("/api/playlist/my")
     suspend fun getMy(): Response<AuthResponse<GetPlayList>>
 }
+
 
 
 

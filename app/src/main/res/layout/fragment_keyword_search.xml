@@ -87,7 +87,7 @@
         app:layout_constraintTop_toBottomOf="@id/keyword_input_cl"
 
         app:layout_constraintWidth_percent="0.911111111"
-        app:layout_constraintHeight_percent="0.155"
+        app:layout_constraintHeight_percent="0.3"
         android:background="@drawable/keyword_act_input_bg"
         android:layout_marginTop="16dp">
         <TextView
@@ -131,11 +131,17 @@
             android:gravity="top"/>
         <TextView
             android:id="@+id/keyword_act_suggest1_tv"
-            android:layout_width="80dp"
+            android:layout_width="100dp"
             android:layout_height="0dp"
-            app:layout_constraintHeight_percent="0.225"
+            app:layout_constraintHeight_percent="0.2"
             android:text="키워드1"
-            android:textSize="14sp"
+            android:textSize="16sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeMaxTextSize="16sp"
+            android:autoSizeStepGranularity="2sp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:letterSpacing="0.02"
             android:textColor="@color/black"
             android:background="@drawable/keyword_act_favor_key_bg"
@@ -147,7 +153,7 @@
             app:layout_constraintStart_toStartOf="parent"/>
         <TextView
             android:id="@+id/keyword_act_suggest2_tv"
-            android:layout_width="80dp"
+            android:layout_width="100dp"
             android:layout_height="0dp"
             app:layout_constraintHeight_percent="0.225"
             android:text="키워드2"
@@ -163,7 +169,7 @@
 
         <TextView
             android:id="@+id/keyword_act_suggest3_tv"
-            android:layout_width="80dp"
+            android:layout_width="100dp"
             android:layout_height="0dp"
             app:layout_constraintHeight_percent="0.225"
             android:text="키워드3"
@@ -179,7 +185,7 @@
 
         <TextView
             android:id="@+id/keyword_act_suggest4_tv"
-            android:layout_width="80dp"
+            android:layout_width="100dp"
             android:layout_height="0dp"
             app:layout_constraintHeight_percent="0.225"
             android:text="키워드1"
@@ -195,7 +201,7 @@
             app:layout_constraintStart_toStartOf="parent"/>
         <TextView
             android:id="@+id/keyword_act_suggest5_tv"
-            android:layout_width="80dp"
+            android:layout_width="100dp"
             android:layout_height="0dp"
             app:layout_constraintHeight_percent="0.225"
             android:text="키워드2"
@@ -211,7 +217,7 @@
 
         <TextView
             android:id="@+id/keyword_act_suggest6_tv"
-            android:layout_width="80dp"
+            android:layout_width="100dp"
             android:layout_height="0dp"
             app:layout_constraintHeight_percent="0.225"
             android:text="키워드3"

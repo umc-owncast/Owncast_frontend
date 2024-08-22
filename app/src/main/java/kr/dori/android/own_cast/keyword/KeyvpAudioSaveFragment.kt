@@ -427,11 +427,12 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         CoroutineScope(Dispatchers.IO).launch() {
             Log.d("캐스트 저장","저장할 때 타이틀 ${castTitle}")
-            val response = apiService.postCast(sharedViewModel.castId.value!!, castTitle,body, !binding.keyAudPublicBtnIv.isChecked,playlistId )
+            val response = apiService.postCast(sharedViewModel.castId.value!!, SaveInfo(castTitle,  !binding.keyAudPublicBtnIv.isChecked,playlistId) , body)
             launch {
                 withContext(Dispatchers.Main) {
                     try {
                         if (response.isSuccessful) {
+                            Log.d("캐스트 저장", "${response.body()?.result}")
                             finDialog.setCancelable(false)//dialog는 여기서
                             finDialog.setCanceledOnTouchOutside(false)
                             finDialog.show()
