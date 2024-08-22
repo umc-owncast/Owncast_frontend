@@ -155,7 +155,8 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
                 isPublic = true,
                 castCreator = it.memberName,
                 castCategory = detail_interest?:"로딩실패",
-                audioLength = it.audioLength
+                audioLength = it.audioLength,
+                imagePath = ""
             )
         }
         var imageData = list.map{

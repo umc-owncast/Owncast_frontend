@@ -89,20 +89,11 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 
             categoryAdapter.notifyDataSetChanged()
         })
-        /*
-        if (sharedViewModel.data.value.isNullOrEmpty()) {
-            sharedViewModel.setData(playlistCategoryData)
-        }
-
- */
 
         binding.fragmentPlaylistAddIv.setOnClickListener {
             val dialog = AddCategoryDiaLogPlaylist(requireContext(), this, this)
             dialog.show()
         }
-
-
-        //  val castFragment = CastFragment(playlistIdList)
 
         binding.fragmentPlaylistSaveIv.setOnClickListener {
             val bundle = Bundle().apply {
@@ -149,7 +140,6 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         return binding.root
     }
 
-    // addCategory 부분은 사용자 토큰이 필요하기에 2024-08-16시점에는 기능이 작동하지 않습니다. -> 사용자 정보와, 제목,totalCast, CastList등의 정보가 필요함 ->
     override fun onCategoryAdded(categoryName: String) {
 
 

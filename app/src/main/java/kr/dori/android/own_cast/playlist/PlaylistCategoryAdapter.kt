@@ -47,6 +47,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val selectedPlaylistId = dataList[position].playlistId
+                    Log.d("playlistID","${selectedPlaylistId},$dataList")
                     getCastInfo(selectedPlaylistId)
                 }
             }
@@ -55,6 +56,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                 if (position != RecyclerView.NO_POSITION) {
                     val selectedPlaylistId = dataList[position].playlistId
                     val selectedPlaylistName = dataList[position].name
+                    Log.d("playlistId","$selectedPlaylistId")
                     fragmentMover.playlistToCategory(selectedPlaylistId, selectedPlaylistName)
                 }
             }
@@ -100,7 +102,8 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                                         isPublic = cast.isPublic,
                                         castCreator = cast.castCreator,
                                         castCategory = cast.castCategory,
-                                        audioLength = cast.audioLength
+                                        audioLength = cast.audioLength,
+                                        imagePath = cast.imagePath
                                     )
                                 }
                                 //CastPlayerData.setCastList(castList)  // 캐스트 리스트를 저장
