@@ -91,7 +91,10 @@ class StudyCustomAdapter :
                 it.scaleY = scale
             }
         }
+
     }
+
+
 }
 
 

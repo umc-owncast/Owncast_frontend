@@ -83,6 +83,13 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
                 binding.scriptRv.adapter = adapter
                 binding.scriptRv.layoutManager = LinearLayoutManager(context)
 
+                // 하이라이트 위치 변경 시 콜백 설정
+                adapter.onHighlightPositionChangeListener = { position ->
+                    scrollToPosition(position)
+                }
+
+
+
                 Log.d("bookmarkTest", "현재 캐스트의 북마크 아이디들: $filteredBookmark //////// 플레이리스트의 북마크 아이디들: $testBookmark, ///////, 캐스트의 센텐스 아이디들: $testCastSentence,")
             }
         }
@@ -92,6 +99,11 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
     fun updateCurrentTime(currentTime: Long) {
         Log.d("UpdateTime", "Fragment: $currentTime")
         adapter.updateCurrentTime(currentTime)
+    }
+
+    private fun scrollToPosition(position: Int) {
+        val layoutManager = binding.scriptRv.layoutManager as LinearLayoutManager
+        layoutManager.scrollToPositionWithOffset(position, binding.scriptRv.height / 2)
     }
 
     override fun onStop() {
