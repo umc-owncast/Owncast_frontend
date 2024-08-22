@@ -59,23 +59,21 @@ class StudyFragment : Fragment() {
 
         snapHelper.attachToRecyclerView(binding.studyCustomAdapterRv)
 
-        // Next, Previous 버튼 추가
-        binding.fragmentStudyNextIv.setOnClickListener {
-            scrollToNextItem()
-        }
-
-        binding.fragmentStudyBackIv.setOnClickListener {
-            scrollToPreviousItem()
-        }
-
-        // 처음에 첫 번째 아이템을 보여줌
-        if (customAdapter.itemList.isNotEmpty()) {
-            binding.studyCustomAdapterRv.post {
-                val firstPosition = 0
-                binding.studyCustomAdapterRv.scrollToPosition(firstPosition)
-                adjustSelectedItem()
+        // 스크롤 리스너 추가
+        binding.studyCustomAdapterRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                customAdapter.adjustItemSize(recyclerView)
+                adjustSelectedItem()  // 스크롤 될 때마다 stateText 업데이트
             }
-        }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    adjustSelectedItem()  // 스크롤 정지 시 stateText 업데이트
+                }
+            }
+        })
 
         val margin = resources.getDimensionPixelSize(R.dimen.study_item_margin)
         binding.studyCustomAdapterRv.addItemDecoration(HorizontalMarginItemDecoration(margin))
@@ -271,19 +269,25 @@ class StudyFragment : Fragment() {
 
     private fun scrollToNextItem() {
         val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
-        val currentPosition = layoutManager.findFirstVisibleItemPosition()
-        if (currentPosition < customAdapter.itemList.size - 1) {
-            binding.studyCustomAdapterRv.smoothScrollToPosition(currentPosition + 1)
-            adjustSelectedItem()
+        val centerView = snapHelper.findSnapView(layoutManager)
+        centerView?.let {
+            val position = layoutManager.getPosition(it)
+            if (position < customAdapter.itemList.size - 1) {
+                binding.studyCustomAdapterRv.smoothScrollToPosition(position + 1)
+                adjustSelectedItem() // 스크롤 후 stateText 업데이트
+            }
         }
     }
 
     private fun scrollToPreviousItem() {
         val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
-        val currentPosition = layoutManager.findFirstVisibleItemPosition()
-        if (currentPosition > 0) {
-            binding.studyCustomAdapterRv.smoothScrollToPosition(currentPosition - 1)
-            adjustSelectedItem()
+        val centerView = snapHelper.findSnapView(layoutManager)
+        centerView?.let {
+            val position = layoutManager.getPosition(it)
+            if (position > 0) {
+                binding.studyCustomAdapterRv.smoothScrollToPosition(position - 1)
+                adjustSelectedItem() // 스크롤 후 stateText 업데이트
+            }
         }
     }
 
@@ -321,6 +325,12 @@ class StudyFragment : Fragment() {
                 customAdapter.itemList.shuffle()
                 customAdapter.notifyDataSetChanged()
                 adjustSelectedItem()  // State 텍스트를 업데이트합니다.
+
+                // 셔플 후 아이템 크기 조정
+                binding.studyCustomAdapterRv.post {
+                    customAdapter.adjustItemSize(binding.studyCustomAdapterRv)
+                    adjustSelectedItem()  // stateText 업데이트
+                }
             }
         }
 
@@ -340,11 +350,12 @@ class StudyFragment : Fragment() {
             }
         }
     }
-    // StudyFragment.kt
 
     private fun handleItemClick(position: Int) {
         when (position) {
-            0 -> loadInitialCustomAdapterData() // 첫 번째 아이템 클릭 시 초기 데이터 로드
+            0 -> {
+                loadInitialCustomAdapterData()
+            } // 첫 번째 아이템 클릭 시 초기 데이터 로드
             1 -> loadNotSaved() // 두 번째 아이템 클릭 시 저장되지 않은 북마크 로드
             else -> {
                 val filteredData = studyAdapter.dataList
@@ -355,5 +366,4 @@ class StudyFragment : Fragment() {
             }
         }
     }
-
 }

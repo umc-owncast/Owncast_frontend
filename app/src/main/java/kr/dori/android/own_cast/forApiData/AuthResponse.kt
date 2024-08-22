@@ -134,7 +134,8 @@ data class GetBookmark(
     @SerializedName(value = "sentenceId") val sentenceId: Long,
     @SerializedName(value = "castId") val castId: Long,
     @SerializedName(value = "originalSentence") val originalSentence: String,
-    @SerializedName(value = "translatedSentence") val translatedSentence: String
+    @SerializedName(value = "translatedSentence") val translatedSentence: String,
+    val isFront: Boolean = true
 )
 
 data class BookmarkId(
