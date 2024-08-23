@@ -473,13 +473,13 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
     private fun addPlaylist(categoryName: String){
         dialog.dismiss()
-        val apiService = getRetrofit().create(PlayListInterface::class.java)
+        val apiService = getRetrofit().create(Playlist::class.java)
         val loadingdialog = KeywordLoadingDialog(requireContext(),"플리를 생성중이에요")
         loadingdialog.setCancelable(false)
         loadingdialog.setCanceledOnTouchOutside(false)
         loadingdialog.show()
         CoroutineScope(Dispatchers.IO).launch() {
-            val response = apiService.postPlayList(categoryName)
+            val response = apiService.postPlaylist(categoryName)
             launch {
 
                 withContext(Dispatchers.Main) {

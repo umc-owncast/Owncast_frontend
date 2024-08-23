@@ -17,7 +17,7 @@ class KeyAudsetDropdownAdapter(context: Context, @LayoutRes private val resId: I
     override fun getView(position: Int, converView: View?, parent: ViewGroup): View {
         val binding = ItemAudSetSpinnerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         binding.tvSpinner.text = audioList[position]
-        binding.icSpinnerSoundIv.visibility = View.VISIBLE
+            //binding.icSpinnerSoundIv.visibility = View.VISIBLE 소리아이콘 지움
         return binding.root
     }
 

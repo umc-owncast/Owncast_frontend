@@ -86,7 +86,8 @@ class CastAudioFragment(val currentCast: CastWithPlaylistId) : Fragment() {
             val previousSentenceTime = if (i > 0) {
                 (sentences[i - 1].timePoint * 1000).toLong()
             } else {
-                0L  // 첫 문장의 경우, 시작을 0으로 설정
+                0L
+                  // 첫 문장의 경우, 시작을 0으로 설정
             }
 
             val sentenceTimePoint = (sentences[i].timePoint * 1000).toLong()

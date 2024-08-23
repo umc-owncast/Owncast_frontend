@@ -34,7 +34,6 @@ class SignupLoadingActivity : ComponentActivity() {
 
     private fun setupImageAnimation() {
         val images = listOf(
-            findViewById<ImageView>(R.id.loading_inner_1),
             findViewById<ImageView>(R.id.loading_inner_2),
             findViewById<ImageView>(R.id.loading_inner_3),
             findViewById<ImageView>(R.id.loading_inner_4)

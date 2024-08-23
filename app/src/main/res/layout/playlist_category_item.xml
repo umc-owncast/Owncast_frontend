@@ -38,17 +38,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/category_img"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cate_item_cardview"
             android:layout_width="48dp"
             android:layout_height="48dp"
+
+
+            android:scaleType="centerCrop"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="0dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
 
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:id="@+id/category_img"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.cardview.widget.CardView>
+
 
         <TextView
             android:id="@+id/playlist_category_title_tv"
@@ -60,7 +75,7 @@
             android:text="카테고리1"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/category_img"
+            app:layout_constraintStart_toEndOf="@+id/cate_item_cardview"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -70,7 +85,7 @@
             android:layout_marginStart="16dp"
             android:text="총 캐스트 개수"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/category_img"
+            app:layout_constraintStart_toEndOf="@+id/cate_item_cardview"
             app:layout_constraintTop_toBottomOf="@+id/playlist_category_title_tv" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
