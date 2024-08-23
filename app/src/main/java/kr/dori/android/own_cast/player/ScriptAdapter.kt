@@ -1,5 +1,5 @@
 /*
-//timePoint가 EndPoint일 때의 로직 
+//timePoint가 EndPoint일 때의 로직
 package kr.dori.android.own_cast.player
 
 import android.graphics.Color
