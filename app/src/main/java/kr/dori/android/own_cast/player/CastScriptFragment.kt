@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,8 +21,10 @@ import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kotlinx.coroutines.async
 import kr.dori.android.own_cast.data.CastPlayerData
+import kr.dori.android.own_cast.data.CastPlayerData.currentBookmarkList
 import kr.dori.android.own_cast.forApiData.Bookmark
 import kr.dori.android.own_cast.forApiData.GetBookmark
+import kr.dori.android.own_cast.network.BookmarkSyncManager
 
 class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
     lateinit var binding: FragmentCastScriptBinding
@@ -32,6 +35,8 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
     lateinit var filteredBookmark: List<Long>
     lateinit var previousBookmark: List<Long>
     private val bookmarks: MutableList<Long> = mutableListOf() // 내부 변수로 북마크 관리
+    private val bookmarkSyncManager = BookmarkSyncManager()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +44,8 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
     ): View? {
         binding = FragmentCastScriptBinding.inflate(inflater, container, false)
         Log.d("Bookmark", "onCreateView")
+        CastPlayerData.currentBookmarkList = CastPlayerData.currentBookmarkList ?: emptyList()
+
 
         val getScript = getRetrofit().create(Playlist::class.java)
         val getBookmark = getRetrofit().create(Bookmark::class.java)
@@ -111,50 +118,21 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
         super.onStop()
 
         val currentBookmarks = CastPlayerData.currentBookmarkList
-        Log.d("Bookmark","${currentBookmarks}")
+        Log.d("Bookmark", "$currentBookmarks")
 
-        // 추가된 북마크: previousBookmark에는 없고 currentBookmarks에 있는 것들
         val addedBookmarks = currentBookmarks.filter { it !in previousBookmark }
-
-        // 삭제된 북마크: currentBookmarks에는 없고 previousBookmark에 있는 것들
         val removedBookmarks = previousBookmark.filter { it !in currentBookmarks }
-        val bookmarkService = getRetrofit().create(Bookmark::class.java)
 
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                Log.d("Bookmark", "Starting network requests")
+        // lifecycleScope를 사용하여 안전하게 네트워크 요청을 관리
+        viewLifecycleOwner.lifecycleScope.launch {
+            // 추가된 북마크 서버에 반영
+            addedBookmarks.forEach { sentenceId ->
+                bookmarkSyncManager.addBookmark(sentenceId)
+            }
 
-                // POST 요청을 통해 추가된 북마크 서버에 반영
-                addedBookmarks.forEach { sentenceId ->
-                    try {
-                        Log.d("Bookmark", "Attempting to add bookmark: $sentenceId")
-                        val response = bookmarkService.postBookmark(sentenceId)
-                        if (response.isSuccessful) {
-                            Log.d("Bookmark", "Successfully added bookmark: $sentenceId, Bookmark ID: ${response.body()?.result?.bookmarkId}")
-                        } else {
-                            Log.d("Bookmark", "Failed to add bookmark: $sentenceId, Code: ${response.code()}, Message: ${response.message()}")
-                        }
-                    } catch (e: Exception) {
-                        Log.e("Bookmark", "Error adding bookmark: ${e.localizedMessage}", e)
-                    }
-                }
-
-                // DELETE 요청을 통해 삭제된 북마크 서버에 반영
-                removedBookmarks.forEach { sentenceId ->
-                    try {
-                        Log.d("Bookmark", "Attempting to remove bookmark: $sentenceId")
-                        val response = bookmarkService.deleteBookmark(sentenceId)
-                        if (response.isSuccessful) {
-                            Log.d("Bookmark", "Successfully removed bookmark: $sentenceId")
-                        } else {
-                            Log.d("Bookmark", "Failed to remove bookmark: $sentenceId, Code: ${response.code()}, Message: ${response.message()}")
-                        }
-                    } catch (e: Exception) {
-                        Log.e("Bookmark", "Error removing bookmark: ${e.localizedMessage}", e)
-                    }
-                }
-            } catch (e: Exception) {
-                Log.d("Bookmark", "Error during bookmark sync: ${e.localizedMessage}", e)
+            // 삭제된 북마크 서버에 반영
+            removedBookmarks.forEach { sentenceId ->
+                bookmarkSyncManager.removeBookmark(sentenceId)
             }
         }
     }
@@ -179,10 +157,12 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
         Log.d("Bookmark", "onResume")
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         handler.removeCallbacksAndMessages(null) // 모든 핸들러 콜백을 제거
     }
+
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null) // 모든 핸들러 콜백 제거

@@ -43,7 +43,9 @@ class PlayCastActivity : AppCompatActivity() {
     private var isSeeking = false
     private var service: BackgroundPlayService? = null
     private var isBound = false
-    private val handler = Handler()
+    private val seekBarHandler = Handler() // SeekBar 업데이트용 핸들러
+    private val scriptHandler = Handler() // ScriptFragment 업데이트용 핸들러
+
     var stateListener: Int = 0
 
     private val connection = object : ServiceConnection {
@@ -71,6 +73,8 @@ class PlayCastActivity : AppCompatActivity() {
             }
 
             startSeekBarUpdate() // 시크바 업데이트 시작
+            startScriptFragmentUpdate() // ScriptFragment 업데이트 시작
+
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {
@@ -179,7 +183,7 @@ class PlayCastActivity : AppCompatActivity() {
                 Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
                 classifyCast()//추가 안한 캐스트면 창뜨게 해야함
             }
-            missFortune()
+            //missFortune()
 
         }
 
@@ -196,7 +200,7 @@ class PlayCastActivity : AppCompatActivity() {
                 classifyCast()
             }
 
-            missFortune()
+         //   missFortune()
         }
 
         binding.to10next.setOnClickListener {
@@ -347,6 +351,8 @@ class PlayCastActivity : AppCompatActivity() {
                 binding.endTv.text = formatTime(audioLength.toInt())
                 binding.seekBar.max = audioLength // 시크바 최대값 설정 (초 단위)
                 startSeekBarUpdate() // 시크바 업데이트 시작
+                startScriptFragmentUpdate() // ScriptFragment 업데이트 시작
+
             }
         }
     }
@@ -358,6 +364,8 @@ class PlayCastActivity : AppCompatActivity() {
                 binding.endTv.text = formatTime(audioLength.toInt())
                 binding.seekBar.max = audioLength // 시크바 최대값 설정 (초 단위)
                 startSeekBarUpdate() // 시크바 업데이트 시작
+                startScriptFragmentUpdate() // 추가된 ScriptFragment 업데이트 중지 호출
+
             }
         }
     }
@@ -394,11 +402,11 @@ class PlayCastActivity : AppCompatActivity() {
         }
     }
     private fun startSeekBarUpdate() {
-        handler.postDelayed(updateSeekBar, 10) //이건 첫번째 객체
+        seekBarHandler.postDelayed(updateSeekBar, 10) //이건 첫번째 객체
     }
 
     private fun stopSeekBarUpdate() {
-        handler.removeCallbacks(updateSeekBar)
+        seekBarHandler.removeCallbacks(updateSeekBar)
     }
 
     private val updateSeekBar = object : Runnable {
@@ -421,7 +429,7 @@ class PlayCastActivity : AppCompatActivity() {
                     audioFragment.updateCurrentTime(currentPosition)
                 }
             }
-            handler.postDelayed(this, 300) // 주기적으로 업데이트
+            seekBarHandler.postDelayed(this, 300) // 주기적으로 업데이트
         }
     }
 
@@ -485,6 +493,7 @@ class PlayCastActivity : AppCompatActivity() {
 
     // Fragment 전환 함수들
     private fun audioToScript() {
+        stopScriptFragmentUpdate()
         binding.activityPlayCastPlaylistOnIv.visibility = View.GONE
         binding.activityPlayCastPlaylistOffIv.visibility = View.VISIBLE
         binding.activityPlayCastScriptOnIv.visibility = View.VISIBLE
@@ -510,9 +519,11 @@ class PlayCastActivity : AppCompatActivity() {
             }
         }
         stateListener = 1
+        startScriptFragmentUpdate()
     }
 
     private fun scriptToAudio() {
+        stopScriptFragmentUpdate()
         binding.activityPlayCastPlaylistOnIv.visibility = View.GONE
         binding.activityPlayCastPlaylistOffIv.visibility = View.VISIBLE
         binding.activityPlayCastScriptOnIv.visibility = View.GONE
@@ -670,6 +681,33 @@ class PlayCastActivity : AppCompatActivity() {
         intent.putExtra("id",CastPlayerData.currentCast.castId)
         startActivity(intent)
         classifyCast()
+    }
+
+    private val updateScriptFragment = object : Runnable {
+        override fun run() {
+            service?.let {
+                val currentPosition = it.getCurrentPosition()
+                val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm)
+                if (fragment is CastScriptFragment && fragment.isAdded && !fragment.isRemoving) {
+                    fragment.updateCurrentTime(currentPosition)
+                    Log.d("UpdateTime", "Activity: $currentPosition")
+                }
+
+                val audioFragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm)
+                if (audioFragment is CastAudioFragment && audioFragment.isAdded && !audioFragment.isRemoving) {
+                    audioFragment.updateCurrentTime(currentPosition)
+                }
+            }
+            scriptHandler.postDelayed(this, 300)
+        }
+    }
+
+    private fun startScriptFragmentUpdate() {
+        scriptHandler.postDelayed(updateScriptFragment, 10)
+    }
+
+    private fun stopScriptFragmentUpdate() {
+        scriptHandler.removeCallbacks(updateScriptFragment)
     }
 
     //담아온 캐스트 제거하는 함수
