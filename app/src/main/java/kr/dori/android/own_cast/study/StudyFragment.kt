@@ -28,6 +28,9 @@ class StudyFragment : Fragment() {
     private lateinit var binding: FragmentStudyBinding
     private val customAdapter = StudyCustomAdapter()
     private lateinit var studyAdapter: StudyAdapter
+    private var audioPlayer: AudioPlayer? = null // AudioPlayer 추가
+    private var isLooping = false // 반복 상태를 저장하는 변수
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +42,11 @@ class StudyFragment : Fragment() {
             handleItemClick(position)
         }
 
+
+        // AudioPlayer 초기화
+        audioPlayer = AudioPlayer(requireContext())
+        audioPlayer?.initializePlayer()
+
         // 빈 리스트로 어댑터 연결
         studyAdapter.dataList = mutableListOf()
         setupRecyclerView()
@@ -46,6 +54,12 @@ class StudyFragment : Fragment() {
         loadInitialCustomAdapterData()
         setupUI()
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        audioPlayer?.releasePlayer()
+
     }
 
     private fun setupRecyclerView() {
@@ -70,6 +84,7 @@ class StudyFragment : Fragment() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    updateSelectedPosition()
                     adjustSelectedItem()  // 스크롤 정지 시 stateText 업데이트
                 }
             }
@@ -81,6 +96,12 @@ class StudyFragment : Fragment() {
 
     private fun adjustSelectedItem() {
         val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
+        val bookmark = getCurrentBookmarkInfo()
+        bookmark?.let {
+            Log.d("StudyFragment2", "Current Bookmark: ${it.originalSentence} - ${it.translatedSentence}, ${it.castURL}")
+        } ?: run {
+            Log.d("StudyFragment2", "No current bookmark selected") // null 확인 로그
+        }
         val centerView = snapHelper.findSnapView(layoutManager)
         centerView?.let {
             val position = layoutManager.getPosition(it)
@@ -282,6 +303,7 @@ class StudyFragment : Fragment() {
         binding.fragmentStudyShuffleIv.isEnabled = true
     }
 
+
     private fun scrollToNextItem() {
         val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
         val centerView = snapHelper.findSnapView(layoutManager)
@@ -289,6 +311,7 @@ class StudyFragment : Fragment() {
             val position = layoutManager.getPosition(it)
             if (position < customAdapter.itemList.size - 1) {
                 binding.studyCustomAdapterRv.smoothScrollToPosition(position + 1)
+                updateSelectedPosition()
                 adjustSelectedItem() // 스크롤 후 stateText 업데이트
             }
         }
@@ -301,32 +324,50 @@ class StudyFragment : Fragment() {
             val position = layoutManager.getPosition(it)
             if (position > 0) {
                 binding.studyCustomAdapterRv.smoothScrollToPosition(position - 1)
+                updateSelectedPosition()
                 adjustSelectedItem() // 스크롤 후 stateText 업데이트
             }
         }
     }
 
     private fun setupUI() {
+
+
         binding.fragmentStudyLoofOffIv.setOnClickListener {
             binding.fragmentStudyLoofOnIv.visibility = View.VISIBLE
             binding.fragmentStudyLoofOffIv.visibility = View.GONE
+            // 현재 북마크 가져와서 스트리밍 시작
+            val bookmark = getCurrentBookmarkInfo()
+            bookmark?.let {
+                audioPlayer?.playAudio(it.castURL, it.start, it.end)
+                Log.d("StudyFragment2", "Playing audio from: ${it.castURL}")
+            } ?: run {
+                Log.d("StudyFragment2", "No current bookmark selected to play audio")
+            }
+            isLooping = true
+            audioPlayer?.setLooping(true)
         }
 
         binding.fragmentStudyLoofOnIv.setOnClickListener {
             binding.fragmentStudyLoofOffIv.visibility = View.VISIBLE
             binding.fragmentStudyLoofOnIv.visibility = View.GONE
+            isLooping = false
+            audioPlayer?.setLooping(false)
         }
 
         binding.fragmentStudySoundOffIv.setOnClickListener {
-            binding.fragmentStudySoundOnIv.visibility = View.VISIBLE
-            binding.fragmentStudySoundOffIv.visibility = View.GONE
-        }
+            //binding.fragmentStudySoundOnIv.visibility = View.VISIBLE
+           // binding.fragmentStudySoundOffIv.visibility = View.GONE
 
-        binding.fragmentStudySoundOnIv.setOnClickListener {
-            binding.fragmentStudySoundOffIv.visibility = View.VISIBLE
-            binding.fragmentStudySoundOnIv.visibility = View.GONE
+            // 현재 북마크 가져와서 스트리밍 시작
+            val bookmark = getCurrentBookmarkInfo()
+            bookmark?.let {
+                audioPlayer?.playAudio(it.castURL, it.start, it.end)
+                Log.d("StudyFragment2", "Playing audio from: ${it.castURL}")
+            } ?: run {
+                Log.d("StudyFragment2", "No current bookmark selected to play audio")
+            }
         }
-
         binding.fragmentStudyNextIv.setOnClickListener {
             scrollToNextItem()
         }
@@ -390,4 +431,25 @@ class StudyFragment : Fragment() {
             }
         }
     }
+
+    private fun updateSelectedPosition() {
+        val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
+        val centerView = snapHelper.findSnapView(layoutManager)
+        centerView?.let {
+            val position = layoutManager.getPosition(it)
+            customAdapter.selectedPosition = position % customAdapter.itemList.size
+            Log.d("StudyFragment", "Updated selected position: ${customAdapter.selectedPosition}")
+        }
+    }
+
+    private fun getCurrentBookmarkInfo(): GetBookmark? {
+        val position = customAdapter.selectedPosition
+        return if (position >= 0 && position < customAdapter.itemList.size) {
+            customAdapter.itemList[position]
+        } else {
+            null  // 선택된 포지션이 유효하지 않을 경우 null 반환
+        }
+    }
+
+
 }
