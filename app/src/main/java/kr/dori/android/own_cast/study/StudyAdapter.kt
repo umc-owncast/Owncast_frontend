@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import kr.dori.android.own_cast.data.PlaylistInfo
 
 import kr.dori.android.own_cast.databinding.StudyCategoryItemBinding
@@ -62,7 +65,14 @@ class StudyAdapter(private val itemClickListener: (Int) -> Unit) : RecyclerView.
         }
         fun setText(data: PlaylistInfo){
             // 이미지 URL을 Glide로 로드
-            Glide.with(itemView.context).load(data.imagePath).into(binding.studyCategoryIv)
+            val requestOptions = RequestOptions()
+                .transform(CenterCrop(), RoundedCorners(30))
+
+            Glide.with(itemView.context)
+                .load(data.imagePath)
+                .apply(requestOptions)
+                .into(binding.studyCategoryIv)
+
             binding.studyCategoryTv.text = data.playlistName
         }
     }
