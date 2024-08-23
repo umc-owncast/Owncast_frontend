@@ -1,45 +1,52 @@
 package kr.dori.android.own_cast.network
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.forApiData.Bookmark
 import kr.dori.android.own_cast.forApiData.getRetrofit
 
-class BookmarkSyncManager {
+class BookmarkSyncTask(context: Context, private val addedBookmarks: List<Long>, private val removedBookmarks: List<Long>) {
 
     private val bookmarkService = getRetrofit().create(Bookmark::class.java)
+    private val appContext = context.applicationContext
 
-    // 북마크 추가
-    suspend fun addBookmark(sentenceId: Long) {
-        withContext(Dispatchers.IO) {
-            try {
-                Log.d("Bookmark", "Attempting to add bookmark: $sentenceId")
-                val response = bookmarkService.postBookmark(sentenceId)
-                if (response.isSuccessful) {
-                    Log.d("Bookmark", "Successfully added bookmark: $sentenceId, Bookmark ID: ${response.body()?.result?.bookmarkId}")
-                } else {
-                    Log.d("Bookmark", "Failed to add bookmark: $sentenceId, Code: ${response.code()}, Message: ${response.message()}")
-                }
-            } catch (e: Exception) {
-                Log.e("Bookmark", "Error adding bookmark: ${e.localizedMessage}", e)
-            }
+    fun execute() {
+        CoroutineScope(Dispatchers.IO).launch {
+            syncBookmarks()
         }
     }
 
-    // 북마크 삭제
-    suspend fun removeBookmark(sentenceId: Long) {
+    private suspend fun syncBookmarks() {
         withContext(Dispatchers.IO) {
             try {
-                Log.d("Bookmark", "Attempting to remove bookmark: $sentenceId")
-                val response = bookmarkService.deleteBookmark(sentenceId)
-                if (response.isSuccessful) {
-                    Log.d("Bookmark", "Successfully removed bookmark: $sentenceId")
-                } else {
-                    Log.d("Bookmark", "Failed to remove bookmark: $sentenceId, Code: ${response.code()}, Message: ${response.message()}")
+                // 추가된 북마크 서버에 반영
+                addedBookmarks.forEach { sentenceId ->
+                    Log.d("BookmarkSyncTask", "Attempting to add bookmark: $sentenceId")
+                    val response = bookmarkService.postBookmark(sentenceId)
+                    if (response.isSuccessful) {
+                        Log.d("BookmarkSyncTask", "Successfully added bookmark: $sentenceId")
+                    } else {
+                        Log.d("BookmarkSyncTask", "Failed to add bookmark: $sentenceId, Code: ${response.code()}")
+                    }
+                }
+
+                // 삭제된 북마크 서버에 반영
+                removedBookmarks.forEach { sentenceId ->
+                    Log.d("BookmarkSyncTask", "Attempting to remove bookmark: $sentenceId")
+                    val response = bookmarkService.deleteBookmark(sentenceId)
+                    if (response.isSuccessful) {
+                        Log.d("BookmarkSyncTask", "Successfully removed bookmark: $sentenceId")
+                    } else {
+                        Log.d("BookmarkSyncTask", "Failed to remove bookmark: $sentenceId, Code: ${response.code()}")
+                    }
                 }
             } catch (e: Exception) {
-                Log.e("Bookmark", "Error removing bookmark: ${e.localizedMessage}", e)
+                Log.e("BookmarkSyncTask", "Error syncing bookmarks: ${e.localizedMessage}", e)
             }
         }
     }
