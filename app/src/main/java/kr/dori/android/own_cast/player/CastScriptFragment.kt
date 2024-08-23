@@ -2,6 +2,7 @@ package kr.dori.android.own_cast.player
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -24,7 +25,7 @@ import kr.dori.android.own_cast.forApiData.GetBookmark
 
 class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
     lateinit var binding: FragmentCastScriptBinding
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper()) // 수정된 부분: Handler 초기화
     val adapter = ScriptAdapter(currentCast)
     lateinit var castInfo: CastInfo
     lateinit var allBookmark: List<GetBookmark>
@@ -98,7 +99,7 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
 
     fun updateCurrentTime(currentTime: Long) {
         Log.d("UpdateTime", "Fragment: $currentTime")
-        adapter.updateCurrentTime(currentTime)
+        adapter.updateCurrentTime(currentTime) // timePoint가 시작 지점으로 사용됨
     }
 
     private fun scrollToPosition(position: Int) {
@@ -184,6 +185,8 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
     }
     override fun onDestroy() {
         super.onDestroy()
+        handler.removeCallbacksAndMessages(null) // 모든 핸들러 콜백 제거
+
         Log.d("Bookmark", "onDestroy")
     }
 

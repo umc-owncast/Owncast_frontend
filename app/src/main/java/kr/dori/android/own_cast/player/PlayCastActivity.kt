@@ -381,6 +381,7 @@ class PlayCastActivity : AppCompatActivity() {
             binding.seekBar.max = service?.getDuration()?.toInt()?.div(1000) ?: 0
             binding.seekBar.progress = (service?.getCurrentPosition()?.div(1000))?.toInt() ?: 0
 
+            binding.endTv.text = currentCast.audioLength
             //  binding.seekbar
 
             if (service?.isPlaying() == true) {
@@ -408,12 +409,17 @@ class PlayCastActivity : AppCompatActivity() {
                 binding.startTv.text = formatTime(currentPosition)
 
                 // CastScriptFragment에 시간 정보 전달
-                val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
-                fragment?.updateCurrentTime(currentPosition)
-                Log.d("UpdateTime", "Activity: $currentPosition")
+                val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm)
+                if (fragment is CastScriptFragment && fragment.isAdded) {
+                    fragment.updateCurrentTime(currentPosition)
+                    Log.d("UpdateTime", "Activity: $currentPosition")
+                }
 
-                val audioFragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastAudioFragment
-                audioFragment?.updateCurrentTime(currentPosition)
+                // CastAudioFragment에 시간 정보 전달
+                val audioFragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm)
+                if (audioFragment is CastAudioFragment && audioFragment.isAdded) {
+                    audioFragment.updateCurrentTime(currentPosition)
+                }
             }
             handler.postDelayed(this, 300) // 주기적으로 업데이트
         }
