@@ -131,11 +131,14 @@ data class SimpleCastDTO(
 
 
 data class GetBookmark(
-    @SerializedName(value = "sentenceId") val sentenceId: Long,
     @SerializedName(value = "castId") val castId: Long,
+    @SerializedName(value = "sentenceId") val sentenceId: Long,
+    @SerializedName(value = "castURL") val castURL: String,
     @SerializedName(value = "originalSentence") val originalSentence: String,
     @SerializedName(value = "translatedSentence") val translatedSentence: String,
-    val isFront: Boolean = true
+    @SerializedName(value = "start") val start: Double,
+    @SerializedName(value = "end") val end: Double,
+    //val isFront: Boolean = true
 )
 
 data class BookmarkId(
