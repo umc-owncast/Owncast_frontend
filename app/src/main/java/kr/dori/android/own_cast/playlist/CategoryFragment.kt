@@ -30,13 +30,19 @@ import kr.dori.android.own_cast.player.CastWithPlaylistId
 import kr.dori.android.own_cast.player.PlayCastActivity
 import retrofit2.create
 
-class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragment(), ActivityMover {
+class CategoryFragment() : Fragment(), ActivityMover {
 
     private lateinit var binding: FragmentCategoryBinding
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var castAdapter: CastAdapter
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     lateinit var sendCastIdList: List<CastWithPlaylistId>
+    private var playlistId: Long = 0 // 초기화된 변수 추가
+    private var playlistName: String = "" // 초기화된 변수 추가
+    constructor(playlistId: Long, playlistName: String) : this() { // 생성자 오버로딩
+        this.playlistId = playlistId
+        this.playlistName = playlistName
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

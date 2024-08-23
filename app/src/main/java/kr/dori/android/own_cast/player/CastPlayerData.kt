@@ -12,8 +12,7 @@ object CastPlayerData {
 
     private val castImagePath = mutableListOf<String>()
 
-    lateinit var currentBookmarkList: MutableList<Long>
-
+    var currentBookmarkList: List<Long> = emptyList()  // 기본값으로 초기화
 
     fun setCast(testList: List<CastWithPlaylistId>, position: Int) {
         allCastList.clear()

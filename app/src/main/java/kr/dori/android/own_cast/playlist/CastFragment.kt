@@ -41,6 +41,7 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
