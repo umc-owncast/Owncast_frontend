@@ -50,7 +50,7 @@ class CategoryFragment() : Fragment(), ActivityMover {
         Log.d("xibal5","${playlistId}")
 
         binding =  FragmentCategoryBinding.inflate(inflater,container,false)
-
+        binding.imageView2
         castAdapter = CastAdapter(this)
         binding.fragmentCategoryRv.adapter = castAdapter
         binding.fragmentCategoryRv.layoutManager = LinearLayoutManager(context)

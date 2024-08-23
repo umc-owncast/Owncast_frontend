@@ -84,7 +84,7 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
             withContext(Dispatchers.Main) {
                 Log.d("script", "${castInfo.sentences}")
                 Log.d("script", "playlistId: ${currentCast.playlistId}, castId: ${currentCast.castId}")
-
+                binding.textView26.text = castInfo.title
                 adapter.dataList = castInfo.sentences
                 adapter.bookmarkList = bookmarks
                 binding.scriptRv.adapter = adapter

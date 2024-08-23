@@ -36,13 +36,7 @@ class CastAudioFragment(val currentCast: CastWithPlaylistId) : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentCastAudioBinding.inflate(inflater,container,false)
 
-        binding.castTitle.text = currentCast.castTitle
-
-        if(currentCast.castCreator != SignupData.nickname){
-            binding.creatorCategory.text = "${currentCast.castCreator}-${currentCast.castCategory}"
-        }else{
-            binding.creatorCategory.visibility = View.GONE
-        }
+        initCastData()
 
         //이미지 추가
 
@@ -100,6 +94,16 @@ class CastAudioFragment(val currentCast: CastWithPlaylistId) : Fragment() {
             }
         }
         return -1
+    }
+
+    fun initCastData(){
+        binding.castTitle.text = currentCast.castTitle
+
+        if(currentCast.castCreator != SignupData.nickname){
+            binding.creatorCategory.text = "${currentCast.castCreator}-${currentCast.castCategory}"
+        }else{
+            binding.creatorCategory.visibility = View.GONE
+        }
     }
 
 }

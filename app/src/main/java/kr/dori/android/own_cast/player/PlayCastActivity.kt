@@ -96,7 +96,7 @@ class PlayCastActivity : AppCompatActivity() {
         // 처음 앱에 들어갔을 때의 초기 UI 설정
         binding.playCastPlayIv.visibility = View.VISIBLE
         binding.playCastPauseIv.visibility = View.GONE
-        classifyCast()
+        //classifyCast()
 
         //playlistId가 -1이고 유저와 생성한 사람의 이름이 다르면 add가 뜸, 어 근데 이미 추가 된거면? -> 삭제되게
 
@@ -182,6 +182,7 @@ class PlayCastActivity : AppCompatActivity() {
                 xibalCast(nextCast.castId)  // 새로운 캐스트 재생 및 UI 초기화
                 Log.d("test", "currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
                 classifyCast() // 추가 안한 캐스트면 창뜨게 해야함
+                updateCastAudioFragmentUI()
             }
         }
 
@@ -195,6 +196,8 @@ class PlayCastActivity : AppCompatActivity() {
                 xibalCast(previousCast.castId)  // 새로운 캐스트 재생 및 UI 초기화
                 Log.d("test", "currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
                 classifyCast()
+                updateCastAudioFragmentUI()
+
             }
         }
 
@@ -450,9 +453,7 @@ class PlayCastActivity : AppCompatActivity() {
 
                 // CastAudioFragment에 시간 정보 전달
                 /*val audioFragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm)
-                if (audioFragment is CastAudioFragment && audioFragment.isAdded) {
-                    audioFragment.updateCurrentTime(currentPosition)
-                }*/
+                */
             }
             seekBarHandler.postDelayed(this, 300) // 주기적으로 업데이트
         }
