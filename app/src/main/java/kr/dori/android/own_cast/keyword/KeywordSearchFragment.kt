@@ -65,7 +65,7 @@ class KeywordSearchFragment:Fragment() {
     }
     fun initKeyword() {//관련 텍스트들을 초기화하는 함수
         //클래스 내 전역변수로 선언한 textList에 바인딩 목록들을 넣고 초기화한다.
-        binding.keywordSearchTopicTv.text = SignupData.interest
+        binding.keywordSearchTopicTv.text = SignupData.detail_interest
             for (i: Int in 0..5) {
                 //view모델 안에 실제 데이터가 있다면 그걸 텍스트 뷰에 그대로 반영
 

@@ -28,7 +28,7 @@ class SearchInputFragment : Fragment() {
     ): View? {
         binding = FragmentSearchInputBinding.inflate(inflater, container, false)
 
-        binding.searchInputTopicTv.text = SignupData.interest
+        binding.searchInputTopicTv.text = SignupData.detail_interest
         binding.fragmentSearchInputTextTv.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (s != null) {
