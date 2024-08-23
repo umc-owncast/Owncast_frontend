@@ -650,7 +650,8 @@ class PlayCastActivity : AppCompatActivity() {
         return String.format("%02d:%02d", minutes, seconds)
     }
 
-    // 루프 기능: timePoint가 endPoint일 때
+    
+    // 루프 기능: timePoint가 endPoint일 때 로직
     private fun enableLoopForSentence(position: Int) {
         val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
         val currentSentence = fragment?.adapter?.dataList?.get(position)
@@ -673,7 +674,7 @@ class PlayCastActivity : AppCompatActivity() {
 
 
     /*
-    //timePoint가 시작위치일 때 이거 쓰세요 좀!! 넌 치매노인이 아니다 넌 치매 노인이 아니다 넌 치매노인
+    //timePoint가 startPoint일 때 로직
     private fun enableLoopForSentence(position: Int) {
         val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
         val currentSentence = fragment?.adapter?.dataList?.get(position)
