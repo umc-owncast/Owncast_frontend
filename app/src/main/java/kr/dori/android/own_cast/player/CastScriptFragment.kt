@@ -24,7 +24,7 @@ import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.data.CastPlayerData.currentBookmarkList
 import kr.dori.android.own_cast.forApiData.Bookmark
 import kr.dori.android.own_cast.forApiData.GetBookmark
-import kr.dori.android.own_cast.network.BookmarkSyncManager
+import kr.dori.android.own_cast.network.BookmarkSyncTask
 
 class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
     lateinit var binding: FragmentCastScriptBinding
@@ -35,7 +35,6 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
     lateinit var filteredBookmark: List<Long>
     lateinit var previousBookmark: List<Long>
     private val bookmarks: MutableList<Long> = mutableListOf() // 내부 변수로 북마크 관리
-    private val bookmarkSyncManager = BookmarkSyncManager()
 
 
     override fun onCreateView(
@@ -123,19 +122,13 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
         val addedBookmarks = currentBookmarks.filter { it !in previousBookmark }
         val removedBookmarks = previousBookmark.filter { it !in currentBookmarks }
 
-        // lifecycleScope를 사용하여 안전하게 네트워크 요청을 관리
-        viewLifecycleOwner.lifecycleScope.launch {
-            // 추가된 북마크 서버에 반영
-            addedBookmarks.forEach { sentenceId ->
-                bookmarkSyncManager.addBookmark(sentenceId)
-            }
-
-            // 삭제된 북마크 서버에 반영
-            removedBookmarks.forEach { sentenceId ->
-                bookmarkSyncManager.removeBookmark(sentenceId)
-            }
+        // BookmarkSyncTask를 사용하여 북마크 동기화
+        if (addedBookmarks.isNotEmpty() || removedBookmarks.isNotEmpty()) {
+            val syncTask = BookmarkSyncTask(requireContext(), addedBookmarks, removedBookmarks)
+            syncTask.execute()
         }
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

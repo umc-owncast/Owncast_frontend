@@ -162,6 +162,7 @@ class PlayCastActivity : AppCompatActivity() {
             binding.playCastPlayIv.visibility = View.GONE
             binding.playCastPauseIv.visibility = View.VISIBLE
             service?.resumeAudio()
+            Log.d("test","현재 캐스트: ${CastPlayerData.currentCast}, 현재 위치: ${CastPlayerData.currentPosition},총 개수: ${CastPlayerData.getAllCastList().size}, 총 캐스트: ${CastPlayerData.getAllCastList()}")
         }
 
         // Pause 버튼 클릭 이벤트 처리
@@ -171,36 +172,30 @@ class PlayCastActivity : AppCompatActivity() {
             service?.pauseAudio()
         }
 
-        // Next 버튼 클릭 이벤트 처리
+// Next 버튼 클릭 이벤트 처리
         binding.next.setOnClickListener {
             binding.playCastPlayIv.visibility = View.GONE
             binding.playCastPauseIv.visibility = View.VISIBLE
-            // service?.resumeAudio()
-            val nextCast = CastPlayerData.playNext() // type: Cast
+            val nextCast = CastPlayerData.playNext() // 다음 캐스트 가져오기
             nextCast?.let {
                 stopCurrentAudio()  // 기존 음원 중지
-                xibalCast(nextCast.castId)  // 새로운 캐스트 재생
-                Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
-                classifyCast()//추가 안한 캐스트면 창뜨게 해야함
+                xibalCast(nextCast.castId)  // 새로운 캐스트 재생 및 UI 초기화
+                Log.d("test", "currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
+                classifyCast() // 추가 안한 캐스트면 창뜨게 해야함
             }
-            //missFortune()
-
         }
 
         // Previous 버튼 클릭 이벤트 처리
         binding.previous.setOnClickListener {
             binding.playCastPlayIv.visibility = View.GONE
             binding.playCastPauseIv.visibility = View.VISIBLE
-            // service?.resumeAudio()
-            val previousCast = CastPlayerData.playPrevious()
+            val previousCast = CastPlayerData.playPrevious() // 이전 캐스트 가져오기
             previousCast?.let {
                 stopCurrentAudio()  // 기존 음원 중지
-                xibalCast(previousCast.castId)  // 새로운 캐스트 재생
-                Log.d("test","currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
+                xibalCast(previousCast.castId)  // 새로운 캐스트 재생 및 UI 초기화
+                Log.d("test", "currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
                 classifyCast()
             }
-
-         //   missFortune()
         }
 
         binding.to10next.setOnClickListener {
@@ -363,12 +358,37 @@ class PlayCastActivity : AppCompatActivity() {
                 service?.playAudio(it) // 오디오를 준비하고 바로 재생
                 binding.endTv.text = formatTime(audioLength.toInt())
                 binding.seekBar.max = audioLength // 시크바 최대값 설정 (초 단위)
+                binding.seekBar.progress = 0 // 시크바 위치 초기화
+                binding.startTv.text = formatTime(0L) // 시작 시간 표시 초기화
+                updateUI() // 추가된 부분: UI를 업데이트
+                replaceCastAudioFragment() // CastAudioFragment를 다시 띄우기
                 startSeekBarUpdate() // 시크바 업데이트 시작
                 startScriptFragmentUpdate() // 추가된 ScriptFragment 업데이트 중지 호출
-
             }
         }
     }
+
+    private fun replaceCastAudioFragment() {
+        val transaction = supportFragmentManager.beginTransaction()
+        val newAudioFragment = CastAudioFragment(CastPlayerData.currentCast)
+        transaction.replace(R.id.play_cast_frm, newAudioFragment)
+        transaction.commitNowAllowingStateLoss() // Fragment를 즉시 교체하여 UI를 업데이트
+    }
+
+
+    private fun updateCastAudioFragmentUI() {
+        val audioFragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastAudioFragment
+        val currentCast = CastPlayerData.currentCast
+
+        currentCast?.let {
+            if (audioFragment != null && audioFragment.isAdded) {
+                audioFragment.setCastTitle(it.castTitle)
+                // 필요한 경우 추가적으로 다른 텍스트 값을 업데이트할 수 있습니다.
+            }
+        }
+    }
+
+
 
 
     private fun stopCurrentAudio() {
@@ -390,7 +410,7 @@ class PlayCastActivity : AppCompatActivity() {
             binding.seekBar.progress = (service?.getCurrentPosition()?.div(1000))?.toInt() ?: 0
 
             binding.endTv.text = currentCast.audioLength
-            //  binding.seekbar
+            binding.startTv.text = formatTime(service?.getCurrentPosition() ?: 0L)
 
             if (service?.isPlaying() == true) {
                 binding.playCastPlayIv.visibility = View.GONE
@@ -399,8 +419,13 @@ class PlayCastActivity : AppCompatActivity() {
                 binding.playCastPlayIv.visibility = View.VISIBLE
                 binding.playCastPauseIv.visibility = View.GONE
             }
+
+            // CastAudioFragment 텍스트 값 업데이트
+            updateCastAudioFragmentUI()
         }
     }
+
+
     private fun startSeekBarUpdate() {
         seekBarHandler.postDelayed(updateSeekBar, 10) //이건 첫번째 객체
     }
@@ -625,7 +650,8 @@ class PlayCastActivity : AppCompatActivity() {
         return String.format("%02d:%02d", minutes, seconds)
     }
 
-    // 루프 기능: timePoint가 endPoint일 때
+    
+    // 루프 기능: timePoint가 endPoint일 때 로직
     private fun enableLoopForSentence(position: Int) {
         val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
         val currentSentence = fragment?.adapter?.dataList?.get(position)
@@ -648,7 +674,7 @@ class PlayCastActivity : AppCompatActivity() {
 
 
     /*
-    //timePoint가 시작위치일 때 이거 쓰세요 좀!! 넌 치매노인이 아니다 넌 치매 노인이 아니다 넌 치매노인
+    //timePoint가 startPoint일 때 로직
     private fun enableLoopForSentence(position: Int) {
         val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
         val currentSentence = fragment?.adapter?.dataList?.get(position)
