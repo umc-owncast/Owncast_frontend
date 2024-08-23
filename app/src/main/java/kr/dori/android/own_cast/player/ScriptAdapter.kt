@@ -1,3 +1,4 @@
+/*
 package kr.dori.android.own_cast.player
 
 import android.graphics.Color
@@ -134,6 +135,7 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
     }
 }
 
+ */
 
 
 
@@ -146,8 +148,9 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
 
 
 
-/*
-timePoint가 문장의 끝지점일 경우의 실시간 가사 기능
+
+
+//timePoint가 문장의 끝지점일 경우의 실시간 가사 기능
 package kr.dori.android.own_cast.player
 
 import android.graphics.Color
@@ -319,7 +322,7 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
     }
 }
 
- */
+
 
 
 

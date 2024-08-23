@@ -255,15 +255,15 @@ class StudyFragment : Fragment() {
 
     private fun disableCustomAdapterUI() {
         binding.studyCustomAdapterRv.isEnabled = false
-        binding.fragmentStudyNextIv.isEnabled = false
-        binding.fragmentStudyBackIv.isEnabled = false
+        binding.fragmentStudyNextIv.visibility = View.GONE
+        binding.fragmentStudyBackIv.visibility = View.GONE
         binding.fragmentStudyShuffleIv.isEnabled = false
     }
 
     private fun enableCustomAdapterUI() {
         binding.studyCustomAdapterRv.isEnabled = true
-        binding.fragmentStudyNextIv.isEnabled = true
-        binding.fragmentStudyBackIv.isEnabled = true
+        binding.fragmentStudyNextIv.visibility = View.VISIBLE
+        binding.fragmentStudyBackIv.visibility = View.VISIBLE
         binding.fragmentStudyShuffleIv.isEnabled = true
     }
 

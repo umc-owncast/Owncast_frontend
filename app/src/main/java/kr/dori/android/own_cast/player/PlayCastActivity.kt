@@ -614,7 +614,7 @@ class PlayCastActivity : AppCompatActivity() {
         return String.format("%02d:%02d", minutes, seconds)
     }
 
-    /* 루프 기능: timePoint가 endPoint일 때
+    // 루프 기능: timePoint가 endPoint일 때
     private fun enableLoopForSentence(position: Int) {
         val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
         val currentSentence = fragment?.adapter?.dataList?.get(position)
@@ -634,8 +634,9 @@ class PlayCastActivity : AppCompatActivity() {
         }
     }
 
-     */
 
+
+    /*
     //timePoint가 시작위치일 때 이거 쓰세요 좀!! 넌 치매노인이 아니다 넌 치매 노인이 아니다 넌 치매노인
     private fun enableLoopForSentence(position: Int) {
         val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
@@ -656,6 +657,8 @@ class PlayCastActivity : AppCompatActivity() {
             Log.e("loop", "Invalid sentence data for looping")
         }
     }
+
+     */
 
     // 반복을 해제
     private fun disableLoopForSentence() {
@@ -696,10 +699,8 @@ class PlayCastActivity : AppCompatActivity() {
                                     val errorResponse: ErrorResponse = gson.fromJson(errorBody.charStream(), ErrorResponse::class.java)
                                     Log.d("캐스트 해제", "${errorResponse.message}, ${errorResponse.code}")
                                     Toast.makeText(this@PlayCastActivity, "서버 오류 코드 : ${errorResponse.code} \n${errorResponse.message}", Toast.LENGTH_SHORT).show()
-
                                 }
                             }
-
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
@@ -708,6 +709,5 @@ class PlayCastActivity : AppCompatActivity() {
             }
         }
     }
-
 }
 
