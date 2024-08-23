@@ -449,10 +449,10 @@ class PlayCastActivity : AppCompatActivity() {
                 }
 
                 // CastAudioFragment에 시간 정보 전달
-                val audioFragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm)
+                /*val audioFragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm)
                 if (audioFragment is CastAudioFragment && audioFragment.isAdded) {
                     audioFragment.updateCurrentTime(currentPosition)
-                }
+                }*/
             }
             seekBarHandler.postDelayed(this, 300) // 주기적으로 업데이트
         }
@@ -719,10 +719,10 @@ class PlayCastActivity : AppCompatActivity() {
                     Log.d("UpdateTime", "Activity: $currentPosition")
                 }
 
-                val audioFragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm)
+                /*val audioFragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm)
                 if (audioFragment is CastAudioFragment && audioFragment.isAdded && !audioFragment.isRemoving) {
                     audioFragment.updateCurrentTime(currentPosition)
-                }
+                }*/
             }
             scriptHandler.postDelayed(this, 300)
         }

@@ -71,7 +71,7 @@ class CastAudioFragment(val currentCast: CastWithPlaylistId) : Fragment() {
         binding.castTitle.text = castTitle
     }
 
-    fun updateCurrentTime(currentTime: Long) {
+    /*fun updateCurrentTime(currentTime: Long) {
         Log.d("UpdateTime", "Fragment: $currentTime")
         val newHighlightedPosition = findCurrentPosition(currentTime)
         if(!sentences.isNullOrEmpty()){
@@ -79,10 +79,10 @@ class CastAudioFragment(val currentCast: CastWithPlaylistId) : Fragment() {
             binding.textView25.text = sentences[newHighlightedPosition].translatedSentence
         }
 
-    }
+    }*/
 
     private fun findCurrentPosition(currentTime: Long): Int {
-        for (i:Int in 1 until  sentences.size) {
+        for (i in sentences.indices) {
             val previousSentenceTime = if (i > 0) {
                 (sentences[i - 1].timePoint * 1000).toLong()
             } else {
