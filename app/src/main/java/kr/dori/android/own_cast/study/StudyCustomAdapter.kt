@@ -16,6 +16,8 @@ class StudyCustomAdapter :
     RecyclerView.Adapter<StudyCustomAdapter.CenteredItemViewHolder>() {
 
     var itemList: MutableList<GetBookmark> = mutableListOf()
+    var selectedPosition: Int = -1  // 현재 선택된 포지션을 저장하는 변수 추가
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CenteredItemViewHolder {
         val binding = StudyItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -27,6 +29,13 @@ class StudyCustomAdapter :
         val item = itemList[actualPosition]
         holder.bind(item)
         holder.itemView.requestLayout()
+
+        // 클릭 리스너 추가
+        holder.itemView.setOnClickListener {
+            selectedPosition = actualPosition
+            notifyDataSetChanged()  // UI 업데이트
+        }
+
     }
 
     // 실제 itemList의 크기를 반환하여 무한 스크롤을 방지함
@@ -93,6 +102,7 @@ class StudyCustomAdapter :
         }
 
     }
+
 
 
 }
