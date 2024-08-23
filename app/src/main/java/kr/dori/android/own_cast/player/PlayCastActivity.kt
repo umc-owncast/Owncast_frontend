@@ -614,7 +614,7 @@ class PlayCastActivity : AppCompatActivity() {
         return String.format("%02d:%02d", minutes, seconds)
     }
 
-    // 특정 문장을 반복하도록 설정
+    /* 루프 기능: timePoint가 endPoint일 때
     private fun enableLoopForSentence(position: Int) {
         val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
         val currentSentence = fragment?.adapter?.dataList?.get(position)
@@ -634,6 +634,28 @@ class PlayCastActivity : AppCompatActivity() {
         }
     }
 
+     */
+
+    //timePoint가 시작위치일 때 이거 쓰세요 좀!! 넌 치매노인이 아니다 넌 치매 노인이 아니다 넌 치매노인
+    private fun enableLoopForSentence(position: Int) {
+        val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
+        val currentSentence = fragment?.adapter?.dataList?.get(position)
+        val nextSentence = fragment?.adapter?.dataList?.getOrNull(position + 1)
+
+        if (currentSentence != null) {
+            val startTime = (currentSentence.timePoint * 1000).toLong()
+            val endTime = if (nextSentence != null) {
+                (nextSentence.timePoint * 1000).toLong()
+            } else {
+                service?.getDuration() ?: Long.MAX_VALUE // 다음 문장이 없을 경우 전체 오디오 길이로 설정
+            }
+
+            service?.setLoopForSegment(startTime, endTime)
+            Log.d("loop", "Loop set from $startTime to $endTime for sentence at position $position")
+        } else {
+            Log.e("loop", "Invalid sentence data for looping")
+        }
+    }
 
     // 반복을 해제
     private fun disableLoopForSentence() {
