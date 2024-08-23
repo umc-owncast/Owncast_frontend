@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,7 +51,7 @@ class CategoryFragment() : Fragment(), ActivityMover {
         Log.d("xibal5","${playlistId}")
 
         binding =  FragmentCategoryBinding.inflate(inflater,container,false)
-        binding.imageView2
+
         castAdapter = CastAdapter(this)
         binding.fragmentCategoryRv.adapter = castAdapter
         binding.fragmentCategoryRv.layoutManager = LinearLayoutManager(context)
@@ -80,6 +81,7 @@ class CategoryFragment() : Fragment(), ActivityMover {
                                     imagePath = cast.imagePath
                                 )
                             }
+                            Glide.with(binding.root.context).load(castListWithPlaylistId[0].imagePath).into(binding.imageView2)
 
                             // 데이터를 어댑터에 설정
                             castAdapter.dataList = castListWithPlaylistId.toMutableList()

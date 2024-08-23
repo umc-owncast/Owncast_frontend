@@ -86,6 +86,7 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
                 Log.d("script", "playlistId: ${currentCast.playlistId}, castId: ${currentCast.castId}")
                 binding.textView26.text = castInfo.title
                 adapter.dataList = castInfo.sentences
+                Log.d("문장체크",castInfo.sentences.toString())
                 adapter.bookmarkList = bookmarks
                 binding.scriptRv.adapter = adapter
                 binding.scriptRv.layoutManager = LinearLayoutManager(context)

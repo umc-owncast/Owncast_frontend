@@ -181,7 +181,7 @@ class PlayCastActivity : AppCompatActivity() {
                 stopCurrentAudio()  // 기존 음원 중지
                 xibalCast(nextCast.castId)  // 새로운 캐스트 재생 및 UI 초기화
                 Log.d("test", "currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
-                classifyCast() // 추가 안한 캐스트면 창뜨게 해야함
+                //classifyCast() // 추가 안한 캐스트면 창뜨게 해야함
                 updateCastAudioFragmentUI()
             }
         }
@@ -195,7 +195,7 @@ class PlayCastActivity : AppCompatActivity() {
                 stopCurrentAudio()  // 기존 음원 중지
                 xibalCast(previousCast.castId)  // 새로운 캐스트 재생 및 UI 초기화
                 Log.d("test", "currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
-                classifyCast()
+                //classifyCast()
                 updateCastAudioFragmentUI()
 
             }
@@ -643,7 +643,7 @@ class PlayCastActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         updateUI() // UI 업데이트 시 현재 상태를 반영하여 조정
-        classifyCast()
+        //classifyCast()
     }
     fun formatTime(input: Int): String {
         val minutes = input / 60
@@ -707,7 +707,7 @@ class PlayCastActivity : AppCompatActivity() {
         val intent = Intent(this, SearchAddCategoryActivity::class.java)
         intent.putExtra("id",CastPlayerData.currentCast.castId)
         startActivity(intent)
-        classifyCast()
+        //classifyCast()
     }
 
     private val updateScriptFragment = object : Runnable {

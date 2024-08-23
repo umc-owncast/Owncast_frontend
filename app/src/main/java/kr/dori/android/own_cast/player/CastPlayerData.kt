@@ -69,6 +69,11 @@ object CastPlayerData {
         }
     }
 
+    fun setCurrentIndex(int: Int){
+        currentPosition = int
+        currentCast = allCastList[int]
+    }
+
     fun setImagePath(list:List<String>){
         castImagePath.clear()
         castImagePath.addAll(list)

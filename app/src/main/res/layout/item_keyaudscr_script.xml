@@ -31,6 +31,6 @@
         android:textColor="#00051F"
         android:textSize="14sp"
         android:letterSpacing="0.02"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="7dp"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -185,6 +185,7 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
         Log.d("ScriptAdapter", "Current Time: $currentTime")
         val newHighlightedPosition = findCurrentPosition(currentTime)
         if (newHighlightedPosition != currentHighlightedPosition) {
+
             val previousHighlightedPosition = currentHighlightedPosition
             currentHighlightedPosition = newHighlightedPosition
             Log.d("ScriptAdapter", "Highlight Position Changed: $previousHighlightedPosition -> $currentHighlightedPosition")
@@ -196,14 +197,14 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
         }
     }
     private fun findCurrentPosition(currentTime: Long): Int {
-        for (i in dataList.indices) {
-            val previousSentenceTime = if (i > 0) {
-                (dataList[i - 1].timePoint * 1000).toLong()
+        for (i:Int in 0 until dataList.size-1) {
+            val previousSentenceTime = if (i >= 0){
+                (dataList[i].timePoint * 1000).toLong()
             } else {
                 0L  // 첫 문장의 경우, 시작을 0으로 설정
             }
 
-            val sentenceTimePoint = (dataList[i].timePoint * 1000).toLong()
+            val sentenceTimePoint = (dataList[i + 1].timePoint * 1000).toLong()
 
             Log.d("ScriptAdapter", "Checking sentence $i: previousSentenceTime = $previousSentenceTime, sentenceTimePoint = $sentenceTimePoint")
 
