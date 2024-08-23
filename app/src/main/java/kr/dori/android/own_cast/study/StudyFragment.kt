@@ -141,6 +141,11 @@ class StudyFragment : Fragment() {
                         if (dataCount > 0) {
                             customAdapter.itemList = allBookmarks.toMutableList()
                             customAdapter.notifyDataSetChanged()
+                            if (dataCount > 1) {
+                                binding.studyCustomAdapterRv.post {
+                                    binding.studyCustomAdapterRv.smoothScrollToPosition(1)
+                                }
+                            }
 
                             adjustSelectedItem()  // State 텍스트를 업데이트합니다.
                             enableCustomAdapterUI()  // UI 요소를 활성화합니다.
@@ -181,6 +186,11 @@ class StudyFragment : Fragment() {
                         if (dataCount > 0) {
                             customAdapter.itemList = allBookmarks.toMutableList()
                             customAdapter.notifyDataSetChanged()
+                            if (dataCount > 1) {
+                                binding.studyCustomAdapterRv.post {
+                                    binding.studyCustomAdapterRv.smoothScrollToPosition(1)
+                                }
+                            }
                             adjustSelectedItem()  // State 텍스트를 업데이트합니다.
                             enableCustomAdapterUI()  // UI 요소를 활성화합니다.
                         } else {
@@ -220,6 +230,11 @@ class StudyFragment : Fragment() {
                         if (dataCount > 0) {
                             customAdapter.itemList = allBookmarks.toMutableList()
                             customAdapter.notifyDataSetChanged()
+                            if (dataCount > 1) {
+                                binding.studyCustomAdapterRv.post {
+                                    binding.studyCustomAdapterRv.smoothScrollToPosition(1)
+                                }
+                            }
                             adjustSelectedItem()  // State 텍스트를 업데이트합니다.
                             enableCustomAdapterUI()  // UI 요소를 활성화합니다.
                         } else {
@@ -355,13 +370,22 @@ class StudyFragment : Fragment() {
         when (position) {
             0 -> {
                 loadInitialCustomAdapterData()
+
+
             } // 첫 번째 아이템 클릭 시 초기 데이터 로드
-            1 -> loadNotSaved() // 두 번째 아이템 클릭 시 저장되지 않은 북마크 로드
+            1 -> {
+                loadNotSaved()
+
+
+            } // 두 번째 아이템 클릭 시 저장되지 않은 북마크 로드
+
             else -> {
                 val filteredData = studyAdapter.dataList
                 if (filteredData.isNotEmpty() && position < filteredData.size) {
                     val playlistId = filteredData[position].playlistId
                     loadCategoryBookmark(playlistId) // 그 외의 경우 해당 카테고리의 북마크 로드
+
+
                 }
             }
         }
