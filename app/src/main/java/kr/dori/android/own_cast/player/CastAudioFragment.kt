@@ -82,7 +82,7 @@ class CastAudioFragment(val currentCast: CastWithPlaylistId) : Fragment() {
     }
 
     private fun findCurrentPosition(currentTime: Long): Int {
-        for (i in sentences.indices) {
+        for (i:Int in 1 until  sentences.size) {
             val previousSentenceTime = if (i > 0) {
                 (sentences[i - 1].timePoint * 1000).toLong()
             } else {
