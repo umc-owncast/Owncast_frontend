@@ -11,5 +11,6 @@ data class CastWithPlaylistId(
     val isPublic: Boolean,
     val castCreator: String,
     val castCategory: String,
-    val audioLength: String
+    val audioLength: String,
+    val imagePath: String
 ): Serializable

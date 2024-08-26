@@ -94,8 +94,8 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
         binding.keywordAudiosetSb.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (progress < 2) {
-                    seekBar?.progress = 2
+                if (progress < 1) {
+                    seekBar?.progress = 1
                 } else if (progress % 2 == 0) {
                     audioTime = progress*30
                     binding.keyAudSetCurTimeTv.text = "${progress / 2}분"
@@ -148,12 +148,12 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
 
                 //api 전송용 데이터를 받아옴
                 if(formality.equals("CASUAL")){
-                    Toast.makeText(requireContext(), voiceList.styleCasual.dataType[p2].toString(), Toast.LENGTH_SHORT).show()
+
                     voice = voiceList.styleCasual.dataType[p2]
                 }
                 else{
 
-                    Toast.makeText(requireContext(), voiceList.styleBusiness.dataType[p2].toString(), Toast.LENGTH_SHORT).show()
+
                     voice = voiceList.styleBusiness.dataType[p2]
                 }
 

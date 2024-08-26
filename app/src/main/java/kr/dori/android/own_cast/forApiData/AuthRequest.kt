@@ -39,12 +39,18 @@ data class PostOtherPlaylistCast(//OtherCastRequestDTO
 //2계층
 data class UpdateInfo(
     @SerializedName("title") val title: String,
-    @SerializedName("imagePath") val imagePath: String,
-    @SerializedName("isPublic") val isPublic: Boolean
+    @SerializedName("isPublic") val isPublic: Boolean,
+    @SerializedName("playlistId") val playlistId: Long
+
 )
 
 data class SaveInfo(
     @SerializedName("title") val title: String,
-    @SerializedName("playlistId") val playlistId: Long,
-    @SerializedName("isPublic") val isPublic: Boolean
+    @SerializedName("isPublic") val isPublic: Boolean,
+    @SerializedName("playlistId") val playlistId: Long
+
+)
+
+data class DeleteOtherDto(
+    @SerializedName("castId") val castId: Long
 )

@@ -19,9 +19,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.data.SongData
+
+import kr.dori.android.own_cast.data.CastPlayerData
+
 import kr.dori.android.own_cast.databinding.FragmentSearchTwoBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
@@ -30,6 +33,9 @@ import kr.dori.android.own_cast.forApiData.PostCastByScript
 import kr.dori.android.own_cast.forApiData.PostCastForResponse
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
+
+import kr.dori.android.own_cast.player.CastWithPlaylistId
+
 import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.playlist.SharedViewModel
 import retrofit2.Response
@@ -37,10 +43,11 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 import kotlin.coroutines.CoroutineContext
 
-class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
+class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope,ActivityMover {
     private lateinit var binding: FragmentSearchTwoBinding
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private val searchTwoAdapter = SearchTwoAdapter(this)
+
 
 
     private val sharedViewModel: SharedViewModel by activityViewModels()
@@ -49,6 +56,11 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
         get() = Dispatchers.Main + corutineJob
     private lateinit var corutineJob: Job
 
+
+
+
+
+    private var detail_interest : String? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -56,10 +68,14 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
     ): View? {
         binding = FragmentSearchTwoBinding.inflate(inflater, container, false)
 
-        val detail_interest = arguments?.getString("detail_interest","야구")
+
+        detail_interest = arguments?.getString("detail_interest","야구")
         detail_interest?.let{
             searchOtherCast(it)
         }
+
+
+
 
 
         activityResultLauncher =
@@ -78,10 +94,10 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
 
         return binding.root
     }
-
     fun searchOtherCast(keyword:String){
         corutineJob = Job()
         var dialogText : String = "로딩 중이에요"
+
 
         val dialog = KeywordLoadingDialog(requireContext(), dialogText)
         dialog.setCancelable(false)
@@ -131,14 +147,28 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
     }
     override fun goPlayCast(list: List<CastHomeDTO>, id:Long) {
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
-        intent.putExtra("list",ArrayList(list))
-        intent.putExtra("id",id)
-        activityResultLauncher.launch(intent)
+
+        var data = list.map{
+            CastWithPlaylistId(
+                castId= it.id,
+                playlistId = -1L,
+                castTitle = it.title,
+                isPublic = true,
+                castCreator = it.memberName,
+                castCategory = detail_interest?:"로딩실패",
+                audioLength = it.audioLength,
+                imagePath = it.imagePath
+            )
+        }
+
+        CastPlayerData.setCast(data,1)//데이터 초기화
+        ToPlayCast(data)
     }
 
     override fun goAddCast(id:Long) {//여기다가 카테고리 정보 담아야함
         val intent = Intent(requireContext(), SearchAddCategoryActivity::class.java)
         sharedViewModel.data.value?.let{
+
             intent.putExtra("categoryList",ArrayList(it))
         }
         intent.putExtra("id",id)
@@ -146,6 +176,22 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope {
     }
 
     override fun backSearch() {
+        TODO("Not yet implemented")
+    }
+
+
+    override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
+
+        // 현재 서비스가 재생 중인지 확인하고 중지
+        //val currentService = getCurrentServiceInstance()
+        //  service?.stopAudio()
+
+        // 캐스트 설정 및 새 액티비티로 이동
+        val intent = Intent(requireContext(), PlayCastActivity::class.java)
+        activityResultLauncher.launch(intent)
+    }
+
+    override fun ToEditAudio(id: Long, playlistId: Long) {
         TODO("Not yet implemented")
     }
 }

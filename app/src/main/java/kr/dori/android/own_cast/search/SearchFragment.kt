@@ -15,6 +15,9 @@ import android.widget.ImageView
 import android.widget.TextView
 
 
+import android.widget.Toast
+
+
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,13 +29,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.SignupData
-import kr.dori.android.own_cast.data.SongData
+
+
+import kr.dori.android.own_cast.data.CastPlayerData
+
+
 import kr.dori.android.own_cast.databinding.FragmentSearchBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
-
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
 
 import kr.dori.android.own_cast.forApiData.CastInterface
@@ -45,15 +52,20 @@ import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.KeywordAudioSetFragment
 import kr.dori.android.own_cast.keyword.PlaylistText
 
+import kr.dori.android.own_cast.player.CastWithPlaylistId
+
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 import kr.dori.android.own_cast.player.PlayCastActivity
-
 import kr.dori.android.own_cast.playlist.SharedViewModel
 
-class SearchFragment : Fragment(), SearchMover {
+
+
+class SearchFragment : Fragment(), SearchMover, ActivityMover {
+
 
     lateinit var binding: FragmentSearchBinding
     private val searchAdapter = SearchAdapter(this)
@@ -64,6 +76,7 @@ class SearchFragment : Fragment(), SearchMover {
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private var categoryList : List<GetAllPlaylist> = listOf()
     private var detail_interest : String? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,7 +90,9 @@ class SearchFragment : Fragment(), SearchMover {
         //searchDataUpdate()//다른 유저 정보 받아오는 함수
 
         initSearchCastData()
+
         val getAllPlaylist = getRetrofit().create(Playlist::class.java)
+
         CoroutineScope(Dispatchers.IO).launch() {
             launch {
                 try {
@@ -87,6 +102,7 @@ class SearchFragment : Fragment(), SearchMover {
                         var playlistCategoryData = response.body()?.result
                         withContext(Dispatchers.Main) {
                             playlistCategoryData?.let {
+
                                 sharedViewModel.setData(it.toMutableList())
                                 Log.d("apitest-searchHome","${it.toString()}")
                             }
@@ -139,19 +155,32 @@ class SearchFragment : Fragment(), SearchMover {
                 .commitAllowingStateLoss()
         }
 
-
-
-
-
-
         return binding.root
     }
 
     override fun goPlayCast(list: List<CastHomeDTO>, id:Long) {//여기다간 캐스트 정보 담아야함
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
-        intent.putExtra("list",ArrayList(list))
-        intent.putExtra("id",id)
-        activityResultLauncher.launch(intent)
+
+        var data = list.map{
+            CastWithPlaylistId(
+                castId= it.id,
+                playlistId = -1L,
+                castTitle = it.title,
+                isPublic = true,
+                castCreator = it.memberName,
+                castCategory = detail_interest?:"로딩실패",
+                audioLength = it.audioLength,
+                imagePath = it.imagePath
+            )
+        }
+        var imageData = list.map{
+            it.imagePath
+        }
+        CastPlayerData.setCast(data,1)//데이터 초기화
+        ToPlayCast(data)
+    //    CastPlayerData.setCurrentPos(id)//
+
+
     }
 
     override fun goAddCast(id:Long) {//여기다가 카테고리 정보 담아야함
@@ -171,21 +200,18 @@ class SearchFragment : Fragment(), SearchMover {
         val apiService = getRetrofit().create(CastInterface::class.java)
         apiService.searchHome().enqueue(object: Callback<AuthResponse<List<CastHomeDTO>>> {
             override fun onResponse(call: Call<AuthResponse<List<CastHomeDTO>>>, response: Response<AuthResponse<List<CastHomeDTO>>>) {
-                if(response.code().equals("COMMON200")) {
-                    val resp: AuthResponse<List<CastHomeDTO>> = response.body()!!
-                    when (resp.code) {
-                        "COMMON200" -> {
-                            Log.d("apiTest-searchHome", "연결성공, resp값: ${resp.result.toString()}}")
-                            resp.result?.let {
-                                setItemData(it)
-                            }
-                        }
-                        else -> {
-                            Log.d("apiTest-searchHome", "연결실패 코드 : ${resp.code}, ${resp.message}")
 
-                        }
+                if(response.isSuccessful) {
+                    val resp: AuthResponse<List<CastHomeDTO>> = response.body()!!
+                    resp.result?.let {
+                        //왜 오류처리가 안될까?
+                        setItemData(it)
+                    } ?: run{
+                        Toast.makeText(context, "검색 결과가 없습니다",Toast.LENGTH_SHORT).show()
                     }
                 }else{
+                    Toast.makeText(context, "서버 오류 코드 : ${response.code()}",Toast.LENGTH_SHORT).show()
+
                     val resp= response.errorBody()?.string()
                     resp?.let {
                         try {
@@ -197,18 +223,22 @@ class SearchFragment : Fragment(), SearchMover {
                             Log.d("apiTest-searchHome", "에러 응답 파싱 실패: ${e.message}")
                         }
                     } ?: run {
-                        Log.d("apiTest-searchHome", "에러 바디가 없음: ${response.code()}")
+
+
                     }
                 }
             }
             override fun onFailure(call: Call<AuthResponse<List<CastHomeDTO>>>, t: Throwable) {
-                Log.d("apiTest-searchHome","연결실패 ${t.message}")
+
+                Toast.makeText(context, "서버 연결 실패",Toast.LENGTH_SHORT).show()
+
             }
         })
     }
 
 
     fun setItemData(castHomeDTO: List<CastHomeDTO>){
+        if(castHomeDTO.size == 0) Toast.makeText(requireContext(),"유사한 검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
         for (i in 0 until castHomeDTO.size) {
             // item_layout.xml을 inflate하여 GridLayout에 추가
             val itemView = inflaterLayout.inflate(R.layout.item_search_fr, binding.gridLayout, false)
@@ -219,7 +249,8 @@ class SearchFragment : Fragment(), SearchMover {
             val durationTv = itemView.findViewById<TextView>(R.id.searchfr_item_duration_tv)
             titleTv.text = castHomeDTO[i].title
             categoryTv.text = "${castHomeDTO[i].memberName}-${castHomeDTO[i].playlistName}"
-            durationTv.text = formatTime(castHomeDTO[i].audioLength.toInt())
+            Log.d("searchFragment_apicheck","${castHomeDTO[i].audioLength}")
+            durationTv.text = castHomeDTO[i].audioLength
 
 
             if (castHomeDTO[i].imagePath.startsWith("http")) {
@@ -249,6 +280,20 @@ class SearchFragment : Fragment(), SearchMover {
         val minutes = totalSeconds / 60
         val seconds = totalSeconds % 60
         return String.format("%d:%02d", minutes, seconds)
+    }
+    override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
+
+        // 현재 서비스가 재생 중인지 확인하고 중지
+        //val currentService = getCurrentServiceInstance()
+        //  service?.stopAudio()
+
+        // 캐스트 설정 및 새 액티비티로 이동
+        val intent = Intent(requireContext(), PlayCastActivity::class.java)
+        activityResultLauncher.launch(intent)
+    }
+
+    override fun ToEditAudio(id: Long, playlistId: Long) {
+        TODO("Not yet implemented")
     }
 
 }

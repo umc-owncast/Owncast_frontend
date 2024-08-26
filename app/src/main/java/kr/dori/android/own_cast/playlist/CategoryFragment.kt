@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +22,6 @@ import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.data.CastPlayerData
-import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.FragmentCategoryBinding
 import kr.dori.android.own_cast.editAudio.EditAudioActivity
 import kr.dori.android.own_cast.forApiData.Cast
@@ -31,32 +31,40 @@ import kr.dori.android.own_cast.player.CastWithPlaylistId
 import kr.dori.android.own_cast.player.PlayCastActivity
 import retrofit2.create
 
-class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragment(), ActivityMover {
+class CategoryFragment() : Fragment(), ActivityMover {
 
     private lateinit var binding: FragmentCategoryBinding
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var castAdapter: CastAdapter
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     lateinit var sendCastIdList: List<CastWithPlaylistId>
+    private var playlistId: Long = 0 // 초기화된 변수 추가
+    private var playlistName: String = "" // 초기화된 변수 추가
+    constructor(playlistId: Long, playlistName: String) : this() { // 생성자 오버로딩
+        this.playlistId = playlistId
+        this.playlistName = playlistName
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d("xibal","${playlistId}")
-
+        Log.d("xibal5","${playlistId}")
 
         binding =  FragmentCategoryBinding.inflate(inflater,container,false)
 
         castAdapter = CastAdapter(this)
-
+        binding.fragmentCategoryRv.adapter = castAdapter
+        binding.fragmentCategoryRv.layoutManager = LinearLayoutManager(context)
 
 
         val getAllPlaylist = getRetrofit().create(Playlist::class.java)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 5)
+                val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 20)
+                Log.d("xibal5","$response")
                 if (response.isSuccessful) {
+                    Log.d("xibal5","연결 성공 ㅅ")
                     val playlistInfo = response.body()?.result
                     withContext(Dispatchers.Main) {
                         playlistInfo?.let {
@@ -64,18 +72,20 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
                             val castListWithPlaylistId = it.castList.map { cast ->
                                 CastWithPlaylistId(
                                     castId = cast.castId,
-                                    playlistId = playlistId,
-                                    castTitle = cast.castTitle,
+                                    playlistId = cast.playlistId,
+                                    castTitle = cast.castTitle?:"untitled",
                                     isPublic = cast.isPublic,
                                     castCreator = cast.castCreator,
                                     castCategory = cast.castCategory,
-                                    audioLength = cast.audioLength
+                                    audioLength = cast.audioLength,
+                                    imagePath = cast.imagePath
                                 )
                             }
+                            Glide.with(binding.root.context).load(castListWithPlaylistId[0].imagePath).into(binding.imageView2)
 
                             // 데이터를 어댑터에 설정
                             castAdapter.dataList = castListWithPlaylistId.toMutableList()
-                            Log.d("castInfo","${castListWithPlaylistId}")
+                            Log.d("castInfo", "${castListWithPlaylistId}")
                             sendCastIdList = castListWithPlaylistId
                             castAdapter.notifyDataSetChanged()
 
@@ -84,12 +94,14 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
                             Log.d("TotalAudioLength", "총 오디오 길이 (초): $totalAudioLengthInSeconds")
                             binding.castSizeTotalLength.text = "${castListWithPlaylistId.size}개, ${formatTime(totalAudioLengthInSeconds)}"
                         }
+
                     }
                 } else {
-                    Log.d("PlaylistCategory", "Failed to fetch playlist info")
+                    Log.d("xibal5","연결 실패요 ㅛ")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                Log.d("xibal5","서버 문제요 ㅛ")
             }
         }
 
@@ -113,15 +125,19 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
         binding.fragmentCategoryRv.adapter = castAdapter
         binding.fragmentCategoryRv.layoutManager = LinearLayoutManager(context)
 
-// 이 부분은 재생목록 부분이어서 어떻게 수정할건지 생각을 해봐야 됨 -> 재생목록 순서를 어떻게 정할 것인가? -> 해결함
+
+// 아
 
         binding.fragmentCategoryPlayIv.setOnClickListener {
+            CastPlayerData.setCast(sendCastIdList, 0)
             ToPlayCast(sendCastIdList)
            // Log.d("Cast","$sendCastIdList")
         }
 
         binding.fragmentCategoryShuffleIv.setOnClickListener {
-            ToPlayCast(sendCastIdList)
+            val shuffledList = sendCastIdList.shuffled()
+            CastPlayerData.setCast(shuffledList,0)
+            ToPlayCast(shuffledList)
         }
 
         return binding.root
@@ -132,11 +148,9 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
 
         //   val currentCast = CastPlayerData.currentCast
 
-        CastPlayerData.setCast(castList)
-
         val intent = Intent(requireContext(), PlayCastActivity::class.java)
-
         activityResultLauncher.launch(intent)
+
 
     }
 
@@ -176,7 +190,6 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
             val formatTime = String.format("%02d:%02d", minutes, seconds)
             return formatTime
     }
-
 
 }
 

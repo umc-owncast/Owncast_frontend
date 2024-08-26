@@ -15,7 +15,6 @@ class KeyAudSaveDropdownAdapter(context: Context, @LayoutRes private val resId: 
     //var dataList: MutableList<PlaylistText> = mutableListOf()
     override fun getView(position: Int, converView: View?, parent: ViewGroup): View {
         val binding = ItemAudSetSpinnerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-
             binding.tvSpinner.text = categoryList[position]
         return binding.root
     }

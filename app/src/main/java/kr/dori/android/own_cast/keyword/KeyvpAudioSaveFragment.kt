@@ -20,6 +20,7 @@ import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -31,19 +32,32 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kr.dori.android.own_cast.ActivityMover
+import kr.dori.android.own_cast.MainActivity
 import kr.dori.android.own_cast.playlist.AddCategoryListener
 import kr.dori.android.own_cast.editAudio.EditAudio
 import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAudiosaveBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.forApiData.ErrorResponse
 import kr.dori.android.own_cast.forApiData.PlayListInterface
+import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.PostPlaylist
 
 import kr.dori.android.own_cast.forApiData.SaveInfo
 import kr.dori.android.own_cast.forApiData.getRetrofit
+import kr.dori.android.own_cast.player.CastWithPlaylistId
+import kr.dori.android.own_cast.player.PlayCastActivity
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 
@@ -62,8 +76,7 @@ import java.io.IOException
 
 
 //AddCategoryDialog에 toast기능을 넣으면서 EditAudio를 추가로 전달해주는 부분이 playlistFragment에 필요해서 인터페이스 상속을 추가했습니다.
-class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategoryListener,
-    EditAudio {
+class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategoryListener, ActivityMover, EditAudio {
     lateinit var binding: FragmentKeyvpAudiosaveBinding
 
     var currentPos:Int = 0//카테고리 새로 추가할때, dismiss되면 그대로 유지해야되서 만듦
@@ -72,14 +85,19 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
     lateinit var _list:MutableList<String>
 
     private lateinit var sharedViewModel: KeywordViewModel
-
+    private lateinit var finDialog : KeywordAudioFinishDialog
     lateinit var adapter:KeyAudSaveDropdownAdapter
     private var playlistName : MutableList<String> = mutableListOf<String>()
 
     private var isText = false
     private var id : Long? = null
+    private var playlistId: Long = 0
 
-    private lateinit var dialog: AddCategoryDialog
+
+
+    private lateinit var dialog:AddCategoryDialog
+
+
 
     private lateinit var imageResultLauncher: ActivityResultLauncher<Intent>
 
@@ -91,6 +109,17 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
 
     //finish dialog
     private var uri: Uri? = null
+
+    private var currentPage = 0
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+
+    }
+    override fun onDetach() {
+        super.onDetach()
+
+    }
 
 
 
@@ -107,7 +136,6 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
         initSaveBtn()//여기서 저장하기 버튼, 저장 api 호출
 
         //기존에 있던 사진을 우선적으로 저장함, 나중에 init으로 변경하기ㅕ
-        body = prepareFilePartFromDrawable(requireContext(), R.drawable.save_keyword_thumb_ex1, "image")
 
 
 
@@ -136,11 +164,12 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                     .centerCrop() // ImageView에 맞게 이미지 크기를 조정
                     .into(binding.keyAudSaveThumbIv)
                 //아래의 코드로 이제 서버쪽으로 이미지를 보낼 수 있게 해줌.
+
                 uri = it//finish dialog로 사진 정보 넘겨줘야함
 
                 body = createMultipartBodyFromUri(it, requireContext())
             }
-
+            Log.d("이미지 변환","${body}")
 
             binding.keyAudSaveGalIc.visibility = View.GONE
 
@@ -148,20 +177,34 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     }
 }
     fun createMultipartBodyFromUri(uri: Uri, context: Context): MultipartBody.Part? {
-        // Open InputStream from the Uri
+        // Uri에서 MIME 타입을 가져옵니다.
+        val mimeType = context.contentResolver.getType(uri) ?: "image/jpeg" // 기본값을 설정할 수 있습니다.
+
+        // Uri에서 InputStream을 가져옵니다.
         val inputStream = context.contentResolver.openInputStream(uri) ?: return null
-        // Create a temp file in the cache directory to store the image
-        val tempFile = File(context.cacheDir, "tempImageFile.png")
-        tempFile.outputStream().use { outputStream ->
-            inputStream.use { inputStream.copyTo(outputStream) }
+
+        // 임시 파일을 생성합니다.
+        val tempFile = File(context.cacheDir, "tempImageFile${System.currentTimeMillis()}.${mimeType.substringAfter("/")}")
+
+        // InputStream의 데이터를 임시 파일로 복사합니다.
+        inputStream.use { input ->
+            FileOutputStream(tempFile).use { output ->
+                input.copyTo(output)
+            }
         }
 
-        // Convert the temp file to RequestBody
-        val requestFile = tempFile.asRequestBody("image/*".toMediaTypeOrNull())
+        // RequestBody를 생성합니다.
+        val requestFile = tempFile.asRequestBody(mimeType.toMediaTypeOrNull())
 
-        // Create MultipartBody.Part from RequestBody
-        return MultipartBody.Part.createFormData("photo", tempFile.name, requestFile)
+        // MultipartBody.Part를 생성합니다.
+        val multipartBody = MultipartBody.Part.createFormData("photo", tempFile.name, requestFile)
+
+        // 임시 파일 삭제 (선택 사항: 파일 사용 후 삭제)
+        tempFile.deleteOnExit()
+
+        return multipartBody
     }
+
 
     private fun selectGallery() {
         // Android 버전에 따른 권한 확인
@@ -255,22 +298,37 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         Log.d("apitest-getPlaylist",sharedViewModel.getPlayList.value!!.toString())
 
+        binding.keyAudSaveCategorySp.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (binding.keyAudSaveCategorySp.count == 1) {
+
+                    dialog.show()
+                    return@setOnTouchListener true
+                }
+            }
+            false  // 이벤트가 처리되지 않았음을 나타냅니다.
+        }
 
         binding.keyAudSaveCategorySp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
                 val value = binding.keyAudSaveCategorySp.getItemAtPosition(pos).toString()
-                when(pos){
+                if((parent?.count == 1)){
 
-                    playlistName.size-1 ->{//이 부분이 카테고리 생성하는 부분, api 추가해주기
+                }else{
+                    when(pos){
 
-                        binding.keyAudSaveCategorySp.setSelection(currentPos)
-                        dialog.show()
-                    }
-                    else ->{
-                        currentPos = pos
-                        Toast.makeText(requireContext(), value, Toast.LENGTH_SHORT).show()
+                        playlistName.size-1 ->{//이 부분이 카테고리 생성하는 부분, api 추가해주기
+                            binding.keyAudSaveCategorySp.setSelection(currentPos)
+                            dialog.show()
+                        }
+                        else ->{
+                            currentPos = pos
+
+                        }
                     }
                 }
+
+
 
                 //다시 포커스 안된거처럼 색깔을 바꿔줘야 함
             }
@@ -280,13 +338,16 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             }
 
         }
-        activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-
-                val data: Intent? = result.data
-                val isSuccess = data?.getBooleanExtra("result", false) ?: false
+        // Initialize ActivityResultLauncher
+        activityResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    Log.d("ifsuccess", "success")
+                    val data: Intent? = result.data
+                    val isSuccess = data?.getBooleanExtra("result", false) ?: false
+                    (activity as? MainActivity)?.setPlaylistTableVisibility(isSuccess)
+                }
             }
-        }
     }
 
 
@@ -294,20 +355,25 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 
 
-
+    //goHome
     //finish dialog listener 구현
     override fun goHomeFragment() {
         super.goHomeFragment()
+        activity?.supportFragmentManager?.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         activity?.finish()
+    }
+        //캐스트 이동
+    override fun goPlayCast() {
+        super.goPlayCast()
+        getCastInfo(playlistId)
     }
 
     //addCategory같이 카테고리 추가하는 기능
     override fun onCategoryAdded(categoryName: String) {
-        //list.add(list.size-1,categoryName)원랜 이걸로 변환됐다고 해줘야되는데
-        //setSelection 써야 우리가 작성한 카테고리가 선택됨
-        //selection 효과가 기본적으로 구현돼있는듯
+
         addPlaylist(categoryName)
         adapter.notifyDataSetChanged()
+        dialog.dismiss()
 
         //새로 생성하면 키워드 생성하기 메뉴가 size-1, 새로 생성된 메뉴가 size-2
 
@@ -362,87 +428,92 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
     }
 
+
+
     fun postCastSave(){//api저장하는 버튼
         val apiService = getRetrofit().create(CastInterface::class.java)
         //1. apiService후, 자신이 만들어놓은 인터페이스(함수 지정해주기)
         //2. AuthResponse에 응답으로 넘어오는 result 값의 제네릭 넣어주기 AuthResponse<List<CastHomeDTO>>
         //3. COMMON200이 성공 코드이고, resp에서 필요한 값 받기
-        val playlistId : Long = sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].id
+        Log.d("캐스트 저장","${playlistId}랑 ${sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].id}")
+        playlistId = sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].id
 
-        val findialog = KeywordAudioFinishDialog(requireContext(), this, castTitle,
-            sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].playlistName, uri)//저장 타이틀, 카테고리, 길이, 사진
+        finDialog = KeywordAudioFinishDialog(requireContext(), this, castTitle,
+            sharedViewModel.getPlayList.value!![binding.keyAudSaveCategorySp.selectedItemPosition].playlistName, uri, sharedViewModel.songDuration)
+            //저장 타이틀, 카테고리, 길이, 사진
 
-        apiService.postCast(sharedViewModel.castId.value!!, SaveInfo(castTitle,playlistId,binding.keyAudPublicBtnIv.isChecked), body!!).enqueue(object: Callback<AuthResponse<String>> {
-            override fun onResponse(call: Call<AuthResponse<String>>, response: Response<AuthResponse<String>>) {
-                Log.d("apiTest-castPost", "저장 시도 중 ${ response.toString() }")
-                val resp = response.body()
-                if(resp!=null){
-                    when(resp.code) {
-                        "COMMON200" -> {
+        //캐스트 저장 api호출
 
-                            Log.d("apiTest-castPost",resp.result.toString())
+        CoroutineScope(Dispatchers.IO).launch() {
+            Log.d("캐스트 저장","저장할 때 타이틀 ${castTitle}, 사진 파일 ${body}")
+            val response = apiService.postCast(sharedViewModel.castId.value!!, SaveInfo(castTitle,  !binding.keyAudPublicBtnIv.isChecked,playlistId) , body)
+            launch {
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            Log.d("캐스트 저장", "${response.body()?.result}")
+                            finDialog.setCancelable(false)//dialog는 여기서
+                            finDialog.setCanceledOnTouchOutside(false)
+                            finDialog.show()
 
-                            findialog.setCancelable(false)//dialog는 여기서
-                            findialog.setCanceledOnTouchOutside(false)
-
-                            findialog.show()
-
+                        } else {
+                            Toast.makeText(this@KeyvpAudioSaveFragment.requireContext(), "저장 실패 코드 ${response.code()}", Toast.LENGTH_SHORT).show()
                         }
-                        else ->{
-                            Log.d("apiTest-castPost","연결실패 코드 : ${resp.code}")
 
-                        }
+                    } catch (e: Exception) {
+                        Toast.makeText(this@KeyvpAudioSaveFragment.requireContext(), "응답 실패 ${e.message}", Toast.LENGTH_SHORT).show()
+                        e.printStackTrace()
                     }
-                }else{
-                    Toast.makeText(requireContext(), "서버가 불안정합니다 잠시후 다시 시도해주세요", Toast.LENGTH_SHORT).show()
                 }
 
+
             }
+        }
+    }
+
+    private fun addPlaylist(categoryName: String){
+        dialog.dismiss()
+        val apiService = getRetrofit().create(Playlist::class.java)
+        val loadingdialog = KeywordLoadingDialog(requireContext(),"플리를 생성중이에요")
+        loadingdialog.setCancelable(false)
+        loadingdialog.setCanceledOnTouchOutside(false)
+        loadingdialog.show()
+        CoroutineScope(Dispatchers.IO).launch() {
+            val response = apiService.postPlaylist(categoryName)
+            launch {
+
+                withContext(Dispatchers.Main) {
+                    try {
+
+                        if (response.isSuccessful) {
+                            response.body()?.result?.let{
+                                sharedViewModel.addGetPlayList(PlaylistText(it.playlistId,categoryName))
+                                playlistName.add(playlistName.size-1,categoryName)
+                                adapter.notifyDataSetChanged()
+                                playlistId = it.playlistId
+                            }
+                            binding.keyAudSaveCategorySp.setSelection(playlistName.size-2)
+
+                        } else {
+                            response.errorBody()?.let { errorBody ->
+                                val gson = Gson()
+                                val errorResponse: ErrorResponse = gson.fromJson(errorBody.charStream(), ErrorResponse::class.java)
+                            }
+                            Log.d("카테고리 추가", "카테고리 추가 실패 : ${response.code()}, ${response.message()}")
+                            Toast.makeText(this@KeyvpAudioSaveFragment.requireContext(),"카테고리 추가 실패,\n 오류코드 : ${response.code()}", Toast.LENGTH_SHORT).show()
+                        }
 
 
-            override fun onFailure(call: Call<AuthResponse<String>>, t: Throwable) {
-                Log.d("apiTest-castPost", t.message.toString())
-                Toast.makeText(requireContext(), "서버가 불안정합니다 잠시후 다시 시도해주세요", Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                    loadingdialog.dismiss()
+                }
             }
-        })
+        }
     }
 
 
-    fun addPlaylist(categoryName: String) {//playList추가 버튼
-        val apiService = getRetrofit().create(PlayListInterface::class.java)
-        apiService.postPlayList(categoryName).enqueue(object: Callback<AuthResponse<PostPlaylist>> {
-            override fun onResponse(call: Call<AuthResponse<PostPlaylist>>, response: Response<AuthResponse<PostPlaylist>>) {
-                Log.d("apiTest1", response.toString())
-                val resp : AuthResponse<PostPlaylist> = response.body()!!
-                when(resp.code) {
-                    "COMMON200" -> {
-
-                        Log.d("apiTest-playlistAdd", "저장성공 id: ${ resp.result.toString() } 제목 : ${categoryName}")
-                        id =  resp.result!!.playlistId
-                        id?.let {
-                            sharedViewModel.addGetPlayList(PlaylistText(it,categoryName))
-                            playlistName.add(playlistName.size-1,categoryName)
-                            adapter.notifyDataSetChanged()
-                        }
-                        binding.keyAudSaveCategorySp.setSelection(playlistName.size-2)
-                        dialog.dismiss()
-
-                        Toast.makeText(requireContext(),"추가되었습니다.",Toast.LENGTH_SHORT).show()
-                    }
-                    else ->{
-                        Log.d("apiTest-playlistAdd","연결실패 코드 : ${resp.code}")
-
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<AuthResponse<PostPlaylist>>, t: Throwable) {
-                Log.d("apiTest-playlistAdd", t.message.toString())
-
-            }
-        })
-
-    }
 
     private fun initEditText(){
 
@@ -468,6 +539,87 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
+    fun getCastInfo(playlistId: Long) {
+        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
+        val dialog = KeywordLoadingDialog(requireContext(),"이동 중입니다.")
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.show()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 5)
+                withContext(Dispatchers.Main) { dialog.dismiss() }
+                if (response.isSuccessful) {
+                    val playlistInfo = response.body()?.result
+                    withContext(Dispatchers.Main) {
+
+                        playlistInfo?.let {
+                            val castList = it.castList.toMutableList()
+
+                            val castListWithPlaylistId = castList.map{
+                                    cast ->
+                                CastWithPlaylistId(
+                                    castId = cast.castId,
+                                    playlistId = playlistId,
+                                    castTitle = cast.castTitle?:"제목못받음",//서버에서 바로 저장이 안돼서 그런거같음;
+                                    isPublic = cast.isPublic,
+                                    castCreator = cast.castCreator,
+                                    castCategory = cast.castCategory,
+                                    audioLength = cast.audioLength,
+                                    imagePath = cast.imagePath
+                                )
+                            }
+
+                            CastPlayerData.setCast(castListWithPlaylistId, castListWithPlaylistId.size-1)
+                            CastPlayerData.setCurrentIndex(castListWithPlaylistId.size-1)
+                            ToPlayCast(castListWithPlaylistId)
+                            // 캐스트 리스트를 저장
+                            //괜히 id쓰는것보다 어차피 마지막 가있을테니깐 넣었음..
+                            //CastPlayerData.currentPosition = CastPlayerData.getAllCastList().size -1
+                            //CastPlayerData.currentCast = CastPlayerData.getAllCastList()[CastPlayerData.currentPosition]
+                            //val intent = Intent(activity, PlayCastActivity::class.java)
+                            //startActivity(intent)
+                            activity?.finish()
+                            finDialog.dismiss()
+                        }
+                    }
+                } else {
+                    Log.e("PlaylistCategoryAdapter", "${response.code()}, ${response.errorBody()?.string()}")
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            context,
+                            "서버 오류 코드 : ${response.code()}", Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                }
+            } catch (e: Exception) {
+                Log.e("PlaylistCategoryAdapter", "Exception during API call", e)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        context,
+                        "응답 실패  : ${e.message}", Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+            }
+        }
+    }
+    override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
+
+        // 현재 서비스가 재생 중인지 확인하고 중지
+        //val currentService = getCurrentServiceInstance()
+        //  service?.stopAudio()
+
+        // 캐스트 설정 및 새 액티비티로 이동
+        val intent = Intent(requireContext(), PlayCastActivity::class.java)
+        activityResultLauncher.launch(intent)
+    }
+
+    override fun ToEditAudio(id: Long, playlistId: Long) {
+        TODO("Not yet implemented")
+    }
 
 }
+
 

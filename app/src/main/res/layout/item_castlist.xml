@@ -8,14 +8,32 @@
     android:paddingEnd="8dp"
     android:layout_marginBottom="8dp"
     >
-    <ImageView
-        android:id="@+id/it_castlist_thumbnail_iv"
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/castlist_item_cardview"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/keyword_aud_save_src_bg"
+
+
+        android:scaleType="centerCrop"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/it_castlist_thumbnail_iv"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.cardview.widget.CardView>
     <ImageView
         android:id="@+id/it_castlist_listadd_iv"
         android:layout_width="wrap_content"
@@ -59,9 +77,9 @@
         android:textSize="14sp"
         android:letterSpacing="0.01"
         android:textColor="@color/text_color"
-        app:layout_constraintStart_toEndOf="@id/it_castlist_thumbnail_iv"
-        app:layout_constraintTop_toTopOf="@id/it_castlist_thumbnail_iv"
-        app:layout_constraintBottom_toBottomOf="@id/it_castlist_thumbnail_iv"
+        app:layout_constraintStart_toEndOf="@id/castlist_item_cardview"
+        app:layout_constraintTop_toTopOf="@id/castlist_item_cardview"
+        app:layout_constraintBottom_toBottomOf="@id/castlist_item_cardview"
         android:layout_marginBottom="22.5dp"
         android:layout_marginStart="16dp"/>
     <TextView
@@ -81,7 +99,7 @@
         android:layout_weight="1"
         android:background="@color/gray"
         app:layout_constraintStart_toStartOf="@id/it_castlist_title_tv"
-        app:layout_constraintTop_toBottomOf="@id/it_castlist_thumbnail_iv"
+        app:layout_constraintTop_toBottomOf="@id/castlist_item_cardview"
         android:layout_marginTop="5dp"
 
         />

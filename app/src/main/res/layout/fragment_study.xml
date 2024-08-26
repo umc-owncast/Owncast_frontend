@@ -35,15 +35,15 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/study_custom_adapter_rv"
         android:layout_width="0dp"
-        android:layout_height="500dp"
-        android:layout_marginTop="30dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="120dp"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_study_shuffle_iv"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/study_category_rv"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/study_category_rv" />
 
     <ImageView
         android:id="@+id/fragment_study_shuffle_iv"
@@ -131,6 +131,8 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/study_custom_adapter_rv" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,12 @@
 package kr.dori.android.own_cast
 
 import android.app.Activity
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.util.Log
@@ -21,16 +25,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 import kotlinx.coroutines.withContext
+
 import kr.dori.android.own_cast.databinding.FragmentHomeBinding
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
+
 import kr.dori.android.own_cast.keyword.KeywordActivity
 import kr.dori.android.own_cast.keyword.KeywordAppData
 
 import kr.dori.android.own_cast.keyword.KeywordData
 import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
 import kr.dori.android.own_cast.keyword.KeywordViewModel
+import kr.dori.android.own_cast.player.BackgroundPlayService
 import kr.dori.android.own_cast.playlist.SharedViewModel
 
 
@@ -40,6 +47,34 @@ class HomeFragment : Fragment() {
     private var textList = ArrayList<TextView>()
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+    // 서비스 관련 변수
+
+
+    private var service: BackgroundPlayService? = null
+    private var isBound = false
+
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            val binder = service as BackgroundPlayService.LocalBinder
+            this@HomeFragment.service = binder.getService()
+            isBound = true
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            service = null
+            isBound = false
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val intent = Intent(context, BackgroundPlayService::class.java)
+        context.bindService(intent, connection, Context.BIND_AUTO_CREATE)
+    }
+
+
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,8 +85,8 @@ class HomeFragment : Fragment() {
 
         //데이터 설정
         if(SignupData.interest!=null){
-            binding.mainInterstTv.text = SignupData.interest
-            binding.homefrKeywordTopicTv.text = SignupData.interest
+            binding.mainInterstTv.text = SignupData.detail_interest
+            binding.homefrKeywordTopicTv.text = SignupData.detail_interest
         }
 
 
@@ -61,20 +96,19 @@ class HomeFragment : Fragment() {
         //밑줄 추가하는 함수
         initTextUi()
         if(KeywordAppData.detailTopic.isNullOrEmpty()){
-            initData()
-
+            initData()//여기서도 결국 초기화는 해줌
         }else{
             initKeyword()
-
         }
 
 
         binding.insertKeyw.setOnClickListener {//검색창 이동
             val intent = Intent(getActivity(), KeywordActivity::class.java)
+            stopAudio() // 음원 중단
             intent.putExtra("isSearch",true)
-
             startActivity(intent)
         }
+
 
         activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -86,6 +120,7 @@ class HomeFragment : Fragment() {
         binding.homefrScriptDirectInputTv.setOnClickListener {
             val intent = Intent(getActivity(), KeywordActivity::class.java)
             intent.putExtra("isSearch",false)
+            stopAudio() // 음원 중단
             activityResultLauncher.launch(intent)
         }
 
@@ -93,6 +128,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun textViewBinding(){
+        if(!textList.isNullOrEmpty()) textList.clear()
         textList.add(binding.homefrTdKeyword1Tv)
         textList.add(binding.homefrTdKeyword2Tv)
         textList.add(binding.homefrTdKeyword3Tv)
@@ -112,6 +148,7 @@ class HomeFragment : Fragment() {
                 textList[i].setOnClickListener {
                     val intent = Intent(getActivity(), KeywordActivity::class.java)
                     intent.putExtra("searchText",textList[i].text.toString())
+                    stopAudio() // 음원 중단
                     startActivity(intent)
                 }
             }else{
@@ -161,6 +198,11 @@ class HomeFragment : Fragment() {
 
 
             }
+        }
+    }
+    private fun stopAudio() {
+        if (isBound && service != null) {
+            service?.pauseAudio()
         }
     }
 }

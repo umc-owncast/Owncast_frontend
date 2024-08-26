@@ -49,16 +49,25 @@
             app:layout_constraintTop_toBottomOf="@+id/fragment_cast_playlist_title"
             app:srcCompat="@drawable/fragment_cast_lock" />
 
-        <ImageView
+
+
+        <TextView
             android:id="@+id/fragment_cast_playlist_duration"
             android:layout_width="41dp"
             android:layout_height="16dp"
+            android:background="@drawable/keyword_act_favor_key_bg"
+            android:backgroundTint="#00051F"
+            android:text="4:18"
+            android:lineSpacingExtra="3sp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            android:letterSpacing="0.05"
             android:layout_marginStart="4dp"
             app:layout_constraintBottom_toBottomOf="@+id/fragment_cast_playlist_title"
             app:layout_constraintStart_toEndOf="@+id/fragment_cast_playlist_title"
             app:layout_constraintTop_toTopOf="@+id/fragment_cast_playlist_title"
-            app:layout_constraintVertical_bias="0.6"
-            app:srcCompat="@drawable/cast_item_duration" />
+            />
 
         <TextView
             android:id="@+id/fragment_cast_playlist_creator"

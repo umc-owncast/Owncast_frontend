@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+.idea/emulatorDisplays.xml
+.idea/appInsightsSettings.xml
+.idea/vcs.xml

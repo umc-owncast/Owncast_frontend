@@ -12,257 +12,444 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.R
-import kr.dori.android.own_cast.data.SongData
-import kr.dori.android.own_cast.data.cardData
+import kr.dori.android.own_cast.data.PlaylistInfo
 import kr.dori.android.own_cast.databinding.FragmentStudyBinding
+import kr.dori.android.own_cast.forApiData.Bookmark
+import kr.dori.android.own_cast.forApiData.GetBookmark
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
 
 class StudyFragment : Fragment() {
 
-    private var cardData = mutableListOf(
-        cardData("오늘 날씨는 정말 맑고 아름다워요.", "The weather today is really clear and beautiful."),
-        cardData("이번 주말에는 친구들과 캠핑을 갈 거예요.", "This weekend, I am going camping with my friends."),
-        cardData("새로운 취미로 그림을 배우고 있어요.", "I am learning painting as a new hobby."),
-        cardData("책을 읽으면서 마음의 평화를 찾았어요.", "I found peace of mind while reading a book."),
-        cardData("저녁 식사로 파스타와 샐러드를 만들었어요.", "I made pasta and salad for dinner."),
-        cardData("다음 휴가 계획은 아직 세우지 못했어요.", "I haven't made plans for the next vacation yet."),
-        cardData("조용한 카페에서 커피를 마시고 싶어요.", "I want to drink coffee at a quiet cafe."),
-        cardData("주말마다 공원에서 조깅을 해요.", "I jog in the park every weekend."),
-        cardData("하루 종일 새로운 프로젝트에 몰두했어요.", "I was immersed in a new project all day long."),
-        cardData("여행을 통해 많은 것을 배웠어요.", "I learned a lot through traveling."),
-        cardData("이번 주는 정말 바쁘고 피곤했어요.", "This week has been really busy and tiring.")
-    )
-
-    var dataCount = cardData.size
-
-    val snapHelper = LinearSnapHelper()
+    private var dataCount = 0
+    private val snapHelper = LinearSnapHelper()
     private lateinit var binding: FragmentStudyBinding
     private val customAdapter = StudyCustomAdapter()
-    private val studyAdapter = StudyAdapter()
+    private lateinit var studyAdapter: StudyAdapter
+    private var audioPlayer: AudioPlayer? = null // AudioPlayer 추가
+    private var isLooping = false // 반복 상태를 저장하는 변수
 
-    private var dummyData = mutableListOf(
-        SongData("category_name1", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "내가 만든 캐스트"),
-        SongData("category_name2", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "저장한 캐스트"),
-        SongData("category_name3", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
-        SongData("category_name4", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
-        SongData("category_name5", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug"),
-        SongData("category_name6", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "animal"),
-        SongData("category_name7", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "monkey"),
-        SongData("category_name8", R.drawable.playlistfr_dummy_iv, "koyoungjun", false, 180, true, "koala"),
-        SongData("category_name9", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, true, "human"),
-        SongData("category_name10", R.drawable.playlistfr_dummy_iv, "koyoungjun", true, 180, false, "slug")
-    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentStudyBinding.inflate(inflater, container, false)
 
-        CoroutineScope(Dispatchers.IO).launch{
-            val getAllPlaylist = getRetrofit().create(Playlist::class.java)
-
-            try{
-                val response = getAllPlaylist.getAllPlaylist()
-                if(response.isSuccessful){
-                    var allPlaylist = response.body()?.result
-
-                }else{
-
-                }
-
-            }catch (e:Exception){
-                e.printStackTrace()
-            }
-
+        studyAdapter = StudyAdapter { position ->
+            handleItemClick(position)
         }
 
 
+        // AudioPlayer 초기화
+        audioPlayer = AudioPlayer(requireContext())
+        audioPlayer?.initializePlayer()
 
-        binding = FragmentStudyBinding.inflate(inflater, container, false)
-        studyAdapter.dataList = dummyData
+        // 빈 리스트로 어댑터 연결
+        studyAdapter.dataList = mutableListOf()
+        setupRecyclerView()
+        loadPlaylistData()
+        loadInitialCustomAdapterData()
+        setupUI()
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        audioPlayer?.releasePlayer()
+
+    }
+
+    private fun setupRecyclerView() {
         binding.studyCategoryRv.adapter = studyAdapter
         binding.studyCategoryRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        studyAdapter.selectedPosition = 0
 
-        binding.fragmentStudyLoofOffIv.setOnClickListener {
-            binding.fragmentStudyLoofOnIv.visibility = View.VISIBLE
-            binding.fragmentStudyLoofOffIv.visibility = View.GONE
-        }
-
-        binding.fragmentStudyLoofOnIv.setOnClickListener {
-            binding.fragmentStudyLoofOffIv.visibility = View.VISIBLE
-            binding.fragmentStudyLoofOnIv.visibility = View.GONE
-        }
-
-        binding.fragmentStudySoundOffIv.setOnClickListener {
-            binding.fragmentStudySoundOnIv.visibility = View.VISIBLE
-            binding.fragmentStudySoundOffIv.visibility = View.GONE
-        }
-
-        binding.fragmentStudySoundOnIv.setOnClickListener {
-            binding.fragmentStudySoundOffIv.visibility = View.VISIBLE
-            binding.fragmentStudySoundOnIv.visibility = View.GONE
-        }
-
-        //category RV 초기화
-        studyAdapter.selectedPosition = 0 // 포지션 0을 선택된 상태로 설정
-        studyAdapter.notifyDataSetChanged() // 어댑터에 변경 사항을 알림
-
-        // 리사이클러뷰에서 초기화 상태로 스크롤 위치 설정
-        // InitialSetting()
-
-        // 커스텀 어댑터 초기화
-        customAdapter.itemList = cardData
-
-        // 리사이클러뷰 설정
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.studyCustomAdapterRv.layoutManager = layoutManager
         binding.studyCustomAdapterRv.adapter = customAdapter
 
-        // SnapHelper 추가
         snapHelper.attachToRecyclerView(binding.studyCustomAdapterRv)
 
-        // ScrollListener 추가
+        // 스크롤 리스너 추가
         binding.studyCustomAdapterRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 customAdapter.adjustItemSize(recyclerView)
-
-                // 중앙에 위치한 아이템의 포지션 계산 및 UI 업데이트
-                val centerView = snapHelper.findSnapView(layoutManager)
-                centerView?.let {
-                    val position = layoutManager.getPosition(it)
-                    var actualPosition = position % dataCount
-                    binding.fragmentStudyStateTv.text = "${setText(actualPosition)}/$dataCount"
-                    Log.d("text","$actualPosition")
-                }
+                adjustSelectedItem()  // 스크롤 될 때마다 stateText 업데이트
             }
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val firstPosition = layoutManager.findFirstVisibleItemPosition()
-                    val lastPosition = layoutManager.findLastVisibleItemPosition()
-
-                    if (firstPosition <= dataCount) {
-                        recyclerView.scrollToPosition(firstPosition + dataCount)
-                    } else if (lastPosition >= layoutManager.itemCount - dataCount) {
-                        recyclerView.scrollToPosition(lastPosition - dataCount)
-                    }
+                    updateSelectedPosition()
+                    adjustSelectedItem()  // 스크롤 정지 시 stateText 업데이트
                 }
             }
-
         })
 
-        binding.studyCustomAdapterRv.setPadding(0, 0, 0, 0)
-        binding.studyCustomAdapterRv.clipToPadding = false
-
-        // 초기 크기 조정
-        binding.studyCustomAdapterRv.post {
-            customAdapter.adjustItemSize(binding.studyCustomAdapterRv)
-        }
-
-        // Next 버튼 클릭 시 동작
-        binding.fragmentStudyNextIv.setOnClickListener {
-            scrollToNextItem()
-        }
-
-        binding.fragmentStudyBackIv.setOnClickListener {
-            scrollToBackItem()
-        }
-
-        // 마진 및 패딩 추가
         val margin = resources.getDimensionPixelSize(R.dimen.study_item_margin)
         binding.studyCustomAdapterRv.addItemDecoration(HorizontalMarginItemDecoration(margin))
-
-        binding.fragmentStudyShuffleIv.setOnClickListener {
-            customAdapter.itemList.shuffle()
-            customAdapter.notifyDataSetChanged()
-        }
-
-        binding.studyCustomAdapterRv.scrollToPosition(5)
-        binding.studyCustomAdapterRv.post {
-            // 중앙에 아이템이 정확히 위치하도록 강제로 다시 레이아웃을 설정
-            val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
-            layoutManager.scrollToPositionWithOffset(5, (binding.studyCustomAdapterRv.width / 2) - (binding.studyCustomAdapterRv.getChildAt(0).width / 2))
-
-            binding.studyCustomAdapterRv.post {
-                customAdapter.adjustItemSize(binding.studyCustomAdapterRv)
-                val centerView = snapHelper.findSnapView(layoutManager)
-                centerView?.let {
-                    val position = layoutManager.getPosition(it)
-                    var actualPosition = position % dataCount
-                    //                    binding.fragmentStudyStateTv.text = "${setText(actualPosition)}$dataCount}" 이렇게 쓰니까 0이 나오지 ㅋㅋㅋㅋㅋㅋㅋㅋㅋ
-                    binding.fragmentStudyStateTv.text = "${setText(actualPosition)}/$dataCount"
-                    Log.d("text","$actualPosition")
-                }
-            }
-        }
-
-        return binding.root
     }
-/*
-    private fun InitialSetting() {
-        val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager?
-        layoutManager?.let {
-            val centerView = snapHelper.findSnapView(it)
-            centerView?.let {
-                val position = layoutManager.getPosition(it)
-                if (position != RecyclerView.NO_POSITION) {
-                    binding.studyCustomAdapterRv.scrollToPosition(Int.MAX_VALUE / 2 - Int.MAX_VALUE / 2 % dataCount)
-                }
-            }
+
+    private fun adjustSelectedItem() {
+        val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
+        val bookmark = getCurrentBookmarkInfo()
+        bookmark?.let {
+            Log.d("StudyFragment2", "Current Bookmark: ${it.originalSentence} - ${it.translatedSentence}, ${it.castURL}")
+        } ?: run {
+            Log.d("StudyFragment2", "No current bookmark selected") // null 확인 로그
+        }
+        val centerView = snapHelper.findSnapView(layoutManager)
+        centerView?.let {
+            val position = layoutManager.getPosition(it)
+            val actualPosition = position % dataCount
+            binding.fragmentStudyStateTv.text = "${actualPosition + 1}/$dataCount"
         }
     }
 
- */
+    private fun loadPlaylistData() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val getAllPlaylist = getRetrofit().create(Playlist::class.java)
+            try {
+                val response = getAllPlaylist.getAllPlaylist()
+                if (response.isSuccessful) {
+                    val allPlaylist = response.body()?.result ?: emptyList()
+                    val filteredList = mutableListOf<PlaylistInfo>()
+
+                    allPlaylist.let { playlists ->
+                        playlists.find { it.name == "내가 만든 캐스트" }?.let {
+                            filteredList.add(PlaylistInfo(it.playlistId, it.name, it.imagePath))
+                        }
+                        playlists.find { it.name == "담아온 캐스트" }?.let {
+                            filteredList.add(PlaylistInfo(it.playlistId, it.name, it.imagePath))
+                        }
+                        playlists.filter { it.playlistId != 0L }.forEach {
+                            filteredList.add(PlaylistInfo(it.playlistId, it.name, it.imagePath))
+                        }
+                    }
+
+                    withContext(Dispatchers.Main) {
+                        studyAdapter.dataList = filteredList
+                        studyAdapter.notifyDataSetChanged()  // 데이터 변경 후 UI 업데이트
+                    }
+
+                } else {
+                    Log.e("StudyFragment", "Failed to load playlists")
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("StudyFragment", "Error loading playlists", e)
+            }
+        }
+    }
+
+    private fun loadInitialCustomAdapterData() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val getAllBookmark = getRetrofit().create(Bookmark::class.java)
+
+            try {
+                val response = getAllBookmark.getSaved()
+                if (response.isSuccessful) {
+                    val allBookmarks = response.body()?.result ?: emptyList()
+                    Log.d("StudyFragment", "Bookmarks loaded successfully: ${allBookmarks.size}")
+
+                    withContext(Dispatchers.Main) {
+                        dataCount = allBookmarks.size
+                        if (dataCount > 0) {
+                            customAdapter.itemList = allBookmarks.toMutableList()
+                            customAdapter.notifyDataSetChanged()
+                            if (dataCount > 1) {
+                                binding.studyCustomAdapterRv.post {
+                                    binding.studyCustomAdapterRv.smoothScrollToPosition(1)
+                                }
+                            }
+
+                            adjustSelectedItem()  // State 텍스트를 업데이트합니다.
+                            enableCustomAdapterUI()  // UI 요소를 활성화합니다.
+                        } else {
+                            // 데이터가 비어 있을 때 UI 요소 비활성화
+                            handleEmptyData()
+                        }
+                    }
+                } else {
+                    Log.e("StudyFragment", "Failed to load bookmarks: ${response.errorBody()?.string()}")
+                    withContext(Dispatchers.Main) {
+                        handleEmptyData()
+                    }
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("StudyFragment", "Error loading bookmarks", e)
+                withContext(Dispatchers.Main) {
+                    handleEmptyData()
+                }
+            }
+        }
+    }
+
+    private fun loadNotSaved() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val getAllBookmark = getRetrofit().create(Bookmark::class.java)
+
+            try {
+                val response = getAllBookmark.getMy()
+                if (response.isSuccessful) {
+                    val allBookmarks = response.body()?.result ?: emptyList()
+                    Log.d("StudyFragment", "Bookmarks loaded successfully: ${allBookmarks.size}")
+
+                    withContext(Dispatchers.Main) {
+                        dataCount = allBookmarks.size
+                        if (dataCount > 0) {
+                            customAdapter.itemList = allBookmarks.toMutableList()
+                            customAdapter.notifyDataSetChanged()
+                            if (dataCount > 1) {
+                                binding.studyCustomAdapterRv.post {
+                                    binding.studyCustomAdapterRv.smoothScrollToPosition(1)
+                                }
+                            }
+                            adjustSelectedItem()  // State 텍스트를 업데이트합니다.
+                            enableCustomAdapterUI()  // UI 요소를 활성화합니다.
+                        } else {
+                            // 데이터가 비어 있을 때 UI 요소 비활성화
+                            handleEmptyData()
+                        }
+                    }
+                } else {
+                    Log.e("StudyFragment", "Failed to load bookmarks: ${response.errorBody()?.string()}")
+                    withContext(Dispatchers.Main) {
+                        handleEmptyData()
+                    }
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("StudyFragment", "Error loading bookmarks", e)
+                withContext(Dispatchers.Main) {
+                    handleEmptyData()
+                }
+            }
+        }
+    }
+
+    private fun loadCategoryBookmark(playlistId: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val getAllBookmark = getRetrofit().create(Bookmark::class.java)
+
+            try {
+                val response = getAllBookmark.getBookmark(playlistId)
+                if (response.isSuccessful) {
+                    val allBookmarks = response.body()?.result ?: emptyList()
+                    Log.d("StudyFragment", "Bookmarks loaded successfully: ${allBookmarks.size}")
+
+                    withContext(Dispatchers.Main) {
+                        dataCount = allBookmarks.size
+                        if (dataCount > 0) {
+                            customAdapter.itemList = allBookmarks.toMutableList()
+                            customAdapter.notifyDataSetChanged()
+                            if (dataCount > 1) {
+                                binding.studyCustomAdapterRv.post {
+                                    binding.studyCustomAdapterRv.smoothScrollToPosition(1)
+                                }
+                            }
+                            adjustSelectedItem()  // State 텍스트를 업데이트합니다.
+                            enableCustomAdapterUI()  // UI 요소를 활성화합니다.
+                        } else {
+                            // 데이터가 비어 있을 때 UI 요소 비활성화
+                            handleEmptyData()
+                        }
+                    }
+                } else {
+                    Log.e("StudyFragment", "Failed to load bookmarks: ${response.errorBody()?.string()}")
+                    withContext(Dispatchers.Main) {
+                        handleEmptyData()
+                    }
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("StudyFragment", "Error loading bookmarks", e)
+                withContext(Dispatchers.Main) {
+                    handleEmptyData()
+                }
+            }
+        }
+    }
+
+    private fun handleEmptyData() {
+        // 데이터가 비어 있을 때 UI 요소 비활성화 및 초기화
+        dataCount = 0
+        customAdapter.itemList.clear()
+        customAdapter.notifyDataSetChanged()
+        binding.fragmentStudyStateTv.text = "No bookmarks available"
+        disableCustomAdapterUI()
+    }
+
+    private fun disableCustomAdapterUI() {
+        binding.studyCustomAdapterRv.isEnabled = false
+        binding.fragmentStudyNextIv.visibility = View.GONE
+        binding.fragmentStudyBackIv.visibility = View.GONE
+        binding.fragmentStudyShuffleIv.isEnabled = false
+    }
+
+    private fun enableCustomAdapterUI() {
+        binding.studyCustomAdapterRv.isEnabled = true
+        binding.fragmentStudyNextIv.visibility = View.VISIBLE
+        binding.fragmentStudyBackIv.visibility = View.VISIBLE
+        binding.fragmentStudyShuffleIv.isEnabled = true
+    }
+
 
     private fun scrollToNextItem() {
         val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
         val centerView = snapHelper.findSnapView(layoutManager)
         centerView?.let {
             val position = layoutManager.getPosition(it)
-         /*   val actualPosition = position % dataCount
-            if (actualPosition < customAdapter.itemList.size - 1) {
+            if (position < customAdapter.itemList.size - 1) {
                 binding.studyCustomAdapterRv.smoothScrollToPosition(position + 1)
+                updateSelectedPosition()
+                adjustSelectedItem() // 스크롤 후 stateText 업데이트
             }
-
-          */
-            binding.studyCustomAdapterRv.smoothScrollToPosition(position + 1)
         }
     }
 
-    private fun scrollToBackItem() {
+    private fun scrollToPreviousItem() {
         val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
         val centerView = snapHelper.findSnapView(layoutManager)
         centerView?.let {
             val position = layoutManager.getPosition(it)
-            /*
-            val actualPosition = position % dataCount
-
-            if (actualPosition > 0) {
+            if (position > 0) {
                 binding.studyCustomAdapterRv.smoothScrollToPosition(position - 1)
+                updateSelectedPosition()
+                adjustSelectedItem() // 스크롤 후 stateText 업데이트
             }
-            */
-            binding.studyCustomAdapterRv.smoothScrollToPosition(position - 1)
         }
     }
 
-    private fun setText(actualPosition: Int): Int{
-        return if(actualPosition >= 5){
-            actualPosition - 4
-        }else{
-            actualPosition + dataCount - 4
+    private fun setupUI() {
+
+
+        binding.fragmentStudyLoofOffIv.setOnClickListener {
+            binding.fragmentStudyLoofOnIv.visibility = View.VISIBLE
+            binding.fragmentStudyLoofOffIv.visibility = View.GONE
+            // 현재 북마크 가져와서 스트리밍 시작
+            val bookmark = getCurrentBookmarkInfo()
+            bookmark?.let {
+                audioPlayer?.playAudio(it.castURL, it.start, it.end)
+                Log.d("StudyFragment2", "Playing audio from: ${it.castURL}")
+            } ?: run {
+                Log.d("StudyFragment2", "No current bookmark selected to play audio")
+            }
+            isLooping = true
+            audioPlayer?.setLooping(true)
         }
-        Log.d("text","$actualPosition")
+
+        binding.fragmentStudyLoofOnIv.setOnClickListener {
+            binding.fragmentStudyLoofOffIv.visibility = View.VISIBLE
+            binding.fragmentStudyLoofOnIv.visibility = View.GONE
+            isLooping = false
+            audioPlayer?.setLooping(false)
+        }
+
+        binding.fragmentStudySoundOffIv.setOnClickListener {
+            //binding.fragmentStudySoundOnIv.visibility = View.VISIBLE
+           // binding.fragmentStudySoundOffIv.visibility = View.GONE
+
+            // 현재 북마크 가져와서 스트리밍 시작
+            val bookmark = getCurrentBookmarkInfo()
+            bookmark?.let {
+                audioPlayer?.playAudio(it.castURL, it.start, it.end)
+                Log.d("StudyFragment2", "Playing audio from: ${it.castURL}")
+            } ?: run {
+                Log.d("StudyFragment2", "No current bookmark selected to play audio")
+            }
+        }
+        binding.fragmentStudyNextIv.setOnClickListener {
+            scrollToNextItem()
+        }
+
+        binding.fragmentStudyBackIv.setOnClickListener {
+            scrollToPreviousItem()
+        }
+
+        binding.fragmentStudyShuffleIv.setOnClickListener {
+            if (dataCount > 0) {
+                customAdapter.itemList.shuffle()
+                customAdapter.notifyDataSetChanged()
+                adjustSelectedItem()  // State 텍스트를 업데이트합니다.
+
+                // 셔플 후 아이템 크기 조정
+                binding.studyCustomAdapterRv.post {
+                    customAdapter.adjustItemSize(binding.studyCustomAdapterRv)
+                    adjustSelectedItem()  // stateText 업데이트
+                }
+            }
+        }
+
+        binding.studyCustomAdapterRv.scrollToPosition(5)
+
+        binding.studyCustomAdapterRv.post {
+            val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
+            if (dataCount > 0) {
+                layoutManager.scrollToPositionWithOffset(
+                    5,
+                    (binding.studyCustomAdapterRv.width / 2) - (binding.studyCustomAdapterRv.getChildAt(0).width / 2)
+                )
+                binding.studyCustomAdapterRv.post {
+                    customAdapter.adjustItemSize(binding.studyCustomAdapterRv)
+                    adjustSelectedItem()
+                }
+            }
+        }
     }
+
+    private fun handleItemClick(position: Int) {
+        when (position) {
+            0 -> {
+                loadInitialCustomAdapterData()
+
+
+            } // 첫 번째 아이템 클릭 시 초기 데이터 로드
+            1 -> {
+                loadNotSaved()
+
+
+            } // 두 번째 아이템 클릭 시 저장되지 않은 북마크 로드
+
+            else -> {
+                val filteredData = studyAdapter.dataList
+                if (filteredData.isNotEmpty() && position < filteredData.size) {
+                    val playlistId = filteredData[position].playlistId
+                    loadCategoryBookmark(playlistId) // 그 외의 경우 해당 카테고리의 북마크 로드
+
+
+                }
+            }
+        }
+    }
+
+    private fun updateSelectedPosition() {
+        val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
+        val centerView = snapHelper.findSnapView(layoutManager)
+        centerView?.let {
+            val position = layoutManager.getPosition(it)
+            customAdapter.selectedPosition = position % customAdapter.itemList.size
+            Log.d("StudyFragment", "Updated selected position: ${customAdapter.selectedPosition}")
+        }
+    }
+
+    private fun getCurrentBookmarkInfo(): GetBookmark? {
+        val position = customAdapter.selectedPosition
+        return if (position >= 0 && position < customAdapter.itemList.size) {
+            customAdapter.itemList[position]
+        } else {
+            null  // 선택된 포지션이 유효하지 않을 경우 null 반환
+        }
+    }
+
+
 }
-
-
-
-
-
-
-

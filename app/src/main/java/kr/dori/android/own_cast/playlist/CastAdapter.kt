@@ -7,8 +7,12 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import kr.dori.android.own_cast.ActivityMover
-import kr.dori.android.own_cast.data.SongData
+
+import kr.dori.android.own_cast.SignupData
+import kr.dori.android.own_cast.data.CastPlayerData
+
 import kr.dori.android.own_cast.databinding.CastItemLayoutBinding
 import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.player.CastWithPlaylistId
@@ -39,20 +43,22 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
                 if (position != RecyclerView.NO_POSITION) {
                     val cast = dataList[position]
                     Log.d("test3","${listOf(cast)}")
-                    activityMover.ToPlayCast(listOf(cast))
+                    // 이렇게 현재 포지션과
+                    CastPlayerData.setCast(dataList,position)
+                    activityMover.ToPlayCast(dataList)
                 }
             }
         }
 
         fun setText(data: CastWithPlaylistId) {
-
+            Glide.with(binding.root.context).load(data.imagePath).into(binding.playlistCast2Iv)
             val constraintLayout = binding.root as ConstraintLayout
             val constraintSet = ConstraintSet()
             constraintSet.clone(constraintLayout)
             binding.castItemTitleTv.text = data.castTitle
             binding.timeTableTv.text = formatTime(data.audioLength)
 
-            if(data.castCreator == "헬로") {
+            if(data.castCreator == SignupData.nickname) {
                 binding.castItemCreator.visibility = View.GONE
                 binding.castItemEditIv.visibility = View.VISIBLE
                 binding.castItemEditIv.setOnClickListener {

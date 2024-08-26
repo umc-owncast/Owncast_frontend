@@ -31,6 +31,7 @@ class KeyvpAudioScriptFragment:Fragment() {
     private lateinit var sharedViewModel: KeywordViewModel
     private var curSpeed:Int = 2
     private lateinit var adapter:KeyvpAudioScriptRVAdapter
+    private var isFinish = false
 
 
     /*-------exoPlayer용 변수--------------------*/
@@ -41,6 +42,7 @@ class KeyvpAudioScriptFragment:Fragment() {
     private var mills: Float =0f
 
     /*---------------------------*/
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,11 +61,16 @@ class KeyvpAudioScriptFragment:Fragment() {
             listener?.onButtonClick()
         }
         binding.keyAudScrRemakeIv.setOnClickListener{
+
+            binding.keyAudScriptPlaybtnIv.visibility = View.GONE
+            binding.keyAudScriptStopBtnIv.visibility = View.VISIBLE
+
             if(sharedViewModel.postCastScript.value!= null){
                 listener?.createCastByScript(sharedViewModel.postCastScript.value!!)
             }else{
                 listener?.createCastByKeyword(sharedViewModel.postCastKeyword.value!!)
             }
+
         }
 
 
@@ -73,6 +80,15 @@ class KeyvpAudioScriptFragment:Fragment() {
         initPlayer()
         initRecyclerView()//sentnences를 받아와 출력
         //스크립트 재생성했을때 이 두개를 다시 실행시켜야함
+
+
+        player = ExoPlayer.Builder(requireContext()).build()
+        //이 작업을 전체 관리하는 listener에서 해주고 있음.
+        //화면을 나갔을때의 pause와 resume과 재생성했을때의 pause를 재 관리 해줘야할거같은데..
+        initPlayer()
+        initRecyclerView()//sentnences를 받아와 출력
+        //스크립트 재생성했을때 이 두개를 다시 실행시켜야함
+
 
         initSpeedUi()
         return binding.root
@@ -131,9 +147,20 @@ class KeyvpAudioScriptFragment:Fragment() {
                 if (playbackState == Player.STATE_READY) {//재생상태가 준비되었음
                     //binding.keyAudScriptSb.max = (player.duration / 1000).toInt() // SeekBar 최대값 설정
                     binding.keyAudSetMediaTimeTv.text = formatTime(player.duration)
+                    sharedViewModel.setSongDuration(formatTime(player.duration))
                     //사용자가 화면을 나갔을때 다시 progressbar 코루틴을 다시 실행시키기 위해 만듦
                     startSeekBarUpdate()
                     player.play()
+                }else if(playbackState == Player.STATE_ENDED){
+                    if(binding.keyAudScrRepeatIv.isChecked){
+                        player.seekTo(0)
+                        binding.keyAudSetMediaTimeTv.text = formatTime(player.currentPosition)
+                        player.play()
+                    }else{
+                        binding.keyAudScriptPlaybtnIv.visibility = View.VISIBLE
+                        binding.keyAudScriptStopBtnIv.visibility = View.GONE
+                        isFinish = true
+                    }
                 }
             }
 
@@ -166,6 +193,7 @@ class KeyvpAudioScriptFragment:Fragment() {
                 isSeeking = false // 사용자가 SeekBar 조작을 마침
                 val progress = seekBar?.progress?.toLong() ?: 0L
                 player.seekTo(progress*player.duration/100000L)
+
                 binding.keyAudSetMediaTimeTv.text = formatTime(player.currentPosition) // 현재 재생 위치 업데이트
 
             }
@@ -175,14 +203,43 @@ class KeyvpAudioScriptFragment:Fragment() {
         binding.keyAudScrAddSecondIv.setOnClickListener{
             val currentPosition = player.currentPosition
             val newPosition = currentPosition + 10_000L // 10초 앞으로
-            player.seekTo(newPosition)
+
+            if (player.isPlaying) {
+                player.seekTo(newPosition)
+            }else{
+                // 정지 상태로 유지
+                player.seekTo(newPosition)
+                player.playWhenReady = false
+
+            }
+            player.pause()
+            binding.keyAudScriptPlaybtnIv.visibility = View.GONE
+            binding.keyAudScriptStopBtnIv.visibility = View.VISIBLE
+
         }
         binding.keyAudScrMinSecondIv.setOnClickListener {
             val currentPosition = player.currentPosition
             val newPosition = currentPosition - 10_000L // 10초 앞으로
-            player.seekTo(newPosition)
+
+            if (player.isPlaying) {
+                player.seekTo(newPosition)
+            }else{
+                // 정지 상태로 유지
+                player.seekTo(newPosition)
+                player.playWhenReady = false
+
+            }
+            player.pause()
+            binding.keyAudScriptPlaybtnIv.visibility = View.GONE
+            binding.keyAudScriptStopBtnIv.visibility = View.VISIBLE
+
+
         }
         binding.keyAudScriptPlaybtnIv.setOnClickListener{
+            if(isFinish){
+                player.seekTo(0)
+                isFinish = false
+            }
             player.play()
             binding.keyAudScriptPlaybtnIv.visibility = View.GONE
             binding.keyAudScriptStopBtnIv.visibility = View.VISIBLE
@@ -191,6 +248,7 @@ class KeyvpAudioScriptFragment:Fragment() {
         }
         binding.keyAudScriptStopBtnIv.setOnClickListener{
             player.pause()
+
             binding.keyAudScriptPlaybtnIv.visibility = View.VISIBLE
             binding.keyAudScriptStopBtnIv.visibility = View.GONE
         }
@@ -256,7 +314,9 @@ class KeyvpAudioScriptFragment:Fragment() {
 
 
                 player.setPlaybackSpeed(speed)//미디어 플레이어 재생속도 설정
-                player.playWhenReady = true//자동 재생해줌
+
+
+
 
 
                 //#8050F2는 MainColro
@@ -291,9 +351,13 @@ class KeyvpAudioScriptFragment:Fragment() {
             binding.keyAudScriptRv.adapter = adapter
         }
 
+
     }
 
     fun updateLyricsHighlight(){
 
+
     }
+
+
 }

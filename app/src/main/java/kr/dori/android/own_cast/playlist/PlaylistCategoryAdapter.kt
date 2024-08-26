@@ -13,7 +13,6 @@ import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.FragmentMover
 import kr.dori.android.own_cast.data.CastPlayerData
-import kr.dori.android.own_cast.data.SongData
 import kr.dori.android.own_cast.databinding.PlaylistCategoryItemBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.GetAllPlaylist
@@ -48,6 +47,8 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val selectedPlaylistId = dataList[position].playlistId
+                    Log.d("playlistID","${selectedPlaylistId},$dataList")
+                    //여기서는 dataList가 Cast 메타데이터를 담지 않기 때문에 getCastInfo를 통해서 데이터를 추출한 뒤에 activityMover기능을 구현해야 함
                     getCastInfo(selectedPlaylistId)
                 }
             }
@@ -56,15 +57,17 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                 if (position != RecyclerView.NO_POSITION) {
                     val selectedPlaylistId = dataList[position].playlistId
                     val selectedPlaylistName = dataList[position].name
+                    Log.d("playlistId","$selectedPlaylistId")
                     fragmentMover.playlistToCategory(selectedPlaylistId, selectedPlaylistName)
                 }
             }
         }
 
         fun setText(data: GetAllPlaylist) {
-            Log.d("xibal", "${data.playlistId}")
+            Log.d("된다", "${data.playlistId}")
 
             data.let {
+                Log.d("플레이리스트", "사진 정보 ${data.imagePath}")
                 Glide.with(binding.root.context).load(data.imagePath).into(binding.categoryImg)
                 binding.playlistCategoryTitleTv.text = it.name
                 binding.playlistCategoryNumTv.text = it.totalCast.toString()
@@ -73,7 +76,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
             binding.playlistCategoryEditIv.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    val dialog = EditCategoryDialog(itemView.context, editListener, position.toLong())
+                    val dialog = EditCategoryDialog(itemView.context, editListener, position.toLong(),data.playlistId)
                     dialog.show()
                 } else {
                     Log.e("PlaylistCategoryAdapter", "Invalid adapter position: $position")
@@ -101,11 +104,14 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                                         isPublic = cast.isPublic,
                                         castCreator = cast.castCreator,
                                         castCategory = cast.castCategory,
-                                        audioLength = cast.audioLength
+                                        audioLength = cast.audioLength,
+                                        imagePath = cast.imagePath
                                     )
                                 }
                                 //CastPlayerData.setCastList(castList)  // 캐스트 리스트를 저장
+                                CastPlayerData.setCast(castListWithPlaylistId, 1)
                                 activityMover.ToPlayCast(castListWithPlaylistId)
+
                             }
                         }
                     } else {
