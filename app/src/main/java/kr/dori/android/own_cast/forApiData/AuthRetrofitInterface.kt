@@ -120,7 +120,8 @@ interface Playlist{
     suspend fun getMy(): Response<AuthResponse<GetPlayList>>
 
     @DELETE("/api/playlist/{playlistId}")
-    suspend fun deleteOtherCast(@Path("playlistId") playlistId:Long,@Body deleteOtherDto: DeleteOtherDto ):Response<AuthResponse<DeleteOther>>
+    fun deleteOtherCast(@Path("playlistId") playlistId:Long,
+                        @Query("castId") castId: Long):Call<AuthResponse<DeleteOther>>
 }
 
 

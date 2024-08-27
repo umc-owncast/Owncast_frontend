@@ -75,10 +75,10 @@ class AddCategoryAdapter(val context: Context, private val mover: SearchMover) :
                 binding.categoryImg.setImageBitmap(bitmap)
             }
             binding.categoryItemAll.setOnClickListener {
-                if(id!=(-1L)){
+                if(id>=0){
                     saveOtherCast(id,data.playlistId)
                 }else{
-                    Toast.makeText(context," 캐스트아이디 오류",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context,"캐스트아이디 오류",Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -99,6 +99,7 @@ class AddCategoryAdapter(val context: Context, private val mover: SearchMover) :
                         dialog.dismiss()
                         if(response.isSuccessful){
                             Toast.makeText(context,"저장 성공",Toast.LENGTH_SHORT).show()
+                            CastPlayerData.currentCast.playlistId =playlistId
                         }
                         else{
                             response.errorBody()?.let { errorBody ->

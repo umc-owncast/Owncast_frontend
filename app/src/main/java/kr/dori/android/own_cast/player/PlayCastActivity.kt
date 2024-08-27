@@ -27,13 +27,21 @@ import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.SignupData
 import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.ActivityPlayCastBinding
+import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.forApiData.DeleteOther
 import kr.dori.android.own_cast.forApiData.DeleteOtherDto
 import kr.dori.android.own_cast.forApiData.ErrorResponse
+import kr.dori.android.own_cast.forApiData.GetUserPlaylist
+import kr.dori.android.own_cast.forApiData.PlayListInterface
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
+import kr.dori.android.own_cast.keyword.PlaylistText
 import kr.dori.android.own_cast.search.SearchAddCategoryActivity
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.concurrent.TimeUnit
 
 class PlayCastActivity : AppCompatActivity() {
@@ -96,7 +104,7 @@ class PlayCastActivity : AppCompatActivity() {
         // 처음 앱에 들어갔을 때의 초기 UI 설정
         binding.playCastPlayIv.visibility = View.VISIBLE
         binding.playCastPauseIv.visibility = View.GONE
-        //classifyCast()
+        classifyCast()
 
         //playlistId가 -1이고 유저와 생성한 사람의 이름이 다르면 add가 뜸, 어 근데 이미 추가 된거면? -> 삭제되게
 
@@ -181,8 +189,12 @@ class PlayCastActivity : AppCompatActivity() {
                 stopCurrentAudio()  // 기존 음원 중지
                 xibalCast(nextCast.castId)  // 새로운 캐스트 재생 및 UI 초기화
                 Log.d("test", "currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
-                //classifyCast() // 추가 안한 캐스트면 창뜨게 해야함
-                updateCastAudioFragmentUI()
+                classifyCast() // 추가 안한 캐스트면 창뜨게 해야함
+                when(stateListener){
+                    0->updateCastAudioFragmentUI()
+                    1->updateCastAudioFragmentUI()//여기 스크립트 부분 변형 부탁
+                    else->updateCastPlaylistFragmentUI()
+                }
             }
         }
 
@@ -195,8 +207,12 @@ class PlayCastActivity : AppCompatActivity() {
                 stopCurrentAudio()  // 기존 음원 중지
                 xibalCast(previousCast.castId)  // 새로운 캐스트 재생 및 UI 초기화
                 Log.d("test", "currentPosition: ${CastPlayerData.currentPosition}, currentCast: ${CastPlayerData.currentCast}")
-                //classifyCast()
-                updateCastAudioFragmentUI()
+                classifyCast()
+                when(stateListener){
+                    0->updateCastAudioFragmentUI()
+                    1->updateCastAudioFragmentUI()//여기 스크립트 부분 변형 부탁
+                    else->updateCastPlaylistFragmentUI()
+                }
 
             }
         }
@@ -312,7 +328,7 @@ class PlayCastActivity : AppCompatActivity() {
         }
     }
 
-    fun classifyCast(){//이게 자기 캐스트인지 담아온 캐스트인지 구분
+    fun classifyCast(){//이게 자기 캐스트인지 담아온 캐스트인지 구분 플레이리스트 id가 -1이면 안담긴걸로 생각
         if(CastPlayerData.currentCast.playlistId == -1L&&!SignupData.nickname.equals(CastPlayerData.currentCast.castCreator)){
             binding.addCategoryOffBtn.visibility = View.VISIBLE
         }else if(CastPlayerData.currentCast.playlistId != -1L&&!SignupData.nickname.equals(CastPlayerData.currentCast.castCreator)){
@@ -386,6 +402,19 @@ class PlayCastActivity : AppCompatActivity() {
         currentCast?.let {
             if (audioFragment != null && audioFragment.isAdded) {
                 audioFragment.setCastTitle(it.castTitle)
+                binding.endTv.text = it.audioLength
+                // 필요한 경우 추가적으로 다른 텍스트 값을 업데이트할 수 있습니다.
+            }
+        }
+    }
+    private fun updateCastPlaylistFragmentUI() {
+        val playlistFragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastPlaylistFragment
+        val currentCast = CastPlayerData.currentCast
+
+        currentCast?.let {
+            if (playlistFragment != null && playlistFragment.isAdded) {
+                playlistFragment.initPlayItem()
+                binding.endTv.text = it.audioLength
                 // 필요한 경우 추가적으로 다른 텍스트 값을 업데이트할 수 있습니다.
             }
         }
@@ -424,7 +453,13 @@ class PlayCastActivity : AppCompatActivity() {
             }
 
             // CastAudioFragment 텍스트 값 업데이트
-            updateCastAudioFragmentUI()
+            //stateListener 0->audio 1->script 2->playlist
+            when(stateListener){
+                0->updateCastAudioFragmentUI()
+                1->return
+                2->updateCastPlaylistFragmentUI()
+            }
+
         }
     }
 
@@ -643,7 +678,7 @@ class PlayCastActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         updateUI() // UI 업데이트 시 현재 상태를 반영하여 조정
-        //classifyCast()
+        classifyCast()
     }
     fun formatTime(input: Int): String {
         val minutes = input / 60
@@ -707,7 +742,6 @@ class PlayCastActivity : AppCompatActivity() {
         val intent = Intent(this, SearchAddCategoryActivity::class.java)
         intent.putExtra("id",CastPlayerData.currentCast.castId)
         startActivity(intent)
-        //classifyCast()
     }
 
     private val updateScriptFragment = object : Runnable {
@@ -737,8 +771,37 @@ class PlayCastActivity : AppCompatActivity() {
         scriptHandler.removeCallbacks(updateScriptFragment)
     }
 
+    fun deleteCast(){
+        val deleteCast = getRetrofit().create(Playlist::class.java)
+        deleteCast.deleteOtherCast(CastPlayerData.currentCast.playlistId,
+            CastPlayerData.currentCast.castId
+        ).enqueue(object: Callback<AuthResponse<DeleteOther>> {
+            override fun onResponse(call: Call<AuthResponse<DeleteOther>>, response: Response<AuthResponse<DeleteOther>>) {
+                Log.d("apiTest-category", response.toString())
+                Log.d("apiTest-category", response.body().toString())
+                if (response.isSuccessful) {
+                    response.body()?.result?.let{
+                        //삭제 했으니깐 버튼 바꿔주기
+                        CastPlayerData.currentCast.playlistId = -1L
+                    }
+                }else{
+                    Log.d("캐스트 해제","${response.code()}")
+                    response.errorBody()?.let { errorBody ->
+                        val gson = Gson()
+                        val errorResponse: ErrorResponse = gson.fromJson(errorBody.charStream(), ErrorResponse::class.java)
+                        Log.d("캐스트 해제", "${errorResponse.message}, ${errorResponse.code}")
+                        Toast.makeText(this@PlayCastActivity, "서버 오류 코드 : ${errorResponse.code} \n${errorResponse.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                classifyCast()
+            }
+            override fun onFailure(call: Call<AuthResponse<DeleteOther>>, t: Throwable) {
+                Toast.makeText(this@PlayCastActivity, "서버 응답 실패", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
     //담아온 캐스트 제거하는 함수
-    private fun deleteCast(){
+    /*private fun deleteCast(){
         if(CastPlayerData.currentCast.playlistId!=-1L){
             val deleteCast = getRetrofit().create(Playlist::class.java)
             CoroutineScope(Dispatchers.IO).launch() {
@@ -753,9 +816,7 @@ class PlayCastActivity : AppCompatActivity() {
                             if (response.isSuccessful) {
                                 response.body()?.result?.let{
                                     //삭제 했으니깐 버튼 바꿔주기
-                                    /*binding.addCategoryOffBtn.visibility = View.VISIBLE
-                                    binding.addCategoryOnBtn.visibility = View.GONE*/
-
+                                    CastPlayerData.currentCast.playlistId = -1L
                                 }
                             } else{
                                 Log.d("캐스트 해제","${response.code()}")
@@ -768,11 +829,13 @@ class PlayCastActivity : AppCompatActivity() {
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()
+                        } finally {
+                            classifyCast()
                         }
                     }
                 }
             }
         }
-    }
+    }*/
 }
 

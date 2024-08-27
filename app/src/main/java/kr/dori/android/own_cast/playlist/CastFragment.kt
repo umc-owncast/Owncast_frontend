@@ -32,7 +32,7 @@ import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
 import kr.dori.android.own_cast.player.CastWithPlaylistId
 
 
-class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), ActivityMover {
+class CastFragment() : Fragment(), ActivityMover {
     private lateinit var binding: FragmentCastBinding
     private lateinit var castAdapter: CastAdapter
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
@@ -61,7 +61,7 @@ class CastFragment(var playlistIdList: MutableList<Long>) : Fragment(), Activity
         loadingdialog.show()
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                if (isSave) {
+                if (!isSave) {
                     val response = getPlaylist.getSaved()
                     Log.d("CastFragment", "getSaved API 호출")
                     if (response.isSuccessful) {

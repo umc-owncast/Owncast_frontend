@@ -359,7 +359,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     //finish dialog listener 구현
     override fun goHomeFragment() {
         super.goHomeFragment()
-        activity?.supportFragmentManager?.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        //activity?.supportFragmentManager?.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         activity?.finish()
     }
         //캐스트 이동
@@ -429,7 +429,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     }
 
 
-
+    //캐스트 저장
     fun postCastSave(){//api저장하는 버튼
         val apiService = getRetrofit().create(CastInterface::class.java)
         //1. apiService후, 자신이 만들어놓은 인터페이스(함수 지정해주기)
@@ -539,6 +539,8 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
+
+    //바로 들으러 가기
     fun getCastInfo(playlistId: Long) {
         val getAllPlaylist = getRetrofit().create(Playlist::class.java)
         val dialog = KeywordLoadingDialog(requireContext(),"이동 중입니다.")
@@ -547,7 +549,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         dialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 5)
+                val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 20)
                 withContext(Dispatchers.Main) { dialog.dismiss() }
                 if (response.isSuccessful) {
                     val playlistInfo = response.body()?.result
@@ -569,16 +571,11 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                                     imagePath = cast.imagePath
                                 )
                             }
-
-                            CastPlayerData.setCast(castListWithPlaylistId, castListWithPlaylistId.size-1)
+                            Log.d("캐스트 저장", castListWithPlaylistId.toString())
+                            CastPlayerData.setCast(castListWithPlaylistId, 0)
                             CastPlayerData.setCurrentIndex(castListWithPlaylistId.size-1)
                             ToPlayCast(castListWithPlaylistId)
-                            // 캐스트 리스트를 저장
-                            //괜히 id쓰는것보다 어차피 마지막 가있을테니깐 넣었음..
-                            //CastPlayerData.currentPosition = CastPlayerData.getAllCastList().size -1
-                            //CastPlayerData.currentCast = CastPlayerData.getAllCastList()[CastPlayerData.currentPosition]
-                            //val intent = Intent(activity, PlayCastActivity::class.java)
-                            //startActivity(intent)
+
                             activity?.finish()
                             finDialog.dismiss()
                         }

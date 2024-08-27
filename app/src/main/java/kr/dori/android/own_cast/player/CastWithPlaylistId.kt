@@ -6,7 +6,7 @@ import java.io.Serializable
 
 data class CastWithPlaylistId(
     val castId: Long,
-    val playlistId: Long,
+    var playlistId: Long,
     val castTitle: String,
     val isPublic: Boolean,
     val castCreator: String,

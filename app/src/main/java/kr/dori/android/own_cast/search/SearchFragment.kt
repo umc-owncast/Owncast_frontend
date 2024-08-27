@@ -93,7 +93,7 @@ class SearchFragment : Fragment(), SearchMover, ActivityMover {
 
         val getAllPlaylist = getRetrofit().create(Playlist::class.java)
 
-        CoroutineScope(Dispatchers.IO).launch() {
+        /*CoroutineScope(Dispatchers.IO).launch() {
             launch {
                 try {
                     val response =
@@ -116,7 +116,7 @@ class SearchFragment : Fragment(), SearchMover, ActivityMover {
             }
 
 
-        }
+        }*/
 
 
         if(SignupData.interest.equals("self")){
@@ -173,20 +173,31 @@ class SearchFragment : Fragment(), SearchMover, ActivityMover {
                 imagePath = it.imagePath
             )
         }
-        var imageData = list.map{
-            it.imagePath
-        }
+
         CastPlayerData.setCast(data,1)//데이터 초기화
         ToPlayCast(data)
-    //    CastPlayerData.setCurrentPos(id)//
+        CastPlayerData.setCurrentPos(id)
 
 
     }
 
-    override fun goAddCast(id:Long) {//여기다가 카테고리 정보 담아야함
+    override fun goAddCast(castHomeDTO: CastHomeDTO) {//여기다가 카테고리 정보 담아야함
         val intent = Intent(requireContext(), SearchAddCategoryActivity::class.java)
-        sharedViewModel.data.value?.let{
+        /*sharedViewModel.data.value?.let{
             intent.putExtra("categoryList",ArrayList(it))
+        }*/
+
+        CastPlayerData.currentCast = castHomeDTO.let{
+            CastWithPlaylistId(
+                castId = it.id,
+                playlistId = -1L,
+                castTitle = it.playlistName,
+                isPublic = true,
+                castCreator = it.memberName,
+                castCategory = it.memberName,
+                audioLength = it.audioLength,
+                imagePath = it.imagePath
+            )
         }
         intent.putExtra("id",id)
         startActivity(intent)
@@ -203,6 +214,7 @@ class SearchFragment : Fragment(), SearchMover, ActivityMover {
 
                 if(response.isSuccessful) {
                     val resp: AuthResponse<List<CastHomeDTO>> = response.body()!!
+
                     resp.result?.let {
                         //왜 오류처리가 안될까?
                         setItemData(it)
@@ -251,8 +263,6 @@ class SearchFragment : Fragment(), SearchMover, ActivityMover {
             categoryTv.text = "${castHomeDTO[i].memberName}-${castHomeDTO[i].playlistName}"
             Log.d("searchFragment_apicheck","${castHomeDTO[i].audioLength}")
             durationTv.text = castHomeDTO[i].audioLength
-
-
             if (castHomeDTO[i].imagePath.startsWith("http")) {
                 // URL로부터 이미지 로드 (Glide 사용)
                 Glide.with(itemView.context)
@@ -270,7 +280,8 @@ class SearchFragment : Fragment(), SearchMover, ActivityMover {
             }
             val addCtgOffBtn = itemView.findViewById<ImageView>(R.id.searchfr_item_add_category_off_iv)
             addCtgOffBtn.setOnClickListener {
-                goAddCast(castHomeDTO[i].id)
+                Log.d("검색 프래그먼트 id","${castHomeDTO[i].id}")
+                goAddCast(castHomeDTO[i])
             }
 
             binding.gridLayout.addView(itemView)

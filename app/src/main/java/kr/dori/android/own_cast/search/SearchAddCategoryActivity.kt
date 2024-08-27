@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.ActivitySearchAddCategoryBinding
 import kr.dori.android.own_cast.forApiData.CastHomeDTO
 import kr.dori.android.own_cast.forApiData.CastInterface
@@ -39,29 +40,13 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
 
         binding = ActivitySearchAddCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val playlist = intent.getSerializableExtra("categoryList") as? ArrayList<GetAllPlaylist>?
-        val id = intent.getLongExtra("id",-1)
 
 
-        if(!playlist.isNullOrEmpty()){
-            //내가 만든거 담아온거 없애야 돼서
-            playlist.removeAt(0)
-            playlist.removeAt(0)
-            searchadapter = AddCategoryAdapter(this,this)
-            searchadapter.dataList = playlist
-            binding.activitySearchAddCategoryRv.adapter = searchadapter
-            binding.activitySearchAddCategoryRv.layoutManager = LinearLayoutManager(this)
-            if(playlist.isNullOrEmpty()){
-                Toast.makeText(this,"재생목록이 비어있습니다.",Toast.LENGTH_SHORT).show()
-            }
-        }else {
-            initCategoryData()//이 함수에서 아래 내용 해줄거임
-            /*binding.activitySearchAddCategoryRv.adapter = searchadapter
-            binding.activitySearchAddCategoryRv.layoutManager = LinearLayoutManager(this)*/
-        }
-        id?.let {
-            searchadapter.id = it
-        }
+        //add해야되는 부분이 검색과 플레이 캐스트 액티비티이므로, 차라리 currentCast받아오게 변경
+        searchadapter = AddCategoryAdapter(this,this)
+        initCategoryData()//재생목록 받아온다
+
+
 
 
         binding.activitySearchAddCategoryExitIv.setOnClickListener {
@@ -73,12 +58,11 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
         TODO("Not yet implemented")
     }
 
-    override fun goAddCast(id:Long) {
+    override fun goAddCast(castHomeDTO: CastHomeDTO) {
         TODO("Not yet implemented")
     }
 
     override fun backSearch() {
-
         finish()
     }
 
@@ -101,7 +85,8 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
 
     fun initCategoryData(){
         val getCategory = getRetrofit().create(PlayListInterface::class.java)
-        val loadingDialog = KeywordLoadingDialog(this,"데이터를 불러오고 있어요")
+        val loadingDialog = KeywordLoadingDialog(this,"재생목록을 불러오고 있어요")
+        Log.d("캐스트 추가", "함수 진입")
         loadingDialog.setCancelable(false)
         loadingDialog.setCanceledOnTouchOutside(false)
         loadingDialog.show()
@@ -121,23 +106,26 @@ class SearchAddCategoryActivity : AppCompatActivity(), SearchMover {
                                         totalCast = it.totalCast
                                     )
                                 }
+                                //추가할때도 검색한 캐스트를 currentCast로 설정해버림
+
+                                searchadapter.id = CastPlayerData.currentCast.castId
                                 searchadapter.dataList.addAll(data)
                                 searchadapter.dataList.removeAt(0)
                                 searchadapter.dataList.removeAt(0)
                                 binding.activitySearchAddCategoryRv.adapter = searchadapter
                                 binding.activitySearchAddCategoryRv.layoutManager = LinearLayoutManager(this@SearchAddCategoryActivity)
-                                Log.d("카테고리 추가","성공 \n ${data.toString()}")
+                                Log.d("캐스트 추가","성공 \n ${data.toString()}")
                             }
                         } else {
+                            Log.d("캐스트 추가","실패 ${response.code()}")
                             Toast.makeText(this@SearchAddCategoryActivity,"재생목록 불러오기 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
                         }
 
                     } catch (e: Exception) {
+                        Log.d("캐스트 추가","실패 ${e.message}")
                         e.printStackTrace()
                     }
                 }
-
-
             }
         }
     }
