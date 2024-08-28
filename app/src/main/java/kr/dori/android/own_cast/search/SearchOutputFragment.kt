@@ -124,6 +124,7 @@ class SearchOutputFragment : Fragment(), SearchMover , CoroutineScope, ActivityM
         CastPlayerData.setCast(data,1)//데이터 초기화
         CastPlayerData.setCurrentPos(id)
         ToPlayCast()
+
     }
 
     override fun goAddCast(castHomeDTO: CastHomeDTO) {

@@ -574,7 +574,9 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                             Log.d("캐스트 저장", castListWithPlaylistId.toString())
                             CastPlayerData.setCast(castListWithPlaylistId, 0)
                             CastPlayerData.setCurrentIndex(castListWithPlaylistId.size-1)
+
                             ToPlayCast()
+
 
                             activity?.finish()
                             finDialog.dismiss()

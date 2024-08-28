@@ -32,6 +32,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.util.Base64
+import androidx.activity.OnBackPressedCallback
 
 import kr.dori.android.own_cast.player.CastWithPlaylistId
 
@@ -42,6 +43,8 @@ import kr.dori.android.own_cast.study.StudyFragment
 
 import org.json.JSONObject
 import java.util.Date
+import java.util.Timer
+import java.util.TimerTask
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 
@@ -68,6 +71,8 @@ class MainActivity : AppCompatActivity() {
             isBound = false
         }
     }
+
+
 
     override fun onStart() {
         super.onStart()
@@ -156,7 +161,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         initBottomButtons()
-
+        quitApp()
     }
 
 
@@ -442,6 +447,28 @@ class MainActivity : AppCompatActivity() {
         binding.castName.text = currentCast.castTitle
         binding.categoryNameTv.text = currentCast.castCategory
         binding.categoryNameTv.bringToFront()
+    }
+
+    private var backPressedOnce = false
+    private fun quitApp(){
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (backPressedOnce) {
+                    // Exit the app
+                    finishAffinity() // Or use finish() to close just the current activity
+                } else {
+                    backPressedOnce = true
+                    Toast.makeText(applicationContext, "한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+
+                    // Reset backPressedOnce after 2 seconds
+                    Timer().schedule(object : TimerTask() {
+                        override fun run() {
+                            backPressedOnce = false
+                        }
+                    }, 2000)
+                }
+            }
+        })
     }
 }
 

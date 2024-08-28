@@ -163,7 +163,9 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope,ActivityMover {
 
         CastPlayerData.setCast(data,1)//데이터 초기화
         CastPlayerData.setCurrentPos(id)
+
         ToPlayCast()
+
     }
 
     override fun goAddCast(castHomeDTO:CastHomeDTO) {//여기다가 카테고리 정보 담아야함

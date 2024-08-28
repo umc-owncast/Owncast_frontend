@@ -146,26 +146,39 @@
             app:srcCompat="@drawable/edit_audio_activity_switch_on" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
+
+    <TextView
         android:id="@+id/activity_edit_audio_ok"
         android:layout_width="230dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="60dp"
-        android:scaleType="fitXY"
+        android:background="@drawable/key_aud_scr_btn_bg"
+        android:backgroundTint="@color/main_color"
+        android:gravity="center"
+        android:text="확인"
+        android:textColor="@color/white"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/restart_ok" />
-
-    <ImageView
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="60dp"
+        app:layout_constraintWidth_percent="0.4861111111111111" />
+    <TextView
         android:id="@+id/activity_edit_audio_delete"
-        android:layout_width="130dp"
+        android:layout_width="114dp"
+
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
         android:layout_marginBottom="60dp"
-        android:scaleType="fitXY"
+        android:background="@drawable/delete_btn_bg"
+        android:backgroundTint="@color/main_color"
+        android:gravity="center"
+        android:text="삭제"
+        android:textColor="@color/black"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/restart_no" />
+        app:layout_constraintWidth_percent="0.4861111111111111" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

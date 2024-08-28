@@ -436,7 +436,8 @@
             android:layout_marginEnd="0dp"
             android:progressDrawable="@drawable/seekbar_progress"
             android:thumb="@android:color/transparent"
-            android:stepSize="0.1"
+
+            android:max="100000"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

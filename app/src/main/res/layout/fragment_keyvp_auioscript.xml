@@ -286,33 +286,26 @@
     <ImageView
         android:id="@+id/key_aud_scr_remake_iv"
         android:layout_width="0dp"
-        app:layout_constraintWidth_percent="0.3888888888888889"
         android:layout_height="40dp"
-        android:src="@drawable/key_aud_scr_remake"
-        app:layout_constraintStart_toStartOf="@id/key_aud_scr_tool_cl"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="44dp"
-        />
+        android:src="@drawable/key_aud_scr_remake"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/key_aud_scr_tool_cl"
+        app:layout_constraintWidth_percent="0.3888888888888889" />
 
     <TextView
         android:id="@+id/key_aud_scr_next_iv"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:text="다음"
         android:layout_width="0dp"
-        app:layout_constraintWidth_percent="0.4861111111111111"
         android:layout_height="40dp"
+        android:background="@drawable/key_aud_scr_btn_bg"
         android:backgroundTint="@color/main_color"
         android:gravity="center"
-        android:background="@drawable/key_aud_scr_btn_bg"
-        app:layout_constraintEnd_toEndOf="@id/key_aud_scr_tool_cl"
+        android:text="다음"
+        android:textColor="@color/white"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/key_aud_scr_remake_iv"
-        />
-
-
-
-
-
+        app:layout_constraintEnd_toEndOf="@id/key_aud_scr_tool_cl"
+        app:layout_constraintWidth_percent="0.4861111111111111" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
