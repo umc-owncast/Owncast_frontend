@@ -12,6 +12,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 
+
 class SignupSelfActivity : ComponentActivity() {
 
     private val MAX_LENGTH = 20

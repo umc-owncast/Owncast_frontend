@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 
+
 class SignupFifthActivity : ComponentActivity() {
 
     private lateinit var cardMovie: ImageView

@@ -3,6 +3,7 @@ package kr.dori.android.own_cast
 
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -38,6 +39,9 @@ interface ApiService {
     // 6. 로그인
     @POST("/api/users/login")
     fun login(@Body loginRequest: LoginRequest): Call<LoginResponse>
+
+    @GET("/api/users/info")
+    fun getUserInfo(@Header("Authorization") token: String): Call<UserInfoResponse>
 
 
     // 7. 언어 설정 업데이트

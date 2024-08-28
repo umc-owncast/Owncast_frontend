@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 
+
 class SignupSecondActivity : ComponentActivity() {
     private lateinit var viewModel: SignupViewModel
 
