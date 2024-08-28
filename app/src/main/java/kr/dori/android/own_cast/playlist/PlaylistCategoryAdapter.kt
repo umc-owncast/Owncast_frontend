@@ -109,7 +109,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                                     )
                                 }
                                 //CastPlayerData.setCastList(castList)  // 캐스트 리스트를 저장
-                                CastPlayerData.setCast(castListWithPlaylistId, 1)
+                                CastPlayerData.setCast(castListWithPlaylistId, 0)
                                 activityMover.ToPlayCast()
 
                             }
