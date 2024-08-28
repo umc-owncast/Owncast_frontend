@@ -8,8 +8,13 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
-
 class AudioPlayer(private val context: Context) {
+
+    interface AudioPlayerListener {
+        fun onAudioPlayFinished()
+    }
+
+    var listener: AudioPlayerListener? = null
 
     private var player: ExoPlayer? = null
     private val handler = Handler(Looper.getMainLooper())
@@ -51,14 +56,15 @@ class AudioPlayer(private val context: Context) {
                             handler.postDelayed({
                                 if (isLooping) {
                                     seekTo((start * 1000).toLong())
-
-                                    // 반복 시 시작 지점으로 이동
                                     playWhenReady = true
                                 } else {
                                     stopAudio()
+                                    listener?.onAudioPlayFinished() // 재생 종료 알림
                                 }
                             }, duration)
                         }
+                    } else if (state == Player.STATE_ENDED) {
+                        listener?.onAudioPlayFinished() // 재생이 종료되었을 때
                     }
                 }
             })
@@ -67,6 +73,7 @@ class AudioPlayer(private val context: Context) {
 
     fun stopAudio() {
         player?.stop()
+        listener?.onAudioPlayFinished() // 재생 중지 알림
     }
 
     fun setLooping(loop: Boolean) {
