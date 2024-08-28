@@ -34,7 +34,6 @@ import retrofit2.create
 class CategoryFragment() : Fragment(), ActivityMover {
 
     private lateinit var binding: FragmentCategoryBinding
-    private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var castAdapter: CastAdapter
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     lateinit var sendCastIdList: List<CastWithPlaylistId>

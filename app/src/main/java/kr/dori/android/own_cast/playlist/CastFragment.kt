@@ -77,6 +77,9 @@ class CastFragment() : Fragment(), ActivityMover {
                                     )
                                 }
                                 castAdapter.dataList = castListWithPlaylistId.toMutableList()
+                                // 총 오디오 길이 계산
+                                val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(castListWithPlaylistId)
+                                binding.castInfo.text = "${castListWithPlaylistId.size}개, ${formatTime(totalAudioLengthInSeconds)}"
                                 Log.d("realTest","${castListWithPlaylistId.toMutableList()}")
                             }
                         }
@@ -104,6 +107,9 @@ class CastFragment() : Fragment(), ActivityMover {
                                     )
                                 }
                                 castAdapter.dataList = castListWithPlaylistId.toMutableList()
+                                // 총 오디오 길이 계산
+                                val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(castListWithPlaylistId)
+                                binding.castInfo.text = "${castListWithPlaylistId.size}개, ${formatTime(totalAudioLengthInSeconds)}"
                             }
                         }
                     } else {
