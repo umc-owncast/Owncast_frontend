@@ -742,6 +742,7 @@ class PlayCastActivity : AppCompatActivity() {
             }
         })
     }
+
     private fun buttonLock() {
         val buttons = listOf(
             binding.activityPlayCastScriptOnIv,
@@ -756,6 +757,7 @@ class PlayCastActivity : AppCompatActivity() {
             buttons.forEach { it.isEnabled = true }
         }, 300)
     }
+
 }
     //담아온 캐스트 제거하는 함수
     /*private fun deleteCast(){
