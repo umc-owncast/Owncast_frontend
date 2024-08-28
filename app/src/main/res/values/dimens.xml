@@ -7,4 +7,6 @@
     <dimen name="signup_fifth_card_w">160dp</dimen>
     <dimen name="signup_fifth_card_h">120dp</dimen>
     <dimen name="study_item_margin">20dp</dimen>
+    <dimen name="default_margin">0dp</dimen>
+    <dimen name="side_card_margin">50dp</dimen>
 </resources>
