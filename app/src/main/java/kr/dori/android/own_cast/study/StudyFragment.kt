@@ -394,8 +394,8 @@ class StudyFragment : Fragment(), AudioPlayer.AudioPlayerListener {
             }
         }
 
-        binding.studyCustomAdapterRv.scrollToPosition(5)
-
+        //binding.studyCustomAdapterRv.scrollToPosition(5)
+/*
         binding.studyCustomAdapterRv.post {
             val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
             if (dataCount > 0) {
@@ -409,6 +409,8 @@ class StudyFragment : Fragment(), AudioPlayer.AudioPlayerListener {
                 }
             }
         }
+
+ */
     }
 
 
