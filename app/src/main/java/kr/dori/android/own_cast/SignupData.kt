@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import java.lang.reflect.Array.getInt
 
+
 class SignupData : Application() {
     companion object {
 

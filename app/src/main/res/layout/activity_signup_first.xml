@@ -92,15 +92,18 @@
             android:text="owncast 서비스를 제공해 드리기\n위해서는 이용약관 동의가 필요해요"
             android:textSize="22sp"
             android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"/>
 
+        <!-- 이용약관 및 체크박스 -->
         <LinearLayout
-            android:layout_width="310dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="5dp"
-            android:layout_gravity="fill_vertical" >
+            android:layout_marginTop="30dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -109,8 +112,7 @@
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:layout_marginRight="10dp">
-            </TextView>
+                android:layout_marginEnd="10dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -119,27 +121,26 @@
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:textColor="@color/main_purple"
-                android:layout_marginRight="10dp">
-            </TextView>
+                android:layout_marginEnd="10dp"/>
 
             <ImageView
                 android:id="@+id/checkbox"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:src="@drawable/signup_uncheck"
-                android:layout_gravity="end"
-                android:scaleType="fitEnd">
-            </ImageView>
-
+                android:scaleType="fitEnd"
+                android:layout_alignParentEnd="true"/>
         </LinearLayout>
 
+        <!-- 스크롤뷰 -->
         <ScrollView
-            android:layout_width="320dp"
-            android:layout_height="285dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_marginTop="5dp"
             android:padding="5dp"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/edittext_background">
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/edittext_background"
+            android:layout_weight="1">
 
             <TextView
                 android:id="@+id/textView"
@@ -152,6 +153,7 @@
         </ScrollView>
 
     </LinearLayout>
+
 
     <Button
         android:id="@+id/btn_next"
