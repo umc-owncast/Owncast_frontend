@@ -51,7 +51,7 @@ class PlayCastActivity : AppCompatActivity() {
     private var isSeeking = false
     private var service: BackgroundPlayService? = null
     private var isBound = false
-    private val seekBarHandler = Handler(Looper.getMainLooper()) // 메인 UI 쓰레드에서 실행
+    private val seekBarHandler = Handler()
     private val scriptHandler = Handler() // ScriptFragment 업데이트용 핸들러
 
     var stateListener: Int = 0
@@ -521,6 +521,7 @@ class PlayCastActivity : AppCompatActivity() {
 
     // Fragment 전환 함수들
     private fun audioToScript() {
+        buttonLock()
         stopScriptFragmentUpdate()
         binding.activityPlayCastPlaylistOnIv.visibility = View.GONE
         binding.activityPlayCastPlaylistOffIv.visibility = View.VISIBLE
@@ -551,6 +552,7 @@ class PlayCastActivity : AppCompatActivity() {
     }
 
     private fun scriptToAudio() {
+        buttonLock()
         stopScriptFragmentUpdate()
         binding.activityPlayCastPlaylistOnIv.visibility = View.GONE
         binding.activityPlayCastPlaylistOffIv.visibility = View.VISIBLE
@@ -569,6 +571,7 @@ class PlayCastActivity : AppCompatActivity() {
 
     //플레이스트 시작
     private fun audioToPlaylist() {
+        buttonLock()
         binding.activityPlayCastPlaylistOnIv.visibility = View.VISIBLE
         binding.activityPlayCastPlaylistOffIv.visibility = View.GONE
         binding.activityPlayCastScriptOnIv.visibility = View.GONE
@@ -585,6 +588,7 @@ class PlayCastActivity : AppCompatActivity() {
     }
 
     private fun playlistToAudio() {
+        buttonLock()
         binding.activityPlayCastPlaylistOnIv.visibility = View.GONE
         binding.activityPlayCastPlaylistOffIv.visibility = View.VISIBLE
         binding.activityPlayCastScriptOnIv.visibility = View.GONE
@@ -738,6 +742,22 @@ class PlayCastActivity : AppCompatActivity() {
             }
         })
     }
+
+    private fun buttonLock() {
+        val buttons = listOf(
+            binding.activityPlayCastScriptOnIv,
+            binding.activityPlayCastScriptOffIv,
+            binding.activityPlayCastPlaylistOnIv,
+            binding.activityPlayCastPlaylistOffIv
+        )
+
+        buttons.forEach { it.isEnabled = false }
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            buttons.forEach { it.isEnabled = true }
+        }, 300)
+    }
+
 }
     //담아온 캐스트 제거하는 함수
     /*private fun deleteCast(){
