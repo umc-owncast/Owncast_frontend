@@ -59,12 +59,16 @@ class AudioPlayer(private val context: Context) {
                                     playWhenReady = true
                                 } else {
                                     stopAudio()
-                                    listener?.onAudioPlayFinished() // 재생 종료 알림
+                                    Handler(Looper.getMainLooper()).postDelayed({
+                                        listener?.onAudioPlayFinished() // 재생이 종료되었을 때, 바로 꺼지면 약간 불편해서 1초 뒤에 알리도록 설정함
+                                    },1000)
                                 }
                             }, duration)
                         }
                     } else if (state == Player.STATE_ENDED) {
-                        listener?.onAudioPlayFinished() // 재생이 종료되었을 때
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            listener?.onAudioPlayFinished() // 재생이 종료되었을 때, 바로 꺼지면 약간 불편해서 1초 뒤에 알리도록 설정함
+                        },1000)
                     }
                 }
             })
@@ -73,7 +77,9 @@ class AudioPlayer(private val context: Context) {
 
     fun stopAudio() {
         player?.stop()
-        listener?.onAudioPlayFinished() // 재생 중지 알림
+        handler.postDelayed({
+            listener?.onAudioPlayFinished()
+        }, 1000) // 1초 지연
     }
 
     fun setLooping(loop: Boolean) {
