@@ -175,7 +175,9 @@ class SearchFragment : Fragment(), SearchMover, ActivityMover {
         }
 
         CastPlayerData.setCast(data,1)//데이터 초기화
-        ToPlayCast(data)
+
+        ToPlayCast()
+
         CastPlayerData.setCurrentPos(id)
 
 
@@ -292,7 +294,7 @@ class SearchFragment : Fragment(), SearchMover, ActivityMover {
         val seconds = totalSeconds % 60
         return String.format("%d:%02d", minutes, seconds)
     }
-    override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
+    override fun ToPlayCast() {
 
         // 현재 서비스가 재생 중인지 확인하고 중지
         //val currentService = getCurrentServiceInstance()

@@ -36,11 +36,6 @@ class CastFragment() : Fragment(), ActivityMover {
     private lateinit var binding: FragmentCastBinding
     private lateinit var castAdapter: CastAdapter
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
-    private var playlistList: MutableList<CastWithPlaylistId> = mutableListOf()
-
-    private val sharedViewModel: SharedViewModel by activityViewModels()
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -150,20 +145,20 @@ class CastFragment() : Fragment(), ActivityMover {
 
         binding.fragmentCastPlayIv.setOnClickListener {
             CastPlayerData.setCast(castAdapter.dataList, 0)
-            ToPlayCast(castAdapter.dataList)
+            ToPlayCast()
         }
 
         binding.fragmentCastShuffleIv.setOnClickListener {
             val forShuffle: List<CastWithPlaylistId> = castAdapter.dataList
             val shuffledList = forShuffle.shuffled()
             CastPlayerData.setCast(shuffledList,0)
-            ToPlayCast(shuffledList)
+            ToPlayCast()
         }
         return binding.root
     }
 
 
-    override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
+    override fun ToPlayCast() {
 
         //   val currentCast = CastPlayerData.currentCast
 
