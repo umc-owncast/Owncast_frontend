@@ -77,7 +77,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
             val bundle = Bundle().apply {
                 putBoolean("isSave", true)  // 세이브 버튼 클릭 시 true 전달
             }
-            val castFragment = CastFragment(playlistIdList).apply {
+            val castFragment = CastFragment().apply {
                 arguments = bundle
             }
             requireActivity().supportFragmentManager.beginTransaction()
@@ -90,7 +90,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
             val bundle = Bundle().apply {
                 putBoolean("isSave", false)  // 세이브 버튼 클릭 시 true 전달
             }
-            val castFragment = CastFragment(playlistIdList).apply {
+            val castFragment = CastFragment().apply {
                 arguments = bundle
             }
             requireActivity().supportFragmentManager.beginTransaction()

@@ -120,17 +120,28 @@ class SearchOutputFragment : Fragment(), SearchMover , CoroutineScope, ActivityM
                 imagePath = it.imagePath
             )
         }
-        var imageData = list.map{
-            it.imagePath
-        }
+
         CastPlayerData.setCast(data,1)//데이터 초기화
+        CastPlayerData.setCurrentPos(id)
         ToPlayCast(data)
     }
 
-    override fun goAddCast(id : Long) {
+    override fun goAddCast(castHomeDTO: CastHomeDTO) {
         val intent = Intent(requireContext(), SearchAddCategoryActivity::class.java)
-        sharedViewModel.data.value?.let{
+        /*sharedViewModel.data.value?.let{
             intent.putExtra("categoryList",ArrayList(it))
+        }*/
+        CastPlayerData.currentCast = castHomeDTO.let{
+            CastWithPlaylistId(
+                castId = it.id,
+                playlistId = 0L,
+                castTitle = it.playlistName,
+                isPublic = true,
+                castCreator = it.memberName,
+                castCategory = it.memberName,
+                audioLength = it.audioLength,
+                imagePath = it.imagePath
+            )
         }
         intent.putExtra("id",id)
         startActivity(intent)

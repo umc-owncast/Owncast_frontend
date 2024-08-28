@@ -50,7 +50,7 @@ class SearchAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Searc
             binding.searchfrItemDurationTv.text = data.audioLength
 
             binding.searchfrItemAddCategoryOffIv.setOnClickListener {
-                mover.goAddCast(data.id)
+                mover.goAddCast(data)
             }
             binding.itemThumbIv.setOnClickListener {
                 mover.goPlayCast(dataList,data.id)

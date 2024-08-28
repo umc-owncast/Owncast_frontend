@@ -104,6 +104,8 @@ class HomeFragment : Fragment() {
 
         binding.insertKeyw.setOnClickListener {//검색창 이동
             val intent = Intent(getActivity(), KeywordActivity::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
             stopAudio() // 음원 중단
             intent.putExtra("isSearch",true)
             startActivity(intent)
@@ -120,6 +122,7 @@ class HomeFragment : Fragment() {
         binding.homefrScriptDirectInputTv.setOnClickListener {
             val intent = Intent(getActivity(), KeywordActivity::class.java)
             intent.putExtra("isSearch",false)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             stopAudio() // 음원 중단
             activityResultLauncher.launch(intent)
         }
@@ -147,6 +150,7 @@ class HomeFragment : Fragment() {
 
                 textList[i].setOnClickListener {
                     val intent = Intent(getActivity(), KeywordActivity::class.java)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     intent.putExtra("searchText",textList[i].text.toString())
                     stopAudio() // 음원 중단
                     startActivity(intent)

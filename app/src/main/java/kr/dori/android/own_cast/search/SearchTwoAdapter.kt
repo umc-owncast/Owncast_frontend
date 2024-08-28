@@ -50,7 +50,7 @@ class SearchTwoAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Se
             binding.searchDurationTv.text = data.audioLength
             binding.searchAddCategoryOffIv.setOnClickListener {
 
-                mover.goAddCast(data.id)
+                mover.goAddCast(data)
             }
             binding.searchPlayIv.setOnClickListener {
 
