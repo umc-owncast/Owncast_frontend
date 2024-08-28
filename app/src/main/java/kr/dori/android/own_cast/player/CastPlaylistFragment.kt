@@ -1,6 +1,7 @@
 package kr.dori.android.own_cast.player
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.FragmentCastPlaylistBinding
+import java.util.Collections
 
 
 class CastPlaylistFragment : Fragment() {
@@ -33,7 +35,7 @@ class CastPlaylistFragment : Fragment() {
         return binding.root
     }
 
-    fun initTouchHeleper(){
+    fun initTouchHeleper() {
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
 
@@ -44,33 +46,17 @@ class CastPlaylistFragment : Fragment() {
             ): Boolean {
                 val fromPosition = viewHolder.adapterPosition
                 val toPosition = target.adapterPosition
-                val cast = CastPlayerData.getAllCastList().removeAt(fromPosition)
-                // 아이템의 순서를 바꿉니다.
-                if(fromPosition > toPosition){//아이템 밑을 ㅗ내림
-                    //currentCast를 바꾸는 작업을 해준다.
-                    CastPlayerData.getAllCastList().add(toPosition, cast)
 
-                    if(fromPosition == CastPlayerData.currentPosition){
-                        CastPlayerData.currentPosition = toPosition
-                        CastPlayerData.currentCast = CastPlayerData.getAllCastList()[toPosition]
-                    }else if((fromPosition < CastPlayerData.currentPosition) && (toPosition <= CastPlayerData.currentPosition)){
-                        CastPlayerData.currentPosition += 1
-                        CastPlayerData.currentCast = CastPlayerData.getAllCastList()[CastPlayerData.currentPosition]
-                    }
-                }else{//아이템 위로 올림
-                    CastPlayerData.getAllCastList().add(toPosition-1, cast)
+                // 변경된 순서를 반영하여 swipeCast 호출
+                val updatedList = CastPlayerData.getAllCastList().toMutableList()
+                Collections.swap(updatedList, fromPosition, toPosition)
 
-                    if(fromPosition == CastPlayerData.currentPosition){
-                        CastPlayerData.currentPosition = toPosition
-                        CastPlayerData.currentCast = CastPlayerData.getAllCastList()[toPosition]
-                    }else if((fromPosition > CastPlayerData.currentPosition) && (toPosition >= CastPlayerData.currentPosition)){
-                        CastPlayerData.currentPosition -= 1
-                        CastPlayerData.currentCast = CastPlayerData.getAllCastList()[CastPlayerData.currentPosition]
-                    }
-                }
+                // swipeCast 메서드로 allCastList를 업데이트
+                CastPlayerData.swipeCast(updatedList)
+                Log.d("testSwipe", "변경된 리스트: ${updatedList.map{ it.castId }}, 싱글톤 리스트: ${CastPlayerData.getAllCastList().map { it.castId }}, 현재 재생중인 캐스트: ${CastPlayerData.currentCast.castId} 현재 포지션: ${CastPlayerData.currentPosition}")
 
+                castPlaylistAdapter.notifyItemMoved(fromPosition, toPosition)
 
-                castPlaylistAdapter.swapItems(fromPosition, toPosition)
                 return true
             }
 
@@ -84,6 +70,7 @@ class CastPlaylistFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding.fragmentCastPlaylistRv)
         castPlaylistAdapter.itemTouchHelper = itemTouchHelper
     }
+
 
     fun initPlayItem(){
         CastPlayerData.currentCast.imagePath.let{

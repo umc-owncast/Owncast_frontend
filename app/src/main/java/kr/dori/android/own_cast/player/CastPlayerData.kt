@@ -9,25 +9,33 @@ object CastPlayerData {
     private val allCastList = mutableListOf<CastWithPlaylistId>()
     var currentPosition : Int = 0
     lateinit var currentCast: CastWithPlaylistId
-
-    private val castImagePath = mutableListOf<String>()
-
     var currentBookmarkList: List<Long> = emptyList()  // 기본값으로 초기화
 
-    fun setCast(testList: List<CastWithPlaylistId>, position: Int) {
+    fun setCast(castList: List<CastWithPlaylistId>, position: Int) {
         allCastList.clear()
-        allCastList.addAll(testList)
+        allCastList.addAll(castList)
 
-        if(position in 0 until testList.size){
+        if(position in 0 until castList.size){
             currentPosition = position
         }
-        //currentPosition = allCastList.size - testList.size
-
         if (currentPosition in 0 until allCastList.size) {
             currentCast = allCastList[currentPosition]
-            Log.d("test", "currentPosition: ${currentPosition}, receiveCastListSize: ${testList.size}, AllCastListSize: ${allCastList.size}, currentCast:${currentCast}, AllCast: ${allCastList}")
+            Log.d("test", "currentPosition: ${currentPosition}, receiveCastListSize: ${castList.size}, AllCastListSize: ${allCastList.size}, currentCast:${currentCast}, AllCast: ${allCastList}")
         } else {
-            Log.e("test", "Invalid testPosition: $currentPosition, testList size: ${testList.size}, ${allCastList.size},${currentPosition}")
+            Log.e("test", "Invalid testPosition: $currentPosition, testList size: ${castList.size}, ${allCastList.size},${currentPosition}")
+        }
+    }
+
+    fun swipeCast(castList: List<CastWithPlaylistId>) {
+        allCastList.clear()
+        allCastList.addAll(castList)
+
+        // currentCast의 새로운 위치를 찾음
+        currentPosition = allCastList.indexOfFirst { it.castId == currentCast.castId }
+        Log.d("swipeCast", "Updated currentPosition: $currentPosition for currentCast with ID: ${currentCast.castId}")
+
+        if (currentPosition == -1) {
+            Log.e("swipeCast", "currentCast not found in updated list")
         }
     }
 
@@ -72,11 +80,6 @@ object CastPlayerData {
     fun setCurrentIndex(int: Int){
         currentPosition = int
         currentCast = allCastList[int]
-    }
-
-    fun setImagePath(list:List<String>){
-        castImagePath.clear()
-        castImagePath.addAll(list)
     }
 
 

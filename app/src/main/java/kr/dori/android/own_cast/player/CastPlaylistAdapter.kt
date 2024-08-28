@@ -24,10 +24,15 @@ class CastPlaylistAdapter: RecyclerView.Adapter<CastPlaylistAdapter.Holder>() {
 
     lateinit var itemTouchHelper: ItemTouchHelper
     fun swapItems(fromPosition: Int, toPosition: Int) {
+        // CastPlayerData의 allCastList에서 아이템 위치 변경
         Collections.swap(CastPlayerData.getAllCastList(), fromPosition, toPosition)
-        Log.d("재생목록테스트",CastPlayerData.getAllCastList().toString())
+
+        Log.d("재생목록테스트", CastPlayerData.getAllCastList().toString())
+
         notifyItemMoved(fromPosition, toPosition)
     }
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val binding = CastplaylistItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
