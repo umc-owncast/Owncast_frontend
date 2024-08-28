@@ -53,6 +53,7 @@ class CastAudioFragment(val currentCast: CastWithPlaylistId) : Fragment() {
             }
             castInfo = castInfoDeferred.await() ?: CastInfo(0, "", "", "", "", emptyList())
             sentences = castInfo.sentences
+            Log.d("센텐스 체크", sentences.toString())
         }
 
 
@@ -65,7 +66,7 @@ class CastAudioFragment(val currentCast: CastWithPlaylistId) : Fragment() {
         binding.castTitle.text = castTitle
     }
 
-    /*fun updateCurrentTime(currentTime: Long) {
+    fun updateCurrentTime(currentTime: Long) {
         Log.d("UpdateTime", "Fragment: $currentTime")
         val newHighlightedPosition = findCurrentPosition(currentTime)
         if(!sentences.isNullOrEmpty()){
@@ -73,15 +74,14 @@ class CastAudioFragment(val currentCast: CastWithPlaylistId) : Fragment() {
             binding.textView25.text = sentences[newHighlightedPosition].translatedSentence
         }
 
-    }*/
+    }
 
     private fun findCurrentPosition(currentTime: Long): Int {
-        for (i in sentences.indices) {
-            val previousSentenceTime = if (i > 0) {
-                (sentences[i - 1].timePoint * 1000).toLong()
+        for (i:Int in 0 until sentences.size) {
+            val previousSentenceTime = if (i > 0){
+                (sentences[i-1].timePoint * 1000).toLong()
             } else {
-                0L
-                  // 첫 문장의 경우, 시작을 0으로 설정
+                (sentences[0].timePoint * 1000).toLong()
             }
 
             val sentenceTimePoint = (sentences[i].timePoint * 1000).toLong()
@@ -90,10 +90,10 @@ class CastAudioFragment(val currentCast: CastWithPlaylistId) : Fragment() {
 
             if (currentTime >= previousSentenceTime && currentTime < sentenceTimePoint) {
                 Log.d("ScriptAdapter", "Current sentence index: $i")
-                return i
-            }
+                return i - 1
+            }else if(i == sentences.size-1&&currentTime>sentenceTimePoint) return i
         }
-        return -1
+        return 0
     }
 
     fun initCastData(){

@@ -5,8 +5,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -79,7 +81,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
     //캐스트 정보 받아올 때 사용
     private lateinit var imageUrl : String
     private var title =""
-    private var isText = false
+    private var isText = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -124,6 +126,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
         }
 
         binding.activityEditAudioExitIv.setOnClickListener {
+
             finish()
         }
 
@@ -137,8 +140,9 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
             isLock = true
         }
 
-        binding.activityEditAudioOk.setOnClickListener {// 수정 완료버튼
-            editCast()
+        binding.activityEditAudioOk.setOnClickListener {
+            if(isText)editCast()// 수정 완료버튼
+
         }
 
         binding.activityEditAudioDelete.setOnClickListener {
@@ -405,11 +409,13 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                 }
                 isText = s?.isNotEmpty() == true
                 if (isText) {
-                    binding.activityEditAudioOk.visibility = View.GONE
-                    binding.activityEditAudioOk.visibility = View.VISIBLE
+                    binding.activityEditAudioOk.backgroundTintList = ColorStateList.
+                    valueOf(ContextCompat.getColor(context, R.color.main_color))
+                    binding.activityEditAudioOk.setTextColor(Color.parseColor("#FFFFFF"))
                 } else{
-                    binding.activityEditAudioOk.visibility = View.VISIBLE
-                    binding.activityEditAudioOk.visibility = View.GONE
+                    binding.activityEditAudioOk.backgroundTintList = ColorStateList.
+                    valueOf(ContextCompat.getColor(context, R.color.button_unclick))
+                    binding.activityEditAudioOk.setTextColor(Color.parseColor("#1F2329"))
                 }
 
             }

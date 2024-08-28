@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -61,7 +62,7 @@ import retrofit2.Response
 
 import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.playlist.SharedViewModel
-
+import kotlin.math.min
 
 
 class SearchFragment : Fragment(), SearchMover, ActivityMover {
@@ -253,40 +254,46 @@ class SearchFragment : Fragment(), SearchMover, ActivityMover {
 
     fun setItemData(castHomeDTO: List<CastHomeDTO>){
         if(castHomeDTO.size == 0) Toast.makeText(requireContext(),"유사한 검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
-        for (i in 0 until castHomeDTO.size) {
-            // item_layout.xml을 inflate하여 GridLayout에 추가
-            val itemView = inflaterLayout.inflate(R.layout.item_search_fr, binding.gridLayout, false)
-            // 필요시 itemView의 내부 요소를 수정
-            val thumbButton = itemView.findViewById<ImageView>(R.id.item_thumb_iv)
-            val titleTv = itemView.findViewById<TextView>(R.id.searchfr_item_title_tv)
-            val categoryTv = itemView.findViewById<TextView>(R.id.searchfr_item_category_tv)
-            val durationTv = itemView.findViewById<TextView>(R.id.searchfr_item_duration_tv)
-            titleTv.text = castHomeDTO[i].title
-            categoryTv.text = "${castHomeDTO[i].memberName}-${castHomeDTO[i].playlistName}"
-            Log.d("searchFragment_apicheck","${castHomeDTO[i].audioLength}")
-            durationTv.text = castHomeDTO[i].audioLength
-            if (castHomeDTO[i].imagePath.startsWith("http")) {
-                // URL로부터 이미지 로드 (Glide 사용)
-                Glide.with(itemView.context)
-                    .load(castHomeDTO[i].imagePath)
-                    .into(thumbButton)
-            } else {
-                // 로컬 파일에서 이미지 로드
-                val bitmap = BitmapFactory.decodeFile(castHomeDTO[i].imagePath)
-                thumbButton.setImageBitmap(bitmap)
-            }
+        for (i in 0 until 4) {
+            if(i<castHomeDTO.size){// item_layout.xml을 inflate하여 GridLayout에 추가
+                val itemView =
+                    inflaterLayout.inflate(R.layout.item_search_fr, binding.gridLayout, false)
+                // 필요시 itemView의 내부 요소를 수정
+                val thumbButton = itemView.findViewById<ImageView>(R.id.item_thumb_iv)
+                val titleTv = itemView.findViewById<TextView>(R.id.searchfr_item_title_tv)
+                val categoryTv = itemView.findViewById<TextView>(R.id.searchfr_item_category_tv)
+                val durationTv = itemView.findViewById<TextView>(R.id.searchfr_item_duration_tv)
+                titleTv.text = castHomeDTO[i].title
+                categoryTv.text = "${castHomeDTO[i].memberName}-${castHomeDTO[i].playlistName}"
+                Log.d("searchFragment_apicheck", "${castHomeDTO[i].audioLength}")
+                durationTv.text = castHomeDTO[i].audioLength
+                if (castHomeDTO[i].imagePath.startsWith("http")) {
+                    // URL로부터 이미지 로드 (Glide 사용)
+                    Glide.with(itemView.context)
+                        .load(castHomeDTO[i].imagePath)
+                        .into(thumbButton)
+                } else {
+                    // 로컬 파일에서 이미지 로드
+                    val bitmap = BitmapFactory.decodeFile(castHomeDTO[i].imagePath)
+                    thumbButton.setImageBitmap(bitmap)
+                }
+                thumbButton.setOnClickListener {
+                    goPlayCast(castHomeDTO, castHomeDTO[i].id)
+                }
+                val addCtgOffBtn =
+                    itemView.findViewById<ImageView>(R.id.searchfr_item_add_category_off_iv)
+                addCtgOffBtn.setOnClickListener {
+                    Log.d("검색 프래그먼트 id", "${castHomeDTO[i].id}")
+                    goAddCast(castHomeDTO[i])
+                }
 
 
-            thumbButton.setOnClickListener {
-                goPlayCast(castHomeDTO, castHomeDTO[i].id)
+                binding.gridLayout.addView(itemView)
+            }else{
+                val itemView =
+                    inflaterLayout.inflate(R.layout.item_blank, binding.gridLayout, false)
+                binding.gridLayout.addView(itemView)
             }
-            val addCtgOffBtn = itemView.findViewById<ImageView>(R.id.searchfr_item_add_category_off_iv)
-            addCtgOffBtn.setOnClickListener {
-                Log.d("검색 프래그먼트 id","${castHomeDTO[i].id}")
-                goAddCast(castHomeDTO[i])
-            }
-
-            binding.gridLayout.addView(itemView)
         }
     }
     private fun formatTime(totalSeconds:Int): String {
