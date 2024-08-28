@@ -51,7 +51,7 @@ class PlayCastActivity : AppCompatActivity() {
     private var isSeeking = false
     private var service: BackgroundPlayService? = null
     private var isBound = false
-    private val seekBarHandler = Handler(Looper.getMainLooper()) // 메인 UI 쓰레드에서 실행
+    private val seekBarHandler = Handler()
     private val scriptHandler = Handler() // ScriptFragment 업데이트용 핸들러
 
     var stateListener: Int = 0
