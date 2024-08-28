@@ -11,9 +11,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="330dp"
         android:layout_height="0dp"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="25dp"
         android:layout_marginBottom="30dp"
         android:background="@drawable/gray_stroke"
         android:padding="8dp"
@@ -24,7 +24,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/script_rv"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="0dp"
 
             android:padding="10dp"

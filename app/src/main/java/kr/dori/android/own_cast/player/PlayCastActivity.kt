@@ -365,6 +365,7 @@ class PlayCastActivity : AppCompatActivity() {
                 binding.seekBar.max = audioLength // 시크바 최대값 설정 (초 단위)
                 startSeekBarUpdate() // 시크바 업데이트 시작
                 startScriptFragmentUpdate() // ScriptFragment 업데이트 시작
+                saveState()
 
             }
         }
@@ -382,6 +383,7 @@ class PlayCastActivity : AppCompatActivity() {
                 replaceCastAudioFragment() // CastAudioFragment를 다시 띄우기
                 startSeekBarUpdate() // 시크바 업데이트 시작
                 startScriptFragmentUpdate() // 추가된 ScriptFragment 업데이트 중지 호출
+                saveState()
             }
         }
     }
@@ -632,7 +634,7 @@ class PlayCastActivity : AppCompatActivity() {
         stateListener = 0
     }
 
-    fun missFortune() {
+    fun saveState() {
 
         when(stateListener){
             0 ->             supportFragmentManager.beginTransaction()
@@ -685,7 +687,7 @@ class PlayCastActivity : AppCompatActivity() {
         return String.format("%02d:%02d", minutes, seconds)
     }
 
-    
+    /*
     // 루프 기능: timePoint가 endPoint일 때 로직
     private fun enableLoopForSentence(position: Int) {
         val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
@@ -707,8 +709,10 @@ class PlayCastActivity : AppCompatActivity() {
     }
 
 
+     */
 
-    /*
+
+
     //timePoint가 startPoint일 때 로직
     private fun enableLoopForSentence(position: Int) {
         val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm) as? CastScriptFragment
@@ -730,7 +734,7 @@ class PlayCastActivity : AppCompatActivity() {
         }
     }
 
-     */
+
 
     // 반복을 해제
     private fun disableLoopForSentence() {
