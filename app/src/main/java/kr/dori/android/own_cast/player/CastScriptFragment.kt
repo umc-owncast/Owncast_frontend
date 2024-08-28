@@ -84,7 +84,8 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
             withContext(Dispatchers.Main) {
                 Log.d("script", "${castInfo.sentences}")
                 Log.d("script", "playlistId: ${currentCast.playlistId}, castId: ${currentCast.castId}")
-                binding.textView26.text = castInfo.title
+                binding.scriptFragmentTitleTv.text = castInfo.title
+
                 adapter.dataList = castInfo.sentences
                 Log.d("문장체크",castInfo.sentences.toString())
                 adapter.bookmarkList = bookmarks
