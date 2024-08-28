@@ -574,7 +574,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                             Log.d("캐스트 저장", castListWithPlaylistId.toString())
                             CastPlayerData.setCast(castListWithPlaylistId, 0)
                             CastPlayerData.setCurrentIndex(castListWithPlaylistId.size-1)
-                            ToPlayCast(castListWithPlaylistId)
+                            ToPlayCast()
 
                             activity?.finish()
                             finDialog.dismiss()
@@ -602,7 +602,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             }
         }
     }
-    override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
+    override fun ToPlayCast() {
 
         // 현재 서비스가 재생 중인지 확인하고 중지
         //val currentService = getCurrentServiceInstance()

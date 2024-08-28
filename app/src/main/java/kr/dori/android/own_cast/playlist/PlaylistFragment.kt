@@ -169,7 +169,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
     }
 
 
-    override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
+    override fun ToPlayCast() {
 
         // 현재 서비스가 재생 중인지 확인하고 중지
         //val currentService = getCurrentServiceInstance()

@@ -163,7 +163,7 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope,ActivityMover {
 
         CastPlayerData.setCast(data,1)//데이터 초기화
         CastPlayerData.setCurrentPos(id)
-        ToPlayCast(data)
+        ToPlayCast()
     }
 
     override fun goAddCast(castHomeDTO:CastHomeDTO) {//여기다가 카테고리 정보 담아야함
@@ -193,7 +193,7 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope,ActivityMover {
     }
 
 
-    override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
+    override fun ToPlayCast() {
 
         // 현재 서비스가 재생 중인지 확인하고 중지
         //val currentService = getCurrentServiceInstance()

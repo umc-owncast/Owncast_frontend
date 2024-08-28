@@ -46,7 +46,6 @@ import java.util.concurrent.TimeUnit
 
 class PlayCastActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayCastBinding
-    private val playCastViewModel: PlayCastViewModel by viewModels { PlayCastViewModelFactory(application) }
     private lateinit var speedTableViewModel: SpeedTableViewModel
     private var isSeeking = false
     private var service: BackgroundPlayService? = null
@@ -800,6 +799,7 @@ class PlayCastActivity : AppCompatActivity() {
             }
         })
     }
+}
     //담아온 캐스트 제거하는 함수
     /*private fun deleteCast(){
         if(CastPlayerData.currentCast.playlistId!=-1L){
@@ -837,5 +837,5 @@ class PlayCastActivity : AppCompatActivity() {
             }
         }
     }*/
-}
+
 
