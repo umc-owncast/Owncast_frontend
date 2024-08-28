@@ -154,7 +154,7 @@ class BackgroundPlayService : Service() {
         player.prepare()
         player.play()  // 재생 시작
         isPlaying = true  // 재생 상태를 갱신
-        startSeekBarUpdate()
+        ///startSeekBarUpdate()
 
         updateNotification()  // 알림 업데이트
         startForeground(1, createNotification())
@@ -206,31 +206,14 @@ class BackgroundPlayService : Service() {
     }
 
     fun getCurrentPosition(): Long {
+        Log.d("ServiceState", "Current Player Position: ${player.currentPosition}")
         return player.currentPosition
     }
+
 
     fun getDuration(): Long {
         return player.duration
     }
-
-    private fun startSeekBarUpdate() {
-        handler.postDelayed(updateSeekBar, 1000)
-    }
-
-    private fun stopSeekBarUpdate() {
-        handler.removeCallbacks(updateSeekBar)
-    }
-
-    private val updateSeekBar = object : Runnable {
-        override fun run() {
-            if (isPlaying) {  // player.isPlaying 대신 isPlaying 변수를 사용
-                val currentPosition = player.currentPosition
-                // 이 위치에서 UI 업데이트를 Activity로 전송하는 로직 추가
-            }
-            handler.postDelayed(this, 1000)
-        }
-    }
-
 
     fun getCastInfo(castId: Long, onInfoReceived: (String?, Int) -> Unit) {
         val getCastInfo = getRetrofit().create(Playlist::class.java)

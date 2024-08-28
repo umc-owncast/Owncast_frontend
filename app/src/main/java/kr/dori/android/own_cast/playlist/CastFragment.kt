@@ -36,11 +36,6 @@ class CastFragment() : Fragment(), ActivityMover {
     private lateinit var binding: FragmentCastBinding
     private lateinit var castAdapter: CastAdapter
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
-    private var playlistList: MutableList<CastWithPlaylistId> = mutableListOf()
-
-    private val sharedViewModel: SharedViewModel by activityViewModels()
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
