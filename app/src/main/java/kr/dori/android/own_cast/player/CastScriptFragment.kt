@@ -111,7 +111,7 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
 
     private fun scrollToPosition(position: Int) {
         val layoutManager = binding.scriptRv.layoutManager as LinearLayoutManager
-        layoutManager.scrollToPositionWithOffset(position, binding.scriptRv.height / 2)
+        layoutManager.scrollToPositionWithOffset(position, binding.scriptRv.height / 5)
     }
 
     override fun onStop() {

@@ -5,7 +5,7 @@ import kr.dori.android.own_cast.player.CastWithPlaylistId
 
 
 interface ActivityMover {
-    fun ToPlayCast(castList: List<CastWithPlaylistId>)
+    fun ToPlayCast()
 
     fun ToEditAudio(id: Long, playlistId:Long)
 //

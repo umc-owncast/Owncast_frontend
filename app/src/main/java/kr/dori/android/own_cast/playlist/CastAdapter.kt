@@ -45,7 +45,7 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
                     Log.d("test3","${listOf(cast)}")
                     // 이렇게 현재 포지션과
                     CastPlayerData.setCast(dataList,position)
-                    activityMover.ToPlayCast(dataList)
+                    activityMover.ToPlayCast()
                 }
             }
         }

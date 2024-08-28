@@ -130,21 +130,21 @@ class CategoryFragment() : Fragment(), ActivityMover {
 
         binding.fragmentCategoryPlayIv.setOnClickListener {
             CastPlayerData.setCast(sendCastIdList, 0)
-            ToPlayCast(sendCastIdList)
+            ToPlayCast()
            // Log.d("Cast","$sendCastIdList")
         }
 
         binding.fragmentCategoryShuffleIv.setOnClickListener {
             val shuffledList = sendCastIdList.shuffled()
             CastPlayerData.setCast(shuffledList,0)
-            ToPlayCast(shuffledList)
+            ToPlayCast()
         }
 
         return binding.root
     }
 
 
-    override fun ToPlayCast(castList: List<CastWithPlaylistId>) {
+    override fun ToPlayCast() {
 
         //   val currentCast = CastPlayerData.currentCast
 
