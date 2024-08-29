@@ -33,11 +33,19 @@ import retrofit2.Callback
 import retrofit2.Response
 import android.util.Base64
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kr.dori.android.own_cast.forApiData.Playlist
+
 
 import kr.dori.android.own_cast.player.CastWithPlaylistId
 
 import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.playlist.PlaylistFragment
+import kr.dori.android.own_cast.playlist.SharedViewModel
 import kr.dori.android.own_cast.search.SearchFragment
 import kr.dori.android.own_cast.study.StudyFragment
 
@@ -52,11 +60,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var playCastActivityResultLauncher: ActivityResultLauncher<Intent>
     private var isPlaying: Boolean = false
-
     private var playlistTableVisible: Boolean = false // playlistTable의 현재 상태를 저장하는 변수
-
     private var service: BackgroundPlayService? = null
     private var isBound = false
+    private val sharedViewModel: SharedViewModel by viewModels()
+
+
 
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
@@ -162,6 +171,10 @@ class MainActivity : AppCompatActivity() {
 
         initBottomButtons()
         quitApp()
+
+        //MainActivity 실행시 비동기로 PlaylistFragment의 데이터를 로드 -> MainActivity 자체의 로드 속도에는 영향이 없습니다.
+        loadInitialData()
+
     }
 
 
@@ -470,6 +483,27 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
+    private fun loadInitialData() {
+        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = getAllPlaylist.getAllPlaylist()
+                if (response.isSuccessful) {
+                    val playlistCategoryData = response.body()?.result
+                    withContext(Dispatchers.Main) {
+                        playlistCategoryData?.let {
+                            sharedViewModel.setData(it.toMutableList())
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }
 
 

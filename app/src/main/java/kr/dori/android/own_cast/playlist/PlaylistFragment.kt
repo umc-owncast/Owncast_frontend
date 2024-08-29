@@ -52,9 +52,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         savedInstanceState: Bundle?
     ): View? {
 
-        loadPlaylist()
-
-
+        //loadPlaylist() MainActivity로 대체
 
         binding = FragmentPlaylistBinding.inflate(inflater, container, false)
 
@@ -62,9 +60,9 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         binding.category.adapter = categoryAdapter
         binding.category.layoutManager = LinearLayoutManager(context)
 
-        sharedViewModel.data.observe(viewLifecycleOwner, Observer { newData ->
-            categoryAdapter.dataList = newData.filter{it.playlistId != 0L}.toMutableList()
 
+        sharedViewModel.data.observe(viewLifecycleOwner, Observer { newData ->
+            categoryAdapter.dataList = newData.filter { it.playlistId != 0L }.toMutableList()
             categoryAdapter.notifyDataSetChanged()
         })
 
@@ -99,9 +97,7 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
                 .commit()
         }
 
-
-
-        // Initialize ActivityResultLauncher
+        //메인 엑티비티 테이블 구현에 필요한 리졸트런처
         activityResultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 if (result.resultCode == Activity.RESULT_OK) {
@@ -111,59 +107,97 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
                     (activity as? MainActivity)?.setPlaylistTableVisibility(isSuccess)
                 }
             }
-
-
-
-
         return binding.root
     }
 
+
+    // 카테고리 추가, 수정 부분을 Optimistic UI로 바꿨습니다. 이제 데이터는 즉각적으로 반영이 되며, 이후 서버 최신 데이터를 갖고 옵니다.
     override fun onCategoryAdded(categoryName: String) {
+        val tempCategory = GetAllPlaylist(categoryName, "", 0, 0)
+        sharedViewModel.addData(tempCategory)
+        Log.d("test9","${sharedViewModel.data.value}")
 
 
+        // 비동기로 서버에 카테고리 추가 요청
         val addCategory = getRetrofit().create(Playlist::class.java)
-
         CoroutineScope(Dispatchers.IO).launch {
-            try{
+            try {
                 val response = addCategory.postPlaylist(categoryName)
                 if (response.isSuccessful) {
-                    var newCategoryId = response.body()?.result
                     withContext(Dispatchers.Main) {
-                        sharedViewModel.addData(GetAllPlaylist(categoryName, "", newCategoryId?.playlistId?: 0,0))
-                        Log.d("xibal","$playlistIdList")
+                        // 서버 요청 성공: 최신 데이터로 ViewModel 업데이트
+                        loadLatestDataFromServer()
+                        Toast.makeText(requireContext(), "카테고리가 성공적으로 추가되었습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    // 서버 요청 실패 시 롤백
+                    withContext(Dispatchers.Main) {
+                        sharedViewModel.removeData(tempCategory)
+                        Toast.makeText(requireContext(), "카테고리 추가에 실패했습니다.", Toast.LENGTH_SHORT).show()
                     }
                 }
-            }catch(e: Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
+                // 네트워크 오류 시 롤백
+                withContext(Dispatchers.Main) {
+                    sharedViewModel.removeData(tempCategory)
+                    Toast.makeText(requireContext(), "네트워크 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 
     override fun onCategoryEdit(position: Long, name: String, playlistId: Long) {
+        // Optimistic UI 적용: 변경 사항을 일단 반영
+        val originalData = sharedViewModel.getCategory(position)
+        sharedViewModel.updateDataAt(position, name)
 
-
-        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
-
-        CoroutineScope(Dispatchers.IO).launch() {
-            launch {
-                try {
-                    Log.d("집가고 싶다","연결시도, ${name} ${playlistId}")
-
-                    val response = getAllPlaylist.patchPlaylist(
-                        playlistId,
-                        name
-                    )
-                    if (response.isSuccessful) {
-                        sharedViewModel.updateDataAt(position,name)
-                        Log.d("집가고 싶다","연결 성공")
-                    } else {
-                        Log.d("집가고 싶다","연결 실패")
-
+        // 서버에 카테고리 수정 요청
+        val playlistService = getRetrofit().create(Playlist::class.java)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = playlistService.patchPlaylist(playlistId, name)
+                if (response.isSuccessful) {
+                    withContext(Dispatchers.Main) {
+                        // 서버 요청 성공: 최신 데이터로 ViewModel 업데이트
+                        loadLatestDataFromServer()
+                        Toast.makeText(requireContext(), "카테고리가 성공적으로 수정되었습니다.", Toast.LENGTH_SHORT).show()
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.d("집가고 싶다","서버 문제")
+                } else {
+                    // 서버 요청 실패 시 롤백
+                    withContext(Dispatchers.Main) {
+                        sharedViewModel.updateDataAt(position, originalData.name)
+                        Toast.makeText(requireContext(),"카테고리 수정에 실패했습니다.",Toast.LENGTH_SHORT).show()
+                    }
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                // 네트워크 오류 시 롤백
+                withContext(Dispatchers.Main) {
+                    sharedViewModel.updateDataAt(position, originalData.name)
+                    Toast.makeText(requireContext(),"네트워크 오류가 발생했습니다.",Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun loadLatestDataFromServer() {
+        val playlistService = getRetrofit().create(Playlist::class.java)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = playlistService.getAllPlaylist()
+                if (response.isSuccessful) {
+                    val latestData = response.body()?.result
+                    withContext(Dispatchers.Main) {
+                        latestData?.let {
+                            sharedViewModel.setData(it.toMutableList())
+                            Log.d("test9","${sharedViewModel.data.value}")
+
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
@@ -187,13 +221,6 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
             ?: throw IndexOutOfBoundsException("Invalid position: $position")
 
     }
-/*
-    override fun ToPlayCast(castList: List<Cast>) {
-        CastPlayerData.setCast(castList)
-        val intent = Intent(requireContext(), PlayCastActivity::class.java)
-        activityResultLauncher.launch(intent)
-    }
- */
 
     override fun playlistToCategory(playlistId: Long, playlistName: String) {
 
@@ -233,40 +260,6 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
     override fun ToEditAudio(id: Long, playlistId:Long) {
         TODO("Not yet implemented")
 
-    }
-
-    fun loadPlaylist(){
-        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
-
-        CoroutineScope(Dispatchers.IO).launch() {
-            launch {
-                try {
-                    val response =
-                        getAllPlaylist.getAllPlaylist() //변수명이 어지럽지만 첫번째 getAll은 레트로핏 활성화 객체이고, 두번째는 인터페이스 내부 함수이다.
-                    if (response.isSuccessful) {
-                        var playlistCategoryData = response.body()?.result
-                        withContext(Dispatchers.Main) {
-
-
-
-                            playlistCategoryData?.let {
-                                playlistIdList = it.map { playlist -> playlist.playlistId }
-                                    .filter { id -> id != 0L }
-                                    .toMutableList()
-                                sharedViewModel.setData(it.toMutableList())
-                                Log.d("xibal","$playlistIdList")
-                            }
-                        }
-                    } else {
-
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-
-
-        }
     }
 }
 

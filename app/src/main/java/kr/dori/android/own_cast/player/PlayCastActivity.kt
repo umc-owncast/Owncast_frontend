@@ -53,6 +53,7 @@ class PlayCastActivity : AppCompatActivity() {
     private var isBound = false
     private val seekBarHandler = Handler()
     private val scriptHandler = Handler() // ScriptFragment 업데이트용 핸들러
+    private val audioHandler = Handler()
 
     var stateListener: Int = 0
 
@@ -77,12 +78,12 @@ class PlayCastActivity : AppCompatActivity() {
             } else {
                 // 새로운 캐스트를 준비
                 stopCurrentAudio()
-                disableLoopForSentence() //다시 돌아왔을 때 루프 러너블 객체 삭제해서 버그 줄임
                 playCast(currentCast.castId)
             }
-
+            disableLoopForSentence()
             startSeekBarUpdate() // 시크바 업데이트 시작
             startScriptFragmentUpdate() // ScriptFragment 업데이트 시작
+            startAudioFragmentUpdate()
 
         }
 
@@ -192,6 +193,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         // Next 버튼 클릭 이벤트 처리
         binding.next.setOnClickListener {
+            disableLoopForSentence()
             CastPlayerData.playNext()
             CastPlayerData.currentCast?.let {
                 newCast(CastPlayerData.currentCast.castId)  // 새로운 캐스트 재생 및 UI 초기화
@@ -202,6 +204,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         // Previous 버튼 클릭 이벤트 처리
         binding.previous.setOnClickListener {
+            disableLoopForSentence()
             CastPlayerData.playPrevious()
             CastPlayerData.currentCast?.let {
                 newCast(CastPlayerData.currentCast.castId)  // 새로운 캐스트 재생 및 UI 초기화
@@ -359,6 +362,7 @@ class PlayCastActivity : AppCompatActivity() {
                 //binding.seekBar.max = audioLength // 시크바 최대값 설정 (초 단위)
                 startSeekBarUpdate() // 시크바 업데이트 시작
                 startScriptFragmentUpdate() // ScriptFragment 업데이트 시작
+                startAudioFragmentUpdate()
                 saveState()
             }
         }
@@ -401,6 +405,7 @@ class PlayCastActivity : AppCompatActivity() {
                     service?.resumeAudio()
                     Log.d("newCast", "Preparing new audio and starting updates.")
                     startScriptFragmentUpdate()
+                    startAudioFragmentUpdate()
                     updateUI()
 
                     // 시크바 업데이트 코드 추가
@@ -550,6 +555,7 @@ class PlayCastActivity : AppCompatActivity() {
     // Fragment 전환 함수들
     private fun audioToScript() {
         buttonLock()
+        stopAudioFragmentUpdate()
         stopScriptFragmentUpdate()
         binding.activityPlayCastPlaylistOnIv.visibility = View.GONE
         binding.activityPlayCastPlaylistOffIv.visibility = View.VISIBLE
@@ -582,6 +588,7 @@ class PlayCastActivity : AppCompatActivity() {
     private fun scriptToAudio() {
 
         buttonLock()
+        stopAudioFragmentUpdate()
         stopScriptFragmentUpdate()
 
         binding.activityPlayCastPlaylistOnIv.visibility = View.GONE
@@ -597,10 +604,13 @@ class PlayCastActivity : AppCompatActivity() {
             .commit()
 
         stateListener = 0
+        startAudioFragmentUpdate()
     }
 
     //플레이스트 시작
     private fun audioToPlaylist() {
+
+        stopAudioFragmentUpdate()
 
         buttonLock()
 
@@ -621,6 +631,8 @@ class PlayCastActivity : AppCompatActivity() {
 
     private fun playlistToAudio() {
 
+        stopAudioFragmentUpdate()
+
         buttonLock()
 
         binding.activityPlayCastPlaylistOnIv.visibility = View.GONE
@@ -636,7 +648,9 @@ class PlayCastActivity : AppCompatActivity() {
             .commit()
 
         stateListener = 0
-        startScriptFragmentUpdate()
+
+        startAudioFragmentUpdate()
+
     }
 
     fun saveState() {
@@ -742,12 +756,33 @@ class PlayCastActivity : AppCompatActivity() {
         }
     }
 
+    private val updateAudioFragment = object : Runnable{
+        override fun run(){
+            service?.let{
+                val currentPosition = it.getCurrentPosition()
+                val fragment = supportFragmentManager.findFragmentById(R.id.play_cast_frm)
+                if(fragment is CastAudioFragment && fragment.isAdded && !fragment.isRemoving){
+                    fragment.updateCurrentTime(currentPosition)
+                }
+            }
+            audioHandler.postDelayed(this, 300)
+        }
+    }
+
     private fun startScriptFragmentUpdate() {
         scriptHandler.postDelayed(updateScriptFragment, 10)
     }
 
     private fun stopScriptFragmentUpdate() {
         scriptHandler.removeCallbacks(updateScriptFragment)
+    }
+
+    private fun startAudioFragmentUpdate(){
+        audioHandler.postDelayed(updateAudioFragment, 10)
+    }
+
+    private fun stopAudioFragmentUpdate(){
+        audioHandler.removeCallbacks(updateAudioFragment)
     }
 
     fun deleteCast(){
@@ -833,4 +868,5 @@ class PlayCastActivity : AppCompatActivity() {
         }
     }
 }*/
+
 

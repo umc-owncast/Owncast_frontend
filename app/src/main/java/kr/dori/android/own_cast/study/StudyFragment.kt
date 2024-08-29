@@ -21,7 +21,7 @@ import kr.dori.android.own_cast.forApiData.GetBookmark
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.getRetrofit
 
-class StudyFragment : Fragment() {
+class StudyFragment : Fragment(), AudioPlayer.AudioPlayerListener {
 
     private var dataCount = 0
     private val snapHelper = LinearSnapHelper()
@@ -46,6 +46,7 @@ class StudyFragment : Fragment() {
         // AudioPlayer 초기화
         audioPlayer = AudioPlayer(requireContext())
         audioPlayer?.initializePlayer()
+        audioPlayer?.listener = this  // 리스너 설정
 
         // 빈 리스트로 어댑터 연결
         studyAdapter.dataList = mutableListOf()
@@ -356,8 +357,9 @@ class StudyFragment : Fragment() {
         }
 
         binding.fragmentStudySoundOffIv.setOnClickListener {
-            //binding.fragmentStudySoundOnIv.visibility = View.VISIBLE
-           // binding.fragmentStudySoundOffIv.visibility = View.GONE
+            // 재생 중 버튼 전환
+            binding.fragmentStudySoundOnIv.visibility = View.VISIBLE
+            binding.fragmentStudySoundOffIv.visibility = View.GONE
 
             // 현재 북마크 가져와서 스트리밍 시작
             val bookmark = getCurrentBookmarkInfo()
@@ -368,6 +370,8 @@ class StudyFragment : Fragment() {
                 Log.d("StudyFragment2", "No current bookmark selected to play audio")
             }
         }
+
+
         binding.fragmentStudyNextIv.setOnClickListener {
             scrollToNextItem()
         }
@@ -390,8 +394,8 @@ class StudyFragment : Fragment() {
             }
         }
 
-        binding.studyCustomAdapterRv.scrollToPosition(5)
-
+        //binding.studyCustomAdapterRv.scrollToPosition(5)
+/*
         binding.studyCustomAdapterRv.post {
             val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
             if (dataCount > 0) {
@@ -405,6 +409,16 @@ class StudyFragment : Fragment() {
                 }
             }
         }
+
+ */
+    }
+
+
+    // 재생이 끝났을 때 호출할 메서드 -> 스터디 프래그먼트에서는 음원의 재생상태를 알 수 없기에
+    override fun onAudioPlayFinished() {
+        // 재생 종료 시 버튼 상태 업데이트
+        binding.fragmentStudySoundOnIv.visibility = View.GONE
+        binding.fragmentStudySoundOffIv.visibility = View.VISIBLE
     }
 
     private fun handleItemClick(position: Int) {

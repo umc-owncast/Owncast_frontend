@@ -98,20 +98,34 @@ data class LoginRequest(
     val password: String
 )
 
-// 로그인 응답에서 result 데이터를 담는 클래스
-data class LoginResult(
-    val accessToken: String,
-    val refreshToken: String
-)
-
-
 // 로그인 응답 데이터 클래스
 data class LoginResponse(
     val isSuccess: Boolean,
     val code: String,
     val message: String,
+    val result: LoginResult?
+)
 
-    val result: LoginResult? // 서버에서 반환된 accessToken과 refreshToken을 저장
+data class LoginResult(
+    val accessToken: String,
+    val refreshToken: String
+)
+
+// 사용자 정보 응답 데이터 클래스
+data class UserInfoResponse(
+    val isSuccess: Boolean,
+    val code: String,
+    val message: String,
+    val result: UserInfo?
+)
+
+data class UserInfo(
+    val loginId: String,
+    val username: String,
+    val nickname: String,
+    val mainCategory: String,
+    val subCategory: String,
+    val language: String
 )
 
 
@@ -152,4 +166,5 @@ data class PreferenceResponse(
         val memberId: Int
     )
 }
+
 

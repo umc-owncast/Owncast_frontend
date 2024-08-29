@@ -197,12 +197,14 @@ class ChangeDetailInterestActivity : ComponentActivity() {
         findViewById<ImageView>(R.id.pop_exit_button).setOnClickListener {
             val intent = Intent(this, ChangeInterestActivity ::class.java)
             startActivity(intent)
+            finish()
         }
 
         // 직접 입력
         findViewById<TextView>(R.id.self).setOnClickListener {
             val intent = Intent(this, ChangeSelfActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
     fun initData(){
