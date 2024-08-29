@@ -24,6 +24,7 @@ class ScriptAdapter(val currentCast: CastWithPlaylistId) : RecyclerView.Adapter<
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val binding = ScriptItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         Log.d("bookmarkAdapter", "${dataList.map { it.id }}, ${bookmarkList}")
+        Log.d("ahahahahah","${dataList}")
         return Holder(binding)
     }
 
