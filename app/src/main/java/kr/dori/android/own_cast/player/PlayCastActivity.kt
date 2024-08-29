@@ -78,10 +78,9 @@ class PlayCastActivity : AppCompatActivity() {
             } else {
                 // 새로운 캐스트를 준비
                 stopCurrentAudio()
-                disableLoopForSentence() //다시 돌아왔을 때 루프 러너블 객체 삭제해서 버그 줄임
                 playCast(currentCast.castId)
             }
-
+            disableLoopForSentence()
             startSeekBarUpdate() // 시크바 업데이트 시작
             startScriptFragmentUpdate() // ScriptFragment 업데이트 시작
             startAudioFragmentUpdate()
@@ -185,6 +184,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         // Next 버튼 클릭 이벤트 처리
         binding.next.setOnClickListener {
+            disableLoopForSentence()
             CastPlayerData.playNext()
             CastPlayerData.currentCast?.let {
                 newCast(CastPlayerData.currentCast.castId)  // 새로운 캐스트 재생 및 UI 초기화
@@ -195,6 +195,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         // Previous 버튼 클릭 이벤트 처리
         binding.previous.setOnClickListener {
+            disableLoopForSentence()
             CastPlayerData.playPrevious()
             CastPlayerData.currentCast?.let {
                 newCast(CastPlayerData.currentCast.castId)  // 새로운 캐스트 재생 및 UI 초기화
