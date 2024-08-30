@@ -31,6 +31,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
@@ -91,7 +92,7 @@ class KeyvpAudioSaveFragment : Fragment(),KeywordAudioFinishListener, AddCategor
 
     private var isText = false
     private var id : Long? = null
-    private var playlistId: Long = -1L
+    private var playlistId: Long = 0
 
 
 
@@ -410,7 +411,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val screenHeight = displayMetrics.heightPixels
         binding.keyAudSaveBtnOnIv.setOnClickListener{
             //finishDialog띄우는 버튼
-            if(playlistId>=0){
+            if(binding.keyAudSaveCategorySp.count>1){
                 postCastSave()
             }else{
                 Toast.makeText(requireContext(),"카테고리를 추가해주세요",Toast.LENGTH_SHORT).show()
