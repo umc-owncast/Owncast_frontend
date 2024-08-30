@@ -295,6 +295,8 @@ class StudyFragment : Fragment(), AudioPlayer.AudioPlayerListener {
         binding.fragmentStudyNextIv.visibility = View.GONE
         binding.fragmentStudyBackIv.visibility = View.GONE
         binding.fragmentStudyShuffleIv.isEnabled = false
+        binding.fragmentStudySoundOffIv.isEnabled = false
+        binding.fragmentStudyLoofOffIv.isEnabled = false
     }
 
     private fun enableCustomAdapterUI() {
@@ -302,6 +304,8 @@ class StudyFragment : Fragment(), AudioPlayer.AudioPlayerListener {
         binding.fragmentStudyNextIv.visibility = View.VISIBLE
         binding.fragmentStudyBackIv.visibility = View.VISIBLE
         binding.fragmentStudyShuffleIv.isEnabled = true
+        binding.fragmentStudySoundOffIv.isEnabled = true
+        binding.fragmentStudyLoofOffIv.isEnabled = true
     }
 
 
@@ -439,8 +443,6 @@ class StudyFragment : Fragment(), AudioPlayer.AudioPlayerListener {
                 if (filteredData.isNotEmpty() && position < filteredData.size) {
                     val playlistId = filteredData[position].playlistId
                     loadCategoryBookmark(playlistId) // 그 외의 경우 해당 카테고리의 북마크 로드
-
-
                 }
             }
         }
