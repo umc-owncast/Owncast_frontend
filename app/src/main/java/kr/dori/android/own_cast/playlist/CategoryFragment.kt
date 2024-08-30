@@ -31,83 +31,30 @@ import kr.dori.android.own_cast.player.CastWithPlaylistId
 import kr.dori.android.own_cast.player.PlayCastActivity
 import retrofit2.create
 
-class CategoryFragment() : Fragment(), ActivityMover {
+class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragment(), ActivityMover {
 
     private lateinit var binding: FragmentCategoryBinding
     private lateinit var castAdapter: CastAdapter
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     lateinit var sendCastIdList: List<CastWithPlaylistId>
-    private var playlistId: Long = 0 // 초기화된 변수 추가
-    private var playlistName: String = "" // 초기화된 변수 추가
-    constructor(playlistId: Long, playlistName: String) : this() { // 생성자 오버로딩
-        this.playlistId = playlistId
-        this.playlistName = playlistName
-    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         Log.d("xibal5","${playlistId}")
-
+        Log.d("xibal","oh bitch")
         binding =  FragmentCategoryBinding.inflate(inflater,container,false)
 
         castAdapter = CastAdapter(this)
         binding.fragmentCategoryRv.adapter = castAdapter
         binding.fragmentCategoryRv.layoutManager = LinearLayoutManager(context)
 
-
-        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 20)
-                Log.d("xibal5","$response")
-                if (response.isSuccessful) {
-                    Log.d("xibal5","연결 성공 ㅅ")
-                    val playlistInfo = response.body()?.result
-                    withContext(Dispatchers.Main) {
-                        playlistInfo?.let {
-                            // 각 Cast를 CastWithPlaylistId로 변환하여 어댑터에 설정
-                            val castListWithPlaylistId = it.castList.map { cast ->
-                                CastWithPlaylistId(
-                                    castId = cast.castId,
-                                    playlistId = cast.playlistId,
-                                    castTitle = cast.castTitle?:"untitled",
-                                    isPublic = cast.isPublic,
-                                    castCreator = cast.castCreator,
-                                    castCategory = cast.castCategory,
-                                    audioLength = cast.audioLength,
-                                    imagePath = cast.imagePath
-                                )
-                            }
-                            Glide.with(binding.root.context).load(castListWithPlaylistId[0].imagePath).into(binding.imageView2)
-
-                            // 데이터를 어댑터에 설정
-                            castAdapter.dataList = castListWithPlaylistId.toMutableList()
-                            Log.d("castInfo", "${castListWithPlaylistId}")
-                            sendCastIdList = castListWithPlaylistId
-                            castAdapter.notifyDataSetChanged()
-
-                            // 총 오디오 길이 계산
-                            val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(castListWithPlaylistId)
-                            Log.d("TotalAudioLength", "총 오디오 길이 (초): $totalAudioLengthInSeconds")
-                            binding.castSizeTotalLength.text = "${castListWithPlaylistId.size}개, ${formatTime(totalAudioLengthInSeconds)}"
-                        }
-
-                    }
-                } else {
-                    Log.d("xibal5","연결 실패요 ㅛ")
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Log.d("xibal5","서버 문제요 ㅛ")
-            }
-        }
-
         binding.fragmentCategoryBackIv.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
 
+        loadCastInfo()
         binding.playlistName.text = playlistName
 
 
@@ -124,8 +71,6 @@ class CategoryFragment() : Fragment(), ActivityMover {
         binding.fragmentCategoryRv.adapter = castAdapter
         binding.fragmentCategoryRv.layoutManager = LinearLayoutManager(context)
 
-
-// 아
 
         binding.fragmentCategoryPlayIv.setOnClickListener {
             CastPlayerData.setCast(sendCastIdList, 0)
@@ -190,5 +135,88 @@ class CategoryFragment() : Fragment(), ActivityMover {
             return formatTime
     }
 
+    private fun loadCastInfo() {
+        val getAllPlaylist = getRetrofit().create(Playlist::class.java)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 20)
+                Log.d("CategoryFragment", "$response")
+                if (response.isSuccessful) {
+                    Log.d("CategoryFragment", "연결 성공")
+                    val playlistInfo = response.body()?.result
+                    withContext(Dispatchers.Main) {
+                        playlistInfo?.let {
+                            val castListWithPlaylistId = it.castList.map { cast ->
+                                CastWithPlaylistId(
+                                    castId = cast.castId,
+                                    playlistId = cast.playlistId,
+                                    castTitle = cast.castTitle ?: "untitled",
+                                    isPublic = cast.isPublic,
+                                    castCreator = cast.castCreator,
+                                    castCategory = cast.castCategory,
+                                    audioLength = cast.audioLength,
+                                    imagePath = cast.imagePath
+                                )
+                            }
+                            Glide.with(binding.root.context).load(castListWithPlaylistId[0].imagePath).into(binding.imageView2)
+
+                            // 데이터를 어댑터에 설정
+                            castAdapter.dataList = castListWithPlaylistId.toMutableList()
+                            sendCastIdList = castListWithPlaylistId
+                            castAdapter.notifyDataSetChanged() // 추가: 어댑터 데이터 변경 알림
+
+                            // 총 오디오 길이 계산
+                            val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(castListWithPlaylistId)
+                            Log.d("TotalAudioLength", "총 오디오 길이 (초): $totalAudioLengthInSeconds")
+                            binding.castSizeTotalLength.text = "${castListWithPlaylistId.size}개, ${formatTime(totalAudioLengthInSeconds)}"
+                        }
+                    }
+                } else {
+                    Log.d("CategoryFragment", "연결 실패")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.d("CategoryFragment", "서버 문제 발생")
+            }
+        }
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("xibal", "onStart called")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadCastInfo()
+        Log.d("xibal", "onResume called")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("xibal", "onPause called")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("xibal", "onStop called")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("xibal", "onDestroyView called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("xibal", "onDestroy called")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.d("xibal", "onDetach called")
+    }
 }
 

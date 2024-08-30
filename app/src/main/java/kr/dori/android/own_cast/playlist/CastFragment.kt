@@ -47,15 +47,97 @@ class CastFragment() : Fragment(), ActivityMover {
 
         castAdapter = CastAdapter(this)
 
-        val isSave = arguments?.getBoolean("isSave") ?: false
 
-        val getPlaylist = getRetrofit().create(Playlist::class.java)
         // API 호출 및 데이터 설정
         // API 호출 및 데이터 설정
+
+        // RecyclerView 설정
+        binding.fragmentCastRv.adapter = castAdapter
+        binding.fragmentCastRv.layoutManager = LinearLayoutManager(context)
+        loadCastInfo()
+
+        // Back 버튼 클릭 이벤트 처리
+        binding.fragmentCastBackIv.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
+        // Initialize ActivityResultLauncher
+        activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                Log.d("ifsuccess", "success")
+                val data: Intent? = result.data
+                val isSuccess = data?.getBooleanExtra("result", false) ?: false
+                (activity as? MainActivity)?.setPlaylistTableVisibility(isSuccess)
+            }
+        }
+
+        binding.fragmentCastPlayIv.setOnClickListener {
+            CastPlayerData.setCast(castAdapter.dataList, 0)
+            ToPlayCast()
+        }
+
+        binding.fragmentCastShuffleIv.setOnClickListener {
+            val forShuffle: List<CastWithPlaylistId> = castAdapter.dataList
+            val shuffledList = forShuffle.shuffled()
+            CastPlayerData.setCast(shuffledList,0)
+            ToPlayCast()
+        }
+        return binding.root
+    }
+
+
+    override fun ToPlayCast() {
+
+        //   val currentCast = CastPlayerData.currentCast
+
+
+        val intent = Intent(requireContext(), PlayCastActivity::class.java)
+
+        activityResultLauncher.launch(intent)
+
+    }
+
+
+
+    override fun ToEditAudio(id: Long,playlistId:Long) {
+
+        val intent = Intent(requireContext(), EditAudioActivity::class.java)
+        intent.putExtra("id",id)
+        intent.putExtra("playlistId",playlistId)
+        startActivity(intent)
+    }
+
+    private fun parseTimeToSeconds(input: String): Int {
+        return if (input.contains(":")) {
+            val parts = input.split(":")
+            val minutes = parts[0].toIntOrNull() ?: 0
+            val seconds = parts[1].toIntOrNull() ?: 0
+            (minutes * 60) + seconds
+        } else {
+            input.toIntOrNull() ?: 0
+        }
+    }
+
+    private fun getTotalAudioLengthInSeconds(castList: List<CastWithPlaylistId>): Int {
+        return castList.sumOf { cast ->
+            parseTimeToSeconds(cast.audioLength)
+        }
+    }
+
+    private fun formatTime(input: Int): String {
+        val minutes = input / 60
+        val seconds = input % 60
+        return String.format("%02d:%02d", minutes, seconds)
+    }
+
+    private fun loadCastInfo(){
         val loadingdialog = KeywordLoadingDialog(requireContext(),"목록을 받아오는 중이에요")
         loadingdialog.setCancelable(false)
         loadingdialog.setCanceledOnTouchOutside(false)
         loadingdialog.show()
+        val isSave = arguments?.getBoolean("isSave") ?: false
+
+        val getPlaylist = getRetrofit().create(Playlist::class.java)
+
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 if (!isSave) {
@@ -131,85 +213,10 @@ class CastFragment() : Fragment(), ActivityMover {
                 }
             }
         }
-
-
-
-
-        // RecyclerView 설정
-        binding.fragmentCastRv.adapter = castAdapter
-        binding.fragmentCastRv.layoutManager = LinearLayoutManager(context)
-
-        // Back 버튼 클릭 이벤트 처리
-        binding.fragmentCastBackIv.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack()
-        }
-        // Initialize ActivityResultLauncher
-        activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                Log.d("ifsuccess", "success")
-                val data: Intent? = result.data
-                val isSuccess = data?.getBooleanExtra("result", false) ?: false
-                (activity as? MainActivity)?.setPlaylistTableVisibility(isSuccess)
-            }
-        }
-
-        binding.fragmentCastPlayIv.setOnClickListener {
-            CastPlayerData.setCast(castAdapter.dataList, 0)
-            ToPlayCast()
-        }
-
-        binding.fragmentCastShuffleIv.setOnClickListener {
-            val forShuffle: List<CastWithPlaylistId> = castAdapter.dataList
-            val shuffledList = forShuffle.shuffled()
-            CastPlayerData.setCast(shuffledList,0)
-            ToPlayCast()
-        }
-        return binding.root
     }
 
-
-    override fun ToPlayCast() {
-
-        //   val currentCast = CastPlayerData.currentCast
-
-
-        val intent = Intent(requireContext(), PlayCastActivity::class.java)
-
-        activityResultLauncher.launch(intent)
-
+    override fun onResume() {
+        super.onResume()
+        loadCastInfo()
     }
-
-
-
-    override fun ToEditAudio(id: Long,playlistId:Long) {
-
-        val intent = Intent(requireContext(), EditAudioActivity::class.java)
-        intent.putExtra("id",id)
-        intent.putExtra("playlistId",playlistId)
-        startActivity(intent)
-    }
-
-    private fun parseTimeToSeconds(input: String): Int {
-        return if (input.contains(":")) {
-            val parts = input.split(":")
-            val minutes = parts[0].toIntOrNull() ?: 0
-            val seconds = parts[1].toIntOrNull() ?: 0
-            (minutes * 60) + seconds
-        } else {
-            input.toIntOrNull() ?: 0
-        }
-    }
-
-    private fun getTotalAudioLengthInSeconds(castList: List<CastWithPlaylistId>): Int {
-        return castList.sumOf { cast ->
-            parseTimeToSeconds(cast.audioLength)
-        }
-    }
-
-    private fun formatTime(input: Int): String {
-        val minutes = input / 60
-        val seconds = input % 60
-        return String.format("%02d:%02d", minutes, seconds)
-    }
-
 }
