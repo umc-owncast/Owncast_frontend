@@ -345,14 +345,6 @@ class PlayCastActivity : AppCompatActivity() {
         updateUI()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (isBound) {
-            unbindService(connection)
-            isBound = false
-        }
-        stopSeekBarUpdate()
-    }
 
     private fun playCast(castId: Long) {
         service?.getCastInfo(castId) { url, audioLength ->
@@ -829,44 +821,27 @@ class PlayCastActivity : AppCompatActivity() {
             buttons.forEach { it.isEnabled = true }
         }, 300)
     }
-
-}
-//담아온 캐스트 제거하는 함수
-/*private fun deleteCast(){
-    if(CastPlayerData.currentCast.playlistId!=-1L){
-        val deleteCast = getRetrofit().create(Playlist::class.java)
-        CoroutineScope(Dispatchers.IO).launch() {
-            Log.d("캐스트 해제", "플레이 리스트${CastPlayerData.currentCast.playlistId}, 캐스트 아이디${CastPlayerData.currentCast.castId}")
-            val response = deleteCast.deleteOtherCast(CastPlayerData.currentCast.playlistId,
-                DeleteOtherDto(CastPlayerData.currentCast.castId)
-            )
-            launch {
-                withContext(Dispatchers.Main) {
-                    try {
-                        Log.d("캐스트 해제","try 진입")
-                        if (response.isSuccessful) {
-                            response.body()?.result?.let{
-                                //삭제 했으니깐 버튼 바꿔주기
-                                CastPlayerData.currentCast.playlistId = -1L
-                            }
-                        } else{
-                            Log.d("캐스트 해제","${response.code()}")
-                            response.errorBody()?.let { errorBody ->
-                                val gson = Gson()
-                                val errorResponse: ErrorResponse = gson.fromJson(errorBody.charStream(), ErrorResponse::class.java)
-                                Log.d("캐스트 해제", "${errorResponse.message}, ${errorResponse.code}")
-                                Toast.makeText(this@PlayCastActivity, "서버 오류 코드 : ${errorResponse.code} \n${errorResponse.message}", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    } finally {
-                        classifyCast()
-                    }
-                }
-            }
+    override fun onStop() {
+        super.onStop()
+        if (CastPlayerData.getAllCastList().isNullOrEmpty()) {
+            service?.stopForeground(true) // 재생 목록이 없으면 알림 제거
         }
     }
-}*/
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isBound) {
+            unbindService(connection)
+            isBound = false
+        }
+        stopSeekBarUpdate()
+        if (CastPlayerData.getAllCastList().isNullOrEmpty()) {
+            service?.stopForeground(true) // 재생 목록이 없으면 알림 제거
+        }
+    }
+
+
+}
+
 
 
