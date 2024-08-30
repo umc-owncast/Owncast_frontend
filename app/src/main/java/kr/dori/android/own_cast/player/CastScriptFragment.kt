@@ -24,6 +24,7 @@ import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.data.CastPlayerData.currentBookmarkList
 import kr.dori.android.own_cast.forApiData.Bookmark
 import kr.dori.android.own_cast.forApiData.GetBookmark
+import kr.dori.android.own_cast.forApiData.NewSentences
 import kr.dori.android.own_cast.network.BookmarkSyncTask
 
 class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
@@ -87,6 +88,7 @@ class CastScriptFragment(val currentCast: CastWithPlaylistId) : Fragment() {
                 binding.scriptFragmentTitleTv.text = castInfo.title
 
                 adapter.dataList = castInfo.sentences
+
                 Log.d("문장체크",castInfo.sentences.toString())
                 adapter.bookmarkList = bookmarks
                 binding.scriptRv.adapter = adapter

@@ -1,6 +1,5 @@
 package kr.dori.android.own_cast
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -24,10 +23,6 @@ import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.KeywordAppData
 import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
-
-
-
-
 
 class ChangeDetailInterestActivity : ComponentActivity() {
 

@@ -51,12 +51,12 @@ data class CastHomeDTO(//검색 홈 API,
     @SerializedName(value = "playlistName") val playlistName : String
 )
 
-data class HomeKeywordDTO(
-    @SerializedName(value = "nickName") val nickName: String,
-    @SerializedName(value = "subCategory") val subCategory : String,
-    @SerializedName(value = "keywords") val keywords : List<String>
-)
 
+data class HomeKeyword(
+    @SerializedName(value="nickname") val nickname: String,
+    @SerializedName(value="subCategory") val subCategory: String,
+    @SerializedName(value="keywords") val keywords: List<String>
+)
 
 
 data class PostPlaylist(
