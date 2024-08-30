@@ -2,8 +2,6 @@ package kr.dori.android.own_cast.data
 
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import kr.dori.android.own_cast.forApiData.Cast
 import kr.dori.android.own_cast.player.CastWithPlaylistId
 
@@ -12,10 +10,6 @@ object CastPlayerData {
     var currentPosition : Int = 0
     lateinit var currentCast: CastWithPlaylistId
     var currentBookmarkList: List<Long> = emptyList()  // 기본값으로 초기화
-
-    private val _isPlaying = MutableLiveData<Boolean>()
-
-    val isPlaying: LiveData<Boolean> get() = _isPlaying
 
     fun setCast(castList: List<CastWithPlaylistId>, position: Int) {
         allCastList.clear()
@@ -88,8 +82,5 @@ object CastPlayerData {
         currentCast = allCastList[int]
     }
 
-    fun setPlayingState(playing: Boolean) {
-        _isPlaying.value = playing
-    }
 
 }

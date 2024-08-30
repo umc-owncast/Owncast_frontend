@@ -26,7 +26,6 @@ import androidx.core.app.NotificationCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.media.session.MediaButtonReceiver
 import kr.dori.android.own_cast.MainActivity
-import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.data.CastPlayerData
 
 class BackgroundPlayService : Service() {
@@ -88,7 +87,7 @@ class BackgroundPlayService : Service() {
         player.play()  // 재생 시작
         isPlaying = true  // 재생 상태를 갱신
         ///startSeekBarUpdate()
-        CastPlayerData.setPlayingState(true)  // 재생 상태 업데이트
+
         updateNotification()  // 알림 업데이트
         startForeground(1, createNotification())
 
@@ -97,7 +96,6 @@ class BackgroundPlayService : Service() {
     fun pauseAudio() {
         player.pause()
         isPlaying = false  // 재생 상태를 갱신
-        CastPlayerData.setPlayingState(false)  // 재생 상태 업데이트
         updateNotification()  // 알림 업데이트
 
     }
@@ -228,19 +226,12 @@ class BackgroundPlayService : Service() {
     }
 
     private fun updateNotification() {
-        val notification = createNotification()
-
         if (CastPlayerData.getAllCastList().isNullOrEmpty()) {
             stopForeground(true)  // 현재 재생 목록이 없으면 알림 제거
         } else {
+            val notification = createNotification()
             startForeground(1, notification)  // 알림 생성 및 업데이트
         }
-
-        // 브로드캐스트를 사용하여 액티비티에 재생 상태 업데이트
-        val intent = Intent("ACTION_UPDATE_UI")
-        sendBroadcast(intent)
-
-        startForeground(1, notification)
     }
 
 
@@ -312,6 +303,7 @@ class BackgroundPlayService : Service() {
             }
         }
     }
+
     private fun createNotification(): Notification {
         val playPauseIcon = if (player.isPlaying) {
             android.R.drawable.ic_media_pause
@@ -319,52 +311,43 @@ class BackgroundPlayService : Service() {
             android.R.drawable.ic_media_play
         }
 
-        // Play/Pause 액션 설정
         val playPauseAction = if (player.isPlaying) {
             NotificationCompat.Action(
                 playPauseIcon, "Pause",
-                PendingIntent.getService(
-                    this, 0,
-                    Intent(this, BackgroundPlayService::class.java).apply { action = "ACTION_PAUSE" },
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                MediaButtonReceiver.buildMediaButtonPendingIntent(
+                    this,
+                    PlaybackStateCompat.ACTION_PAUSE
                 )
             )
         } else {
             NotificationCompat.Action(
                 playPauseIcon, "Play",
-                PendingIntent.getService(
-                    this, 0,
-                    Intent(this, BackgroundPlayService::class.java).apply { action = "ACTION_PLAY" },
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                MediaButtonReceiver.buildMediaButtonPendingIntent(
+                    this,
+                    PlaybackStateCompat.ACTION_PLAY
                 )
             )
         }
 
         val nextAction = NotificationCompat.Action(
             android.R.drawable.ic_media_next, "Next",
-            PendingIntent.getService(
-                this, 0,
-                Intent(this, BackgroundPlayService::class.java).apply { action = "ACTION_NEXT" },
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
+            PendingIntent.getService(this, 0, Intent(this, BackgroundPlayService::class.java).apply {
+                action = "ACTION_NEXT"
+            }, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE) // FLAG_IMMUTABLE 추가
         )
 
         val previousAction = NotificationCompat.Action(
             android.R.drawable.ic_media_previous, "Previous",
-            PendingIntent.getService(
-                this, 0,
-                Intent(this, BackgroundPlayService::class.java).apply { action = "ACTION_PREVIOUS" },
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
+            PendingIntent.getService(this, 0, Intent(this, BackgroundPlayService::class.java).apply {
+                action = "ACTION_PREVIOUS"
+            }, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE) // FLAG_IMMUTABLE 추가
         )
-
         val castTitle = CastPlayerData.currentCast?.castTitle ?: "No Title"
-        val castCreator = CastPlayerData.currentCast?.castCreator
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.screen_two_logo_item)  // 아이콘 설정
-            .setContentTitle(castTitle)  // 기본 제목 설정
-            .setContentText(castCreator)  // 안전한 접근
+            .setSmallIcon(android.R.drawable.ic_media_play)  // 아이콘 설정
+            .setContentTitle("Now Playing")  // 기본 제목 설정
+            .setContentText(castTitle)  // 안전한 접근
             .setContentIntent(createContentIntent())
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .addAction(previousAction)
