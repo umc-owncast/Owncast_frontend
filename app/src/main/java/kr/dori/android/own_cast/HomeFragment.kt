@@ -321,7 +321,7 @@ class HomeFragment : Fragment() {
 
         content = SpannableString(binding.homefrKeywordTopicTv.text.toString())
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
-        binding.homefrKeywordTopicTv.text = SignupData.nickname
+        binding.homefrKeywordTopicTv.text = content
     }
 
     private fun stopAudio() {
