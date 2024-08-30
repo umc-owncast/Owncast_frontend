@@ -34,6 +34,7 @@ import retrofit2.Response
 import android.util.Base64
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -457,6 +458,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setText(currentCast: CastWithPlaylistId){
+        Glide.with(binding.root).load(currentCast.imagePath).centerCrop().into(binding.playtableIv)
         binding.castName.text = currentCast.castTitle
         binding.categoryNameTv.text = currentCast.castCategory
         binding.categoryNameTv.bringToFront()

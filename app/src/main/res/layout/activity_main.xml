@@ -29,15 +29,28 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/play_table_background" />
 
-        <ImageView
-            android:id="@+id/imageView21"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewReal"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="20dp"
+            app:cardCornerRadius="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/playlistfr_dummy_iv" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/playtable_iv"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:scaleType="fitXY"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/playlistfr_dummy_iv" />
+
+        </androidx.cardview.widget.CardView>
+
 
         <ImageView
             android:id="@+id/activity_main_pause_iv"

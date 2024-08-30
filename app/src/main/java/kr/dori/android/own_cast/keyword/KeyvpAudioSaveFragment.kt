@@ -488,10 +488,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     private fun addPlaylist(categoryName: String){
         dialog.dismiss()
         val apiService = getRetrofit().create(Playlist::class.java)
-        val loadingdialog = KeywordLoadingDialog(requireContext(),"플리를 생성중이에요")
-        loadingdialog.setCancelable(false)
-        loadingdialog.setCanceledOnTouchOutside(false)
-        loadingdialog.show()
+
         CoroutineScope(Dispatchers.IO).launch() {
             val response = apiService.postPlaylist(categoryName)
             launch {
@@ -521,7 +518,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
-                    loadingdialog.dismiss()
+
                 }
             }
         }
@@ -557,14 +554,11 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     //바로 들으러 가기
     fun getCastInfo(playlistId: Long) {
         val getAllPlaylist = getRetrofit().create(Playlist::class.java)
-        val dialog = KeywordLoadingDialog(requireContext(),"이동 중입니다.")
-        dialog.setCancelable(false)
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.show()
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 100)
-                withContext(Dispatchers.Main) { dialog.dismiss() }
+                withContext(Dispatchers.Main) {  }
                 if (response.isSuccessful) {
                     val playlistInfo = response.body()?.result
                     withContext(Dispatchers.Main) {

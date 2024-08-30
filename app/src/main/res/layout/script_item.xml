@@ -22,8 +22,8 @@
         android:id="@+id/notFocusOff"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:layout_marginTop="2dp"
         android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/originalSentence_tv"
         app:layout_constraintEnd_toEndOf="@+id/loofOff"
         app:layout_constraintTop_toTopOf="@+id/originalSentence_tv"
         app:srcCompat="@drawable/fragment_script_bookmark_3" />
@@ -32,7 +32,7 @@
         android:id="@+id/loofOff"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/originalSentence_tv"
+        android:layout_marginTop="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/originalSentence_tv"
         app:srcCompat="@drawable/fragment_script_change_1" />
@@ -41,9 +41,9 @@
         android:id="@+id/onFocusOn"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:layout_marginTop="2dp"
         android:layout_marginEnd="20dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/originalSentence_tv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/originalSentence_tv"
         app:srcCompat="@drawable/fragment_script_bookmark_2" />
@@ -52,8 +52,8 @@
         android:id="@+id/loofOn"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/originalSentence_tv"
+        android:layout_marginTop="6dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/originalSentence_tv"
         app:srcCompat="@drawable/fragment_script_change_2" />
@@ -74,9 +74,9 @@
         android:id="@+id/notFocusOn"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:layout_marginTop="2dp"
         android:layout_marginEnd="20dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/originalSentence_tv"
         app:layout_constraintEnd_toEndOf="@+id/loofOff"
         app:layout_constraintTop_toTopOf="@+id/originalSentence_tv"
         app:srcCompat="@drawable/kkookooko" />

@@ -45,7 +45,7 @@ class KeywordAudioFinishDialog(context: Context, private val listener: KeywordAu
     }
     private fun initData(){
         binding.keyFinCastTitleTv.text = title
-        binding.keyFinScrpit1stTv.text = SignupData.nickname
+        //binding.keyFinScrpit1stTv.text = "${ SignupData.nickname }님만의"
         binding.keyFinCastCategoryTv.text = category
         binding.keyFinCastTimeTv.text = duration
         if(uri!=null){

@@ -171,7 +171,7 @@ class StudyFragment : Fragment() {
                             customAdapter.notifyDataSetChanged()
                             if (dataCount > 1) {
                                 binding.studyCustomAdapterRv.post {
-                                    binding.studyCustomAdapterRv.smoothScrollToPosition(1)
+                                    binding.studyCustomAdapterRv.smoothScrollToPosition(0)
                                 }
                             }
 
@@ -219,7 +219,7 @@ class StudyFragment : Fragment() {
                             customAdapter.notifyDataSetChanged()
                             if (dataCount > 1) {
                                 binding.studyCustomAdapterRv.post {
-                                    binding.studyCustomAdapterRv.smoothScrollToPosition(1)
+                                    binding.studyCustomAdapterRv.smoothScrollToPosition(0)
                                 }
                             }
                             adjustSelectedItem()  // State 텍스트를 업데이트합니다.
@@ -266,7 +266,7 @@ class StudyFragment : Fragment() {
                             customAdapter.notifyDataSetChanged()
                             if (dataCount > 1) {
                                 binding.studyCustomAdapterRv.post {
-                                    binding.studyCustomAdapterRv.smoothScrollToPosition(1)
+                                    binding.studyCustomAdapterRv.smoothScrollToPosition(0)
                                 }
                             }
                             adjustSelectedItem()  // State 텍스트를 업데이트합니다.

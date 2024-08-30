@@ -99,17 +99,14 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope,ActivityMover {
         var dialogText : String = "로딩 중이에요"
 
 
-        val dialog = KeywordLoadingDialog(requireContext(), dialogText)
-        dialog.setCancelable(false)
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.show()
+
         launch(Dispatchers.IO) {
             val apiResult = searchOtherCastLauncher(keyword)  // API 호출
 
             // UI 작업은 Dispatchers.Main에서 실행
             withContext(Dispatchers.Main) {
                 // 로딩창 닫기
-                dialog.dismiss()
+
                 apiResult?.let {
                     // 성공적인 API 결과를 UI에 반영
                     it.result?.let {
@@ -129,7 +126,7 @@ class SearchTwoFragment:Fragment(), SearchMover, CoroutineScope,ActivityMover {
         val apiService = getRetrofit().create(CastInterface::class.java)
 
         return try {
-            val response = apiService.postSearchAPI(keyword)
+            val response = apiService.searchHomeCorutine()
             Log.d("apiTest-SearchOther", "검색어: ${keyword}")
             if (response.code().equals("200")||response.body()?.code.equals("COMMON200")) {
                 Log.d("apiTest-SearchOther", "저장성공: ${response.body()?.result}")

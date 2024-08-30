@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.gson.Gson
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +27,7 @@ import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.FragmentKeywordAudiosetBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.forApiData.ErrorResponse
 import kr.dori.android.own_cast.forApiData.PostCastByKeyword
 import kr.dori.android.own_cast.forApiData.PostCastByScript
 import kr.dori.android.own_cast.forApiData.PostCastForResponse
@@ -187,7 +189,15 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
 
                 Log.d("apiTest-CreateCast", "연결실패 에러바디: ${response.errorBody()?.string()}")
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "API 호출 실패\n 오류코드 : ${response.code()}", Toast.LENGTH_SHORT).show()
+
+                    response.errorBody()?.let { errorBody ->
+                        val gson = Gson()
+                        val errorResponse: ErrorResponse = gson.fromJson(errorBody.charStream(), ErrorResponse::class.java)
+                        Log.d("캐스트 생성 오류","${errorResponse}")
+                        Toast.makeText(context, "${errorResponse.result}\n 오류코드 : ${response.code()}", Toast.LENGTH_SHORT).show()
+                    }
+
+                    Log.d("캐스트 생성 오류","${response.code()},${response.message()}")
                 }
 
                 null
@@ -252,7 +262,15 @@ class KeywordAudioSetFragment: Fragment(), KeywordAudioOutListener, KeywordBtnCl
                 response.body()
             } else {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "API 호출 실패\n 오류코드 : ${response.code()}", Toast.LENGTH_SHORT).show()
+                    response.errorBody()?.let { errorBody ->
+                        val gson = Gson()
+                        val errorResponse: ErrorResponse = gson.fromJson(errorBody.charStream(), ErrorResponse::class.java)
+                        Log.d("캐스트 생성 오류","${errorResponse}")
+                        Toast.makeText(context, "${errorResponse.result}\n 오류코드 : ${response.code()}", Toast.LENGTH_SHORT).show()
+                    }
+
+                    Log.d("캐스트 생성 오류","${response.code()},${response.message()}")
+
                 }
                 null
             }
