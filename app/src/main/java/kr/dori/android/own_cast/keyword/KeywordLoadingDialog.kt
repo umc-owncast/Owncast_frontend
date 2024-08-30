@@ -13,6 +13,10 @@ import android.view.LayoutInflater
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.FragmentAddCategoryDialogBinding
 import kr.dori.android.own_cast.databinding.KeywordLoadingDialogBinding
@@ -38,13 +42,30 @@ class KeywordLoadingDialog(context: Context, val loadingText : String):Dialog(co
         rotateAnimator.repeatCount = ObjectAnimator.INFINITE // 무한 반복
         rotateAnimator.repeatMode = ObjectAnimator.RESTART // 애니메이션이 끝나면 다시 시작*/
 
-        val turnAround : Animation = AnimationUtils.loadAnimation(context, R.animator.rotation_animator)
-        context.dialogResize(this, 0.56f,0.185f)
+        //val turnAround : Animation = AnimationUtils.loadAnimation(context, R.animator.rotation_animator)
+        context.dialogResize(this, 0.65f,0.24f)
         window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         // 애니메이션 시작
-        binding.loadingCircle.startAnimation(turnAround)
+        setupImageAnimation()
     }
 
+    private fun setupImageAnimation() {
+        val images = listOf(
+            findViewById<ImageView>(R.id.loading_inner_first),
+            findViewById<ImageView>(R.id.loading_inner_second),
+            findViewById<ImageView>(R.id.loading_inner_third)
+        )
+
+        MainScope().launch {
+            while (true) {
+                for (i in images.indices) {
+                    images[i].visibility = ImageView.VISIBLE
+                    delay(700) // 0.7초 동안 이미지 표시
+                    images[i].visibility = ImageView.GONE
+                }
+            }
+        }
+    }
     private fun Context.dialogResize(dialog: Dialog, width: Float, height: Float){
         val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
 

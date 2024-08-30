@@ -67,12 +67,10 @@ import kotlin.math.min
 
 class SearchFragment : Fragment(), SearchMover, ActivityMover {
 
-
     lateinit var binding: FragmentSearchBinding
     private val searchAdapter = SearchAdapter(this)
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     lateinit var gridLayoutManager: GridLayoutManager
-
     lateinit var inflaterLayout: LayoutInflater
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private var categoryList : List<GetAllPlaylist> = listOf()
@@ -221,19 +219,20 @@ class SearchFragment : Fragment(), SearchMover, ActivityMover {
                     resp.result?.let {
                         //왜 오류처리가 안될까?
                         setItemData(it)
+                        Log.d("apiTest-searchHome","success, ${response.code()}")
                     } ?: run{
                         Toast.makeText(context, "검색 결과가 없습니다",Toast.LENGTH_SHORT).show()
                     }
                 }else{
                     Toast.makeText(context, "서버 오류 코드 : ${response.code()}",Toast.LENGTH_SHORT).show()
-
+                    Log.d("apiTest-searchHome"," ${response.code()}")
                     val resp= response.errorBody()?.string()
                     resp?.let {
                         try {
                             // Gson을 사용해 에러 응답을 파싱
                             val gson = Gson()
                             val errorResponse = gson.fromJson(it, ErrorResponse::class.java)
-                            Log.d("apiTest-searchHome", "오류 발생: ${errorResponse.code}, ${errorResponse.message}")
+                            Log.d("apiTest-searchHome", "오류 발생: ${errorResponse.code}, ${errorResponse.message},${errorResponse.result}")
                         } catch (e: Exception) {
                             Log.d("apiTest-searchHome", "에러 응답 파싱 실패: ${e.message}")
                         }
@@ -244,7 +243,7 @@ class SearchFragment : Fragment(), SearchMover, ActivityMover {
                 }
             }
             override fun onFailure(call: Call<AuthResponse<List<CastHomeDTO>>>, t: Throwable) {
-
+                Log.d("apiTest-searchHome","서버 연결 실패 ")
                 Toast.makeText(context, "서버 연결 실패",Toast.LENGTH_SHORT).show()
 
             }
@@ -271,6 +270,7 @@ class SearchFragment : Fragment(), SearchMover, ActivityMover {
                     // URL로부터 이미지 로드 (Glide 사용)
                     Glide.with(itemView.context)
                         .load(castHomeDTO[i].imagePath)
+                        .centerCrop()
                         .into(thumbButton)
                 } else {
                     // 로컬 파일에서 이미지 로드

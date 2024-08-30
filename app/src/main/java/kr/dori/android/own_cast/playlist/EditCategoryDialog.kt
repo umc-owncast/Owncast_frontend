@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import kr.dori.android.own_cast.databinding.FragmentEditCategoryDialogBinding
@@ -60,6 +61,7 @@ class EditCategoryDialog(context: Context, private val listener: EditCategoryLis
 
                 // 업데이트된 데이터를 listener로 전달
                 listener.onCategoryEdit(position, name, playlistId)
+                Log.d("edit","${position}")
 
                 dismiss()
             }

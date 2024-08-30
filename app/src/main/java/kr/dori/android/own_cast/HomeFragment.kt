@@ -145,7 +145,7 @@ class HomeFragment : Fragment() {
                     if (response.isSuccessful) {
                         response.body()?.result?.let {
                             keywordDataList.clear()
-                            keywordDataList.addAll(it)
+                            keywordDataList.addAll(it.keywords)
                             randomizeTextViews() // 데이터가 성공적으로 받아오면 텍스트 뷰 랜덤 배치
                         }
                     } else {

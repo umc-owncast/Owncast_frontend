@@ -112,7 +112,7 @@ class LoginActivity : ComponentActivity() {
                     }
                 } else {
                     // 서버 오류 또는 응답 실패
-                    callback(false, "서버 오류: ${response.message()}")
+                    callback(false, "서버 오류: ${response.message()} 아이디 또는 비밀번호가 올바르지 않습니다.")
                 }
             }
 

@@ -10,18 +10,7 @@ import kr.dori.android.own_cast.keyword.KeywordData
 
 class SharedViewModel : ViewModel() {
     private val _data = MutableLiveData<MutableList<GetAllPlaylist>>(mutableListOf())
-    private val _keywordData = MutableLiveData<KeywordData>()
-
     val data: LiveData<MutableList<GetAllPlaylist>> get() = _data
-    val keywordData: LiveData<KeywordData> get() = _keywordData
-
-    fun setKeywordData(data: KeywordData) {
-        _keywordData.value = data
-    }
-
-    fun getKeywordListData() : Array<String>? {
-        return keywordData.value?.keywordList
-    }
 
     fun setData(newData: MutableList<GetAllPlaylist>) {
         _data.value = newData
@@ -49,5 +38,14 @@ class SharedViewModel : ViewModel() {
         Log.d("SharedViewModel", "addData: $newData")
     }
 
+    fun getCategory(position: Long): GetAllPlaylist {
+        return _data.value?.get(position.toInt()) ?: throw IndexOutOfBoundsException("Invalid position: $position")
+    }
+
+    fun removeData(oldData: GetAllPlaylist) {
+        _data.value?.remove(oldData)
+        _data.value = _data.value
+        Log.d("SharedViewModel", "removeData: $oldData")
+    }
 
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">15.164.140.239</domain>
+        <domain includeSubdomains="true">owncast-dev-env.eba-riydufgu.ap-northeast-2.elasticbeanstalk.com</domain>
     </domain-config>
 </network-security-config>

@@ -25,17 +25,33 @@ class StudyCustomAdapter :
     }
 
     override fun onBindViewHolder(holder: CenteredItemViewHolder, position: Int) {
-        val actualPosition = position % itemList.size
-        val item = itemList[actualPosition]
+        val item = itemList[position]
         holder.bind(item)
         holder.itemView.requestLayout()
 
-        // 클릭 리스너 추가
-        holder.itemView.setOnClickListener {
-            selectedPosition = actualPosition
-            notifyDataSetChanged()  // UI 업데이트
+        // 모든 카드에 대해 마진 초기화
+        val layoutParams = holder.itemView.layoutParams as ViewGroup.MarginLayoutParams
+        layoutParams.marginStart = holder.itemView.context.resources.getDimensionPixelSize(R.dimen.default_margin)
+        layoutParams.marginEnd = holder.itemView.context.resources.getDimensionPixelSize(R.dimen.default_margin)
+
+        // 첫 번째 카드인 경우 추가적인 마진을 설정
+        if (position == 0) {
+            layoutParams.marginStart = holder.itemView.context.resources.getDimensionPixelSize(R.dimen.side_card_margin)
         }
 
+        // 마지막 카드인 경우 추가적인 마진 설정
+        if (position == itemList.size - 1) {
+            layoutParams.marginEnd = holder.itemView.context.resources.getDimensionPixelSize(R.dimen.side_card_margin)
+        }
+
+        // 초기화된 레이아웃 매개변수를 다시 설정
+        holder.itemView.layoutParams = layoutParams
+
+        // 클릭 리스너 추가
+        holder.itemView.setOnClickListener {
+            selectedPosition = position
+            notifyDataSetChanged()  // UI 업데이트
+        }
     }
 
     // 실제 itemList의 크기를 반환하여 무한 스크롤을 방지함

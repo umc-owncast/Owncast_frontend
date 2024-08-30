@@ -84,7 +84,9 @@ class ChangeLanguageActivity: ComponentActivity() {
                                 ).show()
 
                                 val intent = Intent(this@ChangeLanguageActivity, MainActivity::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                 startActivity(intent)
+                                finish()
                             } else {
                                 // 응답 오류 처리
                                 Toast.makeText(

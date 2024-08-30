@@ -1,4 +1,4 @@
-package kr.dori.android.own_cast.keyword
+package kr.dori.android.own_cast.forApiData
 
 interface Connector{
     fun onSuccess()

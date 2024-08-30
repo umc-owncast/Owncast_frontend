@@ -26,29 +26,8 @@ class SignupLoadingActivity : ComponentActivity() {
         findViewById<TextView>(R.id.main_text).text =
             "[${SignupData.nickname}]님의 취향을\nowncast에 반영하고 있어요"
 
-        // 애니메이션 설정
-        setupImageAnimation()
-
         // 회원가입 요청
         performSignUp()
-    }
-
-    private fun setupImageAnimation() {
-        val images = listOf(
-            findViewById<ImageView>(R.id.loading_inner_2),
-            findViewById<ImageView>(R.id.loading_inner_3),
-            findViewById<ImageView>(R.id.loading_inner_4)
-        )
-
-        MainScope().launch {
-            while (true) {
-                for (i in images.indices) {
-                    images[i].visibility = ImageView.VISIBLE
-                    delay(700) // 0.7초 동안 이미지 표시
-                    images[i].visibility = ImageView.GONE
-                }
-            }
-        }
     }
 
     private fun performSignUp() {
@@ -185,8 +164,10 @@ class SignupLoadingActivity : ComponentActivity() {
         // 전역 변수 초기화
         resetSignupData()
 
-        // SplashActivity로 이동
-        startActivity(Intent(this@SignupLoadingActivity, SplashActivity::class.java))
+        // SplashActivity로 이동하면서 이전 모든 액티비티 종료
+        val intent = Intent(this@SignupLoadingActivity, SplashActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
         finish()
     }
 

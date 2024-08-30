@@ -78,10 +78,9 @@ class PlayCastActivity : AppCompatActivity() {
             } else {
                 // 새로운 캐스트를 준비
                 stopCurrentAudio()
-                disableLoopForSentence() //다시 돌아왔을 때 루프 러너블 객체 삭제해서 버그 줄임
                 playCast(currentCast.castId)
             }
-
+            disableLoopForSentence()
             startSeekBarUpdate() // 시크바 업데이트 시작
             startScriptFragmentUpdate() // ScriptFragment 업데이트 시작
             startAudioFragmentUpdate()
@@ -135,7 +134,11 @@ class PlayCastActivity : AppCompatActivity() {
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser && !isSeeking) {
-                    service?.seekTo(progress * 1000L)
+                    val duration = service?.getDuration()
+
+                        val audioLength = convertToSeconds(CastPlayerData.currentCast.audioLength)*1000
+                        service?.seekTo(progress*audioLength/100000L)
+
                     // CastPlayerData.updatePlaybackPosition(service?.getCurrentPosition() ?: 0L)
                     binding.startTv.text = formatTime(service?.getCurrentPosition() ?: 0L)
                     //updateLyricsHighlight()
@@ -148,7 +151,12 @@ class PlayCastActivity : AppCompatActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 isSeeking = false
-                service?.seekTo(seekBar?.progress?.times(1000L) ?: 0L)
+
+                val progress = seekBar?.progress?.toLong() ?: 0L
+
+                    val audioLength = convertToSeconds(CastPlayerData.currentCast.audioLength)*1000
+                    service?.seekTo(progress*audioLength/100000L)
+
                 //CastPlayerData.updatePlaybackPosition(service?.getCurrentPosition() ?: 0L)
                 binding.startTv.text = formatTime(service?.getCurrentPosition() ?: 0L)
 
@@ -185,6 +193,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         // Next 버튼 클릭 이벤트 처리
         binding.next.setOnClickListener {
+            disableLoopForSentence()
             CastPlayerData.playNext()
             CastPlayerData.currentCast?.let {
                 newCast(CastPlayerData.currentCast.castId)  // 새로운 캐스트 재생 및 UI 초기화
@@ -195,6 +204,7 @@ class PlayCastActivity : AppCompatActivity() {
 
         // Previous 버튼 클릭 이벤트 처리
         binding.previous.setOnClickListener {
+            disableLoopForSentence()
             CastPlayerData.playPrevious()
             CastPlayerData.currentCast?.let {
                 newCast(CastPlayerData.currentCast.castId)  // 새로운 캐스트 재생 및 UI 초기화
@@ -335,21 +345,13 @@ class PlayCastActivity : AppCompatActivity() {
         updateUI()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (isBound) {
-            unbindService(connection)
-            isBound = false
-        }
-        stopSeekBarUpdate()
-    }
 
     private fun playCast(castId: Long) {
         service?.getCastInfo(castId) { url, audioLength ->
             url?.let {
                 service?.prepareAudio(it) // 여기서 prepare만 수행
                 binding.endTv.text = formatTime(audioLength.toInt())
-                binding.seekBar.max = audioLength // 시크바 최대값 설정 (초 단위)
+                //binding.seekBar.max = audioLength // 시크바 최대값 설정 (초 단위)
                 startSeekBarUpdate() // 시크바 업데이트 시작
                 startScriptFragmentUpdate() // ScriptFragment 업데이트 시작
                 startAudioFragmentUpdate()
@@ -399,7 +401,7 @@ class PlayCastActivity : AppCompatActivity() {
                     updateUI()
 
                     // 시크바 업데이트 코드 추가
-                    binding.seekBar.max = audioLength  // 시크바 최대값 설정
+                    //binding.seekBar.max = audioLength  // 시크바 최대값 설정
                     binding.seekBar.progress = 0  // 시크바 초기값 설정
 
                     saveState()
@@ -430,8 +432,12 @@ class PlayCastActivity : AppCompatActivity() {
         currentCast?.let {
             val currentPosition = service?.getCurrentPosition() ?: 0L
 
-            binding.seekBar.max = service?.getDuration()?.toInt()?.div(1000) ?: 0
-            binding.seekBar.progress = (currentPosition.div(1000)).toInt()
+            //binding.seekBar.max = service?.getDuration()?.toInt()?.div(1000) ?: 0
+
+                val audioLength = convertToSeconds(CastPlayerData.currentCast.audioLength)*1000
+                binding.seekBar.progress = (currentPosition*100000 /(audioLength)).toInt()
+
+
             binding.endTv.text = currentCast.audioLength
             binding.startTv.text = formatTime(currentPosition)
 
@@ -465,7 +471,10 @@ class PlayCastActivity : AppCompatActivity() {
                 val currentPosition = it.getCurrentPosition()
                 Log.d("SeekbarUpdateReal", "Current Position: $currentPosition")
 
-                binding.seekBar.progress = (currentPosition.div(1000)).toInt()
+
+                    val audioLength = convertToSeconds(CastPlayerData.currentCast.audioLength)*1000
+                    binding.seekBar.progress = (currentPosition*100000 /(audioLength)).toInt()
+
                 binding.startTv.text = formatTime(currentPosition)
 
                 // CastScriptFragment에 시간 정보 전달
@@ -483,6 +492,18 @@ class PlayCastActivity : AppCompatActivity() {
         val minutes = TimeUnit.MILLISECONDS.toMinutes(ms)
         val seconds = TimeUnit.MILLISECONDS.toSeconds(ms) % 60
         return String.format("%02d:%02d", minutes, seconds)
+    }
+    private fun convertToSeconds(input: String): Int {
+        return if (":" in input) {
+            // "MM:SS" 형식의 입력 처리
+            val parts = input.split(":")
+            val minutes = parts[0].toInt()
+            val seconds = parts[1].toInt()
+            minutes * 60 + seconds
+        } else {
+            // 숫자 형식의 입력 처리
+            input.toInt()
+        }
     }
 
     private fun updateSpeedUI(selectedSpeed: Float, views: List<View>) {
@@ -557,9 +578,11 @@ class PlayCastActivity : AppCompatActivity() {
     }
 
     private fun scriptToAudio() {
+
         buttonLock()
         stopAudioFragmentUpdate()
         stopScriptFragmentUpdate()
+
         binding.activityPlayCastPlaylistOnIv.visibility = View.GONE
         binding.activityPlayCastPlaylistOffIv.visibility = View.VISIBLE
         binding.activityPlayCastScriptOnIv.visibility = View.GONE
@@ -578,8 +601,11 @@ class PlayCastActivity : AppCompatActivity() {
 
     //플레이스트 시작
     private fun audioToPlaylist() {
+
         stopAudioFragmentUpdate()
+
         buttonLock()
+
         binding.activityPlayCastPlaylistOnIv.visibility = View.VISIBLE
         binding.activityPlayCastPlaylistOffIv.visibility = View.GONE
         binding.activityPlayCastScriptOnIv.visibility = View.GONE
@@ -596,8 +622,11 @@ class PlayCastActivity : AppCompatActivity() {
     }
 
     private fun playlistToAudio() {
+
         stopAudioFragmentUpdate()
+
         buttonLock()
+
         binding.activityPlayCastPlaylistOnIv.visibility = View.GONE
         binding.activityPlayCastPlaylistOffIv.visibility = View.VISIBLE
         binding.activityPlayCastScriptOnIv.visibility = View.GONE
@@ -611,7 +640,9 @@ class PlayCastActivity : AppCompatActivity() {
             .commit()
 
         stateListener = 0
+
         startAudioFragmentUpdate()
+
     }
 
     fun saveState() {
@@ -709,7 +740,9 @@ class PlayCastActivity : AppCompatActivity() {
                 if (fragment is CastScriptFragment && fragment.isAdded && !fragment.isRemoving) {
                     fragment.updateCurrentTime(currentPosition)
                     Log.d("UpdateTime", "Activity: $currentPosition")
-                }
+                }else if(fragment is CastAudioFragment && fragment.isAdded && !fragment.isRemoving){
+                    fragment.updateCurrentTime(currentPosition)
+                }else{}
             }
             scriptHandler.postDelayed(this, 300)
         }
@@ -788,44 +821,27 @@ class PlayCastActivity : AppCompatActivity() {
             buttons.forEach { it.isEnabled = true }
         }, 300)
     }
-
-}
-//담아온 캐스트 제거하는 함수
-/*private fun deleteCast(){
-    if(CastPlayerData.currentCast.playlistId!=-1L){
-        val deleteCast = getRetrofit().create(Playlist::class.java)
-        CoroutineScope(Dispatchers.IO).launch() {
-            Log.d("캐스트 해제", "플레이 리스트${CastPlayerData.currentCast.playlistId}, 캐스트 아이디${CastPlayerData.currentCast.castId}")
-            val response = deleteCast.deleteOtherCast(CastPlayerData.currentCast.playlistId,
-                DeleteOtherDto(CastPlayerData.currentCast.castId)
-            )
-            launch {
-                withContext(Dispatchers.Main) {
-                    try {
-                        Log.d("캐스트 해제","try 진입")
-                        if (response.isSuccessful) {
-                            response.body()?.result?.let{
-                                //삭제 했으니깐 버튼 바꿔주기
-                                CastPlayerData.currentCast.playlistId = -1L
-                            }
-                        } else{
-                            Log.d("캐스트 해제","${response.code()}")
-                            response.errorBody()?.let { errorBody ->
-                                val gson = Gson()
-                                val errorResponse: ErrorResponse = gson.fromJson(errorBody.charStream(), ErrorResponse::class.java)
-                                Log.d("캐스트 해제", "${errorResponse.message}, ${errorResponse.code}")
-                                Toast.makeText(this@PlayCastActivity, "서버 오류 코드 : ${errorResponse.code} \n${errorResponse.message}", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    } finally {
-                        classifyCast()
-                    }
-                }
-            }
+    override fun onStop() {
+        super.onStop()
+        if (CastPlayerData.getAllCastList().isNullOrEmpty()) {
+            service?.stopForeground(true) // 재생 목록이 없으면 알림 제거
         }
     }
-}*/
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isBound) {
+            unbindService(connection)
+            isBound = false
+        }
+        stopSeekBarUpdate()
+        if (CastPlayerData.getAllCastList().isNullOrEmpty()) {
+            service?.stopForeground(true) // 재생 목록이 없으면 알림 제거
+        }
+    }
+
+
+}
+
 
 

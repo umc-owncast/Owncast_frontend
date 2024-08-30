@@ -1,4 +1,4 @@
-package kr.dori.android.own_cast.network
+package kr.dori.android.own_cast.player
 
 import android.content.Context
 import android.content.Intent
