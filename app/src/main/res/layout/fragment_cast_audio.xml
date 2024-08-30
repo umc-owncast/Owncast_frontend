@@ -34,6 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/castTitle" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/category_fr_cv"
         android:layout_width="wrap_content"
@@ -63,7 +64,10 @@
         android:layout_height="80dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="a"
+
+        android:text=""
+        android:maxLines="4"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/category_fr_cv" />
@@ -74,7 +78,7 @@
         android:layout_height="80dp"
         android:layout_marginTop="8dp"
         android:gravity="center|top"
-        android:text="a"
+        android:text=""
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

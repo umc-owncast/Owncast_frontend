@@ -148,9 +148,10 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope, VoiceInterface {
         voiceApiCall(voice)
     }
 
-    private fun voiceApiCall(voicdCode:String){
+    private fun voiceApiCall(voiceCode:String){
+        Log.d("KeyvpAudioSetfr_check", "${voiceCode}")
         val voiceInterface = getRetrofit().create(CastInterface::class.java)
-        voiceInterface.getVoiceCall(voicdCode).enqueue(object: Callback<AuthResponse<VoiceDTO>> {
+        voiceInterface.getVoiceCall(voiceCode).enqueue(object: Callback<AuthResponse<VoiceDTO>> {
             override fun onResponse(call: Call<AuthResponse<VoiceDTO>>, response: Response<AuthResponse<VoiceDTO>>) {
                 if (response.isSuccessful) {
                     response.body()?.result?.let{

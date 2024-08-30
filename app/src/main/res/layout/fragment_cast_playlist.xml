@@ -14,8 +14,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cast_playlist_item_cardview"
+
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:scaleType="centerCrop"
@@ -24,9 +26,11 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
             <ImageView
                 android:id="@+id/fragment_playlist_cast_iv"
                 android:layout_width="48dp"
@@ -39,6 +43,7 @@
         </androidx.cardview.widget.CardView>
 
 
+
         <TextView
             android:id="@+id/fragment_cast_playlist_title"
             android:layout_width="wrap_content"
@@ -49,7 +54,9 @@
             android:fontFamily="@font/pretendard_regular"
             android:textSize="16sp"
             android:textStyle="normal"
+
             app:layout_constraintStart_toEndOf="@+id/cast_playlist_item_cardview"
+
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -91,16 +98,6 @@
             android:visibility="visible"
             app:layout_constraintStart_toStartOf="@+id/fragment_cast_playlist_title"
             app:layout_constraintTop_toBottomOf="@+id/fragment_cast_playlist_title" />
-
-        <ImageView
-            android:id="@+id/fragment_cast_playlist_menu_iv"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_menu" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
