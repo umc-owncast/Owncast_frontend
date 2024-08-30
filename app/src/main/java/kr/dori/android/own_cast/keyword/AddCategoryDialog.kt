@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import kr.dori.android.own_cast.databinding.FragmentAddCategoryDialogBinding
 import kr.dori.android.own_cast.editAudio.EditAudio
+import kr.dori.android.own_cast.playlist.AddCategoryListener
 
 class AddCategoryDialog(context: Context, private val listener: AddCategoryListener, private val toast: EditAudio) : Dialog(context) {
     private lateinit var binding: FragmentAddCategoryDialogBinding

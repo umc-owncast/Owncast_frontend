@@ -1,6 +1,5 @@
 package kr.dori.android.own_cast.keyword
 
-
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -39,8 +38,6 @@ import kr.dori.android.own_cast.forApiData.PostCastByScript
 import kr.dori.android.own_cast.forApiData.PostCastForResponse
 import kr.dori.android.own_cast.forApiData.VoiceDTO
 import kr.dori.android.own_cast.forApiData.getRetrofit
-import kr.dori.android.own_cast.keyworddata.VoiceList
-import kr.dori.android.own_cast.keyworddata.VoiceListRepository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
