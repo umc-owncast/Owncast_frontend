@@ -9,7 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-const val BASE_URL = "http://15.164.140.239:8080"
+const val BASE_URL = "http://owncast-dev-env.eba-riydufgu.ap-northeast-2.elasticbeanstalk.com/"
 
 
 
