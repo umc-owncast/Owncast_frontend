@@ -25,7 +25,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -34,36 +33,23 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.ActivityEditAudioBinding
-import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.ErrorResponse
 import kr.dori.android.own_cast.forApiData.PlayListInterface
 import kr.dori.android.own_cast.forApiData.Playlist
-import kr.dori.android.own_cast.forApiData.PostPlaylist
 import kr.dori.android.own_cast.forApiData.UpdateInfo
 
 import kr.dori.android.own_cast.forApiData.getRetrofit
 
 import kr.dori.android.own_cast.keyword.AddCategoryDialog
-import kr.dori.android.own_cast.keyword.KeywordAppData
 import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
 import kr.dori.android.own_cast.keyword.PlaylistText
-import kr.dori.android.own_cast.playlist.AddCategoryListener
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.OkHttp
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
 class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
 
@@ -183,7 +169,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
         with (Toast(applicationContext)) {
             duration = Toast.LENGTH_LONG
             view = layout
-           // setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 100)
+            // setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 100)
             show()
         }
     }

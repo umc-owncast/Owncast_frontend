@@ -1,4 +1,5 @@
-package kr.dori.android.own_cast.data
+package kr.dori.android.own_cast.player
+
 
 
 import android.util.Log

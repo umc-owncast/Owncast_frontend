@@ -84,6 +84,7 @@ class SignupData : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 }

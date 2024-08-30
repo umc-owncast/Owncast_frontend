@@ -61,7 +61,10 @@
             android:background="@drawable/edittext_background"
             android:padding="12dp"
             android:textColorHint="@color/hint_color"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            android:inputType="text"
+            android:maxLines="1"
+            android:lines="1"/>
 
         <TextView
             android:id="@+id/Password"
@@ -81,7 +84,10 @@
             android:background="@drawable/edittext_background"
             android:padding="12dp"
             android:textColorHint="@color/hint_color"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:lines="1"/>
 
         <TextView
             android:id="@+id/error_msg"

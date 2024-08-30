@@ -98,7 +98,9 @@ class ChangePasswordActivity : ComponentActivity() {
                             // 메인 화면으로 이동
                             SignupData.profile_detail_interest = "완료"
                             val intent = Intent(this@ChangePasswordActivity, MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             startActivity(intent)
+                            finish()
 
                         } else {
                             // 실패 메시지 처리

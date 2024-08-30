@@ -231,4 +231,3 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
         Log.d("xibal", "onDetach called")
     }
 }
-
