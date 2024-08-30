@@ -90,6 +90,9 @@ class ChangeSelfActivity : ComponentActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
+                        val intent = Intent(this@ChangeSelfActivity, MainActivity ::class.java)
+                        startActivity(intent)
+                        finish()
                     }
 
                     override fun onFailure(call: Call<PreferenceResponse>, t: Throwable) {
@@ -100,11 +103,14 @@ class ChangeSelfActivity : ComponentActivity() {
                             "관심사 변경 실패",
                             Toast.LENGTH_SHORT
                         ).show()
+                        val intent = Intent(this@ChangeSelfActivity, MainActivity ::class.java)
+                        startActivity(intent)
+                        finish()
                     }
+
                 })
 
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+
         }
 
         backButton.setOnClickListener {

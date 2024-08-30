@@ -67,6 +67,8 @@ class HomeFragment : Fragment() {
         context.bindService(intent, connection, Context.BIND_AUTO_CREATE)
     }
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -78,8 +80,7 @@ class HomeFragment : Fragment() {
 
 
         // Set the text of cell_center TextView to detail_interest
-        binding.cellCenter.text = SignupData.detail_interest
-        binding.homefrKeywordTopicTv.text = SignupData.detail_interest
+
 
         // 텍스트 뷰 바인딩
         textViewBinding()
@@ -91,8 +92,10 @@ class HomeFragment : Fragment() {
         }
 
         // 서버와 소통하여 데이터를 가져와 리스트에 저장 및 로딩창 표시
-        if(KeywordAppData.detailTopic.isNullOrEmpty()){//전역변수가 채워져있는지 확인(통신을 한번 했는지)
+        if(KeywordAppData.detailTopic.isNullOrEmpty()||!KeywordAppData.mainTopic.equals(SignupData.detail_interest)){//전역변수가 채워져있는지 확인(통신을 한번 했는지)
+            KeywordAppData.mainTopic = SignupData.detail_interest
             fetchDataFromServer()
+
         }else{//이미 통신을 완료했을때는 애니메이션과 listener 처리만 해줌
             keywordDataList.clear()
             keywordDataList.addAll(KeywordAppData.detailTopic)
@@ -139,6 +142,8 @@ class HomeFragment : Fragment() {
         super.onResume()
         // 화면이 보일 때마다 텍스트 뷰의 내용 랜덤 배치 및 크기 조정
         randomizeTextViews()
+        binding.cellCenter.text = SignupData.detail_interest
+        binding.homefrKeywordTopicTv.text = SignupData.detail_interest
     }
 
     private fun fetchDataFromServer() {
