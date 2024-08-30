@@ -55,6 +55,14 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
             requireActivity().supportFragmentManager.popBackStack()
         }
 
+
+        // Initialize ActivityResultLauncher
+        activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                loadCastInfo()  // EditAudioActivity에서 데이터 변경이 완료된 경우 즉시 데이터를 다시 로드
+            }
+        }
+
         loadCastInfo()
         binding.playlistName.text = playlistName
 
@@ -90,11 +98,11 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
     }
 
 
-    override fun ToEditAudio(id: Long,playlistId:Long) {
+    override fun ToEditAudio(id: Long, playlistId: Long) {
         val intent = Intent(requireContext(), EditAudioActivity::class.java)
-        intent.putExtra("id",id)
-        intent.putExtra("playlistId",playlistId)
-        startActivity(intent)
+        intent.putExtra("id", id)
+        intent.putExtra("playlistId", playlistId)
+        activityResultLauncher.launch(intent)  // 수정된 부분
     }
 
     fun getTotalAudioLengthInSeconds(castList: List<CastWithPlaylistId>): Int {
