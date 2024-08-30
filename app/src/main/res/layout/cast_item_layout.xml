@@ -90,8 +90,8 @@
 
         <TextView
             android:id="@+id/time_table_tv"
-            android:layout_width="30dp"
-            android:layout_height="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:text="00:00"
             android:textColor="#F5F5F5"
