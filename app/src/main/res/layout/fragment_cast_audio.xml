@@ -63,7 +63,7 @@
         android:layout_height="80dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text=""
+        android:text="a"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/category_fr_cv" />
@@ -73,8 +73,8 @@
         android:layout_width="340dp"
         android:layout_height="80dp"
         android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text=""
+        android:gravity="center|top"
+        android:text="a"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -1,6 +1,7 @@
 package kr.dori.android.own_cast.keyword
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,9 @@ class KeyAudsetDropdownAdapter(context: Context, @LayoutRes private val resId: I
     override fun getView(position: Int, converView: View?, parent: ViewGroup): View {
         val binding = ItemAudSetSpinnerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         binding.tvSpinner.text = audioList[position]
-            //binding.icSpinnerSoundIv.visibility = View.VISIBLE 소리아이콘 지움
+            binding.icSpinnerSoundIv.setOnClickListener {
+                Log.d("드롭다운 테스트","잘 작동")
+            }
         return binding.root
     }
 

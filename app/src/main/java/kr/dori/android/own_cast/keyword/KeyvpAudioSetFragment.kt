@@ -148,20 +148,17 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
 
                 //api 전송용 데이터를 받아옴
                 if(formality.equals("CASUAL")){
-
                     voice = voiceList.styleCasual.dataType[p2]
                 }
                 else{
-
-
                     voice = voiceList.styleBusiness.dataType[p2]
                 }
 
-                binding.keywordAudStyleSp.setBackgroundResource(R.drawable.key_audset_dropdown_off_bg)
+
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 // 선택되지 않은 경우
-                binding.keywordAudStyleSp.setBackgroundResource(R.drawable.key_audset_dropdown_off_bg)
+
                 //다시 스피너가 색깔이 바뀌지 않은거처럼 바꿔준다
             }
         }

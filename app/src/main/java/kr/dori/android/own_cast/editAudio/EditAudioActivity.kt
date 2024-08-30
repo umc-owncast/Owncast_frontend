@@ -217,6 +217,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                                         // URL로부터 이미지 로드 (Glide 사용)
                                         Glide.with(context)
                                             .load(imageUrl)
+                                            .centerCrop()
                                             .into(binding.imageView17)
                                     } else {
                                         // 로컬 파일에서 이미지 로드
@@ -449,7 +450,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
         // Convert the temp file to RequestBody
         val requestFile = tempFile.asRequestBody("image/*".toMediaTypeOrNull())
         // Create MultipartBody.Part from RequestBody
-        return MultipartBody.Part.createFormData("photo", tempFile.name, requestFile)
+        return MultipartBody.Part.createFormData("image", tempFile.name, requestFile)
     }
 
 

@@ -270,6 +270,7 @@ class SearchFragment : Fragment(), SearchMover, ActivityMover {
                     // URL로부터 이미지 로드 (Glide 사용)
                     Glide.with(itemView.context)
                         .load(castHomeDTO[i].imagePath)
+                        .centerCrop()
                         .into(thumbButton)
                 } else {
                     // 로컬 파일에서 이미지 로드

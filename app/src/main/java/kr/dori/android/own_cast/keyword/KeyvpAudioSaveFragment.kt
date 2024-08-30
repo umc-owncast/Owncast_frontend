@@ -197,7 +197,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val requestFile = tempFile.asRequestBody(mimeType.toMediaTypeOrNull())
 
         // MultipartBody.Part를 생성합니다.
-        val multipartBody = MultipartBody.Part.createFormData("photo", tempFile.name, requestFile)
+        val multipartBody = MultipartBody.Part.createFormData("image", tempFile.name, requestFile)
 
         // 임시 파일 삭제 (선택 사항: 파일 사용 후 삭제)
         tempFile.deleteOnExit()
@@ -451,6 +451,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                 withContext(Dispatchers.Main) {
                     try {
                         if (response.isSuccessful) {
+
                             Log.d("캐스트 저장", "${response.body()?.result}")
                             finDialog.setCancelable(false)//dialog는 여기서
                             finDialog.setCanceledOnTouchOutside(false)

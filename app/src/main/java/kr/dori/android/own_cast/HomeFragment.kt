@@ -32,6 +32,7 @@ import kr.dori.android.own_cast.databinding.FragmentHomeBinding
 import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.KeywordActivity
+import kr.dori.android.own_cast.keyword.KeywordAppData
 import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
 import kr.dori.android.own_cast.playlist.SharedViewModel
 import kr.dori.android.own_cast.player.BackgroundPlayService
@@ -91,7 +92,18 @@ class HomeFragment : Fragment() {
         }
 
         // 서버와 소통하여 데이터를 가져와 리스트에 저장 및 로딩창 표시
-        fetchDataFromServer()
+        if(KeywordAppData.detailTopic.isNullOrEmpty()){//전역변수가 채워져있는지 확인(통신을 한번 했는지)
+            fetchDataFromServer()
+        }else{//이미 통신을 완료했을때는 애니메이션과 listener 처리만 해줌
+            keywordDataList.clear()
+            keywordDataList.addAll(KeywordAppData.detailTopic)
+            keywordDataList.sortBy { it.length }
+            randomizeTextViews() // 데이터가 성공적으로 받아오면 텍스트 뷰 랜덤 배치
+            initListener()
+        }
+
+
+
 
         // 검색창 클릭 시 키워드 액티비티로 이동
         binding.insertKeyw.setOnClickListener {
@@ -146,6 +158,10 @@ class HomeFragment : Fragment() {
                         response.body()?.result?.let {
                             keywordDataList.clear()
                             keywordDataList.addAll(it.keywords)
+                            keywordDataList.sortBy { it.length }
+                            //앱데이터 전역으로 선언(추후 viewModel정도로 해놔도 좋을듯?)
+                            KeywordAppData.updateDetailTopic(it.keywords)
+                            Log.d("homefr","${keywordDataList.toString()}")
                             randomizeTextViews() // 데이터가 성공적으로 받아오면 텍스트 뷰 랜덤 배치
                             initListener()
                         }
@@ -160,22 +176,44 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun getRandomTextSize(): Float {
-        val minSize = 14f // 최소 텍스트 크기
-        val maxSize = 24f // 최대 텍스트 크기
-        return (minSize + Math.random() * (maxSize - minSize)).toFloat()
-    }
+
 
     private fun textViewBinding() {
         textList.clear()
         // 텍스트 뷰를 리스트에 추가
-        textList.add(binding.cell1)
-        textList.add(binding.cell2)
+        //글자수 적게 들어가야되는 3, 4부터 먼저 list에 넣음
         textList.add(binding.cell3)
         textList.add(binding.cell4)
-        textList.add(binding.cell5)
+        textList.add(binding.cell1)
+        textList.add(binding.cell2)
         textList.add(binding.cell6)
+        textList.add(binding.cell5)
+
     }
+    private fun getRandomTextSize(size: Int, index:Int): Float {
+        var minSize = 10f + size*1f // 최소 텍스트 크기
+        var maxSize = 36f - size*2f // 최대 텍스트 크기
+        if(index<2){
+            minSize = 10f + size*1f // 최소 텍스트 크기
+            maxSize = 36f - size*2f // 최대 텍스트 크기
+        }else if(index <4){
+            minSize = 14f + size*1f // 최소 텍스트 크기
+            maxSize = 40f - size*2f // 최대 텍스트 크기
+        }else{
+            minSize = 18f + size*1f // 최소 텍스트 크기
+            maxSize = 48f - size*2f // 최대 텍스트 크기
+        }
+
+        return (minSize + Math.random() * (maxSize - minSize)).toFloat()
+    }
+
+    private fun getRandomTextSizeLong(size: Int): Float {
+        val minSize = 14f + size*1f // 최소 텍스트 크기
+        val maxSize = 40f - size*1f // 최대 텍스트 크기
+        return (minSize + Math.random() * (maxSize - minSize)).toFloat()
+    }
+
+
 
     private fun randomizeTextViews() {
         // 데이터가 없는 경우, 빈 화면을 표시
@@ -188,18 +226,32 @@ class HomeFragment : Fragment() {
         }
 
         // 데이터를 랜덤하게 배치
-        val randomizedData = keywordDataList.shuffled()
+        val randomizedDataShort = mutableListOf<String>()
+        val randomizedDataLong = mutableListOf<String>()
+        for(i in keywordDataList.size-1 downTo 0){
+            if(keywordDataList[i].length <6){
+                randomizedDataShort.add(keywordDataList[i])
+            }
+            else randomizedDataLong.add(keywordDataList[i])
+        }
+        randomizedDataShort.shuffle()
+        randomizedDataLong.shuffle()
         for (i in textList.indices) {
-            if (i < randomizedData.size) {
-                textList[i].text = randomizedData[i]
+            if (i < keywordDataList.size) {
+                if(i<randomizedDataShort.size){
+                    textList[i].text = randomizedDataShort[i]
+                }else{
+                    textList[i].text = randomizedDataLong[i-randomizedDataShort.size]
+                }
+
                 textList[i].visibility = View.VISIBLE
+                val textSize = getRandomTextSize(keywordDataList[i].length, i)
+                textList[i].setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
             } else {
                 textList[i].visibility = View.GONE
             }
 
-            // 텍스트 크기 랜덤 설정
-            val textSize = getRandomTextSize()
-            textList[i].setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize)
+
         }
 
         // 애니메이션 적용
@@ -211,21 +263,24 @@ class HomeFragment : Fragment() {
         binding.root.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 // 기준 뷰 (cell_center) 가져오기
-                val centerView = binding.root.findViewById<View>(R.id.cell_center)
 
-                // 기준 뷰의 중앙 좌표 계산
-                val centerX = (centerView.x + centerView.width / 2)
-                val centerY = (centerView.y + centerView.height / 2)
 
                 textList.forEachIndexed { index, textView ->
                     // 텍스트 뷰의 랜덤 크기 설정
                     val randomSize = (14..24).random().toFloat() // 랜덤 크기
                     textView.textSize = randomSize
+                    val centerView = binding.root.findViewById<View>(R.id.cell_center)
+
+                    // 기준 뷰의 중앙 좌표 계산
+                    val centerX = (centerView.x + centerView.width / 2)
+                    val centerY = (centerView.y + centerView.height / 2)
 
                     // 텍스트 뷰의 초기 위치와 가시성 설정
                     textView.translationX = centerX - (textView.x + textView.width / 2)
                     textView.translationY = centerY - (textView.y + textView.height / 2)
                     textView.alpha = 0f // 처음에는 보이지 않도록 설정
+
+
 
                     // 애니메이션 설정 함수 호출
                     startAnimation(textView, index)
@@ -238,6 +293,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun startAnimation(textView: TextView, index: Int) {
+
+
+
         // X와 Y 방향의 애니메이션 생성
         val animatorX = ObjectAnimator.ofFloat(textView, "translationX", textView.translationX, 0f)
         val animatorY = ObjectAnimator.ofFloat(textView, "translationY", textView.translationY, 0f)
@@ -264,7 +322,7 @@ class HomeFragment : Fragment() {
 
         content = SpannableString(binding.homefrKeywordTopicTv.text.toString())
         content.setSpan(UnderlineSpan(), 0, content.length, 0)
-        binding.homefrKeywordTopicTv.text = content
+        binding.homefrKeywordTopicTv.text = SignupData.nickname
     }
 
     private fun stopAudio() {

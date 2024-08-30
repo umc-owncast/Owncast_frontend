@@ -80,7 +80,7 @@ class CategoryFragment() : Fragment(), ActivityMover {
                                     imagePath = cast.imagePath
                                 )
                             }
-                            Glide.with(binding.root.context).load(castListWithPlaylistId[0].imagePath).into(binding.imageView2)
+                            Glide.with(binding.root.context).load(castListWithPlaylistId[0].imagePath).centerCrop().into(binding.imageView2)
 
                             // 데이터를 어댑터에 설정
                             castAdapter.dataList = castListWithPlaylistId.toMutableList()
