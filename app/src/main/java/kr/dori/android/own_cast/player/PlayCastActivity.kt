@@ -677,7 +677,6 @@ class PlayCastActivity : AppCompatActivity() {
                 .replace(R.id.play_cast_frm, CastPlaylistFragment())
                 .commit()
         }
-
     }
 
     fun formatSpeed(speed: String): String {

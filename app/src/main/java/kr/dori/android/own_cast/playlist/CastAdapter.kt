@@ -91,6 +91,7 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
             }
         }
     }
+
     fun formatTime(input: String): String {
         return if (input.contains(":")) {
             // 입력이 이미 "분:초" 형식인 경우
