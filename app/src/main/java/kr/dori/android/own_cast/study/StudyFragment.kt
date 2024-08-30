@@ -153,7 +153,7 @@ class StudyFragment : Fragment(), AudioPlayer.AudioPlayerListener {
             val getAllBookmark = getRetrofit().create(Bookmark::class.java)
 
             try {
-                val response = getAllBookmark.getSaved()
+                val response = getAllBookmark.getMy()
                 if (response.isSuccessful) {
                     val allBookmarks = response.body()?.result ?: emptyList()
                     Log.d("StudyFragment", "Bookmarks loaded successfully: ${allBookmarks.size}")
@@ -198,7 +198,7 @@ class StudyFragment : Fragment(), AudioPlayer.AudioPlayerListener {
             val getAllBookmark = getRetrofit().create(Bookmark::class.java)
 
             try {
-                val response = getAllBookmark.getMy()
+                val response = getAllBookmark.getSaved()
                 if (response.isSuccessful) {
                     val allBookmarks = response.body()?.result ?: emptyList()
                     Log.d("StudyFragment", "Bookmarks loaded successfully: ${allBookmarks.size}")
