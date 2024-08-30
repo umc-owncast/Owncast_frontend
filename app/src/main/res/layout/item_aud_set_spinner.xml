@@ -11,13 +11,15 @@
 
     <ImageView
         android:id="@+id/ic_spinner_sound_iv"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="8dp"
+
         android:src="@drawable/keyword_ic_audioset_sound"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="4dp"
         android:scaleType="centerCrop"
         android:visibility="gone"
         />
@@ -32,9 +34,9 @@
         app:layout_constraintStart_toEndOf="@id/ic_spinner_sound_iv"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="8dp"
         android:letterSpacing="0.02"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
