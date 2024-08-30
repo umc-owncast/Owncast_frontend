@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.editAudio.EditAudioActivity
 import kr.dori.android.own_cast.MainActivity
+import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.databinding.FragmentCastBinding
@@ -45,95 +47,14 @@ class CastFragment() : Fragment(), ActivityMover {
 
         castAdapter = CastAdapter(this)
 
-        val isSave = arguments?.getBoolean("isSave") ?: false
 
-        val getPlaylist = getRetrofit().create(Playlist::class.java)
         // API 호출 및 데이터 설정
         // API 호출 및 데이터 설정
-        val loadingdialog = KeywordLoadingDialog(requireContext(),"목록을 받아오는 중이에요")
-        loadingdialog.setCancelable(false)
-        loadingdialog.setCanceledOnTouchOutside(false)
-        loadingdialog.show()
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                if (!isSave) {
-                    val response = getPlaylist.getSaved()
-                    Log.d("CastFragment", "getSaved API 호출")
-                    if (response.isSuccessful) {
-                        Log.d("CastFragment", "getSaved API 성공")
-                        val playlistInfo = response.body()?.result
-                        withContext(Dispatchers.Main) {
-                            playlistInfo?.let {
-                                val castListWithPlaylistId = it.castList.map { cast ->
-                                    CastWithPlaylistId(
-                                        castId = cast.castId,
-                                        playlistId = cast.playlistId,
-                                        castTitle = cast.castTitle?:"untitled",
-                                        isPublic = cast.isPublic,
-                                        castCreator = cast.castCreator,
-                                        castCategory = cast.castCategory,
-                                        audioLength = cast.audioLength,
-                                        imagePath = cast.imagePath
-                                    )
-                                }
-                                castAdapter.dataList = castListWithPlaylistId.toMutableList()
-                                // 총 오디오 길이 계산
-                                val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(castListWithPlaylistId)
-                                binding.castInfo.text = "${castListWithPlaylistId.size}개, ${formatTime(totalAudioLengthInSeconds)}"
-                                Log.d("realTest","${castListWithPlaylistId.toMutableList()}")
-                            }
-                        }
-                    } else {
-                        Log.e("CastFragment", "getSaved API 실패: ${response.errorBody()?.string()}")
-                    }
-                } else {
-                    val response = getPlaylist.getMy()
-                    Log.d("CastFragment", "getMy API 호출")
-                    if (response.isSuccessful) {
-                        Log.d("CastFragment", "getMy API 성공")
-                        val playlistInfo = response.body()?.result
-                        withContext(Dispatchers.Main) {
-                            playlistInfo?.let {
-                                val castListWithPlaylistId = it.castList.map { cast ->
-                                    CastWithPlaylistId(
-                                        castId = cast.castId,
-                                        playlistId = cast.playlistId,
-                                        castTitle = cast.castTitle?:"untitled",
-                                        isPublic = cast.isPublic,
-                                        castCreator = cast.castCreator,
-                                        castCategory = cast.castCategory,
-                                        audioLength = cast.audioLength,
-                                        imagePath = cast.imagePath
-                                    )
-                                }
-                                castAdapter.dataList = castListWithPlaylistId.toMutableList()
-                                // 총 오디오 길이 계산
-                                val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(castListWithPlaylistId)
-                                binding.castInfo.text = "${castListWithPlaylistId.size}개, ${formatTime(totalAudioLengthInSeconds)}"
-                            }
-                        }
-                    } else {
-                        Log.e("CastFragment", "getMy API 실패: ${response.errorBody()?.string()}")
-                    }
-                }
-                binding.fragmentCastRv.adapter = castAdapter
-                binding.fragmentCastRv.layoutManager = LinearLayoutManager(context)
-            } catch (e: Exception) {
-                Log.e("CastFragment", "API 호출 중 예외 발생", e)
-                e.printStackTrace()
-            } finally {
-                withContext(Dispatchers.Main) {
-                    loadingdialog.dismiss()
-                }
-            }
-        }
-
-
-
 
         // RecyclerView 설정
         binding.fragmentCastRv.adapter = castAdapter
         binding.fragmentCastRv.layoutManager = LinearLayoutManager(context)
+        loadCastInfo()
 
         // Back 버튼 클릭 이벤트 처리
         binding.fragmentCastBackIv.setOnClickListener {
@@ -208,6 +129,94 @@ class CastFragment() : Fragment(), ActivityMover {
         return String.format("%02d:%02d", minutes, seconds)
     }
 
+    private fun loadCastInfo(){
+        val loadingdialog = KeywordLoadingDialog(requireContext(),"목록을 받아오는 중이에요")
+        loadingdialog.setCancelable(false)
+        loadingdialog.setCanceledOnTouchOutside(false)
+        loadingdialog.show()
+        val isSave = arguments?.getBoolean("isSave") ?: false
 
+        val getPlaylist = getRetrofit().create(Playlist::class.java)
 
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                if (!isSave) {
+                    val response = getPlaylist.getSaved()
+                    Log.d("CastFragment", "getSaved API 호출")
+                    if (response.isSuccessful) {
+                        Log.d("CastFragment", "getSaved API 성공")
+                        val playlistInfo = response.body()?.result
+                        withContext(Dispatchers.Main) {
+                            playlistInfo?.let {
+                                val castListWithPlaylistId = it.castList.map { cast ->
+                                    CastWithPlaylistId(
+                                        castId = cast.castId,
+                                        playlistId = cast.playlistId,
+                                        castTitle = cast.castTitle?:"untitled",
+                                        isPublic = cast.isPublic,
+                                        castCreator = cast.castCreator,
+                                        castCategory = cast.castCategory,
+                                        audioLength = cast.audioLength,
+                                        imagePath = cast.imagePath
+                                    )
+                                }
+                                castAdapter.dataList = castListWithPlaylistId.toMutableList()
+                                // 총 오디오 길이 계산
+                                val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(castListWithPlaylistId)
+                                binding.castInfo.text = "${castListWithPlaylistId.size}개, ${formatTime(totalAudioLengthInSeconds)}"
+                                Log.d("realTest","${castListWithPlaylistId.toMutableList()}")
+                                Glide.with(requireActivity()).load(R.drawable.others).into(binding.fragmentCastTitleIv)
+                            }
+                        }
+                    } else {
+                        Log.e("CastFragment", "getSaved API 실패: ${response.errorBody()?.string()}")
+                    }
+                } else {
+                    val response = getPlaylist.getMy()
+                    Log.d("CastFragment", "getMy API 호출")
+                    if (response.isSuccessful) {
+                        Log.d("CastFragment", "getMy API 성공")
+                        val playlistInfo = response.body()?.result
+                        withContext(Dispatchers.Main) {
+                            playlistInfo?.let {
+                                val castListWithPlaylistId = it.castList.map { cast ->
+                                    CastWithPlaylistId(
+                                        castId = cast.castId,
+                                        playlistId = cast.playlistId,
+                                        castTitle = cast.castTitle?:"untitled",
+                                        isPublic = cast.isPublic,
+                                        castCreator = cast.castCreator,
+                                        castCategory = cast.castCategory,
+                                        audioLength = cast.audioLength,
+                                        imagePath = cast.imagePath
+                                    )
+                                }
+                                castAdapter.dataList = castListWithPlaylistId.toMutableList()
+                                // 총 오디오 길이 계산
+                                val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(castListWithPlaylistId)
+                                binding.castInfo.text = "${castListWithPlaylistId.size}개, ${formatTime(totalAudioLengthInSeconds)}"
+                                Glide.with(requireActivity()).load(R.drawable.mines).into(binding.fragmentCastTitleIv)
+                            }
+                        }
+                    } else {
+                        Log.e("CastFragment", "getMy API 실패: ${response.errorBody()?.string()}")
+                    }
+                }
+                binding.fragmentCastRv.adapter = castAdapter
+                binding.fragmentCastRv.layoutManager = LinearLayoutManager(context)
+            } catch (e: Exception) {
+                Log.e("CastFragment", "API 호출 중 예외 발생", e)
+                e.printStackTrace()
+            } finally {
+                withContext(Dispatchers.Main) {
+                    loadingdialog.dismiss()
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadCastInfo()
+    }
 }

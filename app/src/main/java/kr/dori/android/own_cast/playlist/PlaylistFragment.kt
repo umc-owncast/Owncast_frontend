@@ -45,7 +45,6 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
-    private var playlistIdList: MutableList<Long> = mutableListOf( )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,6 +64,8 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
             categoryAdapter.dataList = newData.filter { it.playlistId != 0L }.toMutableList()
             categoryAdapter.notifyDataSetChanged()
         })
+
+        loadLatestDataFromServer()
 
         binding.fragmentPlaylistAddIv.setOnClickListener {
             val dialog = AddCategoryDiaLogPlaylist(requireContext(), this, this)
@@ -147,6 +148,10 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadLatestDataFromServer()
+    }
     override fun onCategoryEdit(position: Long, name: String, playlistId: Long) {
         // Optimistic UI 적용: 변경 사항을 일단 반영
         val originalData = sharedViewModel.getCategory(position)
