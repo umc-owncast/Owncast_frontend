@@ -73,17 +73,7 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
         binding.fragmentCategoryRv.layoutManager = LinearLayoutManager(context)
 
 
-        binding.fragmentCategoryPlayIv.setOnClickListener {
-            CastPlayerData.setCast(sendCastIdList, 0)
-            ToPlayCast()
-           // Log.d("Cast","$sendCastIdList")
-        }
 
-        binding.fragmentCategoryShuffleIv.setOnClickListener {
-            val shuffledList = sendCastIdList.shuffled()
-            CastPlayerData.setCast(shuffledList,0)
-            ToPlayCast()
-        }
 
         return binding.root
     }
@@ -166,6 +156,27 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
                             castAdapter.dataList = castListWithPlaylistId.toMutableList()
                             sendCastIdList = castListWithPlaylistId
                             castAdapter.notifyDataSetChanged() // 추가: 어댑터 데이터 변경 알림
+
+
+                            if(!sendCastIdList.isNullOrEmpty()){
+                                binding.fragmentCategoryPlayIv.setOnClickListener {
+
+                                    CastPlayerData.setCast(sendCastIdList, 0)
+                                    ToPlayCast()
+                                    Log.d("Cast","$sendCastIdList")
+                                }
+                                binding.fragmentCategoryShuffleIv.setOnClickListener {
+                                    val shuffledList = sendCastIdList.shuffled()
+                                    CastPlayerData.setCast(shuffledList,0)
+                                    ToPlayCast()
+
+                                }
+
+                            }else{
+                                binding.fragmentCategoryPlayIv.isEnabled = false
+                                binding.fragmentCategoryShuffleIv.isEnabled = false
+                            }
+
 
                             // 총 오디오 길이 계산
                             val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(castListWithPlaylistId)
