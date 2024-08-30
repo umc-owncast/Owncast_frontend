@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.ActivityMover
 import kr.dori.android.own_cast.editAudio.EditAudioActivity
 import kr.dori.android.own_cast.MainActivity
+import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.player.PlayCastActivity
 import kr.dori.android.own_cast.databinding.FragmentCastBinding
@@ -81,6 +83,7 @@ class CastFragment() : Fragment(), ActivityMover {
                                 val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(castListWithPlaylistId)
                                 binding.castInfo.text = "${castListWithPlaylistId.size}개, ${formatTime(totalAudioLengthInSeconds)}"
                                 Log.d("realTest","${castListWithPlaylistId.toMutableList()}")
+                                Glide.with(requireActivity()).load(R.drawable.others).into(binding.fragmentCastTitleIv)
                             }
                         }
                     } else {
@@ -110,6 +113,7 @@ class CastFragment() : Fragment(), ActivityMover {
                                 // 총 오디오 길이 계산
                                 val totalAudioLengthInSeconds = getTotalAudioLengthInSeconds(castListWithPlaylistId)
                                 binding.castInfo.text = "${castListWithPlaylistId.size}개, ${formatTime(totalAudioLengthInSeconds)}"
+                                Glide.with(requireActivity()).load(R.drawable.mines).into(binding.fragmentCastTitleIv)
                             }
                         }
                     } else {
@@ -207,7 +211,5 @@ class CastFragment() : Fragment(), ActivityMover {
         val seconds = input % 60
         return String.format("%02d:%02d", minutes, seconds)
     }
-
-
 
 }
