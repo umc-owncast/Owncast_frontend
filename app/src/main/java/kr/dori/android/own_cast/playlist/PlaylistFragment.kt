@@ -66,6 +66,8 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
             categoryAdapter.notifyDataSetChanged()
         })
 
+        loadLatestDataFromServer()
+
         binding.fragmentPlaylistAddIv.setOnClickListener {
             val dialog = AddCategoryDiaLogPlaylist(requireContext(), this, this)
             dialog.show()
@@ -147,6 +149,10 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadLatestDataFromServer()
+    }
     override fun onCategoryEdit(position: Long, name: String, playlistId: Long) {
         // Optimistic UI 적용: 변경 사항을 일단 반영
         val originalData = sharedViewModel.getCategory(position)
