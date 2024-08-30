@@ -45,7 +45,6 @@ class PlaylistFragment : Fragment(), AddCategoryListener, EditCategoryListener, 
 
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
-    private var playlistIdList: MutableList<Long> = mutableListOf( )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
