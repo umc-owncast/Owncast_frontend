@@ -85,7 +85,7 @@ class BackgroundPlayService : Service() {
         player.play()  // 재생 시작
         isPlaying = true  // 재생 상태를 갱신
         ///startSeekBarUpdate()
-
+        updatePlaybackState(true)
         updateNotification()  // 알림 업데이트
         startForeground(1, createNotification())
 
@@ -95,17 +95,22 @@ class BackgroundPlayService : Service() {
         player.pause()
         isPlaying = false  // 재생 상태를 갱신
         updateNotification()  // 알림 업데이트
+        updatePlaybackState(false)
 
     }
 
     fun resumeAudio() {
         player.play()
         isPlaying = true  // 재생 상태를 갱신
+        updatePlaybackState(true)
+
     }
 
     fun stopAudio() {
         player.stop()  // 현재 재생 중인 음원을 중지
         isPlaying = false  // 재생 상태를 갱신
+        updatePlaybackState(false)
+
     }
 
     // 반복 모드 설정
@@ -373,6 +378,12 @@ class BackgroundPlayService : Service() {
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(serviceChannel)
         }
+    }
+
+    // 상태 변경 시 알림 업데이트 호출
+    private fun updatePlaybackState(isPlaying: Boolean) {
+        this.isPlaying = isPlaying
+        updateNotification()
     }
 
 
