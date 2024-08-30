@@ -50,6 +50,7 @@ class CategoryFragment(val playlistId: Long, val playlistName: String) : Fragmen
         binding.fragmentCategoryRv.adapter = castAdapter
         binding.fragmentCategoryRv.layoutManager = LinearLayoutManager(context)
 
+
         binding.fragmentCategoryBackIv.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }

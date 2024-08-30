@@ -97,7 +97,7 @@ class CastAudioFragment(val currentCast: CastWithPlaylistId) : Fragment() {
     }
 
     fun initCastData(){
-        Glide.with(binding.root.context).load(currentCast.imagePath).into(binding.imageView)
+        Glide.with(binding.root.context).load(currentCast.imagePath).centerCrop().into(binding.imageView)
         binding.castTitle.text = currentCast.castTitle
 
         if(currentCast.castCreator != SignupData.nickname){

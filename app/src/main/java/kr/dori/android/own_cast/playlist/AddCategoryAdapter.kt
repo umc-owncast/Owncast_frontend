@@ -68,6 +68,7 @@ class AddCategoryAdapter(val context: Context, private val mover: SearchMover) :
                 // URL로부터 이미지 로드 (Glide 사용)
                 Glide.with(holder.itemView.context)
                     .load(data.imagePath)
+                    .centerCrop()
                     .into(binding.categoryImg)
             } else {
                 // 로컬 파일에서 이미지 로드

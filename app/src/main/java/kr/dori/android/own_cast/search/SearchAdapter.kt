@@ -39,6 +39,7 @@ class SearchAdapter(private val mover: SearchMover) : RecyclerView.Adapter<Searc
                 // URL로부터 이미지 로드 (Glide 사용)
                 Glide.with(holder.itemView.context)
                     .load(data.imagePath)
+                    .centerCrop()
                     .into(binding.itemThumbIv)
             } else {
                 // 로컬 파일에서 이미지 로드

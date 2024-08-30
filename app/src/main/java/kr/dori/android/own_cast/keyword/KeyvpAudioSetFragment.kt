@@ -4,6 +4,7 @@ package kr.dori.android.own_cast.keyword
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.media.browse.MediaBrowser
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +17,8 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.media3.exoplayer.ExoPlayer
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -24,12 +27,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.SignupData
+import kr.dori.android.own_cast.data.CastPlayerData
 import kr.dori.android.own_cast.databinding.FragmentKeyvpAudiosetBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.forApiData.DeleteOther
+import kr.dori.android.own_cast.forApiData.ErrorResponse
+import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.PostCastByKeyword
 import kr.dori.android.own_cast.forApiData.PostCastByScript
 import kr.dori.android.own_cast.forApiData.PostCastForResponse
+import kr.dori.android.own_cast.forApiData.VoiceDTO
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyworddata.VoiceList
 import kr.dori.android.own_cast.keyworddata.VoiceListRepository
@@ -40,7 +48,7 @@ import retrofit2.http.POST
 import java.util.Objects
 import kotlin.coroutines.CoroutineContext
 
-class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
+class KeyvpAudioSetFragment() : Fragment(), CoroutineScope, VoiceInterface {
     lateinit var binding: FragmentKeyvpAudiosetBinding
     //뷰페이저에서 다음 프래그먼트로  넘기는 인터페이스 변수
     private var listener: KeywordBtnClickListener? = null
@@ -52,6 +60,7 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
     private lateinit var voice:String
     private var audioTime:Int = 60
     /*-----------------------*/
+    private lateinit var exoPlayer : ExoPlayer
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + corutineJob
     private lateinit var corutineJob: Job
@@ -88,7 +97,7 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
         /////////////////////////////////////
         initVoiceList()//사용자의 언어-발음에 따라 dropdownmenu변경
         initDropDownList()
-
+        exoPlayer = ExoPlayer.Builder(this.requireContext()).build()
 
 
         binding.keywordAudiosetSb.setOnSeekBarChangeListener(object :
@@ -127,41 +136,89 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
             }
 
 
+
         }
         return binding.root
+    }
+
+
+
+    override fun callVoice() {
+        super.callVoice()
+        voiceApiCall(voice)
+    }
+
+    private fun voiceApiCall(voiceCode:String){
+        Log.d("KeyvpAudioSetfr_check", "${voiceCode}")
+        val voiceInterface = getRetrofit().create(CastInterface::class.java)
+        voiceInterface.getVoiceCall(voiceCode).enqueue(object: Callback<AuthResponse<VoiceDTO>> {
+            override fun onResponse(call: Call<AuthResponse<VoiceDTO>>, response: Response<AuthResponse<VoiceDTO>>) {
+                if (response.isSuccessful) {
+                    response.body()?.result?.let{
+                        val mediaItem = androidx.media3.common.MediaItem.fromUri(it.filePath)
+                        exoPlayer.setMediaItem(mediaItem)
+                        // 준비 완료 시 자동 재생 설정
+                        exoPlayer.playWhenReady = true
+                        // ExoPlayer 준비 및 시작
+                        exoPlayer.prepare()
+                        exoPlayer.play()
+
+                    }
+                }else{
+                    Log.d("KeyvpAudioSetfr_check","${response.code()}")
+                    response.errorBody()?.let { errorBody ->
+                        val gson = Gson()
+                        val errorResponse: ErrorResponse = gson.fromJson(errorBody.charStream(), ErrorResponse::class.java)
+                        Log.d("KeyvpAudioSetfr_check", "${errorResponse.message}, ${errorResponse.code}")
+                        Toast.makeText(requireContext(), "서버 오류 코드 : ${errorResponse.code} \n${errorResponse.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+            }
+            override fun onFailure(call: Call<AuthResponse<VoiceDTO>>, t: Throwable) {
+                Toast.makeText(requireContext(), "서버 응답 실패", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     //다음 페이지 넘겨주는 listener 해제
     override fun onDetach() {
         super.onDetach()
         listener = null
+        exoPlayer?.let {
+            it.release()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        exoPlayer?.let {
+            it.release()
+        }
     }
     private fun initDropDownList(){
         val list = voiceList.styleBusiness
         voice = voiceList.styleBusiness.dataType[0]
         //참고 https://develop-oj.tistory.com/27#google_vignette 드롭다운 메뉴
         binding.keywordAudStyleSp.adapter =
-            KeyAudsetDropdownAdapter(requireContext(), R.layout.item_aud_set_spinner,list.gender)
+            KeyAudsetDropdownAdapter(requireContext(), R.layout.item_aud_set_spinner,list.gender, this)
         binding.keywordAudStyleSp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 val value = binding.keywordAudStyleSp.getItemAtPosition(p2).toString()
 
                 //api 전송용 데이터를 받아옴
                 if(formality.equals("CASUAL")){
-
                     voice = voiceList.styleCasual.dataType[p2]
                 }
                 else{
-
-
                     voice = voiceList.styleBusiness.dataType[p2]
                 }
 
-                binding.keywordAudStyleSp.setBackgroundResource(R.drawable.key_audset_dropdown_off_bg)
+
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 // 선택되지 않은 경우
-                binding.keywordAudStyleSp.setBackgroundResource(R.drawable.key_audset_dropdown_off_bg)
+
                 //다시 스피너가 색깔이 바뀌지 않은거처럼 바꿔준다
             }
         }
@@ -169,7 +226,7 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
         binding.keywordAudStyleBuiTv.setOnClickListener {
             if(formality.equals("CASUAL")){//캐주얼 상태일때 비즈니스 스타일로 변경
                 binding.keywordAudStyleSp.adapter =
-                    KeyAudsetDropdownAdapter(requireContext(), R.layout.item_aud_set_spinner,voiceList.styleBusiness.gender)
+                    KeyAudsetDropdownAdapter(requireContext(), R.layout.item_aud_set_spinner,voiceList.styleBusiness.gender, this)
                 formality = "OFFICIAL"
                 changeColor(binding.keywordAudStyleBuiTv,binding.keywordAudStyleCasTv)
             }
@@ -177,7 +234,7 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
         binding.keywordAudStyleCasTv.setOnClickListener {
             if(formality.equals("OFFICIAL")){//비즈니스 상태일때 캐주얼로 변경
                 binding.keywordAudStyleSp.adapter =
-                    KeyAudsetDropdownAdapter(requireContext(), R.layout.item_aud_set_spinner,voiceList.styleCasual.gender)
+                    KeyAudsetDropdownAdapter(requireContext(), R.layout.item_aud_set_spinner,voiceList.styleCasual.gender, this)
                 formality = "CASUAL"
                 changeColor(binding.keywordAudStyleCasTv,binding.keywordAudStyleBuiTv)
             }
@@ -216,6 +273,7 @@ class KeyvpAudioSetFragment() : Fragment(), CoroutineScope {
         }
         Log.d("voiceLanguage",voiceList.language)
     }
+
 }
 
 

@@ -51,11 +51,18 @@ data class CastHomeDTO(//검색 홈 API,
     @SerializedName(value = "playlistName") val playlistName : String
 )
 
+data class VoiceDTO(
+    @SerializedName(value = "voice") val voice : String,
+    @SerializedName(value = "filePath") val filePath : String
+)
+
+
 data class HomeKeyword(
     @SerializedName(value="nickname") val nickname: String,
     @SerializedName(value="subCategory") val subCategory: String,
     @SerializedName(value="keywords") val keywords: List<String>
 )
+
 
 data class PostPlaylist(
     @SerializedName(value = "playlistId") val playlistId: Long
@@ -83,7 +90,6 @@ data class GetUserPlaylist(
     @SerializedName(value = "imagePath") val imagePath: String,
     @SerializedName(value = "playlistId") val playlistId: Long,
     @SerializedName(value = "totalCast") val totalCast: Int
-
 )
 
 

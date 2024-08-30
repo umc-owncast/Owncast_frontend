@@ -134,7 +134,11 @@ class PlayCastActivity : AppCompatActivity() {
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser && !isSeeking) {
-                    service?.seekTo(progress * 1000L)
+                    val duration = service?.getDuration()
+
+                        val audioLength = convertToSeconds(CastPlayerData.currentCast.audioLength)*1000
+                        service?.seekTo(progress*audioLength/100000L)
+
                     // CastPlayerData.updatePlaybackPosition(service?.getCurrentPosition() ?: 0L)
                     binding.startTv.text = formatTime(service?.getCurrentPosition() ?: 0L)
                     //updateLyricsHighlight()
@@ -147,7 +151,12 @@ class PlayCastActivity : AppCompatActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 isSeeking = false
-                service?.seekTo(seekBar?.progress?.times(1000L) ?: 0L)
+
+                val progress = seekBar?.progress?.toLong() ?: 0L
+
+                    val audioLength = convertToSeconds(CastPlayerData.currentCast.audioLength)*1000
+                    service?.seekTo(progress*audioLength/100000L)
+
                 //CastPlayerData.updatePlaybackPosition(service?.getCurrentPosition() ?: 0L)
                 binding.startTv.text = formatTime(service?.getCurrentPosition() ?: 0L)
 
@@ -342,7 +351,7 @@ class PlayCastActivity : AppCompatActivity() {
             url?.let {
                 service?.prepareAudio(it) // 여기서 prepare만 수행
                 binding.endTv.text = formatTime(audioLength.toInt())
-                binding.seekBar.max = audioLength // 시크바 최대값 설정 (초 단위)
+                //binding.seekBar.max = audioLength // 시크바 최대값 설정 (초 단위)
                 startSeekBarUpdate() // 시크바 업데이트 시작
                 startScriptFragmentUpdate() // ScriptFragment 업데이트 시작
                 startAudioFragmentUpdate()
@@ -392,7 +401,7 @@ class PlayCastActivity : AppCompatActivity() {
                     updateUI()
 
                     // 시크바 업데이트 코드 추가
-                    binding.seekBar.max = audioLength  // 시크바 최대값 설정
+                    //binding.seekBar.max = audioLength  // 시크바 최대값 설정
                     binding.seekBar.progress = 0  // 시크바 초기값 설정
 
                     saveState()
@@ -423,8 +432,12 @@ class PlayCastActivity : AppCompatActivity() {
         currentCast?.let {
             val currentPosition = service?.getCurrentPosition() ?: 0L
 
-            binding.seekBar.max = service?.getDuration()?.toInt()?.div(1000) ?: 0
-            binding.seekBar.progress = (currentPosition.div(1000)).toInt()
+            //binding.seekBar.max = service?.getDuration()?.toInt()?.div(1000) ?: 0
+
+                val audioLength = convertToSeconds(CastPlayerData.currentCast.audioLength)*1000
+                binding.seekBar.progress = (currentPosition*100000 /(audioLength)).toInt()
+
+
             binding.endTv.text = currentCast.audioLength
             binding.startTv.text = formatTime(currentPosition)
 
@@ -458,7 +471,10 @@ class PlayCastActivity : AppCompatActivity() {
                 val currentPosition = it.getCurrentPosition()
                 Log.d("SeekbarUpdateReal", "Current Position: $currentPosition")
 
-                binding.seekBar.progress = (currentPosition.div(1000)).toInt()
+
+                    val audioLength = convertToSeconds(CastPlayerData.currentCast.audioLength)*1000
+                    binding.seekBar.progress = (currentPosition*100000 /(audioLength)).toInt()
+
                 binding.startTv.text = formatTime(currentPosition)
 
                 // CastScriptFragment에 시간 정보 전달
@@ -476,6 +492,18 @@ class PlayCastActivity : AppCompatActivity() {
         val minutes = TimeUnit.MILLISECONDS.toMinutes(ms)
         val seconds = TimeUnit.MILLISECONDS.toSeconds(ms) % 60
         return String.format("%02d:%02d", minutes, seconds)
+    }
+    private fun convertToSeconds(input: String): Int {
+        return if (":" in input) {
+            // "MM:SS" 형식의 입력 처리
+            val parts = input.split(":")
+            val minutes = parts[0].toInt()
+            val seconds = parts[1].toInt()
+            minutes * 60 + seconds
+        } else {
+            // 숫자 형식의 입력 처리
+            input.toInt()
+        }
     }
 
     private fun updateSpeedUI(selectedSpeed: Float, views: List<View>) {
@@ -550,9 +578,11 @@ class PlayCastActivity : AppCompatActivity() {
     }
 
     private fun scriptToAudio() {
+
         buttonLock()
         stopAudioFragmentUpdate()
         stopScriptFragmentUpdate()
+
         binding.activityPlayCastPlaylistOnIv.visibility = View.GONE
         binding.activityPlayCastPlaylistOffIv.visibility = View.VISIBLE
         binding.activityPlayCastScriptOnIv.visibility = View.GONE
@@ -571,8 +601,11 @@ class PlayCastActivity : AppCompatActivity() {
 
     //플레이스트 시작
     private fun audioToPlaylist() {
+
         stopAudioFragmentUpdate()
+
         buttonLock()
+
         binding.activityPlayCastPlaylistOnIv.visibility = View.VISIBLE
         binding.activityPlayCastPlaylistOffIv.visibility = View.GONE
         binding.activityPlayCastScriptOnIv.visibility = View.GONE
@@ -589,8 +622,11 @@ class PlayCastActivity : AppCompatActivity() {
     }
 
     private fun playlistToAudio() {
+
         stopAudioFragmentUpdate()
+
         buttonLock()
+
         binding.activityPlayCastPlaylistOnIv.visibility = View.GONE
         binding.activityPlayCastPlaylistOffIv.visibility = View.VISIBLE
         binding.activityPlayCastScriptOnIv.visibility = View.GONE
@@ -604,7 +640,9 @@ class PlayCastActivity : AppCompatActivity() {
             .commit()
 
         stateListener = 0
+
         startAudioFragmentUpdate()
+
     }
 
     fun saveState() {
@@ -702,7 +740,9 @@ class PlayCastActivity : AppCompatActivity() {
                 if (fragment is CastScriptFragment && fragment.isAdded && !fragment.isRemoving) {
                     fragment.updateCurrentTime(currentPosition)
                     Log.d("UpdateTime", "Activity: $currentPosition")
-                }
+                }else if(fragment is CastAudioFragment && fragment.isAdded && !fragment.isRemoving){
+                    fragment.updateCurrentTime(currentPosition)
+                }else{}
             }
             scriptHandler.postDelayed(this, 300)
         }

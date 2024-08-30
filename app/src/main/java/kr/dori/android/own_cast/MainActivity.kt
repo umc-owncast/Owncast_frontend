@@ -40,6 +40,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.forApiData.Playlist
 
+
 import kr.dori.android.own_cast.player.CastWithPlaylistId
 
 import kr.dori.android.own_cast.player.PlayCastActivity
@@ -170,8 +171,10 @@ class MainActivity : AppCompatActivity() {
 
         initBottomButtons()
         quitApp()
+
         //MainActivity 실행시 비동기로 PlaylistFragment의 데이터를 로드 -> MainActivity 자체의 로드 속도에는 영향이 없습니다.
         loadInitialData()
+
     }
 
 
@@ -480,6 +483,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
+
     private fun loadInitialData() {
         val getAllPlaylist = getRetrofit().create(Playlist::class.java)
 
@@ -499,6 +503,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 }
 
 

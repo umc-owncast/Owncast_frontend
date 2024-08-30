@@ -27,6 +27,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,6 +36,7 @@ import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.ActivityEditAudioBinding
 import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.forApiData.ErrorResponse
 import kr.dori.android.own_cast.forApiData.PlayListInterface
 import kr.dori.android.own_cast.forApiData.Playlist
 import kr.dori.android.own_cast.forApiData.PostPlaylist
@@ -217,6 +219,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                                         // URL로부터 이미지 로드 (Glide 사용)
                                         Glide.with(context)
                                             .load(imageUrl)
+                                            .centerCrop()
                                             .into(binding.imageView17)
                                     } else {
                                         // 로컬 파일에서 이미지 로드
@@ -319,8 +322,16 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
 
                             }
                         } else {
-                            Log.d("캐스트 수정", "${ response.errorBody()?.string() }")
-                            Toast.makeText(this@EditAudioActivity,"수정 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
+                            Log.d("캐스트 수정","${response.code()},${response.message()},${response.errorBody()?.string()}")
+                            if(response.code() == 413){
+                                Toast.makeText(this@EditAudioActivity, "파일이 너무 큽니다.\n용량 제한 10Mb", Toast.LENGTH_SHORT).show()
+
+                            }else{
+                                Toast.makeText(this@EditAudioActivity, "오류 코드 : ${response.code()}\n${response.message()}", Toast.LENGTH_SHORT).show()
+
+                            }
+
+
                         }
 
                     } catch (e: Exception) {
@@ -449,7 +460,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
         // Convert the temp file to RequestBody
         val requestFile = tempFile.asRequestBody("image/*".toMediaTypeOrNull())
         // Create MultipartBody.Part from RequestBody
-        return MultipartBody.Part.createFormData("photo", tempFile.name, requestFile)
+        return MultipartBody.Part.createFormData("image", tempFile.name, requestFile)
     }
 
 

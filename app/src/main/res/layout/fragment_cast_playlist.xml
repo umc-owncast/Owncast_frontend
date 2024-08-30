@@ -16,24 +16,33 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
+            android:id="@+id/cast_playlist_item_cardview"
+
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:scaleType="centerCrop"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="0dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            app:cardCornerRadius="10dp"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/fragment_playlist_cast_iv"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/playlistfr_dummy_iv" />
+            <ImageView
+                android:id="@+id/fragment_playlist_cast_iv"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/playlistfr_dummy_iv"/>
         </androidx.cardview.widget.CardView>
+
+
 
         <TextView
             android:id="@+id/fragment_cast_playlist_title"
@@ -45,7 +54,9 @@
             android:fontFamily="@font/pretendard_regular"
             android:textSize="16sp"
             android:textStyle="normal"
-            app:layout_constraintStart_toEndOf="@+id/cardView"
+
+            app:layout_constraintStart_toEndOf="@+id/cast_playlist_item_cardview"
+
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
