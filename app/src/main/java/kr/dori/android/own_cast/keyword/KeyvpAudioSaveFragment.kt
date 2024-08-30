@@ -171,7 +171,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             }
             Log.d("이미지 변환","${body}")
 
-            binding.keyAudSaveGalIc.visibility = View.GONE
+            
 
         }
     }
@@ -458,7 +458,15 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                             finDialog.show()
 
                         } else {
-                            Toast.makeText(this@KeyvpAudioSaveFragment.requireContext(), "저장 실패 코드 ${response.code()}", Toast.LENGTH_SHORT).show()
+                            Log.d("캐스트 수정","${response.code()},${response.message()},${response.errorBody()?.string()}")
+                            if(response.code() == 413){
+                                Toast.makeText(this@KeyvpAudioSaveFragment.requireContext(), "파일이 너무 큽니다.\n용량 제한 10Mb", Toast.LENGTH_SHORT).show()
+
+                            }else{
+                                Toast.makeText(this@KeyvpAudioSaveFragment.requireContext(), "오류 코드 : ${response.code()}\n${response.message()}", Toast.LENGTH_SHORT).show()
+
+                            }
+
                         }
 
                     } catch (e: Exception) {
