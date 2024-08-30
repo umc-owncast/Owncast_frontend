@@ -132,21 +132,22 @@ class HomeFragment : Fragment() {
 
     private fun fetchDataFromServer() {
         val getKeyword = getRetrofit().create(CastInterface::class.java)
-        val dialog = KeywordLoadingDialog(requireContext(), "데이터를 불러오고 있어요")
+        /*val dialog = KeywordLoadingDialog(requireContext(), "데이터를 불러오고 있어요")
         dialog.setCancelable(false)
         dialog.setCanceledOnTouchOutside(false)
-        dialog.show()
+        dialog.show()*/
 
         CoroutineScope(Dispatchers.IO).launch {
             val response = getKeyword.getKeywordHome()
             withContext(Dispatchers.Main) {
                 try {
-                    dialog.dismiss()  // 로딩창을 onCreateView에서만 표시하도록 하고, 완료 후 숨김
+                    //dialog.dismiss()  // 로딩창을 onCreateView에서만 표시하도록 하고, 완료 후 숨김
                     if (response.isSuccessful) {
                         response.body()?.result?.let {
                             keywordDataList.clear()
-                            keywordDataList.addAll(it)
+                            keywordDataList.addAll(it.keywords)
                             randomizeTextViews() // 데이터가 성공적으로 받아오면 텍스트 뷰 랜덤 배치
+                            initListener()
                         }
                     } else {
                         Log.d("fetchDataFromServer", "failed code : ${response.code()}")
@@ -218,7 +219,7 @@ class HomeFragment : Fragment() {
 
                 textList.forEachIndexed { index, textView ->
                     // 텍스트 뷰의 랜덤 크기 설정
-                    val randomSize = (8..30).random().toFloat() // 랜덤 크기
+                    val randomSize = (14..24).random().toFloat() // 랜덤 크기
                     textView.textSize = randomSize
 
                     // 텍스트 뷰의 초기 위치와 가시성 설정
@@ -269,6 +270,17 @@ class HomeFragment : Fragment() {
     private fun stopAudio() {
         if (isBound && service != null) {
             service?.pauseAudio()
+        }
+    }
+
+    private fun initListener(){
+        for(i in textList.indices){
+            textList[i].setOnClickListener {
+                val intent = Intent(getActivity(), KeywordActivity::class.java)
+                stopAudio() // 음원 중단
+                intent.putExtra("searchText", textList[i].text.toString())
+                startActivity(intent)
+            }
         }
     }
 }

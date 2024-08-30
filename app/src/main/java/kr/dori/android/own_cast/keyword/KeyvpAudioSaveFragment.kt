@@ -549,7 +549,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         dialog.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 20)
+                val response = getAllPlaylist.getPlaylistInfo(playlistId, 0, 100)
                 withContext(Dispatchers.Main) { dialog.dismiss() }
                 if (response.isSuccessful) {
                     val playlistInfo = response.body()?.result

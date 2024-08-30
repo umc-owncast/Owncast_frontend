@@ -224,7 +224,7 @@ class ChangeDetailInterestActivity : ComponentActivity() {
                         dialog.dismiss()
                         if (response.isSuccessful) {
                             response.body()?.result?.let{
-                                KeywordAppData.updateDetailTopic(it)
+                                KeywordAppData.updateDetailTopic(it.keywords)
                             }
                         } else {
                             Log.d("initDataFinish","failed code : ${response.code()}")

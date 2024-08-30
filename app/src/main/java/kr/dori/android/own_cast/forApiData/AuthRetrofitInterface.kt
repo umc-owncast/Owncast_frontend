@@ -37,7 +37,7 @@ interface CastInterface{
     @GET("/api/cast/search/home") // 검색 홈 API(검색 화면 상위 4개 castdata받아옴)
     fun searchHome(): Call<AuthResponse<List<CastHomeDTO>>>
     @GET("/api/cast/home")// 홈화면 키워드 6개 받아오기
-    suspend fun getKeywordHome() : Response<AuthResponse<List<String>>>
+    suspend fun getKeywordHome() : Response<AuthResponse<HomeKeywordDTO>>
     @Multipart
     @PATCH("/api/cast/{castId}")//캐스트 수정 api, 이미지 파일로 보내야함
     suspend fun patchCast(@Path("castId") castId:Long,@Part("updateInfo") updateInfo: UpdateInfo, @Part image: MultipartBody.Part?) :Response<AuthResponse<SimpleCastDTO>>
