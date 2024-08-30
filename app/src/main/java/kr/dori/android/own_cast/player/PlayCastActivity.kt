@@ -1,8 +1,10 @@
 package kr.dori.android.own_cast.player
 
+import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.Handler
@@ -56,6 +58,15 @@ class PlayCastActivity : AppCompatActivity() {
     private val audioHandler = Handler()
 
     var stateListener: Int = 0
+
+    private val playStateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val action = intent?.action
+            if (action == "ACTION_UPDATE_UI") {
+                updateUI()  // 서비스로부터 재생 상태를 받아 UI 업데이트
+            }
+        }
+    }
 
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, binder: IBinder) {
@@ -153,7 +164,14 @@ class PlayCastActivity : AppCompatActivity() {
 
                 //  updateLyricsHighlight()
 
+                registerReceiver(playStateReceiver, IntentFilter("ACTION_UPDATE_UI"))
+
+
             }
+        })
+
+        CastPlayerData.isPlaying.observe(this, Observer { isPlaying ->
+            updateUI()  // 재생 상태가 변경될 때 UI 업데이트
         })
 
         // 카테고리 추가 버튼
@@ -313,6 +331,7 @@ class PlayCastActivity : AppCompatActivity() {
             binding.speedTable.visibility = View.VISIBLE
             binding.speedTable.bringToFront()
         }
+
     }
 
     fun classifyCast(){//이게 자기 캐스트인지 담아온 캐스트인지 구분 플레이리스트 id가 -1이면 안담긴걸로 생각
