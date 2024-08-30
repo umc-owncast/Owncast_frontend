@@ -487,19 +487,11 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
         imageResultLauncher.launch(intent)
     }
 
-
-
     companion object {
         private const val REQ_GALLERY = 1
     }
 
 
     //기존 파일을 비트맵으로 바꿔서 서버 api에 보낼 수 있게 하는 방법
-
-
-
-
-//------------------------------------------------------------갤러리 참조용 함수 종료
-
 
 }

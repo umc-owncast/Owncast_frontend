@@ -52,11 +52,10 @@
         android:id="@+id/loofOn"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/originalSentence_tv"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.888"
+        app:layout_constraintTop_toTopOf="@+id/originalSentence_tv"
         app:srcCompat="@drawable/fragment_script_change_2" />
 
     <TextView
