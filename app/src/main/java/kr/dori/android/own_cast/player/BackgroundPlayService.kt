@@ -46,8 +46,9 @@ class BackgroundPlayService : Service() {
         // 알림창 설정
         mediaSession = MediaSessionCompat(this, "BackgroundPlayService")
 
-       // createNotificationChannel()
+        createNotificationChannel()  // Notification Channel 생성 호출 추가
     }
+
 
     inner class LocalBinder : Binder() {
         fun getService(): BackgroundPlayService = this@BackgroundPlayService
@@ -69,6 +70,8 @@ class BackgroundPlayService : Service() {
         player.prepare()
         updateNotification()  // 알림 업데이트
     }
+
+
 
 
     fun isPlaying(): Boolean {
@@ -223,9 +226,15 @@ class BackgroundPlayService : Service() {
     }
 
     private fun updateNotification() {
-        val notification = createNotification()
-        startForeground(1, notification)
+        if (CastPlayerData.getAllCastList().isNullOrEmpty()) {
+            stopForeground(true)  // 현재 재생 목록이 없으면 알림 제거
+        } else {
+            val notification = createNotification()
+            startForeground(1, notification)  // 알림 생성 및 업데이트
+        }
     }
+
+
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
@@ -234,10 +243,22 @@ class BackgroundPlayService : Service() {
             "ACTION_NEXT" -> playNextTrack()
             "ACTION_PREVIOUS" -> playPreviousTrack()
         }
-        startForegroundService()
-        return START_STICKY
 
+        // API 레벨에 따라 startService 또는 startForegroundService 사용
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(Intent(this, BackgroundPlayService::class.java))
+        } else {
+            startService(Intent(this, BackgroundPlayService::class.java))
+        }
+
+        // 서비스가 포그라운드에서 실행되고 있음을 보장합니다.
+        val notification = createNotification()
+        startForeground(1, notification)
+
+        return START_STICKY
     }
+
+
 
     private fun playNextTrack() {
         player.stop()  // 기존 재생 중지
@@ -312,20 +333,21 @@ class BackgroundPlayService : Service() {
             android.R.drawable.ic_media_next, "Next",
             PendingIntent.getService(this, 0, Intent(this, BackgroundPlayService::class.java).apply {
                 action = "ACTION_NEXT"
-            }, PendingIntent.FLAG_UPDATE_CURRENT)
+            }, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE) // FLAG_IMMUTABLE 추가
         )
 
         val previousAction = NotificationCompat.Action(
             android.R.drawable.ic_media_previous, "Previous",
             PendingIntent.getService(this, 0, Intent(this, BackgroundPlayService::class.java).apply {
                 action = "ACTION_PREVIOUS"
-            }, PendingIntent.FLAG_UPDATE_CURRENT)
+            }, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE) // FLAG_IMMUTABLE 추가
         )
+        val castTitle = CastPlayerData.currentCast?.castTitle ?: "No Title"
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_media_play)
-            .setContentTitle("Now Playing")
-            .setContentText(CastPlayerData.currentCast.castTitle)
+            .setSmallIcon(android.R.drawable.ic_media_play)  // 아이콘 설정
+            .setContentTitle("Now Playing")  // 기본 제목 설정
+            .setContentText(castTitle)  // 안전한 접근
             .setContentIntent(createContentIntent())
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .addAction(previousAction)
@@ -338,10 +360,11 @@ class BackgroundPlayService : Service() {
             .build()
     }
 
+
     private fun createContentIntent(): PendingIntent {
         val openPlayCastActivityIntent = Intent(this, PlayCastActivity::class.java)
         openPlayCastActivityIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        return PendingIntent.getActivity(this, 0, openPlayCastActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getActivity(this, 0, openPlayCastActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE) // FLAG_IMMUTABLE 추가
     }
 
     private fun createNotificationChannel() {
@@ -354,6 +377,7 @@ class BackgroundPlayService : Service() {
             manager.createNotificationChannel(serviceChannel)
         }
     }
+
 
 
 
