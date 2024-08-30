@@ -75,12 +75,11 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         // 데이터 설정
-        if (SignupData.interest != null) {
-            binding.homefrKeywordTopicTv.text = SignupData.detail_interest
-        }
+
 
         // Set the text of cell_center TextView to detail_interest
         binding.cellCenter.text = SignupData.detail_interest
+        binding.homefrKeywordTopicTv.text = SignupData.detail_interest
 
         // 텍스트 뷰 바인딩
         textViewBinding()

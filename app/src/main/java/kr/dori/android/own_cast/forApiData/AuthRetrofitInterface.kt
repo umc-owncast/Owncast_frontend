@@ -31,7 +31,8 @@ interface CastInterface{
     @GET("/api/cast/{castId}/audio")
     suspend fun getCastPlay(@Path("castId") castId: Long): Response<ResponseBody>
 
-
+    @GET("/api/voice/{voiceCode}/example")
+    fun getVoiceCall(@Path("voiceCode") voiceCode: String):Call<AuthResponse<VoiceDTO>>
 
 
     @GET("/api/cast/search/home") // 검색 홈 API(검색 화면 상위 4개 castdata받아옴)

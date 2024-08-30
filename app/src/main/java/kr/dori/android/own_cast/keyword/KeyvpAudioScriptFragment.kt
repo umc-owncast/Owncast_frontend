@@ -82,12 +82,7 @@ class KeyvpAudioScriptFragment:Fragment() {
         //스크립트 재생성했을때 이 두개를 다시 실행시켜야함
 
 
-        player = ExoPlayer.Builder(requireContext()).build()
-        //이 작업을 전체 관리하는 listener에서 해주고 있음.
-        //화면을 나갔을때의 pause와 resume과 재생성했을때의 pause를 재 관리 해줘야할거같은데..
-        initPlayer()
-        initRecyclerView()//sentnences를 받아와 출력
-        //스크립트 재생성했을때 이 두개를 다시 실행시켜야함
+
 
 
         initSpeedUi()
