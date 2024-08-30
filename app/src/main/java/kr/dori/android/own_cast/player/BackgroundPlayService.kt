@@ -345,13 +345,12 @@ class BackgroundPlayService : Service() {
         )
 
         val castTitle = CastPlayerData.currentCast?.castTitle ?: "No Title"
-        val castCreator = CastPlayerData.currentCast?.castCreator?: "somebody"
+        val castCreator = CastPlayerData.currentCast?.castCreator ?: "somebody"
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.screen_two_logo_item)
             .setContentTitle(castTitle)
             .setContentText(castCreator)
-            .setContentIntent(createContentIntent())
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .addAction(previousAction)
             .addAction(playPauseAction)  // Play/Pause 액션 추가
@@ -360,6 +359,8 @@ class BackgroundPlayService : Service() {
                 androidx.media.app.NotificationCompat.MediaStyle()
                     .setMediaSession(mediaSession.sessionToken)
             )
+            // setContentIntent() 호출을 제거하여 알림창 자체를 클릭해도 아무런 반응이 없게 함
+            .setContentIntent(null)
             .build()
     }
 
