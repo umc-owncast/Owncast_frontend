@@ -54,6 +54,16 @@ class CastFragment() : Fragment(), ActivityMover {
         // RecyclerView 설정
         binding.fragmentCastRv.adapter = castAdapter
         binding.fragmentCastRv.layoutManager = LinearLayoutManager(context)
+
+
+        // Initialize ActivityResultLauncher
+        activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                loadCastInfo()  // EditAudioActivity에서 데이터 변경이 완료된 경우 즉시 데이터를 다시 로드
+            }
+        }
+
+
         loadCastInfo()
 
         // Back 버튼 클릭 이벤트 처리
@@ -87,15 +97,13 @@ class CastFragment() : Fragment(), ActivityMover {
 
     }
 
-
-
-    override fun ToEditAudio(id: Long,playlistId:Long) {
-
+    override fun ToEditAudio(id: Long, playlistId: Long) {
         val intent = Intent(requireContext(), EditAudioActivity::class.java)
-        intent.putExtra("id",id)
-        intent.putExtra("playlistId",playlistId)
-        startActivity(intent)
+        intent.putExtra("id", id)
+        intent.putExtra("playlistId", playlistId)
+        activityResultLauncher.launch(intent)  // 수정된 부분
     }
+
 
     private fun parseTimeToSeconds(input: String): Int {
         return if (input.contains(":")) {

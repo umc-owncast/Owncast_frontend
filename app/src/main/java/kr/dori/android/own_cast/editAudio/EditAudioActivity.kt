@@ -306,6 +306,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                             response.body()?.result?.let{
                                 Log.d("캐스트 수정","${response.code()}")
                                 Toast.makeText(this@EditAudioActivity,"수정되었습니다.",Toast.LENGTH_SHORT).show()
+                                setResult(Activity.RESULT_OK)  // 결과 설정
 
                             }
                         } else {
@@ -340,6 +341,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
 
                         if (response.isSuccessful) {
                             response.body()?.result?.let{
+                                setResult(Activity.RESULT_OK)  // 결과 설정
 
                                 Toast.makeText( this@EditAudioActivity,"삭제되었습니다.",Toast.LENGTH_SHORT).show()
 
