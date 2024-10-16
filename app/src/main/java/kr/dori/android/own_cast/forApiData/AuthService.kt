@@ -1,4 +1,4 @@
-package kr.dori.android.own_cast.keyword
+package kr.dori.android.own_cast.forApiData
 
 import android.util.Log
 import kr.dori.android.own_cast.forApiData.AuthResponse

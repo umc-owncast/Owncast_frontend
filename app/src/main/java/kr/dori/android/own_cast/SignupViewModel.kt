@@ -7,6 +7,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class SignupViewModel : ViewModel() {
     private val _nickNameError = MutableLiveData<String>()
     val nickNameError: LiveData<String> get() = _nickNameError

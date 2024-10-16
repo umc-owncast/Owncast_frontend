@@ -51,7 +51,7 @@ class CastAdapter(private val activityMover: ActivityMover) : RecyclerView.Adapt
         }
 
         fun setText(data: CastWithPlaylistId) {
-            Glide.with(binding.root.context).load(data.imagePath).into(binding.playlistCast2Iv)
+            Glide.with(binding.root.context).load(data.imagePath).centerCrop().into(binding.playlistCast2Iv)
             val constraintLayout = binding.root as ConstraintLayout
             val constraintSet = ConstraintSet()
             constraintSet.clone(constraintLayout)

@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 
+
 class SignupFirstActivity : ComponentActivity() {
 
     private var isChecked = false // 체크 상태를 관리하는 변수

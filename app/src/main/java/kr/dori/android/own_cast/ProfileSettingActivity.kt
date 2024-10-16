@@ -61,8 +61,10 @@ class ProfileSettingActivity : AppCompatActivity() {
         val btnBack = findViewById<ImageView>(R.id.backButton)
         btnBack.setOnClickListener {
             SignupData.profile_detail_interest = "완료"
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this@ProfileSettingActivity, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
+            finish()
         }
 
         // Clear 버튼 클릭 시 텍스트 초기화 및 버튼 비활성화
@@ -124,7 +126,9 @@ class ProfileSettingActivity : AppCompatActivity() {
                             // 메인 화면으로 이동
                             SignupData.profile_detail_interest = "완료"
                             val intent = Intent(this@ProfileSettingActivity, MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             startActivity(intent)
+                            finish()
 
                         } else {
                             // 실패 메시지 처리

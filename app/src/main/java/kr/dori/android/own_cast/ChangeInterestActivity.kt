@@ -60,8 +60,10 @@ class ChangeInterestActivity : ComponentActivity() {
 
         findViewById<ImageView>(R.id.backButton).setOnClickListener {
             SignupData.profile_detail_interest = "완료"
-            val intent = Intent(this, MainActivity ::class.java)
+            val intent = Intent(this@ChangeInterestActivity, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
+            finish()
         }
 
     }

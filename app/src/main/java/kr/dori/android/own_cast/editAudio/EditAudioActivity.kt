@@ -25,43 +25,32 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.dori.android.own_cast.R
 import kr.dori.android.own_cast.databinding.ActivityEditAudioBinding
-import kr.dori.android.own_cast.forApiData.AuthResponse
 import kr.dori.android.own_cast.forApiData.CastInterface
+import kr.dori.android.own_cast.forApiData.ErrorResponse
 import kr.dori.android.own_cast.forApiData.PlayListInterface
 import kr.dori.android.own_cast.forApiData.Playlist
-import kr.dori.android.own_cast.forApiData.PostPlaylist
 import kr.dori.android.own_cast.forApiData.UpdateInfo
 
 import kr.dori.android.own_cast.forApiData.getRetrofit
 
 import kr.dori.android.own_cast.keyword.AddCategoryDialog
-import kr.dori.android.own_cast.keyword.KeywordAppData
 import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
 import kr.dori.android.own_cast.keyword.PlaylistText
 import kr.dori.android.own_cast.playlist.AddCategoryListener
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.OkHttp
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
 class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
 
@@ -181,7 +170,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
         with (Toast(applicationContext)) {
             duration = Toast.LENGTH_LONG
             view = layout
-           // setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 100)
+            // setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 100)
             show()
         }
     }
@@ -217,6 +206,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                                         // URL로부터 이미지 로드 (Glide 사용)
                                         Glide.with(context)
                                             .load(imageUrl)
+                                            .centerCrop()
                                             .into(binding.imageView17)
                                     } else {
                                         // 로컬 파일에서 이미지 로드
@@ -316,11 +306,20 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
                             response.body()?.result?.let{
                                 Log.d("캐스트 수정","${response.code()}")
                                 Toast.makeText(this@EditAudioActivity,"수정되었습니다.",Toast.LENGTH_SHORT).show()
+                                setResult(Activity.RESULT_OK)  // 결과 설정
 
                             }
                         } else {
-                            Log.d("캐스트 수정", "${ response.errorBody()?.string() }")
-                            Toast.makeText(this@EditAudioActivity,"수정 실패,\n 오류코드 : $${response.code()}",Toast.LENGTH_SHORT).show()
+                            Log.d("캐스트 수정","${response.code()},${response.message()},${response.errorBody()?.string()}")
+                            if(response.code() == 413){
+                                Toast.makeText(this@EditAudioActivity, "파일이 너무 큽니다.\n용량 제한 10Mb", Toast.LENGTH_SHORT).show()
+
+                            }else{
+                                Toast.makeText(this@EditAudioActivity, "오류 코드 : ${response.code()}\n${response.message()}", Toast.LENGTH_SHORT).show()
+
+                            }
+
+
                         }
 
                     } catch (e: Exception) {
@@ -342,6 +341,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
 
                         if (response.isSuccessful) {
                             response.body()?.result?.let{
+                                setResult(Activity.RESULT_OK)  // 결과 설정
 
                                 Toast.makeText( this@EditAudioActivity,"삭제되었습니다.",Toast.LENGTH_SHORT).show()
 
@@ -449,7 +449,7 @@ class EditAudioActivity : AppCompatActivity(), EditAudio, AddCategoryListener {
         // Convert the temp file to RequestBody
         val requestFile = tempFile.asRequestBody("image/*".toMediaTypeOrNull())
         // Create MultipartBody.Part from RequestBody
-        return MultipartBody.Part.createFormData("photo", tempFile.name, requestFile)
+        return MultipartBody.Part.createFormData("image", tempFile.name, requestFile)
     }
 
 

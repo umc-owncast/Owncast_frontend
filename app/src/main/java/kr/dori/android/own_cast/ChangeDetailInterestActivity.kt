@@ -1,6 +1,5 @@
 package kr.dori.android.own_cast
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -24,10 +23,6 @@ import kr.dori.android.own_cast.forApiData.CastInterface
 import kr.dori.android.own_cast.forApiData.getRetrofit
 import kr.dori.android.own_cast.keyword.KeywordAppData
 import kr.dori.android.own_cast.keyword.KeywordLoadingDialog
-
-
-
-
 
 class ChangeDetailInterestActivity : ComponentActivity() {
 
@@ -197,12 +192,14 @@ class ChangeDetailInterestActivity : ComponentActivity() {
         findViewById<ImageView>(R.id.pop_exit_button).setOnClickListener {
             val intent = Intent(this, ChangeInterestActivity ::class.java)
             startActivity(intent)
+            finish()
         }
 
         // 직접 입력
         findViewById<TextView>(R.id.self).setOnClickListener {
             val intent = Intent(this, ChangeSelfActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
     fun initData(){
@@ -222,7 +219,7 @@ class ChangeDetailInterestActivity : ComponentActivity() {
                         dialog.dismiss()
                         if (response.isSuccessful) {
                             response.body()?.result?.let{
-                                KeywordAppData.updateDetailTopic(it)
+                                KeywordAppData.updateDetailTopic(it.keywords)
                             }
                         } else {
                             Log.d("initDataFinish","failed code : ${response.code()}")

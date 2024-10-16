@@ -1,6 +1,8 @@
 package kr.dori.android.own_cast.study
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -46,6 +48,7 @@ class StudyFragment : Fragment() {
         // AudioPlayer 초기화
         audioPlayer = AudioPlayer(requireContext())
         audioPlayer?.initializePlayer()
+        //  audioPlayer?.listener = this  // 리스너 설정
 
         // 빈 리스트로 어댑터 연결
         studyAdapter.dataList = mutableListOf()
@@ -64,7 +67,8 @@ class StudyFragment : Fragment() {
 
     private fun setupRecyclerView() {
         binding.studyCategoryRv.adapter = studyAdapter
-        binding.studyCategoryRv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.studyCategoryRv.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         studyAdapter.selectedPosition = 0
 
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -98,7 +102,10 @@ class StudyFragment : Fragment() {
         val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
         val bookmark = getCurrentBookmarkInfo()
         bookmark?.let {
-            Log.d("StudyFragment2", "Current Bookmark: ${it.originalSentence} - ${it.translatedSentence}, ${it.castURL}")
+            Log.d(
+                "StudyFragment2",
+                "Current Bookmark: ${it.originalSentence} - ${it.translatedSentence}, ${it.castURL}"
+            )
         } ?: run {
             Log.d("StudyFragment2", "No current bookmark selected") // null 확인 로그
         }
@@ -152,7 +159,7 @@ class StudyFragment : Fragment() {
             val getAllBookmark = getRetrofit().create(Bookmark::class.java)
 
             try {
-                val response = getAllBookmark.getSaved()
+                val response = getAllBookmark.getMy()
                 if (response.isSuccessful) {
                     val allBookmarks = response.body()?.result ?: emptyList()
                     Log.d("StudyFragment", "Bookmarks loaded successfully: ${allBookmarks.size}")
@@ -176,7 +183,10 @@ class StudyFragment : Fragment() {
                         }
                     }
                 } else {
-                    Log.e("StudyFragment", "Failed to load bookmarks: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "StudyFragment",
+                        "Failed to load bookmarks: ${response.errorBody()?.string()}"
+                    )
                     withContext(Dispatchers.Main) {
                         handleEmptyData()
                     }
@@ -197,7 +207,7 @@ class StudyFragment : Fragment() {
             val getAllBookmark = getRetrofit().create(Bookmark::class.java)
 
             try {
-                val response = getAllBookmark.getMy()
+                val response = getAllBookmark.getSaved()
                 if (response.isSuccessful) {
                     val allBookmarks = response.body()?.result ?: emptyList()
                     Log.d("StudyFragment", "Bookmarks loaded successfully: ${allBookmarks.size}")
@@ -220,7 +230,10 @@ class StudyFragment : Fragment() {
                         }
                     }
                 } else {
-                    Log.e("StudyFragment", "Failed to load bookmarks: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "StudyFragment",
+                        "Failed to load bookmarks: ${response.errorBody()?.string()}"
+                    )
                     withContext(Dispatchers.Main) {
                         handleEmptyData()
                     }
@@ -264,7 +277,10 @@ class StudyFragment : Fragment() {
                         }
                     }
                 } else {
-                    Log.e("StudyFragment", "Failed to load bookmarks: ${response.errorBody()?.string()}")
+                    Log.e(
+                        "StudyFragment",
+                        "Failed to load bookmarks: ${response.errorBody()?.string()}"
+                    )
                     withContext(Dispatchers.Main) {
                         handleEmptyData()
                     }
@@ -294,6 +310,8 @@ class StudyFragment : Fragment() {
         binding.fragmentStudyNextIv.visibility = View.GONE
         binding.fragmentStudyBackIv.visibility = View.GONE
         binding.fragmentStudyShuffleIv.isEnabled = false
+        binding.fragmentStudySoundOffIv.isEnabled = false
+        binding.fragmentStudyLoofOffIv.isEnabled = false
     }
 
     private fun enableCustomAdapterUI() {
@@ -301,6 +319,8 @@ class StudyFragment : Fragment() {
         binding.fragmentStudyNextIv.visibility = View.VISIBLE
         binding.fragmentStudyBackIv.visibility = View.VISIBLE
         binding.fragmentStudyShuffleIv.isEnabled = true
+        binding.fragmentStudySoundOffIv.isEnabled = true
+        binding.fragmentStudyLoofOffIv.isEnabled = true
     }
 
 
@@ -336,6 +356,7 @@ class StudyFragment : Fragment() {
         binding.fragmentStudyLoofOffIv.setOnClickListener {
             binding.fragmentStudyLoofOnIv.visibility = View.VISIBLE
             binding.fragmentStudyLoofOffIv.visibility = View.GONE
+            binding.fragmentStudySoundOffIv.isEnabled = false
             // 현재 북마크 가져와서 스트리밍 시작
             val bookmark = getCurrentBookmarkInfo()
             bookmark?.let {
@@ -351,23 +372,41 @@ class StudyFragment : Fragment() {
         binding.fragmentStudyLoofOnIv.setOnClickListener {
             binding.fragmentStudyLoofOffIv.visibility = View.VISIBLE
             binding.fragmentStudyLoofOnIv.visibility = View.GONE
+            binding.fragmentStudySoundOffIv.isEnabled = true
             isLooping = false
             audioPlayer?.setLooping(false)
         }
 
         binding.fragmentStudySoundOffIv.setOnClickListener {
-            //binding.fragmentStudySoundOnIv.visibility = View.VISIBLE
-           // binding.fragmentStudySoundOffIv.visibility = View.GONE
-
-            // 현재 북마크 가져와서 스트리밍 시작
             val bookmark = getCurrentBookmarkInfo()
             bookmark?.let {
-                audioPlayer?.playAudio(it.castURL, it.start, it.end)
-                Log.d("StudyFragment2", "Playing audio from: ${it.castURL}")
+                val duration = (it.end - it.start).toInt()
+                if (duration > 0) {
+                    binding.fragmentStudySoundOnIv.visibility = View.VISIBLE
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        binding.fragmentStudySoundOnIv.visibility = View.GONE
+                        binding.fragmentStudySoundOffIv.visibility = View.VISIBLE
+                        binding.fragmentStudyLoofOffIv.isEnabled = true
+                    }, duration.toLong() * 1000 + 1000) // 바로 꺼지는건 좀 밋밋해서 1초 버퍼를 넣었음 어쩌라고
+
+                    // 오디오 플레이어를 사용하여 재생 시작
+                    audioPlayer?.playAudio(it.castURL, it.start, it.end)
+                    Log.d("StudyFragment2", "Playing audio from: ${it.castURL}")
+                } else {
+                    Log.d("StudyFragment2", "Duration is zero or negative, cannot play audio.")
+                }
             } ?: run {
                 Log.d("StudyFragment2", "No current bookmark selected to play audio")
             }
+
+            // 'soundOff' 버튼을 숨김
+            binding.fragmentStudySoundOffIv.visibility = View.GONE
+            // loop 막아둠
+            binding.fragmentStudyLoofOffIv.isEnabled = false
         }
+
+
         binding.fragmentStudyNextIv.setOnClickListener {
             scrollToNextItem()
         }
@@ -390,8 +429,8 @@ class StudyFragment : Fragment() {
             }
         }
 
-        binding.studyCustomAdapterRv.scrollToPosition(5)
-
+        //binding.studyCustomAdapterRv.scrollToPosition(5)
+        /*
         binding.studyCustomAdapterRv.post {
             val layoutManager = binding.studyCustomAdapterRv.layoutManager as LinearLayoutManager
             if (dataCount > 0) {
@@ -405,7 +444,10 @@ class StudyFragment : Fragment() {
                 }
             }
         }
+
+ */
     }
+
 
     private fun handleItemClick(position: Int) {
         when (position) {
@@ -425,8 +467,6 @@ class StudyFragment : Fragment() {
                 if (filteredData.isNotEmpty() && position < filteredData.size) {
                     val playlistId = filteredData[position].playlistId
                     loadCategoryBookmark(playlistId) // 그 외의 경우 해당 카테고리의 북마크 로드
-
-
                 }
             }
         }
@@ -450,6 +490,7 @@ class StudyFragment : Fragment() {
             null  // 선택된 포지션이 유효하지 않을 경우 null 반환
         }
     }
-
-
 }
+
+
+

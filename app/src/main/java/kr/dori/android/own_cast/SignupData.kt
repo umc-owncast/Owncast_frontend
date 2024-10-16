@@ -3,7 +3,9 @@ package kr.dori.android.own_cast
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatDelegate
 import java.lang.reflect.Array.getInt
+
 
 class SignupData : Application() {
     companion object {
@@ -82,5 +84,7 @@ class SignupData : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 }

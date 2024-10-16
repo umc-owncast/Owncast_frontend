@@ -68,7 +68,7 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
 
             data.let {
                 Log.d("플레이리스트", "사진 정보 ${data.imagePath}")
-                Glide.with(binding.root.context).load(data.imagePath).into(binding.categoryImg)
+                Glide.with(binding.root.context).load(data.imagePath).centerCrop().into(binding.categoryImg)
                 binding.playlistCategoryTitleTv.text = it.name
                 binding.playlistCategoryNumTv.text = it.totalCast.toString()
             }
@@ -108,10 +108,11 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                                         imagePath = cast.imagePath
                                     )
                                 }
-                                //CastPlayerData.setCastList(castList)  // 캐스트 리스트를 저장
-                                CastPlayerData.setCast(castListWithPlaylistId, 0)
-                                activityMover.ToPlayCast()
-
+                                if(!castListWithPlaylistId.isNullOrEmpty()){
+                                    //CastPlayerData.setCastList(castList)  // 캐스트 리스트를 저장
+                                    CastPlayerData.setCast(castListWithPlaylistId, 0)
+                                    activityMover.ToPlayCast()
+                                }
                             }
                         }
                     } else {
@@ -122,7 +123,6 @@ class PlaylistCategoryAdapter(private val editListener: EditCategoryListener, pr
                 }
             }
         }
-
     }
 }
 

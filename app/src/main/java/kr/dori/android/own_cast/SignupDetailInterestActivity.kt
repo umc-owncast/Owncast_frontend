@@ -12,6 +12,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 
+
 class SignupDetailInterestActivity : ComponentActivity() {
 
     // 각 체크박스 ImageView를 선언
