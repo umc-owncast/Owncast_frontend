@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
+import com.kakao.sdk.common.KakaoSdk
 import java.lang.reflect.Array.getInt
 
 
@@ -85,6 +86,7 @@ class SignupData : Application() {
         super.onCreate()
         instance = this
 
+        KakaoSdk.init(this, getString(R.string.KAKAO_APPKEY))
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 }

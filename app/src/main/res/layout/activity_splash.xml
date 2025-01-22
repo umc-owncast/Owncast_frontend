@@ -1,3 +1,4 @@
+<layout>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -112,6 +113,18 @@
 
     </TextView>
 
+    <ImageButton
+        android:id="@+id/btn_kakao_login"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:src="@drawable/social_kakao_login"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:layout_above="@id/loginBtn"
+        android:layout_marginBottom="16dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/loginBtn"
         android:layout_width="328dp"
@@ -139,4 +152,4 @@
         android:visibility="gone" />
 
 </RelativeLayout>
-
+</layout>

@@ -11,6 +11,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        dataBinding = true
     }
 
     defaultConfig {
@@ -85,4 +86,7 @@ dependencies {
     //fireBase
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-analytics")
+
+    // kakao
+    implementation ("com.kakao.sdk:v2-all:2.20.6")
 }
