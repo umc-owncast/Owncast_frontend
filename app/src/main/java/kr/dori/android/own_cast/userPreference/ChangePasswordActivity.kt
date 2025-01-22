@@ -1,10 +1,9 @@
-package kr.dori.android.own_cast
+package kr.dori.android.own_cast.userPreference
 
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -14,7 +13,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
+import kr.dori.android.own_cast.MainActivity
+import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.RetrofitClient
+import kr.dori.android.own_cast.SignupData
+import kr.dori.android.own_cast.UpdatePasswordRequest
+import kr.dori.android.own_cast.UpdatePasswordResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -234,7 +238,9 @@ class ChangePasswordActivity : ComponentActivity() {
             btnNext.backgroundTintList = ContextCompat.getColorStateList(this, R.color.main_purple)
         } else {
             btnNext.isClickable = false
-            btnNext.backgroundTintList = ContextCompat.getColorStateList(this, R.color.button_unclick)
+            btnNext.backgroundTintList = ContextCompat.getColorStateList(this,
+                R.color.button_unclick
+            )
         }
 
 

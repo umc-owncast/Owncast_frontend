@@ -1,8 +1,7 @@
-package kr.dori.android.own_cast
+package kr.dori.android.own_cast.signUp
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,8 +12,11 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import kr.dori.android.own_cast.CheckIDResponse
+import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.RetrofitClient
+import kr.dori.android.own_cast.SignupData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -70,7 +72,11 @@ class SignupThirdActivity : AppCompatActivity() {
         }
 
         btnNext.setOnClickListener {
-            if (SignupData.name != getString(R.string.signup_info_first) && SignupData.id != getString(R.string.signup_info_first) && SignupData.password != getString(R.string.signup_info_first) && SignupData.passwordconfirm != getString(R.string.signup_info_first)) {
+            if (SignupData.name != getString(R.string.signup_info_first) && SignupData.id != getString(
+                    R.string.signup_info_first
+                ) && SignupData.password != getString(R.string.signup_info_first) && SignupData.passwordconfirm != getString(
+                    R.string.signup_info_first
+                )) {
                 SignupData.name = name
                 SignupData.id = id
                 SignupData.password = password
@@ -269,7 +275,9 @@ class SignupThirdActivity : AppCompatActivity() {
             errorTextView.text = errorMessage
             editText.setBackgroundResource(R.drawable.button_error)
             nextButton.isClickable = false
-            nextButton.backgroundTintList = ContextCompat.getColorStateList(this, R.color.button_unclick)
+            nextButton.backgroundTintList = ContextCompat.getColorStateList(this,
+                R.color.button_unclick
+            )
         } else {
             errorTextView.text = ""
             editText.setBackgroundResource(R.drawable.edittext_background)
@@ -278,7 +286,11 @@ class SignupThirdActivity : AppCompatActivity() {
     }
 
     private fun nextBtnSection(nextButton: Button) {
-        val ready = SignupData.name != getString(R.string.signup_info_first) && SignupData.id != getString(R.string.signup_info_first) && SignupData.password != getString(R.string.signup_info_first) && SignupData.passwordconfirm != getString(R.string.signup_info_first)
+        val ready = SignupData.name != getString(R.string.signup_info_first) && SignupData.id != getString(
+            R.string.signup_info_first
+        ) && SignupData.password != getString(R.string.signup_info_first) && SignupData.passwordconfirm != getString(
+            R.string.signup_info_first
+        )
         nextButton.isClickable = ready
         nextButton.backgroundTintList = ContextCompat.getColorStateList(this, if (ready) R.color.main_purple else R.color.button_unclick)
     }
