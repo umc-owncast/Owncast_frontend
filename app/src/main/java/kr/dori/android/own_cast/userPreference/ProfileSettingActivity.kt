@@ -1,4 +1,4 @@
-package kr.dori.android.own_cast
+package kr.dori.android.own_cast.userPreference
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +13,14 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import kr.dori.android.own_cast.CheckIDResponse
+import kr.dori.android.own_cast.CheckNickNameResponse
+import kr.dori.android.own_cast.MainActivity
+import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.RetrofitClient
+import kr.dori.android.own_cast.SignupData
+import kr.dori.android.own_cast.UpdateProfileRequest
+import kr.dori.android.own_cast.UpdateProfileResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -186,7 +194,9 @@ class ProfileSettingActivity : AppCompatActivity() {
             btnNext.backgroundTintList = ContextCompat.getColorStateList(this, R.color.main_purple)
         } else {
             btnNext.isClickable = false
-            btnNext.backgroundTintList = ContextCompat.getColorStateList(this, R.color.button_unclick)
+            btnNext.backgroundTintList = ContextCompat.getColorStateList(this,
+                R.color.button_unclick
+            )
         }
     }
 

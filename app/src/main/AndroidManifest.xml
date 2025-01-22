@@ -53,29 +53,29 @@
             android:name=".AuthAfterActivity"
             android:exported="false" />
         <activity
-            android:name=".SignupFirstActivity"
+            android:name=".signUp.SignupFirstActivity"
             android:exported="false" />
         <activity
-            android:name=".SignupSecondActivity"
+            android:name=".signUp.SignupSecondActivity"
             android:exported="false" />
         <activity
-            android:name=".SignupThirdActivity"
+            android:name=".signUp.SignupThirdActivity"
             android:windowSoftInputMode="adjustResize|stateVisible"
             android:exported="false" />
         <activity
-            android:name=".SignupLanguageActivity"
+            android:name=".signUp.SignupLanguageActivity"
             android:exported="false" />
         <activity
-            android:name=".SignupFifthActivity"
+            android:name=".signUp.SignupFifthActivity"
             android:exported="false" />
         <activity
-            android:name=".SignupDetailInterestActivity"
+            android:name=".signUp.SignupDetailInterestActivity"
             android:exported="false" />
         <activity
-            android:name=".SignupSelfActivity"
+            android:name=".signUp.SignupSelfActivity"
             android:exported="false" />
         <activity
-            android:name=".SignupLoadingActivity"
+            android:name=".signUp.SignupLoadingActivity"
             android:exported="false" />
         <activity
             android:name=".ClearSignupActivity"
@@ -89,25 +89,25 @@
 
         </activity>
         <activity
-            android:name=".ChangeDetailInterestActivity"
+            android:name=".userPreference.ChangeDetailInterestActivity"
             android:exported="false" />
         <activity
-            android:name=".ChangeInterestActivity"
+            android:name=".userPreference.ChangeInterestActivity"
             android:exported="false" />
         <activity
-            android:name=".ChangeLanguageActivity"
+            android:name=".userPreference.ChangeLanguageActivity"
             android:exported="false" />
         <activity
-            android:name=".ChangeSelfActivity"
+            android:name=".userPreference.ChangeSelfActivity"
             android:exported="false" />
         <activity
-            android:name=".PasswordSettingActivity"
+            android:name=".signUp.PasswordSettingActivity"
             android:exported="false" />
         <activity
-            android:name=".ProfileSettingActivity"
+            android:name=".userPreference.ProfileSettingActivity"
             android:exported="false" />
         <activity
-            android:name=".ChangePasswordActivity"
+            android:name=".userPreference.ChangePasswordActivity"
             android:exported="false" />
         <activity
             android:name=".search.SearchAddCategoryActivity"

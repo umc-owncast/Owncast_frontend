@@ -1,4 +1,4 @@
-package kr.dori.android.own_cast
+package kr.dori.android.own_cast.signUp
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,9 @@ import android.widget.ImageView
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
+import kr.dori.android.own_cast.AuthActivity
+import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.SignupData
 
 
 class SignupFirstActivity : ComponentActivity() {

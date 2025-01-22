@@ -1,15 +1,16 @@
-package kr.dori.android.own_cast
+package kr.dori.android.own_cast.signUp
 
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
+import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.SignupData
 
 
 class SignupFifthActivity : ComponentActivity() {

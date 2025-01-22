@@ -1,4 +1,4 @@
-package kr.dori.android.own_cast
+package kr.dori.android.own_cast.userPreference
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,11 +7,16 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
+import kr.dori.android.own_cast.LanguageRequest
+import kr.dori.android.own_cast.LanguageResponse
+import kr.dori.android.own_cast.MainActivity
+import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.RetrofitClient
+import kr.dori.android.own_cast.SignupData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -40,7 +45,9 @@ class ChangeLanguageActivity: ComponentActivity() {
         findViewById<View>(R.id.SpSection).setOnClickListener(::onSpSectionClick)
 
         nextButton.setOnClickListener {
-            if ( SignupData.temp_language != getString(R.string.signup_info_first) && SignupData.temp_accent != getString(R.string.signup_info_first) ) {
+            if ( SignupData.temp_language != getString(R.string.signup_info_first) && SignupData.temp_accent != getString(
+                    R.string.signup_info_first
+                ) ) {
 
                 // 서버로 전송할 language 값을 설정
                 val language = when {

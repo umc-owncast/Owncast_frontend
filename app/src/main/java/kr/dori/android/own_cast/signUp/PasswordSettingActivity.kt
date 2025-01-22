@@ -1,10 +1,10 @@
-package kr.dori.android.own_cast
+package kr.dori.android.own_cast.signUp
 
-import android.app.Activity
 import android.os.Bundle
 import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
+import kr.dori.android.own_cast.R
 
 
 class PasswordSettingActivity : ComponentActivity() {
