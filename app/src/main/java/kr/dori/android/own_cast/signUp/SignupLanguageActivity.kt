@@ -1,9 +1,8 @@
-package kr.dori.android.own_cast
+package kr.dori.android.own_cast.signUp
 
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
@@ -13,6 +12,8 @@ import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
+import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.SignupData
 
 
 class SignupLanguageActivity : ComponentActivity() {
@@ -35,7 +36,9 @@ class SignupLanguageActivity : ComponentActivity() {
         findViewById<View>(R.id.SpSection).setOnClickListener(::onSpSectionClick)
 
         nextButton.setOnClickListener {
-            if ( SignupData.language != getString(R.string.signup_info_first) && SignupData.accent != getString(R.string.signup_info_first) ) {
+            if ( SignupData.language != getString(R.string.signup_info_first) && SignupData.accent != getString(
+                    R.string.signup_info_first
+                ) ) {
                 startActivity(Intent(this, SignupFifthActivity::class.java))
             }
         }

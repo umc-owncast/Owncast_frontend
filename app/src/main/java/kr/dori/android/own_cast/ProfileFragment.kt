@@ -8,12 +8,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
+import kr.dori.android.own_cast.userPreference.ChangeInterestActivity
+import kr.dori.android.own_cast.userPreference.ChangeLanguageActivity
+import kr.dori.android.own_cast.userPreference.ProfileSettingActivity
 
 class ProfileFragment : Fragment() {
 

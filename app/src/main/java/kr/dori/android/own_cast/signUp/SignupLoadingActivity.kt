@@ -1,8 +1,7 @@
-package kr.dori.android.own_cast
+package kr.dori.android.own_cast.signUp
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -10,6 +9,15 @@ import androidx.activity.enableEdgeToEdge
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kr.dori.android.own_cast.ClearSignupActivity
+import kr.dori.android.own_cast.LoginRequest
+import kr.dori.android.own_cast.LoginResponse
+import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.RetrofitClient
+import kr.dori.android.own_cast.SignUpRequest
+import kr.dori.android.own_cast.SignUpResponse
+import kr.dori.android.own_cast.SignupData
+import kr.dori.android.own_cast.SplashActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

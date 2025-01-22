@@ -1,8 +1,10 @@
-package kr.dori.android.own_cast
+package kr.dori.android.own_cast.signUp
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kr.dori.android.own_cast.CheckNickNameResponse
+import kr.dori.android.own_cast.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

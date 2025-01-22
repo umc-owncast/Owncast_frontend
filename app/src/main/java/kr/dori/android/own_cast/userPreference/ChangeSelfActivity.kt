@@ -1,6 +1,5 @@
-package kr.dori.android.own_cast
+package kr.dori.android.own_cast.userPreference
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -13,6 +12,12 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
+import kr.dori.android.own_cast.MainActivity
+import kr.dori.android.own_cast.PreferenceRequest
+import kr.dori.android.own_cast.PreferenceResponse
+import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.RetrofitClient
+import kr.dori.android.own_cast.SignupData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -142,7 +147,9 @@ class ChangeSelfActivity : ComponentActivity() {
 
                 // 버튼 상태 업데이트
                 btnNext.isEnabled = true
-                btnNext.setBackgroundTintList(ContextCompat.getColorStateList(this@ChangeSelfActivity, R.color.main_purple))
+                btnNext.setBackgroundTintList(ContextCompat.getColorStateList(this@ChangeSelfActivity,
+                    R.color.main_purple
+                ))
             }
         })
 

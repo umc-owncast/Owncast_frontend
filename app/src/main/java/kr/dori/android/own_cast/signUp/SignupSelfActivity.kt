@@ -1,4 +1,4 @@
-package kr.dori.android.own_cast
+package kr.dori.android.own_cast.signUp
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +11,8 @@ import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
+import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.SignupData
 
 
 class SignupSelfActivity : ComponentActivity() {
@@ -61,7 +63,9 @@ class SignupSelfActivity : ComponentActivity() {
 
                 // 버튼 상태 업데이트
                 btnNext.isEnabled = true
-                btnNext.setBackgroundTintList(ContextCompat.getColorStateList(this@SignupSelfActivity, R.color.main_purple))
+                btnNext.setBackgroundTintList(ContextCompat.getColorStateList(this@SignupSelfActivity,
+                    R.color.main_purple
+                ))
             }
         })
 

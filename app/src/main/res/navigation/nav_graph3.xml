@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/First3Fragment"
-        android:name="kr.dori.android.own_cast.First3Fragment"
+        android:name="kr.dori.android.own_cast.userClause.First3Fragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_first3">
 
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/Second3Fragment"
-        android:name="kr.dori.android.own_cast.Second3Fragment"
+        android:name="kr.dori.android.own_cast.userClause.Second3Fragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second3">
 

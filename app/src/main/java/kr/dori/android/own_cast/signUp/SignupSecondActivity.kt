@@ -1,10 +1,9 @@
-package kr.dori.android.own_cast
+package kr.dori.android.own_cast.signUp
 
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -14,6 +13,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import kr.dori.android.own_cast.R
+import kr.dori.android.own_cast.SignupData
 
 
 class SignupSecondActivity : ComponentActivity() {
@@ -71,12 +72,16 @@ class SignupSecondActivity : ComponentActivity() {
                         nickNameError.text = finalError
                         etNickName.setBackgroundResource(R.drawable.button_error)
                         btnNext.isClickable = false
-                        btnNext.backgroundTintList = ContextCompat.getColorStateList(this@SignupSecondActivity, R.color.button_unclick)
+                        btnNext.backgroundTintList = ContextCompat.getColorStateList(this@SignupSecondActivity,
+                            R.color.button_unclick
+                        )
                     } else {
                         nickNameError.text = ""
                         etNickName.setBackgroundResource(R.drawable.edittext_background)
                         btnNext.isClickable = true
-                        btnNext.backgroundTintList = ContextCompat.getColorStateList(this@SignupSecondActivity, R.color.main_purple)
+                        btnNext.backgroundTintList = ContextCompat.getColorStateList(this@SignupSecondActivity,
+                            R.color.main_purple
+                        )
                     }
                 })
             }

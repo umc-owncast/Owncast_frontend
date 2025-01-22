@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kr.dori.android.own_cast.signUp.SignupFirstActivity
 
 
 class SplashActivity : AppCompatActivity() {
