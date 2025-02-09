@@ -53,7 +53,7 @@ class LoginActivity : ComponentActivity() {
 
         // 뒤로 가기 버튼 클릭 시
         backButton.setOnClickListener {
-            startActivity(Intent(this, AuthActivity::class.java))
+            finish()
         }
 
         // 로그인 버튼 클릭 시

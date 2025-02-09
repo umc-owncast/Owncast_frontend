@@ -42,7 +42,7 @@ class SignupFirstActivity : ComponentActivity() {
 
         // 백 버튼 클릭 시 AuthActivity로 이동
         backButton.setOnClickListener {
-            startActivity(Intent(this, AuthActivity::class.java))
+            finish()
         }
 
         // 다음 버튼 클릭 시 SignupSecondActivity로 이동

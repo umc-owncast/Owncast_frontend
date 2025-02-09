@@ -28,7 +28,7 @@ class SignupLanguageActivity : ComponentActivity() {
         nextButton = findViewById(R.id.btn_next)
 
         backButton.setOnClickListener {
-            startActivity(Intent(this, SignupThirdActivity::class.java))
+            finish()
         }
 
         findViewById<View>(R.id.EnSection).setOnClickListener(::onEnSectionClick)

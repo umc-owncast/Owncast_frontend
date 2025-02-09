@@ -30,6 +30,7 @@ import kr.dori.android.own_cast.databinding.ActivitySplashBinding
 import kr.dori.android.own_cast.presentation.ui.auth.social.SocialLoginUiState
 import kr.dori.android.own_cast.presentation.ui.auth.social.SocialLoginViewModel
 import kr.dori.android.own_cast.signUp.SignupFirstActivity
+import kr.dori.android.own_cast.signUp.SignupThirdActivity
 
 
 class SplashActivity : AppCompatActivity() {
@@ -75,6 +76,7 @@ class SplashActivity : AppCompatActivity() {
                         }
                         SocialLoginUiState.KakaoLoginSuccess -> {
                             // 사용자의 정보 얻어옴
+                            startActivity(Intent(baseContext, SignupThirdActivity::class.java))
                         }
                         SocialLoginUiState.LoginFail -> {
                         }

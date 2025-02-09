@@ -60,8 +60,7 @@ class SignupFifthActivity : ComponentActivity() {
         }
 
         findViewById<ImageView>(R.id.backButton).setOnClickListener {
-            val intent = Intent(this, SignupLanguageActivity::class.java)
-            startActivity(intent)
+            finish()
         }
 
         // 메인 텍스트 설정
